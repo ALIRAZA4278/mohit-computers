@@ -69,7 +69,7 @@ export const databaseSchema = {
       indexes: ['category', 'brand', 'price', 'inStock', 'featured']
     },
     
-    orders: {
+    ordeRs:{
       fields: [
         'id', 'customerId', 'customerName', 'customerEmail', 'customerPhone',
         'products', 'totalAmount', 'status', 'paymentMethod', 'shippingAddress',
@@ -78,7 +78,7 @@ export const databaseSchema = {
       indexes: ['customerId', 'status', 'orderDate']
     },
     
-    customers: {
+    customeRs:{
       fields: [
         'id', 'name', 'email', 'phone', 'address', 'company',
         'customerType', 'registrationDate', 'totalOrders', 'totalSpent'
@@ -122,14 +122,14 @@ export const apiEndpoints = {
     delete: '/api/products/:id' // Admin only
   },
   
-  orders: {
+  ordeRs:{
     create: '/api/orders',
     getByCustomer: '/api/orders/customer/:customerId',
     getById: '/api/orders/:id',
     updateStatus: '/api/orders/:id/status' // Admin only
   },
   
-  customers: {
+  customeRs:{
     register: '/api/customers/register',
     login: '/api/customers/login',
     profile: '/api/customers/profile',

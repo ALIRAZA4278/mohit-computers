@@ -150,10 +150,10 @@ export default function Cart() {
                       {/* Price */}
                       <div className="text-right">
                         <div className="text-lg font-bold text-gray-800">
-                          ₹{(item.price * item.quantity).toLocaleString()}
+                          Rs:{(item.price * item.quantity).toLocaleString()}
                         </div>
                         <div className="text-sm text-gray-500">
-                          ₹{item.price.toLocaleString()} each
+                          Rs:{item.price.toLocaleString()} each
                         </div>
                       </div>
 
@@ -272,7 +272,7 @@ export default function Cart() {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">₹{getCartTotal().toLocaleString()}</span>
+                  <span className="font-medium">Rs:{getCartTotal().toLocaleString()}</span>
                 </div>
                 
                 <div className="flex justify-between">
@@ -282,13 +282,13 @@ export default function Cart() {
                 
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax (18% GST)</span>
-                  <span className="font-medium">₹{Math.round(getCartTotal() * 0.18).toLocaleString()}</span>
+                  <span className="font-medium">Rs:{Math.round(getCartTotal() * 0.18).toLocaleString()}</span>
                 </div>
                 
                 <div className="border-t pt-4">
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span>₹{Math.round(getCartTotal() * 1.18).toLocaleString()}</span>
+                    <span>Rs:{Math.round(getCartTotal() * 1.18).toLocaleString()}</span>
                   </div>
                 </div>
               </div>

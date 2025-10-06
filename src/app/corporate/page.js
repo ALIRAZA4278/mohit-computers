@@ -134,11 +134,11 @@ export default function Corporate() {
                     Budget Range
                   </label>
                   <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Under ₹2 Lakhs</option>
-                    <option>₹2-5 Lakhs</option>
-                    <option>₹5-10 Lakhs</option>
-                    <option>₹10-25 Lakhs</option>
-                    <option>Above ₹25 Lakhs</option>
+                    <option>Under Rs:2 Lakhs</option>
+                    <option>Rs:2-5 Lakhs</option>
+                    <option>Rs:5-10 Lakhs</option>
+                    <option>Rs:10-25 Lakhs</option>
+                    <option>Above Rs:25 Lakhs</option>
                   </select>
                 </div>
               </div>

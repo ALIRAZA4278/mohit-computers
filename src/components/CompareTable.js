@@ -169,17 +169,17 @@ const CompareTable = () => {
               {laptopItems.map((product) => (
                 <td key={product.id} className={`p-6 border-r border-gray-200 last:border-r-0 ${isHighlight(product, 'price') ? 'bg-green-50 border-green-200' : ''}`}>
                   <div className={`font-bold text-2xl ${isHighlight(product, 'price') ? 'text-green-600' : 'text-gray-800'}`}>
-                    ₹{product.price.toLocaleString()}
+                    Rs:{product.price.toLocaleString()}
                     {isHighlight(product, 'price') && <span className="ml-2 text-sm">🏆 Best Price</span>}
                   </div>
                   {product.originalPrice && (
                     <div className="text-sm text-gray-500 line-through mt-1">
-                      ₹{product.originalPrice.toLocaleString()}
+                      Rs:{product.originalPrice.toLocaleString()}
                     </div>
                   )}
                   {product.originalPrice && (
                     <div className="text-xs text-green-600 font-medium mt-1">
-                      Save ₹{(product.originalPrice - product.price).toLocaleString()} 
+                      Save Rs:{(product.originalPrice - product.price).toLocaleString()} 
                       ({Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% off)
                     </div>
                   )}

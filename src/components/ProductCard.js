@@ -27,7 +27,7 @@ const ProductCard = ({ product, showCompare = true }) => {
     } else {
       const success = addToCompare(product);
       if (success) {
-        // Optional: Show success message
+        // Product added to compare - floating widget will handle the display
       }
     }
   };
@@ -41,107 +41,173 @@ const ProductCard = ({ product, showCompare = true }) => {
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
+  // Get category badge info
+  const getCategoryBadge = () => {
+    if (product.category === 'used-laptop') {
+      return { text: 'Laptop', gradient: 'from-blue-500 to-blue-600' };
+    }
+    if (product.category === 'chromebook') {
+      return { text: 'Chromebook', gradient: 'from-green-500 to-green-600' };
+    }
+    if (product.category === 'accessories') {
+      return { text: 'Accessory', gradient: 'from-orange-400 to-red-500' };
+    }
+    return { text: 'Product', gradient: 'from-gray-500 to-gray-600' };
+  };
+
+  const categoryBadge = getCategoryBadge();
+
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
-      {/* Product Image */}
-      <div className="relative overflow-hidden rounded-t-lg">
-        <Image
-          // src={product.image}
-          src="/next.png" // Fallback image
-          alt={product.name}
-          width={300}
-          height={200}
-          className="w-full h-48 object-cover"
-        />
-        
-        {/* Badges */}
-        <div className="absolute top-2 left-2">
-          {discountPercentage > 0 && (
-            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">
-              {discountPercentage}% OFF
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Product Info */}
-      <div className="p-4">
-        {/* Product Name */}
-        <Link href={`/products/${product.id}`}>
-          <h3 className="font-medium text-base text-blue-600 mb-2 hover:text-blue-700 cursor-pointer line-clamp-2">
-            {product.name}
-          </h3>
-        </Link>
-
-        {/* Specifications */}
-        <div className="text-sm text-gray-600 mb-3 space-y-1">
-          {product.processor && (
-            <div>• {product.processor}</div>
-          )}
-          {product.ram && (
-            <div>• {product.ram} RAM and {product.storage}</div>
-          )}
-          {product.display && (
-            <div>• {product.display}</div>
-          )}
-        </div>
-
-        {/* Price */}
-        <div className="mb-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xl font-bold text-gray-900">
-              Rs.{product.price.toLocaleString()}
-            </span>
-            {product.originalPrice && (
-              <span className="text-sm text-gray-500 line-through">
-                Rs.{product.originalPrice.toLocaleString()}
-              </span>
-            )}
+    <div className="group">
+      <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-teal-200">
+        {/* Category Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <div className={`bg-gradient-to-r ${categoryBadge.gradient} text-white px-3 py-1 rounded-full text-xs font-bold shadow-md`}>
+            {categoryBadge.text}
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="space-y-2">
-          {/* VIEW DETAIL Button */}
-          <Link 
-            href={`/products/${product.id}`}
-            className="w-full bg-blue-900 text-white py-2 px-4 rounded text-center font-medium hover:bg-blue-800 transition-colors duration-200 block"
-          >
-            VIEW DETAIL
+        {/* Discount Badge */}
+        {discountPercentage > 0 && (
+          <div className="absolute top-4 right-4 z-10">
+            <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+              {discountPercentage}% OFF
+            </div>
+          </div>
+        )}
+        
+        {/* Product Image */}
+        <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+          <Image
+            src="/next.svg"
+            alt={product.name}
+            width={200}
+            height={150}
+            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
+          />
+        </div>
+        
+        {/* Product Info */}
+        <div className="p-6">
+          <Link href={`/products/${product.id}`}>
+            <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2 group-hover:text-teal-600 transition-colors cursor-pointer">
+              {product.name}
+            </h3>
           </Link>
 
-          {/* Compare and Wishlist Buttons */}
-          <div className="flex gap-2">
+          {/* Brand */}
+          {product.brand && (
+            <p className="text-sm text-gray-500 mb-3 font-medium">
+              Brand: {product.brand}
+            </p>
+          )}
 
-           
-
-            {/* Compare Button */}
-            {showCompare && isLaptopCategory(product.category) && (
-              <button
-                onClick={handleCompare}
-                className={`px-3 py-2 rounded text-sm font-medium transition-colors duration-200 ${
-                  isInCompare(product.id)
-                    ? 'bg-blue-900 text-white'
-                    : 'bg-blue-900 text-white hover:bg-teal-600'
-                }`}
-                title={isInCompare(product.id) ? 'Remove from comparison' : 'Add to comparison'}
-              >
-                ⚖ Compare
-              </button>
+          {/* Specifications */}
+          <div className="text-sm text-gray-600 mb-4 space-y-1">
+            {product.processor && (
+              <div className="flex items-center">
+                <span className="w-1.5 h-1.5 bg-teal-500 rounded-full mr-2"></span>
+                {product.processor}
+              </div>
             )}
+            {product.ram && (
+              <div className="flex items-center">
+                <span className="w-1.5 h-1.5 bg-teal-500 rounded-full mr-2"></span>
+                {product.ram} RAM, {product.storage}
+              </div>
+            )}
+            {product.display && (
+              <div className="flex items-center">
+                <span className="w-1.5 h-1.5 bg-teal-500 rounded-full mr-2"></span>
+                {product.display}
+              </div>
+            )}
+          </div>
+          
+          {/* Price */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <span className="text-2xl font-bold text-gray-900">
+                ₹{product.price.toLocaleString()}
+              </span>
+              {product.originalPrice && (
+                <span className="text-sm text-gray-500 line-through ml-2">
+                  ₹{product.originalPrice.toLocaleString()}
+                </span>
+              )}
+            </div>
+            {product.originalPrice && (
+              <div className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                Save ₹{(product.originalPrice - product.price).toLocaleString()}
+              </div>
+            )}
+          </div>
 
-            {/* Wishlist Button */}
-            <button
-              onClick={handleWishlist}
-              className={`px-3 py-2 rounded text-sm font-medium transition-colors duration-200 ${
-                isInWishlist(product.id)
-                  ? 'bg-red-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-red-500 hover:text-white'
-              }`}
-              title={isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+          {/* Stock Status */}
+          <div className="mb-4">
+            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+              product.inStock !== false 
+                ? 'bg-green-100 text-green-800' 
+                : 'bg-red-100 text-red-800'
+            }`}>
+              <span className={`w-1.5 h-1.5 rounded-full mr-1 ${
+                product.inStock !== false ? 'bg-green-500' : 'bg-red-500'
+              }`}></span>
+              {product.inStock !== false ? 'In Stock' : 'Out of Stock'}
+            </span>
+          </div>
+          
+          {/* Action Buttons */}
+          <div className="space-y-3">
+            <Link 
+              href={`/products/${product.id}`}
+              className="w-full bg-teal-600 text-white py-3 px-4 rounded-lg text-center font-medium hover:bg-teal-700 transition-colors duration-200 block"
             >
-              {isInWishlist(product.id) ? '♥ Added' : '♡ Add to Wishlist'}
-            </button>
+              View Details
+            </Link>
+            
+            <div className="flex gap-2">
+              <button
+                onClick={handleAddToCart}
+                disabled={product.inStock === false}
+                className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+                  product.inStock !== false
+                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                <ShoppingCart className="w-4 h-4 inline mr-1" />
+                Add to Cart
+              </button>
+              
+              {/* Compare Button */}
+              {showCompare && isLaptopCategory(product.category) && (
+                <button
+                  onClick={handleCompare}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isInCompare(product.id)
+                      ? 'bg-teal-100 text-teal-700 border border-teal-200'
+                      : 'bg-gray-100 text-gray-700 hover:bg-teal-100 hover:text-teal-700'
+                  }`}
+                  title={isInCompare(product.id) ? 'Remove from comparison' : 'Add to comparison'}
+                >
+                  <BarChart3 className="w-4 h-4" />
+                </button>
+              )}
+              
+              {/* Wishlist Button */}
+              <button
+                onClick={handleWishlist}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isInWishlist(product.id)
+                    ? 'bg-red-100 text-red-700 border border-red-200'
+                    : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-700'
+                }`}
+                title={isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+              >
+                <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+              </button>
+            </div>
           </div>
         </div>
       </div>

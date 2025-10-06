@@ -14,6 +14,7 @@ export default function Products() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+
   useEffect(() => {
     // Get URL parameters for initial filtering
     const urlParams = new URLSearchParams(window.location.search);
@@ -258,6 +259,7 @@ export default function Products() {
                     key={product.id} 
                     product={product}
                     showCompare={true}
+
                   />
                 ))}
               </div>
@@ -267,6 +269,7 @@ export default function Products() {
           </div>
         </div>
       </div>
+
     </div>
   );
 }

@@ -486,7 +486,7 @@ export const filterOptions = {
   brands: [
     'HP', 'Dell', 'Lenovo', 'Acer', 'ASUS', 'Samsung', 'Kingston', 'Crucial', 'Corsair', 'Logitech'
   ],
-  processors: [
+  processoRs:[
     'Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Intel Celeron', 'AMD Ryzen 3', 'AMD Ryzen 5', 'AMD Ryzen 7'
   ],
   ram: ['4GB', '8GB', '16GB', '32GB'],
@@ -495,10 +495,10 @@ export const filterOptions = {
   generation: ['8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen', 'Latest'],
   condition: ['Excellent', 'Very Good', 'Good', 'Fair', 'New'],
   priceRanges: [
-    { label: 'Under ₹20,000', min: 0, max: 20000 },
-    { label: '₹20,000 - ₹40,000', min: 20000, max: 40000 },
-    { label: '₹40,000 - ₹60,000', min: 40000, max: 60000 },
-    { label: '₹60,000 - ₹80,000', min: 60000, max: 80000 },
-    { label: 'Above ₹80,000', min: 80000, max: Infinity }
+    { label: 'Under Rs:20,000', min: 0, max: 20000 },
+    { label: 'Rs:20,000 - Rs:40,000', min: 20000, max: 40000 },
+    { label: 'Rs:40,000 - Rs:60,000', min: 40000, max: 60000 },
+    { label: 'Rs:60,000 - Rs:80,000', min: 60000, max: 80000 },
+    { label: 'Above Rs:80,000', min: 80000, max: Infinity }
   ]
 };
