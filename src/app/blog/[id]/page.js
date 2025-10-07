@@ -8,10 +8,9 @@ import BlogCard from '../../../components/BlogCard';
 
 async function getBlog(slug) {
   try {
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://your-domain.com' 
-      : 'http://localhost:3000';
-    
+    // Use relative path in production so the server calls its own API endpoint.
+    const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+
     const res = await fetch(`${baseUrl}/api/blogs/${slug}`, {
       cache: 'no-store'
     });
@@ -30,10 +29,8 @@ async function getBlog(slug) {
 
 async function getRelatedBlogs(currentBlogId, tags) {
   try {
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://your-domain.com' 
-      : 'http://localhost:3000';
-    
+    const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+
     const res = await fetch(`${baseUrl}/api/blogs`, {
       cache: 'no-store'
     });

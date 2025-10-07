@@ -4,12 +4,14 @@ import BlogCard from '../../components/BlogCard';
 
 async function getBlogs() {
   try {
-    const baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://your-domain.com' 
-      : 'http://localhost:3000';
-    
+    // In production use a relative API path so the server calls its own API endpoint.
+    // Using a hard-coded domain like "https://your-domain.com" can return the
+    // site's HTML (not JSON) if the domain isn't the API origin. For external
+    // APIs set NEXT_PUBLIC_BASE_URL or similar.
+    const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+
     console.log('Fetching blogs from:', `${baseUrl}/api/blogs`);
-    
+
     const res = await fetch(`${baseUrl}/api/blogs`, {
       cache: 'no-store' // Always get fresh data
     });
