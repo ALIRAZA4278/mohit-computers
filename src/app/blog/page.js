@@ -45,18 +45,17 @@ export default async function Blog() {
           <div className="text-center">
             <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
               <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
-+              From the Lab
+Our blogs
             </div>
 +
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
+            {/* <h1 className="text-4xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
 +
               Insights & Reviews <span className="text-teal-600">for Smart Shoppers</span>
 +
-            </h1>
+            </h1> */}
 +
             <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
-+
-              Expert guides, honest reviews, and practical tips to help you pick the right laptop, desktop, or accessory with confidence.
+          Expert guides, honest reviews, and practical tips to help you pick the right laptop, desktop, or accessory with confidence.
 +
             </p>
             <div className="flex justify-center">
