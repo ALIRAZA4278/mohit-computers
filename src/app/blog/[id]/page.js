@@ -8,10 +8,18 @@ import BlogCard from '../../../components/BlogCard';
 
 async function getBlog(slug) {
   try {
-    // Use relative path in production so the server calls its own API endpoint.
-    const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+    const getBaseUrl = () => {
+      if (process.env.NODE_ENV === 'development') return 'http://localhost:3000';
+      if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+      if (process.env.NEXT_PUBLIC_BASE_URL) return process.env.NEXT_PUBLIC_BASE_URL;
+      console.warn('No production base URL found (VERCEL_URL or NEXT_PUBLIC_BASE_URL). Falling back to http://localhost:3000');
+      return 'http://localhost:3000';
+    };
 
-    const res = await fetch(`${baseUrl}/api/blogs/${slug}`, {
+    const baseUrl = getBaseUrl();
+    const apiUrl = new URL(`/api/blogs/${slug}`, baseUrl).toString();
+
+    const res = await fetch(apiUrl, {
       cache: 'no-store'
     });
     
@@ -29,9 +37,18 @@ async function getBlog(slug) {
 
 async function getRelatedBlogs(currentBlogId, tags) {
   try {
-    const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+    const getBaseUrl = () => {
+      if (process.env.NODE_ENV === 'development') return 'http://localhost:3000';
+      if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+      if (process.env.NEXT_PUBLIC_BASE_URL) return process.env.NEXT_PUBLIC_BASE_URL;
+      console.warn('No production base URL found (VERCEL_URL or NEXT_PUBLIC_BASE_URL). Falling back to http://localhost:3000');
+      return 'http://localhost:3000';
+    };
 
-    const res = await fetch(`${baseUrl}/api/blogs`, {
+    const baseUrl = getBaseUrl();
+    const apiUrl = new URL('/api/blogs', baseUrl).toString();
+
+    const res = await fetch(apiUrl, {
       cache: 'no-store'
     });
     

@@ -4,15 +4,22 @@ import BlogCard from '../../components/BlogCard';
 
 async function getBlogs() {
   try {
-    // In production use a relative API path so the server calls its own API endpoint.
-    // Using a hard-coded domain like "https://your-domain.com" can return the
-    // site's HTML (not JSON) if the domain isn't the API origin. For external
-    // APIs set NEXT_PUBLIC_BASE_URL or similar.
-    const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000';
+    // Build an absolute base URL for server-side fetches.
+    const getBaseUrl = () => {
+      if (process.env.NODE_ENV === 'development') return 'http://localhost:3000';
+      if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+      if (process.env.NEXT_PUBLIC_BASE_URL) return process.env.NEXT_PUBLIC_BASE_URL;
+      // Fallback to localhost to avoid invalid URL errors. In production set VERCEL_URL or NEXT_PUBLIC_BASE_URL.
+      console.warn('No production base URL found (VERCEL_URL or NEXT_PUBLIC_BASE_URL). Falling back to http://localhost:3000');
+      return 'http://localhost:3000';
+    };
 
-    console.log('Fetching blogs from:', `${baseUrl}/api/blogs`);
+    const baseUrl = getBaseUrl();
+    const apiUrl = new URL('/api/blogs', baseUrl).toString();
 
-    const res = await fetch(`${baseUrl}/api/blogs`, {
+    console.log('Fetching blogs from:', apiUrl);
+
+    const res = await fetch(apiUrl, {
       cache: 'no-store' // Always get fresh data
     });
     
