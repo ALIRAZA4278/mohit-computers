@@ -6,8 +6,11 @@ import ProductCard from '../../components/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar';
 import { products } from '../../lib/data';
 
+// Add safety check for products
+const safeProducts = products || [];
+
 export default function Products() {
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const [filteredProducts, setFilteredProducts] = useState(safeProducts);
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState('name');
   const [viewMode, setViewMode] = useState('grid');
@@ -31,7 +34,12 @@ export default function Products() {
   }, []);
 
   useEffect(() => {
-    let filtered = [...products];
+    if (!safeProducts || !Array.isArray(safeProducts)) {
+      setFilteredProducts([]);
+      return;
+    }
+
+    let filtered = [...safeProducts];
 
     // Apply category filter
     if (filters.category && filters.category.length > 0) {
@@ -242,7 +250,7 @@ export default function Products() {
             </div>
 
             {/* Products Grid/List */}
-            {filteredProducts.length === 0 ? (
+            {!filteredProducts || filteredProducts.length === 0 ? (
               <div className="text-center py-12">
                 <h3 className="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
                 <p className="text-gray-500">Try adjusting your filters or search criteria</p>
@@ -254,14 +262,22 @@ export default function Products() {
                   : 'space-y-6'
                 }
               `}>
-                {filteredProducts.map((product) => (
-                  <ProductCard 
-                    key={product.id} 
-                    product={product}
-                    showCompare={true}
-
-                  />
-                ))}
+                {filteredProducts && filteredProducts.length > 0 ? (
+                  filteredProducts.map((product) => (
+                    <ProductCard 
+                      key={product.id} 
+                      product={product}
+                      showCompare={true}
+                    />
+                  ))
+                ) : (
+                  <div className="col-span-full text-center py-12">
+                    <div className="text-gray-500 text-lg">
+                      {safeProducts && safeProducts.length === 0 ? 'No products available' : 'No products match your filters'}
+                    </div>
+                    <p className="text-gray-400 mt-2">Try adjusting your search criteria</p>
+                  </div>
+                )}
               </div>
             )}
 

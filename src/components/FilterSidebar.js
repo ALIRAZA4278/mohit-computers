@@ -40,7 +40,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
     <div className="mb-6">
       <h4 className="font-semibold text-gray-800 mb-3">{title}</h4>
       <div className="space-y-2 max-h-48 overflow-y-auto">
-        {options.map((option) => (
+        {options && options.length > 0 ? options.map((option) => (
           <label key={option} className="flex items-center">
             <input
               type="checkbox"
@@ -50,7 +50,9 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
             />
             <span className="text-sm text-gray-700">{option}</span>
           </label>
-        ))}
+        )) : (
+          <p className="text-gray-500 text-sm">No options available</p>
+        )}
       </div>
     </div>
   );

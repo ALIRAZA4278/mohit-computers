@@ -7,163 +7,210 @@ export default function Corporate() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-4xl lg:text-6xl font-bold mb-6">
-                Corporate Solutions
-                <span className="text-yellow-400"> That Scale</span>
-              </h1>
-              <p className="text-xl mb-8 text-blue-100">
-                Equip your business with quality refurbished laptops and technology solutions. 
-                Trusted by 500+ companies across India for bulk orders and enterprise needs.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link 
-                  href="#quote" 
-                  className="bg-yellow-400 text-black px-8 py-4 rounded-lg font-semibold hover:bg-yellow-500 transition-colors flex items-center justify-center"
-                >
-                  Get a Quote
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-                <Link 
-                  href="#solutions" 
-                  className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-colors flex items-center justify-center"
-                >
-                  View Solutions
-                </Link>
-              </div>
+      <section className="bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+        <div className="container mx-auto px-4 py-20 relative">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+              Corporate Solutions
             </div>
-            <div className="relative">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
-                <Image
-                  src="/next.png" // Placeholder
-                  alt="Corporate Solutions"
-                  width={500}
-                  height={400}
-                  className="w-full h-auto"
-                />
+            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Enterprise Solutions
+              <span className="text-blue-600 block">That Scale</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
+              Equip your business with quality refurbished laptops and technology solutions. 
+              Trusted by 500+ companies worldwide for bulk orders and enterprise needs.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Link 
+                href="#quote" 
+                className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+              >
+                Get a Quote
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+              <Link 
+                href="#solutions" 
+                className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-colors inline-flex items-center"
+              >
+                View Solutions
+              </Link>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-24 h-1 bg-blue-600 rounded-full"></div>
+            </div>
+          </div>
+
+          {/* Stats */}
+         
+        </div>
+      </section>
+
+      {/* Why Choose Corporate */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Why Choose Mohit Computers for Corporate?</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              We understand the unique challenges of corporate technology procurement and offer tailored solutions
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors duration-300">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-blue-600" />
               </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Bulk Pricing</h3>
+              <p className="text-gray-600">
+                Special discounts for bulk orders. The more you buy, the more you save.
+              </p>
+            </div>
+
+            <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors duration-300">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Quality Assured</h3>
+              <p className="text-gray-600">
+                All laptops undergo rigorous testing and come with warranty coverage.
+              </p>
+            </div>
+
+            <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors duration-300">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Truck className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Fast Delivery</h3>
+              <p className="text-gray-600">
+                Quick delivery across Pakistan with secure packaging and tracking.
+              </p>
+            </div>
+
+            <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors duration-300">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <HeadphonesIcon className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Dedicated Support</h3>
+              <p className="text-gray-600">
+                Dedicated account manager and 24/7 technical support for corporates.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-    
-
- 
-
-
+     
       {/* Get Quote Form */}
-      <section id="quote" className="py-16 bg-white text-black">
+      <section id="quote" className="py-20 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl lg:text-4xl font-bold mb-4">Get a Custom Quote</h2>
-              <p className="text-xl text-black">
+              <p className="text-xl text-blue-100">
                 Tell us about your requirements and we&rsquo;ll create a tailored solution for your business
               </p>
+              <div className="w-24 h-1 bg-white/30 rounded-full mx-auto mt-6"></div>
             </div>
 
-            <form className="bg-white rounded-lg p-8 text-gray-800">
+            <form className="bg-white rounded-2xl shadow-2xl p-8 text-gray-800">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Name *
+                    Full Name
                   </label>
                   <input
                     type="text"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Your Company Name"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    placeholder="Name"
                   />
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Contact Person *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Your Name"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email *
+                    Email
                   </label>
                   <input
                     type="email"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="your@email.com"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    placeholder="Email"
                   />
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone *
+                    Phone
                   </label>
                   <input
                     type="tel"
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="+92 336 8900349"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    placeholder="Phone"
                   />
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Number of Laptops Required *
+                    Whatsapp Number
                   </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>5-10</option>
-                    <option>11-25</option>
-                    <option>26-50</option>
-                    <option>51-100</option>
-                    <option>100+</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Budget Range
-                  </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Under Rs:2 Lakhs</option>
-                    <option>Rs:2-5 Lakhs</option>
-                    <option>Rs:5-10 Lakhs</option>
-                    <option>Rs:10-25 Lakhs</option>
-                    <option>Above Rs:25 Lakhs</option>
-                  </select>
+                  <input
+                    type="tel"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    placeholder=""
+                  />
                 </div>
               </div>
               
               <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Specific Requirements
+                  Message
                 </label>
                 <textarea
                   rows="4"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Tell us about your specific requirements, preferred configurations, timeline, etc."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  placeholder="Message"
                 ></textarea>
+              </div>
+
+              <div className="mt-6">
+                <label className="block text-sm font-medium text-gray-700 mb-4">
+                  Interested in a
+                </label>
+                <div className="space-y-3">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Laptops</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Chromebooks</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+                    />
+                    <span className="ml-2 text-sm text-gray-700">Workstation</span>
+                  </label>
+                </div>
               </div>
               
               <div className="mt-8 text-center">
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                  className="w-full bg-teal-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-600 transition-colors shadow-lg hover:shadow-xl"
                 >
-                  Submit Quote Request
+                  Submit
                 </button>
-                <p className="text-sm text-gray-500 mt-4">
-                  We&rsquo;ll get back to you within 24 hours with a detailed quote
-                </p>
               </div>
             </form>
           </div>

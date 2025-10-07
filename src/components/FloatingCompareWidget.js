@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BarChart3, X, Eye } from 'lucide-react';
+import { GitCompareArrows, X, Eye } from 'lucide-react';
 import { useCompare } from '../context/CompareContext';
 import CompareModal from './CompareModal';
 
@@ -28,7 +28,7 @@ const FloatingCompareWidget = () => {
               className="flex items-center space-x-2 text-teal-600 hover:text-teal-700 transition-colors"
             >
               <div className="relative">
-                <BarChart3 className="w-5 h-5" />
+                <GitCompareArrows className="w-5 h-5" />
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
                   {compareItems.length}
                 </span>
@@ -61,7 +61,7 @@ const FloatingCompareWidget = () => {
                           {product.name}
                         </p>
                         <p className="text-xs text-gray-500">
-                          ₹{product.price.toLocaleString()}
+                          Rs:{product.price.toLocaleString()}
                         </p>
                       </div>
                     </div>

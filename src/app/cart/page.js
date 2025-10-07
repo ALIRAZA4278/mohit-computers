@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Heart, BarChart3 } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Heart, GitCompareArrows } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCompare } from '../../context/CompareContext';
@@ -50,48 +50,82 @@ export default function Cart() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <ShoppingBag className="w-24 h-24 text-gray-300 mx-auto mb-6" />
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">Your Cart is Empty</h1>
-            <p className="text-gray-600 mb-8">
-              Looks like you haven&rsquo;t added any items to your cart yet. 
-              Start shopping to fill it up!
-            </p>
-            <Link 
-              href="/products"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center"
-            >
-              Continue Shopping
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+        {/* Hero Section */}
+        <section className="py-10 pb-0">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
+                <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
+                Shopping Cart
+              </div>
+              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Your Cart</h1>
+              <div className="w-24 h-1 bg-teal-600 rounded-full mx-auto"></div>
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* Empty Cart */}
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
+                <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                  <ShoppingBag className="w-16 h-16 text-gray-400" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Cart is Empty</h2>
+                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                  Looks like you haven&rsquo;t added any items to your cart yet. 
+                  Explore our amazing collection of laptops and accessories!
+                </p>
+                <Link 
+                  href="/products"
+                  className="bg-teal-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+                >
+                  Start Shopping
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Shopping Cart</h1>
-          <p className="text-gray-600">
-            {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your cart
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      {/* Hero Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
+              Shopping Cart
+            </div>
+            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Your Cart</h1>
+            <p className="text-lg text-gray-600 mb-6">
+              {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} ready for checkout
+            </p>
+            <div className="w-24 h-1 bg-teal-600 rounded-full mx-auto"></div>
+          </div>
         </div>
+      </section>
+
+      {/* Cart Content */}
+      <section className="pb-20">
+        <div className="container mx-auto px-4">
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="p-6 border-b border-gray-200">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+              <div className="p-6 border-b border-gray-100 bg-gray-50">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-xl font-semibold text-gray-800">Cart Items</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Cart Items</h2>
                   <button
                     onClick={clearCart}
-                    className="text-red-600 hover:text-red-800 text-sm font-medium"
+                    className="text-red-600 hover:text-red-700 text-sm font-semibold px-4 py-2 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
                   >
                     Clear All
                   </button>
@@ -183,7 +217,7 @@ export default function Cart() {
                             }`}
                             title={isInCompare(item.id) ? 'Remove from Compare' : 'Add to Compare'}
                           >
-                            <BarChart3 className="w-4 h-4" />
+                            <GitCompareArrows className="w-4 h-4" />
                           </button>
                         )}
 
@@ -240,7 +274,7 @@ export default function Cart() {
                     }}
                     className="flex-1 bg-teal-50 text-teal-600 hover:bg-teal-100 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center"
                   >
-                    <BarChart3 className="w-4 h-4 mr-2" />
+                    <GitCompareArrows className="w-4 h-4 mr-2" />
                     Compare Laptops
                   </button>
                 </div>
@@ -266,8 +300,8 @@ export default function Cart() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-              <h2 className="text-xl font-semibold text-gray-800 mb-6">Order Summary</h2>
+            <div className="bg-white rounded-2xl shadow-xl p-8 sticky top-4 border border-gray-100">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Order Summary</h2>
               
               <div className="space-y-4">
                 <div className="flex justify-between">
@@ -296,10 +330,10 @@ export default function Cart() {
               <button
                 onClick={handleCheckout}
                 disabled={isCheckingOut}
-                className={`w-full mt-6 py-3 rounded-lg font-semibold transition-colors ${
+                className={`w-full mt-6 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg hover:shadow-xl ${
                   isCheckingOut
                     ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-teal-600 text-white hover:bg-teal-700'
                 }`}
               >
                 {isCheckingOut ? 'Processing...' : 'Proceed to Checkout'}
@@ -341,7 +375,8 @@ export default function Cart() {
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

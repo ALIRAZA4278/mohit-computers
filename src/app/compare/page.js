@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { BarChart3, ArrowRight } from 'lucide-react';
+import { GitCompareArrows, ArrowRight } from 'lucide-react';
 import { useCompare } from '../../context/CompareContext';
 import CompareTable from '../../components/CompareTable';
 
@@ -11,38 +11,71 @@ export default function Compare() {
 
   if (compareItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <BarChart3 className="w-24 h-24 text-gray-300 mx-auto mb-6" />
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">No Products to Compare</h1>
-            <p className="text-gray-600 mb-8">
-              Add products to your comparison list to see their features side by side. 
-              You can compare up to 4 products at once.
-            </p>
-            <Link 
-              href="/products"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center"
-            >
-              Browse Products
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+        {/* Hero Section */}
+        <section className="py-10 pb-0">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
+                <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
+                Product Comparison
+              </div>
+              <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Compare Products</h1>
+              <div className="w-24 h-1 bg-teal-600 rounded-full mx-auto"></div>
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* Empty Compare */}
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
+                <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                  <GitCompareArrows className="w-16 h-16 text-gray-400" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">No Products to Compare</h2>
+                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                  Add products to your comparison list to see their features side by side. 
+                  You can compare up to 4 laptops at once to find the perfect match!
+                </p>
+                <Link 
+                  href="/products"
+                  className="bg-teal-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+                >
+                  Browse Laptops
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Product Comparison</h1>
-          <p className="text-gray-600">
-            Compare {compareItems.length} {compareItems.length === 1 ? 'product' : 'products'} side by side
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+      {/* Hero Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
+              Product Comparison
+            </div>
+            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Compare Products</h1>
+            <p className="text-lg text-gray-600 mb-6">
+              Compare {compareItems.length} {compareItems.length === 1 ? 'product' : 'products'} side by side
+            </p>
+            <div className="w-24 h-1 bg-teal-600 rounded-full mx-auto"></div>
+          </div>
         </div>
+      </section>
+
+      {/* Compare Content */}
+      <section className="pb-20">
+        <div className="container mx-auto px-4">
 
         {/* Compare Table */}
         <CompareTable />
@@ -51,13 +84,14 @@ export default function Compare() {
         <div className="mt-12 text-center">
           <Link 
             href="/products"
-            className="text-blue-600 hover:text-blue-800 font-medium flex items-center justify-center"
+            className="bg-teal-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
           >
             Browse More Products
             <ArrowRight className="ml-2 w-5 h-5" />
           </Link>
         </div>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

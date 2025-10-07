@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, Phone, Mail, Clock, MessageCircle, Send } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
 
 export default function Contact() {
   return (
@@ -25,89 +25,50 @@ export default function Contact() {
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Send us a Message</h2>
               
               <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      First Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Your first name"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Your last name"
-                    />
-                  </div>
-                </div>
-                
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Name"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                  <input
+                    type="tel"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Phone"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                   <input
                     type="email"
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="your@email.com"
+                    placeholder="Email"
                   />
                 </div>
-                
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="+92 336 8900349"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject *
-                  </label>
-                  <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>General Inquiry</option>
-                    <option>Product Support</option>
-                    <option>Bulk Order</option>
-                    <option>Corporate Solutions</option>
-                    <option>Technical Support</option>
-                    <option>Warranty Claim</option>
-                    <option>Feedback/Suggestion</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
                   <textarea
                     rows="5"
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Tell us how we can help you..."
+                    placeholder="Message"
                   ></textarea>
                 </div>
-                
+
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center"
+                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
-                  Send Message
-                  <Send className="ml-2 w-5 h-5" />
+                  Submit
                 </button>
               </form>
             </div>
@@ -128,9 +89,7 @@ export default function Contact() {
                   <div>
                     <h4 className="text-lg font-semibold text-gray-800 mb-1">Visit Our Store</h4>
                     <p className="text-gray-600">
-                      123 Tech Street, Computer Market<br />
-                      Nehru Place, New Delhi - 110019<br />
-                      India
+                      Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi
                     </p>
                   </div>
                 </div>
@@ -143,9 +102,8 @@ export default function Contact() {
                   <div>
                     <h4 className="text-lg font-semibold text-gray-800 mb-1">Call Us</h4>
                     <p className="text-gray-600">
-                      Sales: +92 336 8900349<br />
-                      Support: +91-9876543211<br />
-                      Corporate: +91-9876543212
+                      0336-8900349<br />
+                      021-3270070-6
                     </p>
                   </div>
                 </div>
@@ -158,9 +116,7 @@ export default function Contact() {
                   <div>
                     <h4 className="text-lg font-semibold text-gray-800 mb-1">Email Us</h4>
                     <p className="text-gray-600">
-                      General: info@computerzone.com<br />
-                      Sales: sales@computerzone.com<br />
-                      Support: support@computerzone.com
+                      info@mohitcomputers.pk
                     </p>
                   </div>
                 </div>
@@ -173,9 +129,8 @@ export default function Contact() {
                   <div>
                     <h4 className="text-lg font-semibold text-gray-800 mb-1">Business Hours</h4>
                     <p className="text-gray-600">
-                      Monday - Saturday: 10:00 AM - 8:00 PM<br />
-                      Sunday: 11:00 AM - 6:00 PM<br />
-                      <span className="text-sm text-gray-500">Support available 24/7 online</span>
+                      Monday to Thursday &amp; Saturday: 12:00 PM – 9:00 PM<br />
+                      Friday: 2:00 PM – 9:00 PM
                     </p>
                   </div>
                 </div>
@@ -216,7 +171,7 @@ export default function Contact() {
               <div className="text-center text-gray-500">
                 <MapPin className="w-12 h-12 mx-auto mb-2" />
                 <p>Interactive Map Coming Soon</p>
-                <p className="text-sm">123 Tech Street, Nehru Place, New Delhi</p>
+                <p className="text-sm">Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi</p>
               </div>
             </div>
           </div>
@@ -234,13 +189,13 @@ export default function Contact() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a 
-              href="tel:+919876543210"
+              href="tel:+923368900349"
               className="bg-yellow-400 text-black px-8 py-4 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
             >
               Call Now: +92 336 8900349
             </a>
             <a 
-              href="mailto:info@computerzone.com"
+              href="mailto:info@mohitcomputers.pk"
               className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-colors"
             >
               Email Us

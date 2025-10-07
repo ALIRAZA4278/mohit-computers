@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingCart, Heart, BarChart3, Menu, X, User, Phone, Mail } from 'lucide-react';
+import { Search, ShoppingCart, Heart, GitCompareArrows, Menu, X, User, Phone, Mail } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCompare } from '../context/CompareContext';
@@ -97,8 +97,8 @@ const Navbar = () => {
               </form>
             </div>
 
-            {/* Cart Info */}
-            <div className="flex items-center space-x-1 sm:space-x-2">
+            {/* Cart Info - Hidden on mobile */}
+            <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
               <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
                 <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
                 {wishlistItems.length > 0 && (
@@ -108,7 +108,7 @@ const Navbar = () => {
                 )}
               </Link>
               <Link href="/compare" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
-                <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" />
+                <GitCompareArrows className="w-5 h-5 sm:w-6 sm:h-6" />
                 {compareItems.length > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium">
                     {compareItems.length}
@@ -274,13 +274,52 @@ const Navbar = () => {
             <Link href="/blog" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">Blog</Link>
             <Link href="/corporate" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">Corporate</Link>
             <Link href="/contact" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">Contact</Link>
+            
+            {/* Mobile Action Buttons */}
             <div className="pt-3 border-t border-gray-200 mt-3">
-              <Link href="/cart" className="flex items-center justify-between py-2 text-gray-700 hover:text-teal-600 font-medium">
-                <span>Cart</span>
-                <span className="text-sm text-gray-600">{formatCurrency(getCartTotal())}</span>
-              </Link>
-              <Link href="/wishlist" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">Wishlist ({wishlistItems.length})</Link>
-              <Link href="/compare" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">Compare ({compareItems.length})</Link>
+              <div className="grid grid-cols-3 gap-3 mb-3">
+                <Link href="/wishlist" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
+                  <div className="relative">
+                    <Heart className="w-5 h-5 mb-1" />
+                    {wishlistItems.length > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
+                        {wishlistItems.length}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-xs font-medium">Wishlist</span>
+                </Link>
+                
+                <Link href="/compare" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
+                  <div className="relative">
+                    <GitCompareArrows className="w-5 h-5 mb-1" />
+                    {compareItems.length > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
+                        {compareItems.length}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-xs font-medium">Compare</span>
+                </Link>
+                
+                <Link href="/cart" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
+                  <div className="relative">
+                    <ShoppingCart className="w-5 h-5 mb-1" />
+                    {getCartItemsCount() > 0 && (
+                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
+                        {getCartItemsCount()}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-xs font-medium">Cart</span>
+                </Link>
+              </div>
+              
+              <div className="text-center py-2 bg-teal-50 rounded-lg">
+                <span className="text-sm font-medium text-teal-700">
+                  Cart Total: {formatCurrency(getCartTotal())}
+                </span>
+              </div>
             </div>
           </div>
         </div>

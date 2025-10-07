@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { X, ShoppingCart, CheckCircle, XCircle, Star } from 'lucide-react';
+import { X, ShoppingCart, CheckCircle, XCircle, Star, Link } from 'lucide-react';
 import { useCompare } from '../context/CompareContext';
 import { useCart } from '../context/CartContext';
 
@@ -458,12 +458,11 @@ const CompareTable = () => {
             >
               Clear Comparison
             </button>
-            <a
-              href="/products?category=used-laptop"
+            <Link href="/products?category=used-laptop"
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Browse More Laptops
-            </a>
+            </Link>
           </div>
         </div>
       </div>

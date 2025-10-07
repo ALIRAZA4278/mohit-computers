@@ -93,11 +93,11 @@ const CompareModal = ({ isOpen, onClose }) => {
         {/* Price */}
         <div className="mb-3">
           <div className="text-lg font-bold text-gray-900">
-            ₹{product.price.toLocaleString()}
+            Rs:{product.price.toLocaleString()}
           </div>
           {product.originalPrice && (
             <div className="text-xs text-gray-500 line-through">
-              ₹{product.originalPrice.toLocaleString()}
+              Rs:{product.originalPrice.toLocaleString()}
             </div>
           )}
         </div>
