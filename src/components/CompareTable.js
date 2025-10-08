@@ -623,11 +623,26 @@ const CompareTable = () => {
       {/* Bottom Summary */}
       <div className="bg-gray-50 p-4 sm:p-6 border-t border-gray-200">
         <div className="text-center">
-          <p className="text-gray-600 mb-4 text-sm sm:text-base">
+          {/* Mobile Summary */}
+          <div className="block sm:hidden mb-4 space-y-2">
+            <p className="text-gray-600 text-xs">
+              📊 Comparison completed for {laptopItems.length} laptop{laptopItems.length > 1 ? 's' : ''}
+            </p>
+            <p className="text-gray-600 text-xs">
+              🏆 Best values highlighted in green
+            </p>
+            <p className="text-gray-600 text-xs">
+              💡 <strong>Need help choosing?</strong> <a href="/contact" className="text-blue-600 hover:underline">Contact our experts</a>
+            </p>
+          </div>
+          
+          {/* Desktop Summary */}
+          <p className="hidden sm:block text-gray-600 mb-4 text-sm sm:text-base">
             📊 Comparison completed for {laptopItems.length} laptop{laptopItems.length > 1 ? 's' : ''} • 
             🏆 Best values highlighted in green • 
             💡 <strong>Need help choosing?</strong> <a href="/contact" className="text-blue-600 hover:underline">Contact our experts</a>
           </p>
+          
           <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
             <button
               onClick={clearCompare}
