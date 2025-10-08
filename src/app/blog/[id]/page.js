@@ -55,10 +55,10 @@ async function getRelatedBlogs(currentBlogId, tags) {
   try {
     // For server-side rendering, bypass Vercel protection by calling database directly
     if (typeof window === 'undefined') {
-      const { connectDB } = await import('../../../lib/mongodb');
+      const connectToDatabase = (await import('../../../lib/mongodb')).default;
       const Blog = await import('../../../models/Blog');
       
-      await connectDB();
+      await connectToDatabase();
       const blogs = await Blog.default.find({ 
         _id: { $ne: currentBlogId },
         status: 'published',
