@@ -4,26 +4,23 @@ import BlogCard from '../../components/BlogCard';
 
 async function getBlogs() {
   try {
-    // For server-side rendering, bypass Vercel protection by calling database directly
+    // For server-side rendering, use Supabase directly
     if (typeof window === 'undefined') {
-      // We're on the server, call the database directly
-      const connectToDatabase = (await import('../../lib/mongodb')).default;
-      const Blog = await import('../../models/Blog');
+      // Server-side: Use Supabase directly
+      const { blogsAPI } = await import('../../lib/supabase-db');
       
-      await connectToDatabase();
-      const blogs = await Blog.default.find({ status: 'published' })
-        .sort({ createdAt: -1 })
-        .lean();
+      const { data: blogs, error } = await blogsAPI.getAll(50);
       
-      return blogs.map(blog => ({
-        ...blog,
-        _id: blog._id.toString(),
-        createdAt: blog.createdAt.toISOString(),
-        updatedAt: blog.updatedAt?.toISOString() || blog.createdAt.toISOString()
-      }));
+      if (error) {
+        console.error('Server-side Supabase error:', error);
+        return [];
+      }
+      
+      console.log('Server-side fetched blogs:', blogs?.length || 0, 'blogs');
+      return blogs || [];
     }
     
-    // Client-side fetch - use relative URL to work on any domain
+    // Client-side fetch - use API route
     const apiUrl = '/api/blogs';
     console.log('Fetching blogs from:', apiUrl);
 

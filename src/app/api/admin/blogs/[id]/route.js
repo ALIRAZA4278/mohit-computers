@@ -1,133 +1,107 @@
-import connectToDatabase from '../../../../../lib/mongodb';
-import Blog from '../../../../../models/Blog';
 import { NextResponse } from 'next/server';
-import { unlink } from 'fs/promises';
-import path from 'path';
+import { blogsAPI, supabase } from '@/lib/supabase-db';
 
-// Helper function to delete image file
-async function deleteImageFile(imageUrl) {
-  try {
-    if (!imageUrl) return;
-    
-    const filename = imageUrl.split('/').pop();
-    if (filename) {
-      const filePath = path.join(process.cwd(), 'public', 'uploads', 'blogs', filename);
-      await unlink(filePath);
-      console.log('File deleted successfully:', filePath);
-    }
-  } catch (error) {
-    console.error('Error deleting file:', error);
-  }
-}
-
-// GET - Fetch single blog
+// GET - Fetch single blog (Admin)
 export async function GET(request, { params }) {
   try {
-    await connectToDatabase();
-    const blog = await Blog.findById(params.id);
+    const { data: blog, error } = await supabase
+      .from('blogs')
+      .select('*')
+      .eq('id', params.id)
+      .single()
     
-    if (!blog) {
+    if (error || !blog) {
       return NextResponse.json(
         { success: false, error: 'Blog not found' },
         { status: 404 }
-      );
+      )
     }
 
     return NextResponse.json({ 
       success: true, 
       blog 
-    });
+    })
   } catch (error) {
-    console.error('Error fetching blog:', error);
+    console.error('Error fetching blog:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to fetch blog' },
       { status: 500 }
-    );
+    )
   }
 }
 
 // PUT - Update blog
 export async function PUT(request, { params }) {
   try {
-    const body = await request.json();
-    await connectToDatabase();
+    const body = await request.json()
 
-    const blog = await Blog.findByIdAndUpdate(
-      params.id,
-      {
-        title: body.title,
-        content: body.content,
-        excerpt: body.excerpt,
-        category: body.category || 'Tech Guides',
-        tags: body.tags || [],
-        status: body.status || 'draft',
-        featured: body.featured || false,
-        featuredImage: body.featuredImage || '',
-        images: body.images || [],
-        updatedAt: Date.now()
-      },
-      { new: true }
-    );
+    // Prepare blog data for Supabase
+    const blogData = {
+      title: body.title,
+      content: body.content,
+      excerpt: body.excerpt,
+      category: body.category || 'Tech Guides',
+      tags: body.tags || [],
+      status: body.status || 'draft',
+      is_featured: body.featured || false,
+      featured_image: body.featuredImage || '',
+      gallery_images: body.images || [],
+      reading_time: Math.ceil((body.content || '').split(' ').length / 200),
+      meta_title: body.title,
+      meta_description: body.excerpt || body.title
+    }
 
-    if (!blog) {
+    // Set published_at if status changes to published
+    if (blogData.status === 'published') {
+      blogData.published_at = new Date().toISOString()
+    }
+
+    const { data: blog, error } = await blogsAPI.update(params.id, blogData)
+
+    if (error) {
+      console.error('Error updating blog:', error)
       return NextResponse.json(
-        { success: false, error: 'Blog not found' },
-        { status: 404 }
-      );
+        { success: false, error: 'Failed to update blog' },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({ 
       success: true, 
       blog,
-      message: 'Blog updated successfully' 
-    });
+      message: 'Blog updated successfully in Supabase!' 
+    })
   } catch (error) {
-    console.error('Error updating blog:', error);
+    console.error('Error updating blog:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to update blog' },
       { status: 500 }
-    );
+    )
   }
 }
 
 // DELETE - Delete blog
 export async function DELETE(request, { params }) {
   try {
-    await connectToDatabase();
-    
-    // First get the blog to access its images
-    const blog = await Blog.findById(params.id);
+    const { error } = await blogsAPI.delete(params.id)
 
-    if (!blog) {
+    if (error) {
+      console.error('Error deleting blog:', error)
       return NextResponse.json(
-        { success: false, error: 'Blog not found' },
-        { status: 404 }
-      );
+        { success: false, error: 'Failed to delete blog' },
+        { status: 500 }
+      )
     }
-
-    // Delete associated image files
-    if (blog.featuredImage) {
-      await deleteImageFile(blog.featuredImage);
-    }
-    
-    if (blog.images && blog.images.length > 0) {
-      for (const imageUrl of blog.images) {
-        await deleteImageFile(imageUrl);
-      }
-    }
-
-    // Delete the blog from database
-    await Blog.findByIdAndDelete(params.id);
 
     return NextResponse.json({ 
       success: true,
-      message: 'Blog and associated images deleted successfully' 
-    });
+      message: 'Blog deleted successfully from Supabase!' 
+    })
   } catch (error) {
-    console.error('Error deleting blog:', error);
+    console.error('Error deleting blog:', error)
     return NextResponse.json(
       { success: false, error: 'Failed to delete blog' },
       { status: 500 }
-    );
+    )
   }
 }

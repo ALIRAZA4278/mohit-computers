@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Plus, Edit, Trash2, Eye, Search, FileText } from 'lucide-react';
 import BlogEditor from './BlogEditor';
 
@@ -62,7 +63,7 @@ export default function BlogManagement() {
 
   const filteredBlogs = blogs.filter(blog =>
     blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    blog.author.toLowerCase().includes(searchTerm.toLowerCase())
+    (blog.author_name || blog.author || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (view === 'editor') {
@@ -125,7 +126,7 @@ export default function BlogManagement() {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Title
+                    Blog
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Author
@@ -143,15 +144,38 @@ export default function BlogManagement() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredBlogs.map((blog) => (
-                  <tr key={blog._id} className="hover:bg-gray-50">
+                  <tr key={blog.id || blog._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{blog.title}</p>
-                        <p className="text-sm text-gray-500">{blog.excerpt || 'No excerpt'}</p>
+                      <div className="flex items-center">
+                        {/* Featured Image Preview */}
+                        <div className="flex-shrink-0 h-12 w-12 mr-4">
+                          {(blog.featured_image || blog.featuredImage) ? (
+                            <Image
+                              src={blog.featured_image || blog.featuredImage}
+                              alt={blog.title}
+                              width={48}
+                              height={48}
+                              className="h-12 w-12 rounded-lg object-cover border-2 border-gray-200"
+                            />
+                          ) : (
+                            <div className="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center">
+                              <FileText className="h-6 w-6 text-gray-400" />
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{blog.title}</p>
+                          <p className="text-sm text-gray-500">{blog.excerpt || 'No excerpt'}</p>
+                          {(blog.gallery_images?.length || blog.images?.length) && (
+                            <p className="text-xs text-blue-600 mt-1">
+                              📸 {(blog.gallery_images?.length || blog.images?.length || 0)} gallery images
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {blog.author}
+                      {blog.author_name || blog.author || 'Admin'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 text-xs rounded-full ${
@@ -165,7 +189,7 @@ export default function BlogManagement() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(blog.createdAt).toLocaleDateString()}
+                      {new Date(blog.created_at || blog.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex justify-end space-x-2">

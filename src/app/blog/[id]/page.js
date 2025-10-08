@@ -8,31 +8,22 @@ import BlogCard from '../../../components/BlogCard';
 
 async function getBlog(slug) {
   try {
-    // For server-side rendering, bypass Vercel protection by calling database directly
+    // For server-side rendering, use Supabase directly
     if (typeof window === 'undefined') {
-      const { connectDB } = await import('../../../lib/mongodb');
-      const Blog = await import('../../../models/Blog');
+      const { blogsAPI } = await import('../../../lib/supabase-db');
       
-      await connectDB();
-      const blog = await Blog.default.findOne({ 
-        $or: [
-          { slug: slug },
-          { _id: slug }
-        ],
-        status: 'published'
-      }).lean();
+      const { data: blog, error } = await blogsAPI.getBySlug(slug);
       
-      if (!blog) return null;
+      if (error || !blog) {
+        console.error('Server-side blog fetch error:', error);
+        return null;
+      }
       
-      return {
-        ...blog,
-        _id: blog._id.toString(),
-        createdAt: blog.createdAt.toISOString(),
-        updatedAt: blog.updatedAt?.toISOString() || blog.createdAt.toISOString()
-      };
+      console.log('Server-side fetched blog:', blog.title);
+      return blog;
     }
     
-    // Client-side fetch - use relative URL to work on any domain
+    // Client-side fetch - use API route
     const apiUrl = `/api/blogs/${slug}`;
 
     const res = await fetch(apiUrl, {
@@ -53,30 +44,28 @@ async function getBlog(slug) {
 
 async function getRelatedBlogs(currentBlogId, tags) {
   try {
-    // For server-side rendering, bypass Vercel protection by calling database directly
+    // For server-side rendering, use Supabase directly
     if (typeof window === 'undefined') {
-      const connectToDatabase = (await import('../../../lib/mongodb')).default;
-      const Blog = await import('../../../models/Blog');
+      const { blogsAPI } = await import('../../../lib/supabase-db');
       
-      await connectToDatabase();
-      const blogs = await Blog.default.find({ 
-        _id: { $ne: currentBlogId },
-        status: 'published',
-        tags: { $in: tags || [] }
-      })
-      .sort({ createdAt: -1 })
-      .limit(3)
-      .lean();
+      const { data: blogs, error } = await blogsAPI.getAll(20);
       
-      return blogs.map(blog => ({
-        ...blog,
-        _id: blog._id.toString(),
-        createdAt: blog.createdAt.toISOString(),
-        updatedAt: blog.updatedAt?.toISOString() || blog.createdAt.toISOString()
-      }));
+      if (error || !blogs) {
+        console.error('Error fetching related blogs:', error);
+        return [];
+      }
+      
+      // Filter related blogs with matching tags
+      return blogs
+        .filter(blog => 
+          blog.id !== currentBlogId && 
+          blog.status === 'published' &&
+          blog.tags && tags && blog.tags.some(tag => tags.includes(tag))
+        )
+        .slice(0, 3);
     }
     
-    // Client-side fetch - use relative URL to work on any domain
+    // Client-side fetch - use API route
     const apiUrl = '/api/blogs';
 
     const res = await fetch(apiUrl, {
@@ -90,9 +79,9 @@ async function getRelatedBlogs(currentBlogId, tags) {
     const data = await res.json();
     return data.blogs
       .filter(blog => 
-        blog._id !== currentBlogId && 
+        blog.id !== currentBlogId && 
         blog.status === 'published' &&
-        blog.tags.some(tag => tags.includes(tag))
+        blog.tags && tags && blog.tags.some(tag => tags.includes(tag))
       )
       .slice(0, 3);
   } catch (error) {
@@ -162,10 +151,10 @@ export default async function BlogDetail({ params }) {
           <article className="lg:col-span-3">
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
               {/* Featured Image */}
-              {post.featuredImage && (
+              {(post.featured_image || post.featuredImage) && (
                 <div className="relative h-64 md:h-96">
                   <Image
-                    src={post.featuredImage}
+                    src={post.featured_image || post.featuredImage}
                     alt={post.title}
                     fill
                     className="object-cover"
@@ -208,11 +197,11 @@ export default async function BlogDetail({ params }) {
                 <div className="flex flex-wrap items-center gap-6 text-black mb-8 pb-6 border-b-2 border-gray-100">
                   <div className="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
                     <User className="w-4 h-4 mr-2 text-blue-600" />
-                    <span className="font-medium text-black">By {post.author}</span>
+                    <span className="font-medium text-black">By {post.author_name || post.author || 'Admin'}</span>
                   </div>
                   <div className="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
                     <Calendar className="w-4 h-4 mr-2 text-green-600" />
-                    <span className="text-black">{formatDate(post.createdAt)}</span>
+                    <span className="text-black">{formatDate(post.created_at || post.createdAt)}</span>
                   </div>
                   <div className="flex items-center bg-gray-50 px-3 py-2 rounded-lg">
                     <span className="text-black font-medium">{post.views || 0} Views</span>
@@ -270,14 +259,14 @@ export default async function BlogDetail({ params }) {
                 </div>
 
                 {/* Gallery Images */}
-                {post.images && post.images.length > 0 && (
+                {(post.gallery_images || post.images) && (post.gallery_images || post.images).length > 0 && (
                   <div className="mt-10 bg-gray-50 p-6 rounded-lg">
                     <h3 className="text-2xl font-bold text-black mb-6 flex items-center">
                       <span className="w-1 h-6 bg-blue-500 mr-3"></span>
                       Gallery
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {post.images.map((image, index) => (
+                      {(post.gallery_images || post.images).map((image, index) => (
                         <div key={index} className="relative h-64 rounded-lg overflow-hidden shadow-lg group">
                           <Image
                             src={image}

@@ -19,9 +19,9 @@ const BlogCard = ({ post, featured = false }) => {
     <div className={`bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group ${featured ? 'md:flex md:h-80' : ''}`}>
       {/* Blog Image */}
       <div className={`relative overflow-hidden ${featured ? 'md:w-1/2' : ''}`}>
-        <Link href={`/blog/${post.slug || post._id}`}>
+        <Link href={`/blog/${post.slug || post.id || post._id}`}>
           <Image
-            src={post.featuredImage || '/next.png'} // Use featuredImage from database
+            src={post.featured_image || post.featuredImage || '/next.png'} // Use featured_image from Supabase
             alt={post.title}
             width={400}
             height={250}
@@ -56,7 +56,7 @@ const BlogCard = ({ post, featured = false }) => {
 
         {/* Blog Title */}
         <h3 className={`font-bold text-black mb-3 group-hover:text-blue-600 transition-colors duration-200 ${featured ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
-          <Link href={`/blog/${post.slug || post._id}`} className="line-clamp-2">
+          <Link href={`/blog/${post.slug || post.id || post._id}`} className="line-clamp-2">
             {post.title}
           </Link>
         </h3>
@@ -69,7 +69,7 @@ const BlogCard = ({ post, featured = false }) => {
         {/* Read More Link */}
         <div className="mb-4">
           <Link 
-            href={`/blog/${post.slug || post._id}`}
+            href={`/blog/${post.slug || post.id || post._id}`}
             className="text-blue-600 hover:text-blue-800 font-semibold text-sm uppercase tracking-wide flex items-center group"
           >
             READ MORE
@@ -82,12 +82,12 @@ const BlogCard = ({ post, featured = false }) => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-1 text-blue-600" />
-              <span>{formatDate(post.createdAt)}</span>
+              <span>{formatDate(post.created_at || post.createdAt)}</span>
             </div>
-            {post.author && (
+            {(post.author_name || post.author) && (
               <div className="flex items-center">
                 <User className="w-4 h-4 mr-1 text-green-600" />
-                <span>{post.author}</span>
+                <span>{post.author_name || post.author}</span>
               </div>
             )}
           </div>

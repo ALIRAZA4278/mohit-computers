@@ -1,24 +1,6 @@
-import connectToDatabase from '../../../../../../lib/mongodb';
-import Blog from '../../../../../../models/Blog';
 import { NextResponse } from 'next/server';
-import { unlink } from 'fs/promises';
-import path from 'path';
-
-// Helper function to delete image file
-async function deleteImageFile(imageUrl) {
-  try {
-    if (!imageUrl) return;
-    
-    const filename = imageUrl.split('/').pop();
-    if (filename) {
-      const filePath = path.join(process.cwd(), 'public', 'uploads', 'blogs', filename);
-      await unlink(filePath);
-      console.log('File deleted successfully:', filePath);
-    }
-  } catch (error) {
-    console.error('Error deleting file:', error);
-  }
-}
+import { blogsAPI } from '@/lib/supabase-db';
+import { deleteImage } from '@/lib/supabase';
 
 // DELETE - Remove specific image from blog
 export async function DELETE(request, { params }) {
@@ -34,10 +16,8 @@ export async function DELETE(request, { params }) {
       );
     }
 
-    await connectToDatabase();
-
     // Find the blog
-    const blog = await Blog.findById(params.id);
+    const blog = await blogsAPI.getById(params.id);
     if (!blog) {
       return NextResponse.json(
         { success: false, error: 'Blog not found' },
@@ -45,27 +25,28 @@ export async function DELETE(request, { params }) {
       );
     }
 
-    // Delete the image file from server
-    await deleteImageFile(imageUrl);
+    // Delete the image from Supabase storage
+    try {
+      await deleteImage(imageUrl);
+    } catch (error) {
+      console.error('Error deleting image from storage:', error);
+    }
 
     // Update the blog in database
     let updateData = {};
     
     if (imageType === 'featured') {
       // Remove featured image
-      updateData.featuredImage = '';
+      updateData.featured_image = '';
     } else {
       // Remove from gallery images array
-      updateData.images = blog.images.filter(img => img !== imageUrl);
+      const currentImages = blog.images || [];
+      updateData.images = currentImages.filter(img => img !== imageUrl);
     }
 
-    updateData.updatedAt = Date.now();
+    updateData.updated_at = new Date().toISOString();
 
-    const updatedBlog = await Blog.findByIdAndUpdate(
-      params.id,
-      updateData,
-      { new: true }
-    );
+    const updatedBlog = await blogsAPI.update(params.id, updateData);
 
     return NextResponse.json({
       success: true,
