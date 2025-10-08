@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft, Upload, X } from 'lucide-react';
 import { categories, laptopBrands, resolutionOptions, touchOptions, conditionOptions } from '@/lib/data';
+import Image from 'next/image';
 
 export default function ProductEditor({ product, onSave, onCancel }) {
   const [formData, setFormData] = useState({
@@ -353,14 +354,19 @@ export default function ProductEditor({ product, onSave, onCancel }) {
             </div>
             {formData.featuredImage && (
               <div className="mt-3">
-                <img
-                  src={formData.featuredImage}
-                  alt="Featured product"
-                  className="w-32 h-32 object-cover rounded-lg border border-gray-300"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
+                <div className="w-32 h-32 relative rounded-lg border border-gray-300 overflow-hidden">
+                  <Image
+                    src={formData.featuredImage}
+                    alt="Featured product"
+                    fill
+                    sizes="128px"
+                    className="object-cover"
+                    unoptimized
+                    onError={(e) => {
+                      try { e.currentTarget.style.display = 'none'; } catch(err){}
+                    }}
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -417,15 +423,17 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 <div className="flex flex-wrap gap-3">
                   {formData.images.map((image, index) => (
                     image && (
-                      <img
-                        key={index}
-                        src={image}
-                        alt={`Product ${index + 1}`}
-                        className="w-20 h-20 object-cover rounded border border-gray-300"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
+                      <div key={index} className="w-20 h-20 relative">
+                        <Image
+                          src={image}
+                          alt={`Product ${index + 1}`}
+                          width={80}
+                          height={80}
+                          className="object-cover rounded border border-gray-300"
+                          unoptimized
+                          onError={(e) => { try { e.currentTarget.style.display = 'none'; } catch(err){} }}
+                        />
+                      </div>
                     )
                   ))}
                 </div>
