@@ -4,19 +4,27 @@ import BlogCard from '../../components/BlogCard';
 
 async function getBlogs() {
   try {
-    // Build an absolute base URL for server-side fetches.
-    const getBaseUrl = () => {
-      if (process.env.NODE_ENV === 'development') return 'http://localhost:3000';
-      if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-      if (process.env.NEXT_PUBLIC_BASE_URL) return process.env.NEXT_PUBLIC_BASE_URL;
-      // Fallback to localhost to avoid invalid URL errors. In production set VERCEL_URL or NEXT_PUBLIC_BASE_URL.
-      console.warn('No production base URL found (VERCEL_URL or NEXT_PUBLIC_BASE_URL). Falling back to http://localhost:3000');
-      return 'http://localhost:3000';
-    };
-
-    const baseUrl = getBaseUrl();
-    const apiUrl = new URL('/api/blogs', baseUrl).toString();
-
+    // For server-side rendering, bypass Vercel protection by calling database directly
+    if (typeof window === 'undefined') {
+      // We're on the server, call the database directly
+      const connectToDatabase = (await import('../../lib/mongodb')).default;
+      const Blog = await import('../../models/Blog');
+      
+      await connectToDatabase();
+      const blogs = await Blog.default.find({ status: 'published' })
+        .sort({ createdAt: -1 })
+        .lean();
+      
+      return blogs.map(blog => ({
+        ...blog,
+        _id: blog._id.toString(),
+        createdAt: blog.createdAt.toISOString(),
+        updatedAt: blog.updatedAt?.toISOString() || blog.createdAt.toISOString()
+      }));
+    }
+    
+    // Client-side fetch - use relative URL to work on any domain
+    const apiUrl = '/api/blogs';
     console.log('Fetching blogs from:', apiUrl);
 
     const res = await fetch(apiUrl, {
