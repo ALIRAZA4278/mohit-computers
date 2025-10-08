@@ -182,10 +182,10 @@ export default function Cart() {
                           <div className="flex justify-between items-center">
                             <div>
                               <div className="text-lg font-bold text-gray-800">
-                                ₹{(item.price * item.quantity).toLocaleString()}
+                                Rs{(item.price * item.quantity).toLocaleString()}
                               </div>
                               <div className="text-xs text-gray-500">
-                                ₹{item.price.toLocaleString()} each
+                                Rs{item.price.toLocaleString()} each
                               </div>
                             </div>
 
@@ -295,10 +295,10 @@ export default function Cart() {
                       {/* Price */}
                       <div className="text-right">
                         <div className="text-lg font-bold text-gray-800">
-                          ₹{(item.price * item.quantity).toLocaleString()}
+                          Rs{(item.price * item.quantity).toLocaleString()}
                         </div>
                         <div className="text-sm text-gray-500">
-                          ₹{item.price.toLocaleString()} each
+                          Rs{item.price.toLocaleString()} each
                         </div>
                       </div>
 
@@ -433,7 +433,7 @@ export default function Cart() {
                 <div className="border-t pt-4">
                   <div className="flex justify-between text-lg font-bold text-black ">
                     <span>Total</span>
-                    <span>₹{Math.round(getCartTotal() * 1.18).toLocaleString()}</span>
+                    <span>Rs{Math.round(getCartTotal() * 1.18).toLocaleString()}</span>
                   </div>
                 </div>
               </div>

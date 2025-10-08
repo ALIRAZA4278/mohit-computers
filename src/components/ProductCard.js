@@ -37,20 +37,32 @@ const ProductCard = ({ product, showCompare = true }) => {
     // Optional: Show success message
   };
 
-  const discountPercentage = product.originalPrice 
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+  // Handle both database and static data field names
+  const originalPrice = product.original_price || product.originalPrice;
+  const category = product.category_id || product.category;
+  const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+  const isFeatured = product.is_featured || product.featured;
+  
+  const discountPercentage = originalPrice 
+    ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
     : 0;
 
   // Get category badge info
   const getCategoryBadge = () => {
-    if (product.category === 'used-laptop') {
+    if (category === 'laptop' || category === 'used-laptop') {
       return { text: 'Laptop', gradient: 'from-blue-500 to-blue-600' };
     }
-    if (product.category === 'chromebook') {
+    if (category === 'chromebook') {
       return { text: 'Chromebook', gradient: 'from-green-500 to-green-600' };
     }
-    if (product.category === 'accessories') {
+    if (category === 'accessories') {
       return { text: 'Accessory', gradient: 'from-orange-400 to-red-500' };
+    }
+    if (category === 'ram') {
+      return { text: 'RAM', gradient: 'from-purple-500 to-purple-600' };
+    }
+    if (category === 'ssd') {
+      return { text: 'SSD', gradient: 'from-indigo-500 to-indigo-600' };
     }
     return { text: 'Product', gradient: 'from-gray-500 to-gray-600' };
   };
@@ -79,11 +91,14 @@ const ProductCard = ({ product, showCompare = true }) => {
         {/* Product Image */}
         <div className="relative h-36 bg-gradient-to-br from-gray-50 to-gray-100 p-4">
           <Image
-            src="/next.svg"
+            src={product.featured_image || product.image || "/next.svg"}
             alt={product.name}
             width={200}
             height={120}
             className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
+            onError={(e) => {
+              e.target.src = "/next.svg";
+            }}
           />
         </div>
         
@@ -114,13 +129,13 @@ const ProductCard = ({ product, showCompare = true }) => {
             {product.ram && (
               <div className="flex items-center">
                 <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                <span className="truncate">{product.ram} RAM, {product.storage}</span>
+                <span className="truncate">{product.ram} RAM, {product.hdd || product.storage}</span>
               </div>
             )}
-            {product.display && (
+            {(product.display_size || product.display) && (
               <div className="flex items-center">
                 <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                <span className="truncate">{product.display}</span>
+                <span className="truncate">{product.display_size || product.display}</span>
               </div>
             )}
           </div>
@@ -129,17 +144,17 @@ const ProductCard = ({ product, showCompare = true }) => {
           <div className="flex items-center justify-between mb-3">
             <div>
               <span className="text-lg font-bold text-gray-900">
-                Rs:{product.price.toLocaleString()}
+                Rs:{product.price?.toLocaleString() || '0'}
               </span>
-              {product.originalPrice && (
+              {originalPrice && (
                 <span className="text-xs text-gray-500 line-through ml-1 block">
-                  Rs:{product.originalPrice.toLocaleString()}
+                  Rs:{originalPrice.toLocaleString()}
                 </span>
               )}
             </div>
-            {product.originalPrice && (
+            {originalPrice && (
               <div className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
-                Save Rs:{(product.originalPrice - product.price).toLocaleString()}
+                Save Rs:{(originalPrice - product.price).toLocaleString()}
               </div>
             )}
           </div>
@@ -147,14 +162,14 @@ const ProductCard = ({ product, showCompare = true }) => {
           {/* Stock Status */}
           <div className="mb-2">
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-              product.inStock !== false 
+              isActive 
                 ? 'bg-green-100 text-green-800' 
                 : 'bg-red-100 text-red-800'
             }`}>
               <span className={`w-1 h-1 rounded-full mr-1 ${
-                product.inStock !== false ? 'bg-green-500' : 'bg-red-500'
+                isActive ? 'bg-green-500' : 'bg-red-500'
               }`}></span>
-              {product.inStock !== false ? 'In Stock' : 'Out of Stock'}
+              {isActive ? 'In Stock' : 'Out of Stock'}
             </span>
           </div>
           
@@ -170,9 +185,9 @@ const ProductCard = ({ product, showCompare = true }) => {
             <div className="flex gap-1">
               <button
                 onClick={handleAddToCart}
-                disabled={product.inStock === false}
+                disabled={!isActive}
                 className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-colors ${
-                  product.inStock !== false
+                  isActive
                     ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                 }`}
@@ -182,7 +197,7 @@ const ProductCard = ({ product, showCompare = true }) => {
               </button>
               
               {/* Compare Button */}
-              {showCompare && isLaptopCategory(product.category) && (
+              {showCompare && isLaptopCategory(category) && (
                 <button
                   onClick={handleCompare}
                   className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${

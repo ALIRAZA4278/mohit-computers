@@ -31,30 +31,32 @@ CREATE TABLE categories (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Products Table
 CREATE TABLE products (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,  
   slug VARCHAR(255) UNIQUE NOT NULL,
-  description TEXT,
-  short_description TEXT,
-  price DECIMAL(10,2) NOT NULL,
-  sale_price DECIMAL(10,2),
-  stock_quantity INTEGER DEFAULT 0,
-  sku VARCHAR(100) UNIQUE,
-  images TEXT[] DEFAULT '{}',
-  category_id UUID REFERENCES categories(id),
-  specifications JSONB DEFAULT '{}',
-  tags TEXT[] DEFAULT '{}',
-  weight DECIMAL(8,2),
-  dimensions JSONB DEFAULT '{}',
-  brand VARCHAR(100),
-  model VARCHAR(100),
-  warranty_period INTEGER, -- in months
+  price DECIMAL(10,2) NOT NULL,  
+  category_id VARCHAR(100) DEFAULT 'laptop',
+  brand VARCHAR(100), 
   is_active BOOLEAN DEFAULT TRUE,
   is_featured BOOLEAN DEFAULT FALSE,
-  meta_title VARCHAR(255),
-  meta_description TEXT,
+  
+  processor VARCHAR(255), 
+  generation VARCHAR(50), 
+  ram VARCHAR(100), 
+  hdd VARCHAR(100),  
+  display_size VARCHAR(50),  
+  resolution VARCHAR(100), 
+  integrated_graphics VARCHAR(255), 
+  discrete_graphics VARCHAR(255), 
+  touch_type VARCHAR(100), 
+  operating_features TEXT, 
+  extra_features TEXT,  
+  condition VARCHAR(50) DEFAULT 'Good', 
+  battery VARCHAR(100), -- "Battery"
+  charger_included BOOLEAN DEFAULT false, - 
+  warranty VARCHAR(100),  
+ 
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

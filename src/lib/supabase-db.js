@@ -64,16 +64,18 @@ export const authAPI = {
 // Products API
 export const productsAPI = {
   // Get all products
-  async getAll(limit = 50) {
-    const { data, error } = await supabase
+  async getAll(limit = 5000, activeOnly = true) {
+    let query = supabase
       .from('products')
-      .select(`
-        *,
-        categories(name, slug)
-      `)
-      .eq('is_active', true)
+      .select('*')
       .limit(limit)
-      .order('created_at', { ascending: false })
+      .order('created_at', { ascending: false });
+    
+    if (activeOnly) {
+      query = query.eq('is_active', true);
+    }
+    
+    const { data, error } = await query;
     return { data, error }
   },
 
@@ -81,12 +83,19 @@ export const productsAPI = {
   async getBySlug(slug) {
     const { data, error } = await supabase
       .from('products')
-      .select(`
-        *,
-        categories(name, slug)
-      `)
+      .select('*')
       .eq('slug', slug)
       .eq('is_active', true)
+      .single()
+    return { data, error }
+  },
+
+  // Get product by ID (Admin)
+  async getById(id) {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', id)
       .single()
     return { data, error }
   },

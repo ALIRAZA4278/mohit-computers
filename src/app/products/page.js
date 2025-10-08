@@ -1,50 +1,84 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Filter, Grid, List, SortAsc } from 'lucide-react';
+import { Filter, Grid, List, SortAsc, Loader } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar';
-import { products } from '../../lib/data';
-
-// Add safety check for products
-const safeProducts = products || [];
 
 export default function Products() {
-  const [filteredProducts, setFilteredProducts] = useState(safeProducts);
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState('name');
   const [viewMode, setViewMode] = useState('grid');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+
+  // Fetch products from database
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/products');
+        const data = await response.json();
+        
+        if (data.success) {
+          setProducts(data.data || []);
+        } else {
+          setError(data.error || 'Failed to load products');
+        }
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to load products');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     // Get URL parameters for initial filtering
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
+    const brand = urlParams.get('brand');
     const search = urlParams.get('search');
     
+    const initialFilters = {};
+    
     if (category) {
-      setFilters({ category: [category] });
+      initialFilters.category = [category];
+    }
+    
+    if (brand) {
+      initialFilters.brands = [brand];
     }
     
     if (search) {
       setSearchQuery(search);
     }
+    
+    if (Object.keys(initialFilters).length > 0) {
+      setFilters(initialFilters);
+    }
   }, []);
 
   useEffect(() => {
-    if (!safeProducts || !Array.isArray(safeProducts)) {
+    if (!products || !Array.isArray(products)) {
       setFilteredProducts([]);
       return;
     }
 
-    let filtered = [...safeProducts];
+    let filtered = [...products];
 
-    // Apply category filter
+    // Apply category filter (database field: category_id)
     if (filters.category && filters.category.length > 0) {
       filtered = filtered.filter(product => 
-        filters.category.includes(product.category)
+        filters.category.includes(product.category_id)
       );
     }
 
@@ -55,54 +89,50 @@ export default function Products() {
       );
     }
 
-    // Apply processor filter
+    // Apply processor filter (database field: processor)
     if (filters.processors && filters.processors.length > 0) {
       filtered = filtered.filter(product => 
         filters.processors.some(proc => 
-          product.processor?.includes(proc) || 
-          product.specifications?.processor?.includes(proc)
+          product.processor?.toLowerCase().includes(proc.toLowerCase())
         )
       );
     }
 
-    // Apply RAM filter
+    // Apply RAM filter (database field: ram)
     if (filters.ram && filters.ram.length > 0) {
       filtered = filtered.filter(product => 
         filters.ram.some(ram => 
-          product.ram?.includes(ram) || 
-          product.specifications?.ram?.includes(ram)
+          product.ram?.includes(ram)
         )
       );
     }
 
-    // Apply storage filter
+    // Apply storage filter (database field: hdd)
     if (filters.storage && filters.storage.length > 0) {
       filtered = filtered.filter(product => 
         filters.storage.some(storage => 
-          product.storage?.includes(storage) || 
-          product.specifications?.storage?.includes(storage)
+          product.hdd?.includes(storage)
         )
       );
     }
 
-    // Apply display filter
+    // Apply display filter (database field: display_size)
     if (filters.display && filters.display.length > 0) {
       filtered = filtered.filter(product => 
         filters.display.some(display => 
-          product.display?.includes(display) || 
-          product.specifications?.display?.includes(display)
+          product.display_size?.includes(display)
         )
       );
     }
 
-    // Apply generation filter
+    // Apply generation filter (database field: generation)
     if (filters.generation && filters.generation.length > 0) {
       filtered = filtered.filter(product => 
         filters.generation.includes(product.generation)
       );
     }
 
-    // Apply condition filter
+    // Apply condition filter (database field: condition)
     if (filters.condition && filters.condition.length > 0) {
       filtered = filtered.filter(product => 
         filters.condition.includes(product.condition)
@@ -117,23 +147,24 @@ export default function Products() {
       );
     }
 
-    // Apply in stock filter
+    // Apply in stock filter (database field: is_active)
     if (filters.inStock) {
-      filtered = filtered.filter(product => product.inStock);
+      filtered = filtered.filter(product => product.is_active);
     }
 
-    // Apply featured filter
+    // Apply featured filter (database field: is_featured)
     if (filters.featured) {
-      filtered = filtered.filter(product => product.featured);
+      filtered = filtered.filter(product => product.is_featured);
     }
 
     // Apply search query
     if (searchQuery) {
       filtered = filtered.filter(product => 
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description?.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category_id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.processor?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.ram?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -145,18 +176,18 @@ export default function Products() {
         case 'price-high':
           return b.price - a.price;
         case 'name':
-          return a.name.localeCompare(b.name);
+          return a.name?.localeCompare(b.name || '') || 0;
         case 'brand':
-          return a.brand.localeCompare(b.brand);
+          return a.brand?.localeCompare(b.brand || '') || 0;
         case 'newest':
-          return b.id - a.id;
+          return new Date(b.created_at) - new Date(a.created_at);
         default:
           return 0;
       }
     });
 
     setFilteredProducts(filtered);
-  }, [filters, sortBy, searchQuery]);
+  }, [products, filters, sortBy, searchQuery]);
 
   const handleFiltersChange = (newFilters) => {
     setFilters(newFilters);
@@ -249,11 +280,29 @@ export default function Products() {
               </div>
             </div>
 
-            {/* Products Grid/List */}
-            {!filteredProducts || filteredProducts.length === 0 ? (
+            {/* Loading State */}
+            {loading ? (
+              <div className="flex justify-center items-center py-12">
+                <Loader className="w-8 h-8 animate-spin text-blue-600" />
+                <span className="ml-2 text-gray-600">Loading products...</span>
+              </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Products</h3>
+                <p className="text-gray-500">{error}</p>
+                <button 
+                  onClick={() => window.location.reload()} 
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Retry
+                </button>
+              </div>
+            ) : !filteredProducts || filteredProducts.length === 0 ? (
               <div className="text-center py-12">
                 <h3 className="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
-                <p className="text-gray-500">Try adjusting your filters or search criteria</p>
+                <p className="text-gray-500">
+                  {products.length === 0 ? 'No products available in database' : 'Try adjusting your filters or search criteria'}
+                </p>
               </div>
             ) : (
               <div className={`
@@ -262,22 +311,13 @@ export default function Products() {
                   : 'space-y-6'
                 }
               `}>
-                {filteredProducts && filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
-                    <ProductCard 
-                      key={product.id} 
-                      product={product}
-                      showCompare={true}
-                    />
-                  ))
-                ) : (
-                  <div className="col-span-full text-center py-12">
-                    <div className="text-gray-500 text-lg">
-                      {safeProducts && safeProducts.length === 0 ? 'No products available' : 'No products match your filters'}
-                    </div>
-                    <p className="text-gray-400 mt-2">Try adjusting your search criteria</p>
-                  </div>
-                )}
+                {filteredProducts.map((product) => (
+                  <ProductCard 
+                    key={product.id} 
+                    product={product}
+                    showCompare={true}
+                  />
+                ))}
               </div>
             )}
 

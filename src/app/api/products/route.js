@@ -7,7 +7,7 @@ export async function GET(request) {
     const category = searchParams.get('category')
     const search = searchParams.get('search')
     const featured = searchParams.get('featured')
-    const limit = parseInt(searchParams.get('limit')) || 50
+    const limit = parseInt(searchParams.get('limit')) || 5000
 
     let result
 
@@ -33,7 +33,7 @@ export async function GET(request) {
 
     return NextResponse.json({
       success: true,
-      products: products || [],
+      data: products || [],
       count: products?.length || 0
     })
 

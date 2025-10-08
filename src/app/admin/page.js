@@ -5,6 +5,7 @@ import { User, Lock, Shield } from 'lucide-react';
 import AdminSidebar from '../../components/admin/AdminSidebar';
 import AdminDashboard from '../../components/admin/AdminDashboard';
 import BlogManagement from '../../components/admin/BlogManagement';
+import ProductManagement from '../../components/admin/ProductManagement';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -151,12 +152,7 @@ export default function AdminLogin() {
       case 'blogs':
         return <BlogManagement />;
       case 'products':
-        return (
-          <div className="p-6">
-            <h1 className="text-3xl font-bold text-gray-900">Products</h1>
-            <p className="text-gray-600 mt-2">Product management coming soon...</p>
-          </div>
-        );
+        return <ProductManagement />;
       case 'orders':
         return (
           <div className="p-6">
