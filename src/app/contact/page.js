@@ -30,7 +30,7 @@ export default function Contact() {
                   <input
                     type="text"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Name"
                   />
                 </div>
@@ -39,7 +39,7 @@ export default function Contact() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
                   <input
                     type="tel"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Phone"
                   />
                 </div>
@@ -49,7 +49,7 @@ export default function Contact() {
                   <input
                     type="email"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Email"
                   />
                 </div>
@@ -59,7 +59,7 @@ export default function Contact() {
                   <textarea
                     rows="5"
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Message"
                   ></textarea>
                 </div>
@@ -157,27 +157,7 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Map Section */}
-      <section className="py-16 bg-gray-100">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">Find Us</h2>
-            <p className="text-gray-600">Visit our showroom to see our products in person</p>
-          </div>
-          
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            {/* Placeholder for Google Maps */}
-            <div className="h-96 bg-gray-200 flex items-center justify-center">
-              <div className="text-center text-gray-500">
-                <MapPin className="w-12 h-12 mx-auto mb-2" />
-                <p>Interactive Map Coming Soon</p>
-                <p className="text-sm">Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+    
    
 
       {/* Call to Action */}
