@@ -7,8 +7,11 @@ const CompareContext = createContext();
 const compareReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_TO_COMPARE':
-      // Only allow laptops (used-laptop or chromebook categories)
-      if (!['used-laptop', 'chromebook'].includes(action.payload.category)) {
+      // Only allow laptops (laptop, used-laptop or chromebook categories)
+      const laptopCategories = ['laptop', 'used-laptop', 'chromebook'];
+      const productCategory = action.payload.category_id || action.payload.category;
+
+      if (!laptopCategories.includes(productCategory)) {
         console.warn('Only laptops can be compared');
         return state;
       }
@@ -74,7 +77,10 @@ export const CompareProvider = ({ children }) => {
 
   const addToCompare = (product) => {
     // Check if it's a laptop
-    if (!['used-laptop', 'chromebook'].includes(product.category)) {
+    const laptopCategories = ['laptop', 'used-laptop', 'chromebook'];
+    const productCategory = product.category_id || product.category;
+
+    if (!laptopCategories.includes(productCategory)) {
       alert('⚠️ Only laptops can be compared!\nPlease select laptops or Chromebooks to compare their specifications.');
       return false;
     }
@@ -122,7 +128,7 @@ export const CompareProvider = ({ children }) => {
   };
 
   const isLaptopCategory = (category) => {
-    return ['used-laptop', 'chromebook'].includes(category);
+    return ['laptop', 'used-laptop', 'chromebook'].includes(category);
   };
 
   const value = {

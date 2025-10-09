@@ -6,6 +6,8 @@ import AdminSidebar from '../../components/admin/AdminSidebar';
 import AdminDashboard from '../../components/admin/AdminDashboard';
 import BlogManagement from '../../components/admin/BlogManagement';
 import ProductManagement from '../../components/admin/ProductManagement';
+import UsersManagement from '../../components/admin/UsersManagement';
+import OrdersManagement from '../../components/admin/OrdersManagement';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -154,19 +156,9 @@ export default function AdminLogin() {
       case 'products':
         return <ProductManagement />;
       case 'orders':
-        return (
-          <div className="p-6">
-            <h1 className="text-3xl font-bold text-gray-900">Orders</h1>
-            <p className="text-gray-600 mt-2">Order management coming soon...</p>
-          </div>
-        );
+        return <OrdersManagement />;
       case 'users':
-        return (
-          <div className="p-6">
-            <h1 className="text-3xl font-bold text-gray-900">Users</h1>
-            <p className="text-gray-600 mt-2">User management coming soon...</p>
-          </div>
-        );
+        return <UsersManagement />;
       case 'settings':
         return (
           <div className="p-6">

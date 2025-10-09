@@ -3,12 +3,14 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Heart, GitCompareArrows } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCompare } from '../../context/CompareContext';
 
 export default function Cart() {
+  const router = useRouter();
   const { cartItems, removeFromCart, updateQuantity, clearCart, getCartTotal } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCompare, removeFromCompare, isInCompare, isLaptopCategory } = useCompare();
@@ -39,13 +41,7 @@ export default function Cart() {
   };
 
   const handleCheckout = () => {
-    setIsCheckingOut(true);
-    // In a real app, you would integrate with a payment gateway
-    setTimeout(() => {
-      alert('Order placed successfully! Thank you for your purchase.');
-      clearCart();
-      setIsCheckingOut(false);
-    }, 2000);
+    router.push('/checkout');
   };
 
   if (cartItems.length === 0) {
@@ -417,64 +413,32 @@ export default function Cart() {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium text-black">Rs{getCartTotal().toLocaleString()}</span>
+                  <span className="font-medium text-black">Rs {getCartTotal().toLocaleString()}</span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
                   <span className="font-medium text-green-600">Free</span>
                 </div>
-                
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tax (18% GST)</span>
-                  <span className="font-medium text-black">Rs{Math.round(getCartTotal() * 0.18).toLocaleString()}</span>
-                </div>
-                
+
                 <div className="border-t pt-4">
-                  <div className="flex justify-between text-lg font-bold text-black ">
+                  <div className="flex justify-between text-lg font-bold text-black">
                     <span>Total</span>
-                    <span>Rs{Math.round(getCartTotal() * 1.18).toLocaleString()}</span>
+                    <span>Rs {getCartTotal().toLocaleString()}</span>
                   </div>
                 </div>
               </div>
 
               <button
                 onClick={handleCheckout}
-                disabled={isCheckingOut}
-                className={`w-full mt-4 sm:mt-6 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-colors shadow-lg hover:shadow-xl ${
-                  isCheckingOut
-                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                    : 'bg-teal-600 text-white hover:bg-teal-700'
-                }`}
+                className="w-full mt-4 sm:mt-6 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-colors shadow-lg hover:shadow-xl bg-teal-600 text-white hover:bg-teal-700"
               >
-                {isCheckingOut ? 'Processing...' : 'Proceed to Checkout'}
+                Proceed to Checkout
               </button>
 
-              {/* Checkout Form (Simple) */}
-              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t">
-                <h3 className="font-semibold text-gray-800 mb-3 sm:mb-4 text-sm sm:text-base">Quick Checkout</h3>
-                <form className="space-y-3 sm:space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    className="w-full text-black px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Phone Number"
-                    className="w-full text-black px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                  />
-                  <textarea
-                    placeholder="Delivery Address"
-                    rows="3"
-                    className="w-full text-black px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
-                  ></textarea>
-                  <select className="w-full text-black px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent bg-white">
-                    <option>Cash on Delivery</option>
-            
-                  </select>
-                </form>
-              </div>
+              <p className="text-center text-sm text-gray-500 mt-4">
+                Complete your order securely with Cash on Delivery
+              </p>
 
               {/* Security */}
               <div className="mt-6 pt-6 border-t text-center">

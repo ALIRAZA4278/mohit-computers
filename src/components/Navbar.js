@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search, ShoppingCart, Heart, GitCompareArrows, Menu, X, User, Phone, Mail } from 'lucide-react';
@@ -12,7 +12,19 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
   const router = useRouter();
+
+  useEffect(() => {
+    // Check if user is logged in
+    const userData = localStorage.getItem('user');
+    const token = localStorage.getItem('token');
+    if (userData && token) {
+      setIsLoggedIn(true);
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   const { getCartItemsCount, getCartTotal } = useCart();
   const { wishlistItems } = useWishlist();
@@ -115,8 +127,25 @@ const Navbar = () => {
               </form>
             </div>
 
-            {/* Cart Info - Hidden on mobile */}
+            {/* Cart Info & User Account - Hidden on mobile */}
             <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
+              {isLoggedIn ? (
+                <Link href="/account" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
+                  <User className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <div className="hidden lg:block">
+                    <div className="text-sm font-medium">{user?.name?.split(' ')[0] || 'Account'}</div>
+                    <div className="text-xs text-gray-600">My Account</div>
+                  </div>
+                </Link>
+              ) : (
+                <Link href="/login" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
+                  <User className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <div className="hidden lg:block">
+                    <div className="text-sm font-medium">Login</div>
+                    <div className="text-xs text-gray-600">Account</div>
+                  </div>
+                </Link>
+              )}
               <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
                 <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
                 {wishlistItems.length > 0 && (

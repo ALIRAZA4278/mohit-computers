@@ -3,9 +3,25 @@ import { productsAPI } from '@/lib/supabase-db'
 
 export async function GET(request, { params }) {
   try {
-    const { data: product, error } = await productsAPI.getBySlug(params.slug)
+    const identifier = params.slug;
+    let product, error;
 
-    if (error) {
+    // Check if identifier is UUID (ID) or slug
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
+
+    if (isUUID) {
+      // Fetch by ID
+      const result = await productsAPI.getById(identifier);
+      product = result.data;
+      error = result.error;
+    } else {
+      // Fetch by slug
+      const result = await productsAPI.getBySlug(identifier);
+      product = result.data;
+      error = result.error;
+    }
+
+    if (error || !product) {
       console.error('Error fetching product:', error)
       return NextResponse.json(
         { error: 'Product not found' },
