@@ -4,7 +4,7 @@ import { productsAPI } from '@/lib/supabase-db';
 // GET - Get all products (Admin)
 export async function GET() {
   try {
-    const { data: products, error } = await productsAPI.getAll(100, false);
+    const { data: products, error } = await productsAPI.getAll(5000, false);
     
     if (error) {
       return NextResponse.json(

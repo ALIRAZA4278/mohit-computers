@@ -13,6 +13,10 @@ export default function Login() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotMessage, setForgotMessage] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -57,6 +61,39 @@ export default function Login() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setForgotLoading(true);
+    setForgotMessage('');
+
+    try {
+      const response = await fetch('/api/users/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setForgotMessage({ type: 'success', text: data.message });
+        setForgotEmail('');
+        setTimeout(() => {
+          setShowForgotPassword(false);
+          setForgotMessage('');
+        }, 3000);
+      } else {
+        setForgotMessage({ type: 'error', text: data.message });
+      }
+    } catch (error) {
+      setForgotMessage({ type: 'error', text: 'Failed to send password. Please try again.' });
+    } finally {
+      setForgotLoading(false);
     }
   };
 
@@ -162,9 +199,13 @@ export default function Login() {
               </div>
 
               <div className="text-sm">
-                <Link href="/forgot-password" className="text-teal-600 hover:text-teal-500 font-medium">
+                <button
+                  type="button"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="text-teal-600 hover:text-teal-500 font-medium"
+                >
                   Forgot your password?
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -196,6 +237,73 @@ export default function Login() {
           </p>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotPassword && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-xl">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Forgot Password</h3>
+            <p className="text-gray-600 mb-6">
+              Enter your email address and we&apos;ll send your password to your inbox.
+            </p>
+
+            {forgotMessage && (
+              <div
+                className={`mb-4 p-3 rounded-lg ${
+                  forgotMessage.type === 'success'
+                    ? 'bg-green-50 border border-green-200 text-green-700'
+                    : 'bg-red-50 border border-red-200 text-red-700'
+                }`}
+              >
+                {forgotMessage.text}
+              </div>
+            )}
+
+            <form onSubmit={handleForgotPassword}>
+              <div className="mb-6">
+                <label htmlFor="forgot-email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    id="forgot-email"
+                    type="email"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    required
+                    className="w-full pl-10 pr-4 py-3 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForgotPassword(false);
+                    setForgotEmail('');
+                    setForgotMessage('');
+                  }}
+                  className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={forgotLoading}
+                  className="flex-1 px-4 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {forgotLoading ? 'Sending...' : 'Send Password'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

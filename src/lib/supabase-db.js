@@ -101,11 +101,11 @@ export const productsAPI = {
   },
 
   // Get products by category
-  async getByCategory(categoryId) {
+  async getByCategory(category) {
     const { data, error } = await supabase
       .from('products')
       .select('*')
-      .eq('category_id', categoryId)
+      .eq('category', category)
       .eq('is_active', true)
       .order('created_at', { ascending: false })
     return { data, error }

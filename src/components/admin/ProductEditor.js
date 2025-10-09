@@ -16,8 +16,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     condition: 'Good',
     warranty: '',
     inStock: true,
+    active: true,
     featured: false,
-    
+    workstation: false,
+
     // Image fields
     featuredImage: '',
     images: [],
@@ -52,9 +54,11 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         description: product.description || '',
         condition: product.condition || 'Good',
         warranty: product.warranty || '',
-        inStock: product.is_active !== false,
+        inStock: product.in_stock !== false,
+        active: product.is_active !== false,
         featured: product.is_featured || false,
-        
+        workstation: product.is_workstation || false,
+
         // Image fields
         featuredImage: product.featured_image || '',
         images: product.images || [],
@@ -89,9 +93,11 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         category_id: formData.category, // Map category to category_id
         brand: formData.brand,
         price: parseFloat(formData.price) || 0,
-        is_active: formData.inStock,
+        in_stock: formData.inStock,
+        is_active: formData.active,
         is_featured: formData.featured,
-        
+        is_workstation: formData.workstation,
+
         // Image fields
         featured_image: formData.featuredImage || null,
         images: formData.images || [],
@@ -306,12 +312,22 @@ export default function ProductEditor({ product, onSave, onCancel }) {
             <label className="flex items-center">
               <input
                 type="checkbox"
+                name="active"
+                checked={formData.active}
+                onChange={handleChange}
+                className="rounded text-black border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-700">Active (Show Product)</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
                 name="inStock"
                 checked={formData.inStock}
                 onChange={handleChange}
                 className="rounded text-black border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="ml-2 text-sm text-gray-700">In Stock</span>
+              <span className="ml-2 text-sm text-gray-700">In Stock (Allow Orders)</span>
             </label>
             <label className="flex items-center">
               <input
@@ -322,6 +338,16 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 className="rounded text-black border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-700">Featured Product</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="workstation"
+                checked={formData.workstation}
+                onChange={handleChange}
+                className="rounded text-black border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-700">Workstation Product</span>
             </label>
           </div>
         </div>

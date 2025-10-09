@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Eye, Search, Package, Upload, ArrowLeft } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, Search, Package, Upload, ArrowLeft, RefreshCw } from 'lucide-react';
 import ProductEditor from './ProductEditor';
 import BulkImport from './BulkImport';
 
@@ -137,24 +137,28 @@ export default function ProductManagement() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="p-8 bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Product Management</h2>
-          <p className="text-gray-600">Manage your product inventory</p>
-        </div>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-black">Product Management</h1>
         <div className="flex gap-3">
           <button
+            onClick={fetchProducts}
+            className="bg-white text-black px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 font-medium shadow-sm flex items-center gap-2"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Refresh
+          </button>
+          <button
             onClick={() => setShowBulkImport(true)}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+            className="bg-white text-black px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 font-medium shadow-sm flex items-center gap-2"
           >
             <Upload className="w-4 h-4" />
             Bulk Import
           </button>
           <button
             onClick={() => setShowEditor(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 font-medium shadow-md flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Add Product
@@ -162,25 +166,23 @@ export default function ProductManagement() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+      {/* Search & Filters */}
+      <div className="bg-white rounded-lg shadow-md p-4 mb-6 border border-gray-200">
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search products by name or brand..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-black"
+            />
           </div>
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 text-black font-medium"
           >
             <option value="all">All Categories</option>
             <option value="laptop">Laptop</option>
@@ -191,115 +193,93 @@ export default function ProductManagement() {
         </div>
       </div>
 
-      {/* Products List */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        {loading ? (
-          <div className="p-8 text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-2 text-gray-600">Loading products...</p>
-          </div>
-        ) : filteredProducts.length === 0 ? (
-          <div className="p-8 text-center">
-            <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
-            <p className="text-gray-600 mb-4">
-              {products.length === 0 
-                ? "You haven't added any products yet."
-                : "No products match your current filters."
-              }
-            </p>
-            {products.length === 0 && (
-              <button
-                onClick={() => setShowEditor(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Add Your First Product
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Product
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Category
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Price
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10">
-                          <div className="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                            <Package className="w-5 h-5 text-gray-500" />
-                          </div>
-                        </div>
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">
-                            {product.name}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {product.brand}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                        {product.category_id}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      Rs:{product.price?.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        product.is_active 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {product.is_active ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => handleEdit(product)}
-                          className="text-blue-600 hover:text-blue-900"
-                          title="Edit"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(product.id)}
-                          className="text-red-600 hover:text-red-900"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+      {/* Products Grid */}
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
+        </div>
+      ) : filteredProducts.length === 0 ? (
+        <div className="bg-white rounded-lg shadow-md p-12 text-center border border-gray-200">
+          <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-bold text-black mb-2">No products found</h3>
+          <p className="text-gray-600 mb-4">
+            {products.length === 0
+              ? "You haven&apos;t added any products yet."
+              : "No products match your current filters."
+            }
+          </p>
+          {products.length === 0 && (
+            <button
+              onClick={() => setShowEditor(true)}
+              className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 font-medium"
+            >
+              Add Your First Product
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-xl transition-shadow overflow-hidden"
+            >
+              {/* Product Image/Icon */}
+              <div className="h-48 bg-gradient-to-br from-teal-50 to-teal-100 flex items-center justify-center">
+                <Package className="w-20 h-20 text-teal-600" />
+              </div>
+
+              {/* Product Info */}
+              <div className="p-5 space-y-3">
+                <div>
+                  <h3 className="font-bold text-lg text-black line-clamp-1">{product.name}</h3>
+                  <p className="text-sm text-gray-600">{product.brand}</p>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="px-3 py-1 text-xs font-bold rounded-full bg-teal-100 text-teal-800 border border-teal-300">
+                    {product.category_id?.toUpperCase()}
+                  </span>
+                  <span className={`px-3 py-1 text-xs font-bold rounded-full ${
+                    product.is_active
+                      ? 'bg-green-100 text-green-800 border border-green-300'
+                      : 'bg-red-100 text-red-800 border border-red-300'
+                  }`}>
+                    {product.is_active ? 'Active' : 'Inactive'}
+                  </span>
+                </div>
+
+                <div className="pt-3 border-t">
+                  <p className="text-2xl font-bold text-black">Rs {product.price?.toLocaleString()}</p>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 pt-3">
+                  <button
+                    onClick={() => handleEdit(product)}
+                    className="flex-1 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 font-medium flex items-center justify-center gap-2"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product.id)}
+                    className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Summary */}
+      <div className="mt-6 bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+        <p className="text-sm text-black font-medium">
+          Showing <span className="font-bold">{filteredProducts.length}</span> of <span className="font-bold">{products.length}</span> products
+        </p>
       </div>
     </div>
   );

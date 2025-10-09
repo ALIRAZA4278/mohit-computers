@@ -24,23 +24,34 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
 
+      // Admin credentials for authenticated requests
+      const adminEmail = 'admin@mohitcomputers.com';
+      const adminPassword = 'Admin@123456';
+      const credentials = btoa(`${adminEmail}:${adminPassword}`);
+
       // Fetch all data in parallel
       const [ordersRes, productsRes, usersRes, blogsRes] = await Promise.all([
         fetch('/api/admin/orders').catch(() => ({ ok: false })),
-        fetch('/api/products').catch(() => ({ ok: false })),
-        fetch('/api/admin/users').catch(() => ({ ok: false })),
+        fetch('/api/admin/products').catch(() => ({ ok: false })),
+        fetch('/api/admin/users', {
+          headers: {
+            'Authorization': `Basic ${credentials}`
+          }
+        }).catch(() => ({ ok: false })),
         fetch('/api/blogs').catch(() => ({ ok: false }))
       ]);
 
       const ordersData = ordersRes.ok ? await ordersRes.json() : { orders: [] };
-      const productsData = productsRes.ok ? await productsRes.json() : { data: [] };
-      const usersData = usersRes.ok ? await usersRes.json() : { users: [] };
+      const productsData = productsRes.ok ? await productsRes.json() : { products: [] };
+      const usersData = usersRes.ok ? await usersRes.json() : { pagination: { total: 0 }, users: [] };
       const blogsData = blogsRes.ok ? await blogsRes.json() : { blogs: [] };
 
       const orders = ordersData.orders || [];
-      const products = productsData.data || productsData.products || [];
-      const users = usersData.users || [];
+      const products = productsData.products || [];
       const blogs = blogsData.blogs || [];
+
+      // Get total users from pagination (not array length)
+      const totalUsersCount = usersData.pagination?.total || 0;
 
       // Calculate statistics
       const totalRevenue = orders.reduce((sum, order) =>
@@ -53,7 +64,7 @@ export default function AdminDashboard() {
       setStats({
         totalOrders: orders.length,
         totalProducts: products.length,
-        totalUsers: users.length,
+        totalUsers: totalUsersCount,
         totalBlogs: blogs.length,
         totalRevenue,
         pendingOrders,

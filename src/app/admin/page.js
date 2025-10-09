@@ -16,6 +16,10 @@ export default function AdminLogin() {
   const [error, setError] = useState('');
   const [activeSection, setActiveSection] = useState('dashboard');
   const [isLoading, setIsLoading] = useState(true);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotMessage, setForgotMessage] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
 
   // Check for existing login session on component mount
   useEffect(() => {
@@ -113,11 +117,15 @@ export default function AdminLogin() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    
-    if (email === 'mohit316bwebsite@gmail.com' && password === 'Rabahsocial') {
+
+    // Get admin credentials from environment variables
+    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL 
+    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD 
+
+    if (email === adminEmail && password === adminPassword) {
       setIsLoggedIn(true);
       setError('');
-      
+
       // Save login state to localStorage
       try {
         localStorage.setItem('adminLoggedIn', 'true');
@@ -136,7 +144,7 @@ export default function AdminLogin() {
     setActiveSection('dashboard');
     setEmail('');
     setPassword('');
-    
+
     // Clear login state from localStorage
     try {
       localStorage.removeItem('adminLoggedIn');
@@ -144,6 +152,39 @@ export default function AdminLogin() {
       localStorage.removeItem('adminLoginTime');
     } catch (error) {
       console.error('Error clearing login state:', error);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setForgotLoading(true);
+    setForgotMessage('');
+
+    try {
+      const response = await fetch('/api/admin/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setForgotMessage({ type: 'success', text: data.message });
+        setForgotEmail('');
+        setTimeout(() => {
+          setShowForgotPassword(false);
+          setForgotMessage('');
+        }, 3000);
+      } else {
+        setForgotMessage({ type: 'error', text: data.message });
+      }
+    } catch (error) {
+      setForgotMessage({ type: 'error', text: 'Failed to send password. Please try again.' });
+    } finally {
+      setForgotLoading(false);
     }
   };
 
@@ -278,9 +319,13 @@ export default function AdminLogin() {
             </div>
 
             <div className="text-sm">
-              <a href="#" className="font-medium text-blue-400 hover:text-blue-300">
+              <button
+                type="button"
+                onClick={() => setShowForgotPassword(true)}
+                className="font-medium text-blue-400 hover:text-blue-300"
+              >
                 Forgot password?
-              </a>
+              </button>
             </div>
           </div>
 
@@ -305,6 +350,68 @@ export default function AdminLogin() {
           </div>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotPassword && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full mx-4">
+            <h3 className="text-2xl font-bold text-white mb-4">Forgot Password</h3>
+            <p className="text-gray-400 mb-6">
+              Enter your admin email and we&apos;ll send your password to your inbox.
+            </p>
+
+            {forgotMessage && (
+              <div
+                className={`mb-4 p-3 rounded ${
+                  forgotMessage.type === 'success'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
+                }`}
+              >
+                {forgotMessage.text}
+              </div>
+            )}
+
+            <form onSubmit={handleForgotPassword}>
+              <div className="mb-6">
+                <label htmlFor="forgot-email" className="block text-sm font-medium text-gray-300 mb-2">
+                  Admin Email
+                </label>
+                <input
+                  id="forgot-email"
+                  type="email"
+                  value={forgotEmail}
+                  onChange={(e) => setForgotEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="admin@example.com"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForgotPassword(false);
+                    setForgotEmail('');
+                    setForgotMessage('');
+                  }}
+                  className="flex-1 px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={forgotLoading}
+                  className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {forgotLoading ? 'Sending...' : 'Send Password'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -564,3 +564,226 @@ export const sendOrderStatusUpdateEmail = async (orderData, newStatus) => {
     return { success: false, error: error.message };
   }
 };
+
+// Send admin password email
+export const sendAdminPasswordEmail = async (email, password) => {
+  try {
+    const transporter = createTransporter();
+
+    const mailOptions = {
+      from: `"Mohit Computers Admin" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: 'Admin Password - Mohit Computers',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #333;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #f9f9f9;
+            }
+            .content {
+              background-color: white;
+              padding: 40px;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+              padding-bottom: 20px;
+              border-bottom: 2px solid #0891b2;
+            }
+            .password-box {
+              background-color: #f0f9ff;
+              padding: 20px;
+              border-radius: 8px;
+              border-left: 4px solid #0891b2;
+              margin: 20px 0;
+            }
+            .password {
+              font-size: 24px;
+              font-weight: bold;
+              color: #0369a1;
+              letter-spacing: 2px;
+              text-align: center;
+            }
+            .footer {
+              margin-top: 30px;
+              padding-top: 20px;
+              border-top: 1px solid #e5e7eb;
+              text-align: center;
+              color: #6b7280;
+              font-size: 12px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="content">
+              <div class="header">
+                <h1 style="color: #0891b2; margin: 0;">Admin Password Recovery</h1>
+                <p style="color: #6b7280; margin-top: 10px;">Mohit Computers Admin Panel</p>
+              </div>
+
+              <p>Hello Admin,</p>
+              <p>You requested your admin password. Here are your login credentials:</p>
+
+              <div class="password-box">
+                <p style="margin: 0 0 10px 0; font-weight: bold; color: #374151;">Your Password:</p>
+                <div class="password">${password}</div>
+              </div>
+
+              <p style="margin-top: 20px;"><strong>Security Notice:</strong></p>
+              <ul style="color: #6b7280;">
+                <li>Keep this password secure and confidential</li>
+                <li>Do not share this password with anyone</li>
+                <li>Consider changing your password after logging in</li>
+                <li>If you didn't request this, please contact support immediately</li>
+              </ul>
+
+              <div style="background-color: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444; margin-top: 20px;">
+                <p style="margin: 0; color: #991b1b;"><strong>⚠️ Important:</strong> This is a security-sensitive email. Please delete it after noting down your password.</p>
+              </div>
+
+              <div class="footer">
+                <p>This is an automated email from Mohit Computers Admin Panel.</p>
+                <p>If you did not request this password, please ignore this email.</p>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Admin password email sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending admin password email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Send user password email (forgot password)
+export const sendUserPasswordEmail = async (email, password, name) => {
+  try {
+    const transporter = createTransporter();
+
+    const mailOptions = {
+      from: `"Mohit Computers" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: 'Your Password - Mohit Computers',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #333;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              padding: 20px;
+              background-color: #f9f9f9;
+            }
+            .content {
+              background-color: white;
+              padding: 40px;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 30px;
+              padding-bottom: 20px;
+              border-bottom: 2px solid #3b82f6;
+            }
+            .password-box {
+              background-color: #eff6ff;
+              padding: 20px;
+              border-radius: 8px;
+              border-left: 4px solid #3b82f6;
+              margin: 20px 0;
+            }
+            .password {
+              font-size: 24px;
+              font-weight: bold;
+              color: #1e40af;
+              letter-spacing: 2px;
+              text-align: center;
+            }
+            .footer {
+              margin-top: 30px;
+              padding-top: 20px;
+              border-top: 1px solid #e5e7eb;
+              text-align: center;
+              color: #6b7280;
+              font-size: 12px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="content">
+              <div class="header">
+                <h1 style="color: #3b82f6; margin: 0;">Password Recovery</h1>
+                <p style="color: #6b7280; margin-top: 10px;">Mohit Computers</p>
+              </div>
+
+              <p>Hello ${name || 'Customer'},</p>
+              <p>You requested your account password. Here is your login password:</p>
+
+              <div class="password-box">
+                <p style="margin: 0 0 10px 0; font-weight: bold; color: #374151;">Your Password:</p>
+                <div class="password">${password}</div>
+              </div>
+
+              <p style="margin-top: 20px;">You can now log in to your account using this password along with your email address.</p>
+
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/login" style="display: inline-block; background-color: #3b82f6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">Login to Your Account</a>
+              </div>
+
+              <p style="margin-top: 20px;"><strong>Security Tips:</strong></p>
+              <ul style="color: #6b7280;">
+                <li>Keep your password secure and don't share it with anyone</li>
+                <li>Consider changing your password after logging in</li>
+                <li>Use a strong, unique password for your account</li>
+              </ul>
+
+              <div style="background-color: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444; margin-top: 20px;">
+                <p style="margin: 0; color: #991b1b;"><strong>⚠️ Didn't request this?</strong> If you didn't request a password reset, please contact us immediately.</p>
+              </div>
+
+              <div class="footer">
+                <p>Thank you for shopping with Mohit Computers!</p>
+                <p>This is an automated email. Please do not reply directly to this message.</p>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('User password email sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending user password email:', error);
+    return { success: false, error: error.message };
+  }
+};

@@ -67,9 +67,9 @@ export default function Home() {
   }, []);
 
   const featuredProducts = products.filter(product => product.is_featured);
-  const newArrivalProducts = products.slice(0, 8); // Latest 8 products
-  const workstationProducts = products.filter(product => product.category === 'used-laptop');
-  const accessoryProducts = products.filter(product => product.category === 'accessories');
+  const newArrivalProducts = products.slice(0, 8); // Latest 8 products - all categories
+  const workstationProducts = products.filter(product => product.category_id === 'workstation');
+  const accessoryProducts = products.filter(product => product.category_id === 'accessories');
 
   // Calculate max index for each carousel
   const getMaxIndex = (productCount) => Math.max(0, productCount - itemsPerView);
@@ -268,7 +268,7 @@ export default function Home() {
           </div>
           <h2 className="text-4xl lg:text-5xl font-bold mb-4">New Arrivals</h2>
           <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-            Discover the latest additions to our carefully curated collection of premium refurbished laptops
+            Discover the latest additions to our collection - Laptops, Accessories, RAM, SSD, and more
           </p>
           <div className="flex justify-center">
             <div className="w-24 h-1 bg-white/30 rounded-full"></div>
@@ -336,8 +336,8 @@ export default function Home() {
           </div>
           <h2 className="text-4xl lg:text-5xl font-bold mb-4">Workstation Collection</h2>
           <p className="text-xl text-indigo-100 mb-8 max-w-3xl mx-auto">
-            High-performance laptops engineered for demanding professional workflows, 
-            creative projects, and intensive computing tasks
+            High-performance workstations engineered for demanding professional workflows,
+            3D modeling, video editing, and intensive computing tasks
           </p>
           <div className="flex justify-center">
             <div className="w-24 h-1 bg-white/30 rounded-full"></div>
