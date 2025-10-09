@@ -161,7 +161,7 @@ export const testimonials = [
 
 export const filterOptions = {
   brands: [
-    'HP', 'Dell', 'Lenovo', 'Acer', 'ASUS',
+    'HP', 'Dell', 'Lenovo', 'Acer',
   ],
   processors: [
     'Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Intel Celeron', 'AMD Ryzen 3', 'AMD Ryzen 5', 'AMD Ryzen 7'

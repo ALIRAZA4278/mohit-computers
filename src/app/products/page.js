@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Filter, Grid, List, SortAsc, Loader } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar';
 
 export default function Products() {
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filters, setFilters] = useState({});
@@ -26,7 +28,17 @@ export default function Products() {
         const data = await response.json();
         
         if (data.success) {
-          setProducts(data.data || []);
+          const products = data.data || [];
+          setProducts(products);
+
+          // DEBUG: Show actual product data
+          if (products.length > 0) {
+            console.log('=== PRODUCTS LOADED ===');
+            console.log('Total products:', products.length);
+            console.log('First product:', products[0]);
+            console.log('All brands:', [...new Set(products.map(p => p.brand).filter(Boolean))].sort());
+            console.log('All categories:', [...new Set(products.map(p => p.category || p.category_id).filter(Boolean))].sort());
+          }
         } else {
           setError(data.error || 'Failed to load products');
         }
@@ -41,31 +53,48 @@ export default function Products() {
     fetchProducts();
   }, []);
 
+  // Watch for URL parameter changes and update filters accordingly
   useEffect(() => {
-    // Get URL parameters for initial filtering
-    const urlParams = new URLSearchParams(window.location.search);
-    const category = urlParams.get('category');
-    const brand = urlParams.get('brand');
-    const search = urlParams.get('search');
-    
-    const initialFilters = {};
-    
+    const category = searchParams.get('category');
+    const brand = searchParams.get('brand');
+    const search = searchParams.get('search');
+
+    console.log('=== URL PARAMS CHANGED ===');
+    console.log('Category:', category);
+    console.log('Brand:', brand);
+    console.log('Search:', search);
+
+    // ALWAYS clear all filters first, then apply URL params
+    const newFilters = {};
+
     if (category) {
-      initialFilters.category = [category];
+      // Map friendly category names to database values
+      const categoryMap = {
+        'used-laptop': 'laptop',  // Database uses 'laptop' not 'used-laptop'
+        'chromebook': 'chromebook',
+        'accessories': 'accessories',
+        'ram': 'ram',
+        'ssd': 'ssd'
+      };
+      newFilters.category = [categoryMap[category] || category];
+      console.log('✅ Category filter set:', newFilters.category);
     }
-    
+
     if (brand) {
-      initialFilters.brands = [brand];
+      // Ensure brand is capitalized properly
+      newFilters.brands = [brand];
+      console.log('✅ Brand filter set:', newFilters.brands);
     }
-    
+
     if (search) {
       setSearchQuery(search);
+    } else {
+      setSearchQuery('');
     }
-    
-    if (Object.keys(initialFilters).length > 0) {
-      setFilters(initialFilters);
-    }
-  }, []);
+
+    console.log('🔄 Updating filters:', newFilters);
+    setFilters(newFilters);
+  }, [searchParams]); // Re-run when searchParams change
 
   useEffect(() => {
     if (!products || !Array.isArray(products)) {
@@ -73,20 +102,84 @@ export default function Products() {
       return;
     }
 
-    let filtered = [...products];
+    console.log('🔍 Filtering - Total products:', products.length);
+    console.log('🔍 Active filters:', filters);
 
-    // Apply category filter (database field: category_id)
-    if (filters.category && filters.category.length > 0) {
-      filtered = filtered.filter(product => 
-        filters.category.includes(product.category_id)
-      );
+    // Show sample products for debugging
+    if (products.length > 0) {
+      console.log('📦 Sample product:', {
+        name: products[0].name,
+        brand: products[0].brand,
+        category: products[0].category,
+        category_id: products[0].category_id
+      });
     }
 
-    // Apply brand filter
+    let filtered = [...products];
+
+    // Apply category filter
+    if (filters.category && filters.category.length > 0) {
+      const beforeFilter = filtered.length;
+
+      // Filter by category
+      filtered = filtered.filter(product => {
+        const productCategory = (product.category || product.category_id || '').toLowerCase();
+
+        return filters.category.some(cat => {
+          const filterCat = cat.toLowerCase();
+          // Exact match or contains
+          return productCategory === filterCat || productCategory.includes(filterCat);
+        });
+      });
+
+      console.log(`✅ Category filter (${filters.category}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // Apply brand filter (case-insensitive and flexible)
     if (filters.brands && filters.brands.length > 0) {
-      filtered = filtered.filter(product => 
-        filters.brands.includes(product.brand)
-      );
+      const beforeFilter = filtered.length;
+
+      console.log('🏷️ Applying brand filter:', filters.brands);
+      console.log('🏷️ Products to filter:', beforeFilter);
+
+      // Debug: Show first product before filtering
+      if (filtered.length > 0) {
+        console.log('🏷️ First product brand before filter:', filtered[0].brand);
+      }
+
+      filtered = filtered.filter(product => {
+        const productBrand = (product.brand || '').toLowerCase().trim();
+
+        const matches = filters.brands.some(brand => {
+          const filterBrand = brand.toLowerCase().trim();
+          // Match if brand exactly matches OR if product brand contains filter brand
+          const isMatch = productBrand === filterBrand || productBrand.includes(filterBrand);
+
+          // Debug first comparison
+          if (!isMatch && beforeFilter > 0 && filtered.indexOf(product) === 0) {
+            console.log('🏷️ Brand comparison:', {
+              productBrand: `"${productBrand}"`,
+              filterBrand: `"${filterBrand}"`,
+              match: isMatch
+            });
+          }
+
+          return isMatch;
+        });
+
+        return matches;
+      });
+
+      console.log(`✅ Brand filter result: ${beforeFilter} → ${filtered.length} products`);
+
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO BRANDS MATCHED!');
+        console.log('Sample brands from products:',
+          products.slice(0, 10).map(p => `"${p.brand}"`).filter(b => b !== '""')
+        );
+        console.log('Looking for:', filters.brands.map(b => `"${b}"`));
+      }
     }
 
     // Apply processor filter (database field: processor)
@@ -243,7 +336,7 @@ export default function Products() {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border text-black border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="name">Sort by Name</option>
                       <option value="price-low">Price: Low to High</option>

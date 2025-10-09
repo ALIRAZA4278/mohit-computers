@@ -5,7 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { products, testimonials } from '../lib/data';
+import { testimonials } from '../lib/data';
+import { productsAPI } from '../lib/supabase-db';
 
 export default function Home() {
   const [featuredIndex, setFeaturedIndex] = useState(0);
@@ -13,42 +14,71 @@ export default function Home() {
   const [workstationIndex, setWorkstationIndex] = useState(0);
   const [accessoryIndex, setAccessoryIndex] = useState(0);
 
-  const featuredProducts = products.filter(product => product.featured);
-  const newArrivalProducts = products.slice(8, 16); // Assuming newer products
+  // State for products from database
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // State for items per view (responsive)
+  const [itemsPerView, setItemsPerView] = useState(4);
+
+  // Handle responsive items per view
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerView(1); // Mobile
+      } else if (window.innerWidth < 768) {
+        setItemsPerView(2); // Small tablets
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(3); // Tablets
+      } else {
+        setItemsPerView(4); // Desktop
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Fetch products from database
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        setLoading(true);
+        const { data, error } = await productsAPI.getAll();
+
+        if (error) {
+          console.error('Error fetching products:', error);
+          setError(error.message);
+          return;
+        }
+
+        setProducts(data || []);
+      } catch (err) {
+        console.error('Error:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
+  const featuredProducts = products.filter(product => product.is_featured);
+  const newArrivalProducts = products.slice(0, 8); // Latest 8 products
   const workstationProducts = products.filter(product => product.category === 'used-laptop');
   const accessoryProducts = products.filter(product => product.category === 'accessories');
 
-  // Auto-slide effect for featured products (right to left)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFeaturedIndex((prev) => (prev + 1) % Math.max(1, featuredProducts.length - 4));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [featuredProducts.length]);
+  // Calculate max index for each carousel
+  const getMaxIndex = (productCount) => Math.max(0, productCount - itemsPerView);
 
-  // Auto-slide effect for new arrivals
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNewArrivalIndex((prev) => (prev + 1) % Math.max(1, newArrivalProducts.length - 4));
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [newArrivalProducts.length]);
-
-  // Auto-slide effect for workstation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setWorkstationIndex((prev) => (prev + 1) % Math.max(1, workstationProducts.length - 4));
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [workstationProducts.length]);
-
-  // Auto-slide effect for accessories
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAccessoryIndex((prev) => (prev + 1) % Math.max(1, accessoryProducts.length - 4));
-    }, 4500);
-    return () => clearInterval(interval);
-  }, [accessoryProducts.length]);
+  // Calculate transform percentage based on items per view
+  const getTransformPercentage = (index) => {
+    const slideWidth = 100 / itemsPerView;
+    return index * slideWidth;
+  };
 
   return (
     <div>
@@ -171,32 +201,58 @@ export default function Home() {
       {/* Featured Products Slider */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="relative">
-            <div className="overflow-hidden rounded-xl">
-              <div 
-                className="flex transition-transform duration-700 ease-in-out gap-6"
-                style={{ transform: `translateX(-${featuredIndex * 25}%)` }}
-              >
-                {featuredProducts.map((product) => (
-                  <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </div>
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal-600"></div>
             </div>
-            <button 
-              onClick={() => setFeaturedIndex(Math.max(0, featuredIndex - 1))}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10"
-            >
-              <ChevronLeft className="w-6 h-6 text-gray-700" />
-            </button>
-            <button 
-              onClick={() => setFeaturedIndex(Math.min(featuredProducts.length - 4, featuredIndex + 1))}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-700" />
-            </button>
-          </div>
+          ) : error ? (
+            <div className="text-center py-20">
+              <p className="text-red-600 text-lg mb-4">Error loading products: {error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+              >
+                Retry
+              </button>
+            </div>
+          ) : featuredProducts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-gray-600 text-lg">No featured products available at the moment.</p>
+            </div>
+          ) : (
+            <div className="relative">
+              <div className="overflow-hidden rounded-xl">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out gap-6"
+                  style={{ transform: `translateX(-${getTransformPercentage(featuredIndex)}%)` }}
+                >
+                  {featuredProducts.map((product) => (
+                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {featuredProducts.length > itemsPerView && (
+                <>
+                  <button
+                    onClick={() => setFeaturedIndex(Math.max(0, featuredIndex - 1))}
+                    className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={featuredIndex === 0}
+                  >
+                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                  <button
+                    onClick={() => setFeaturedIndex(Math.min(getMaxIndex(featuredProducts.length), featuredIndex + 1))}
+                    className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={featuredIndex >= getMaxIndex(featuredProducts.length)}
+                  >
+                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -223,39 +279,47 @@ export default function Home() {
       {/* New Arrival Products Slider */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="relative">
-            <div className="overflow-hidden rounded-xl">
-              <div 
-                className="flex transition-transform duration-700 ease-in-out gap-6"
-                style={{ transform: `translateX(-${newArrivalIndex * 25}%)` }}
-              >
-                {newArrivalProducts.map((product) => (
-                  <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-                    <div className="relative">
-                      <div className="absolute -top-3 -right-3 z-10">
-                        <div className="bg-gradient-to-r from-green-400 to-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                          NEW
+          {!loading && !error && newArrivalProducts.length > 0 && (
+            <div className="relative">
+              <div className="overflow-hidden rounded-xl">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out gap-6"
+                  style={{ transform: `translateX(-${getTransformPercentage(newArrivalIndex)}%)` }}
+                >
+                  {newArrivalProducts.map((product) => (
+                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                      <div className="relative">
+                        <div className="absolute -top-3 -right-3 z-10">
+                          <div className="bg-gradient-to-r from-green-400 to-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                            NEW
+                          </div>
                         </div>
+                        <ProductCard product={product} />
                       </div>
-                      <ProductCard product={product} />
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
+              {newArrivalProducts.length > itemsPerView && (
+                <>
+                  <button
+                    onClick={() => setNewArrivalIndex(Math.max(0, newArrivalIndex - 1))}
+                    className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={newArrivalIndex === 0}
+                  >
+                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                  <button
+                    onClick={() => setNewArrivalIndex(Math.min(getMaxIndex(newArrivalProducts.length), newArrivalIndex + 1))}
+                    className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={newArrivalIndex >= getMaxIndex(newArrivalProducts.length)}
+                  >
+                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                </>
+              )}
             </div>
-            <button 
-              onClick={() => setNewArrivalIndex(Math.max(0, newArrivalIndex - 1))}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200"
-            >
-              <ChevronLeft className="w-6 h-6 text-gray-700" />
-            </button>
-            <button 
-              onClick={() => setNewArrivalIndex(Math.min(newArrivalProducts.length - 4, newArrivalIndex + 1))}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-700" />
-            </button>
-          </div>
+          )}
         </div>
       </section>
 
@@ -284,39 +348,47 @@ export default function Home() {
       {/* Workstation Products Slider */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="relative">
-            <div className="overflow-hidden rounded-xl">
-              <div 
-                className="flex transition-transform duration-700 ease-in-out gap-6"
-                style={{ transform: `translateX(-${workstationIndex * 25}%)` }}
-              >
-                {workstationProducts.map((product) => (
-                  <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-                    <div className="relative">
-                      <div className="absolute -top-3 -right-3 z-10">
-                        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                          PRO
+          {!loading && !error && workstationProducts.length > 0 && (
+            <div className="relative">
+              <div className="overflow-hidden rounded-xl">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out gap-6"
+                  style={{ transform: `translateX(-${getTransformPercentage(workstationIndex)}%)` }}
+                >
+                  {workstationProducts.map((product) => (
+                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                      <div className="relative">
+                        <div className="absolute -top-3 -right-3 z-10">
+                          <div className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                            PRO
+                          </div>
                         </div>
+                        <ProductCard product={product} />
                       </div>
-                      <ProductCard product={product} />
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
+              {workstationProducts.length > itemsPerView && (
+                <>
+                  <button
+                    onClick={() => setWorkstationIndex(Math.max(0, workstationIndex - 1))}
+                    className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={workstationIndex === 0}
+                  >
+                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                  <button
+                    onClick={() => setWorkstationIndex(Math.min(getMaxIndex(workstationProducts.length), workstationIndex + 1))}
+                    className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={workstationIndex >= getMaxIndex(workstationProducts.length)}
+                  >
+                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                </>
+              )}
             </div>
-            <button 
-              onClick={() => setWorkstationIndex(Math.max(0, workstationIndex - 1))}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200"
-            >
-              <ChevronLeft className="w-6 h-6 text-gray-700" />
-            </button>
-            <button 
-              onClick={() => setWorkstationIndex(Math.min(workstationProducts.length - 4, workstationIndex + 1))}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-700" />
-            </button>
-          </div>
+          )}
         </div>
       </section>
 
@@ -337,32 +409,41 @@ export default function Home() {
           </div>
           
           {/* Accessories Slider */}
-          <div className="relative">
-            <div className="overflow-hidden rounded-xl">
-              <div 
-                className="flex transition-transform duration-700 ease-in-out gap-6"
-                style={{ transform: `translateX(-${accessoryIndex * 25}%)` }}
-              >
-                {accessoryProducts.map((product) => (
-                  <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-                    <ProductCard product={product} />
-                  </div>
-                ))}
+          {!loading && !error && accessoryProducts.length > 0 && (
+            <div className="relative">
+              <div className="overflow-hidden rounded-xl">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out gap-6"
+                  style={{ transform: `translateX(-${getTransformPercentage(accessoryIndex)}%)` }}
+                >
+                  {accessoryProducts.map((product) => (
+                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
               </div>
+              {accessoryProducts.length > itemsPerView && (
+                <>
+                  <button
+                    onClick={() => setAccessoryIndex(Math.max(0, accessoryIndex - 1))}
+                    className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={accessoryIndex === 0}
+                  >
+                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                  <button
+                    onClick={() => setAccessoryIndex(Math.min(getMaxIndex(accessoryProducts.length), accessoryIndex + 1))}
+                    className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={accessoryIndex >= getMaxIndex(accessoryProducts.length)}
+                  >
+                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                </>
+              )}
             </div>
-            <button 
-              onClick={() => setAccessoryIndex(Math.max(0, accessoryIndex - 1))}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200"
-            >
-              <ChevronLeft className="w-6 h-6 text-gray-700" />
-            </button>
-            <button 
-              onClick={() => setAccessoryIndex(Math.min(accessoryProducts.length - 4, accessoryIndex + 1))}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-700" />
-            </button>
-          </div>
+          )}
+
           
           {/* View All Button */}
           <div className="text-center mt-12">

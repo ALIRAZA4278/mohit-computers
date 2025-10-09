@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Search, ShoppingCart, Heart, GitCompareArrows, Menu, X, User, Phone, Mail } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -11,13 +12,20 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  
+  const router = useRouter();
+
   const { getCartItemsCount, getCartTotal } = useCart();
   const { wishlistItems } = useWishlist();
   const { compareItems } = useCompare();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProducts = () => setIsProductsOpen(!isProductsOpen);
+
+  const handleCategoryClick = (e, url) => {
+    e.preventDefault();
+    setIsProductsOpen(false);
+    router.push(url);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -29,34 +37,44 @@ const Navbar = () => {
 
   const formatCurrency = (amount) => {
     try {
-      return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount || 0);
+      return `Rs ${(amount || 0).toLocaleString('en-PK', { maximumFractionDigits: 2 })}`;
     } catch (e) {
-      return `Rs:${(amount || 0).toLocaleString()}`;
+      return `Rs ${(amount || 0).toLocaleString()}`;
     }
   };
 
   return (
     <>
       {/* Top Header */}
-      <div className="bg-gray-900 text-white text-sm py-3">
+      <div className="bg-gray-900 text-white text-sm py-2 md:py-3">
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
-            <div className="flex items-center space-x-6">
+            {/* Contact Info - Hidden on mobile, visible on tablets+ */}
+            <div className="hidden sm:flex items-center space-x-4 md:space-x-6 text-xs md:text-sm">
               <span className="flex items-center text-gray-300">
-                <Phone className="w-4 h-4 mr-2" />
+                <Phone className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
                 <span className="font-medium">Call: 0336 8900349</span>
               </span>
               <span className="flex items-center text-gray-300">
-                <Mail className="w-4 h-4 mr-2" />
+                <Mail className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
                 <span className="font-medium">info@mohitcomputers.pk</span>
               </span>
             </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/account" className="text-gray-300 hover:text-teal-400 transition-colors font-medium">My Account</Link>
-              <span className="text-gray-600">|</span>
+
+            {/* Account Links - Responsive */}
+            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 text-xs sm:text-sm">
+              <Link href="/account" className="flex items-center text-gray-300 hover:text-teal-400 transition-colors font-medium">
+                <User className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-0 sm:hidden" />
+                <span className="hidden sm:inline">My Account</span>
+                <span className="sm:hidden">Account</span>
+              </Link>
+              <span className="text-gray-600 hidden sm:inline">|</span>
               <Link href="/login" className="text-gray-300 hover:text-teal-400 transition-colors font-medium">Log In</Link>
               <span className="text-gray-600">|</span>
-              <Link href="/register" className="text-gray-300 hover:text-teal-400 transition-colors font-medium">Create Account</Link>
+              <Link href="/register" className="text-gray-300 hover:text-teal-400 transition-colors font-medium">
+                <span className="hidden sm:inline">Create Account</span>
+                <span className="sm:hidden">Register</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -169,7 +187,7 @@ const Navbar = () => {
                     <div className="py-2">
                       {/* Used Laptops with brand submenu */}
                       <div className="relative group/submenu">
-                        <Link href="/products?category=used-laptop" className="flex items-center justify-between px-4 py-3 hover:bg-gray-100">
+                        <Link href="/products?category=used-laptop" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop')} className="flex items-center justify-between px-4 py-3 hover:bg-gray-100 cursor-pointer">
                           <span className="font-medium text-gray-800">Used Laptops</span>
                           <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -178,37 +196,37 @@ const Navbar = () => {
                         {/* Brand Submenu */}
                         <div className="absolute left-full top-0 mt-0 w-48 bg-white shadow-xl rounded-lg hidden group-hover/submenu:block border-l border-gray-200">
                           <div className="py-2">
-                            <Link href="/products?category=used-laptop&brand=hp" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                            <Link href="/products?category=used-laptop&brand=HP" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop&brand=HP')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
                               HP
                             </Link>
-                            <Link href="/products?category=used-laptop&brand=dell" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                            <Link href="/products?category=used-laptop&brand=Dell" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop&brand=Dell')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
                               Dell
                             </Link>
-                            <Link href="/products?category=used-laptop&brand=acer" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                            <Link href="/products?category=used-laptop&brand=Acer" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop&brand=Acer')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
                               Acer
                             </Link>
-                            <Link href="/products?category=used-laptop&brand=lenovo" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                            <Link href="/products?category=used-laptop&brand=Lenovo" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop&brand=Lenovo')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
                               Lenovo
                             </Link>
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="border-t border-gray-100"></div>
-                      
-                      <Link href="/products?category=chromebook" className="block px-4 py-3 hover:bg-gray-100">
+
+                      <Link href="/products?category=chromebook" onClick={(e) => handleCategoryClick(e, '/products?category=chromebook')} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">Chrome Book</div>
                       </Link>
-                      
-                      <Link href="/products?category=accessories" className="block px-4 py-3 hover:bg-gray-100">
+
+                      <Link href="/products?category=accessories" onClick={(e) => handleCategoryClick(e, '/products?category=accessories')} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">Accessories</div>
                       </Link>
-                      
-                      <Link href="/products?category=ram" className="block px-4 py-3 hover:bg-gray-100">
+
+                      <Link href="/products?category=ram" onClick={(e) => handleCategoryClick(e, '/products?category=ram')} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">RAM</div>
                       </Link>
-                      
-                      <Link href="/products?category=ssd" className="block px-4 py-3 hover:bg-gray-100">
+
+                      <Link href="/products?category=ssd" onClick={(e) => handleCategoryClick(e, '/products?category=ssd')} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">SSD</div>
                       </Link>
                     </div>
@@ -280,7 +298,7 @@ const Navbar = () => {
               <div className="grid grid-cols-3 gap-3 mb-3">
                 <Link href="/wishlist" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
                   <div className="relative">
-                    <Heart className="w-5 h-5 mb-1" />
+                    <Heart className="w-5 h-5 mb-1 text-black" />
                     {wishlistItems.length > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
                         {wishlistItems.length}
@@ -292,7 +310,7 @@ const Navbar = () => {
                 
                 <Link href="/compare" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
                   <div className="relative">
-                    <GitCompareArrows className="w-5 h-5 mb-1" />
+                    <GitCompareArrows className="w-5 h-5 mb-1 text-black" />
                     {compareItems.length > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
                         {compareItems.length}
@@ -304,7 +322,7 @@ const Navbar = () => {
                 
                 <Link href="/cart" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
                   <div className="relative">
-                    <ShoppingCart className="w-5 h-5 mb-1" />
+                    <ShoppingCart className="w-5 h-5 mb-1 text-black" />
                     {getCartItemsCount() > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
                         {getCartItemsCount()}

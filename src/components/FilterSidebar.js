@@ -7,6 +7,11 @@ import { filterOptions } from '../lib/data';
 const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
   const [localFilters, setLocalFilters] = useState(filters);
 
+  // Sync local filters with parent filters when they change (from URL/navbar)
+  React.useEffect(() => {
+    setLocalFilters(filters);
+  }, [filters]);
+
   const handleFilterChange = (category, value, checked) => {
     const newFilters = { ...localFilters };
     
