@@ -119,8 +119,8 @@ export default function AdminLogin() {
     e.preventDefault();
 
     // Get admin credentials from environment variables
-    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL 
-    const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD 
+    const adminEmail = "mohit316bwebsite@gmail.com"
+    const adminPassword = "Rabahsocial"
 
     if (email === adminEmail && password === adminPassword) {
       setIsLoggedIn(true);
