@@ -674,8 +674,8 @@ export const sendAdminPasswordEmail = async (email, password) => {
   }
 };
 
-// Send user password email (forgot password)
-export const sendUserPasswordEmail = async (email, password, name) => {
+// Send user password reset email (forgot password)
+export const sendUserPasswordResetEmail = async (email, password, name) => {
   try {
     const transporter = createTransporter();
 
@@ -744,14 +744,14 @@ export const sendUserPasswordEmail = async (email, password, name) => {
               </div>
 
               <p>Hello ${name || 'Customer'},</p>
-              <p>You requested your account password. Here is your login password:</p>
+              <p>You requested a password reset. We've generated a new temporary password for your account:</p>
 
               <div class="password-box">
-                <p style="margin: 0 0 10px 0; font-weight: bold; color: #374151;">Your Password:</p>
+                <p style="margin: 0 0 10px 0; font-weight: bold; color: #374151;">Your New Temporary Password:</p>
                 <div class="password">${password}</div>
               </div>
 
-              <p style="margin-top: 20px;">You can now log in to your account using this password along with your email address.</p>
+              <p style="margin-top: 20px;">You can now log in to your account using this password. <strong>Please change this password after logging in.</strong></p>
 
               <div style="text-align: center; margin: 30px 0;">
                 <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/login" style="display: inline-block; background-color: #3b82f6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">Login to Your Account</a>
@@ -784,6 +784,355 @@ export const sendUserPasswordEmail = async (email, password, name) => {
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error('Error sending user password email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Send corporate inquiry email to admin
+export const sendCorporateInquiryEmail = async (data) => {
+  try {
+    const transporter = createTransporter();
+    const { name, email, phone, whatsapp, message, interests } = data;
+
+    const interestsList = interests && interests.length > 0
+      ? interests.join(', ')
+      : 'Not specified';
+
+    const mailOptions = {
+      from: `"Mohit Computers Corporate" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER, // Send to admin email
+      replyTo: email,
+      subject: `Corporate Inquiry from ${name}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .field { margin-bottom: 20px; }
+            .field-label { font-weight: bold; color: #0d9488; margin-bottom: 5px; }
+            .field-value { background: white; padding: 10px; border-radius: 5px; border-left: 3px solid #0d9488; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🏢 New Corporate Inquiry</h1>
+              <p>From Mohit Computers Corporate Form</p>
+            </div>
+            <div class="content">
+              <div class="field">
+                <div class="field-label">Name:</div>
+                <div class="field-value">${name}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Email:</div>
+                <div class="field-value">${email}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Phone:</div>
+                <div class="field-value">${phone || 'Not provided'}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">WhatsApp:</div>
+                <div class="field-value">${whatsapp || 'Not provided'}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Interested In:</div>
+                <div class="field-value">${interestsList}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Message:</div>
+                <div class="field-value">${message || 'No message provided'}</div>
+              </div>
+              <p style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; color: #6b7280; font-size: 14px;">
+                This email was sent from the Corporate Inquiry form on Mohit Computers website.
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Corporate inquiry email sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending corporate inquiry email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Send contact form inquiry email to admin
+export const sendContactInquiryEmail = async (data) => {
+  try {
+    const transporter = createTransporter();
+    const { name, email, subject, message } = data;
+
+    const mailOptions = {
+      from: `"Mohit Computers Contact" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER, // Send to admin email
+      replyTo: email,
+      subject: `Contact Form: ${subject || 'General Inquiry'} - ${name}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .field { margin-bottom: 20px; }
+            .field-label { font-weight: bold; color: #0d9488; margin-bottom: 5px; }
+            .field-value { background: white; padding: 10px; border-radius: 5px; border-left: 3px solid #0d9488; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>📧 New Contact Form Submission</h1>
+              <p>From Mohit Computers Contact Page</p>
+            </div>
+            <div class="content">
+              <div class="field">
+                <div class="field-label">Name:</div>
+                <div class="field-value">${name}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Email:</div>
+                <div class="field-value">${email}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Subject:</div>
+                <div class="field-value">${subject || 'No subject provided'}</div>
+              </div>
+              <div class="field">
+                <div class="field-label">Message:</div>
+                <div class="field-value">${message}</div>
+              </div>
+              <p style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; color: #6b7280; font-size: 14px;">
+                This email was sent from the Contact form on Mohit Computers website.
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Contact inquiry email sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending contact inquiry email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Send newsletter subscription confirmation email
+export const sendNewsletterSubscriptionEmail = async (email) => {
+  try {
+    const transporter = createTransporter();
+
+    const mailOptions = {
+      from: `"Mohit Computers" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: 'Welcome to Mohit Computers Newsletter! 🎉',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); color: white; padding: 40px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎉 Welcome to Our Newsletter!</h1>
+              <p>Thank you for subscribing to Mohit Computers updates</p>
+            </div>
+            <div class="content">
+              <p style="font-size: 16px; margin-bottom: 20px;">
+                You're now part of our tech community! You'll receive:
+              </p>
+              <ul style="margin: 20px 0; padding-left: 20px;">
+                <li style="margin: 10px 0;">📱 Latest product arrivals and deals</li>
+                <li style="margin: 10px 0;">💡 Tech tips and recommendations</li>
+                <li style="margin: 10px 0;">🎁 Exclusive subscriber-only offers</li>
+                <li style="margin: 10px 0;">📰 Tech news and updates</li>
+              </ul>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/products" class="button">
+                  Browse Products
+                </a>
+              </div>
+              <p style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; color: #6b7280; font-size: 14px;">
+                This email confirms your subscription to Mohit Computers newsletter.<br>
+                If you didn't subscribe, please ignore this email.
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Newsletter subscription email sent:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending newsletter subscription email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Send corporate inquiry confirmation to user
+export const sendCorporateConfirmationEmail = async (data) => {
+  try {
+    const transporter = createTransporter();
+    const { name, email } = data;
+
+    const mailOptions = {
+      from: `"Mohit Computers" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: 'Thank You for Your Corporate Inquiry - Mohit Computers',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); color: white; padding: 40px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>✅ Inquiry Received!</h1>
+              <p>Thank you for contacting Mohit Computers</p>
+            </div>
+            <div class="content">
+              <p>Dear ${name},</p>
+              <p style="font-size: 16px; margin: 20px 0;">
+                Thank you for your corporate inquiry! We have received your request and our team will review it shortly.
+              </p>
+              <p><strong>What happens next?</strong></p>
+              <ul style="margin: 20px 0; padding-left: 20px;">
+                <li style="margin: 10px 0;">Our corporate sales team will review your requirements</li>
+                <li style="margin: 10px 0;">We'll prepare a customized quote for your business</li>
+                <li style="margin: 10px 0;">You'll receive a response within 24-48 business hours</li>
+              </ul>
+              <p style="margin-top: 20px;">
+                In the meantime, feel free to explore our product catalog or contact us directly if you have any urgent questions.
+              </p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/products" class="button">
+                  Browse Products
+                </a>
+              </div>
+              <p style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; color: #6b7280; font-size: 14px;">
+                Best regards,<br>
+                <strong>Mohit Computers Team</strong><br>
+                Corporate Sales Department
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Corporate confirmation email sent to user:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending corporate confirmation email:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Send contact inquiry confirmation to user
+export const sendContactConfirmationEmail = async (data) => {
+  try {
+    const transporter = createTransporter();
+    const { name, email } = data;
+
+    const mailOptions = {
+      from: `"Mohit Computers" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: 'Thank You for Contacting Us - Mohit Computers',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); color: white; padding: 40px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; background: #0d9488; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>📧 Message Received!</h1>
+              <p>Thank you for contacting Mohit Computers</p>
+            </div>
+            <div class="content">
+              <p>Dear ${name},</p>
+              <p style="font-size: 16px; margin: 20px 0;">
+                Thank you for reaching out to us! We have received your message and our support team will get back to you as soon as possible.
+              </p>
+              <p><strong>What's next?</strong></p>
+              <ul style="margin: 20px 0; padding-left: 20px;">
+                <li style="margin: 10px 0;">Our team is reviewing your message</li>
+                <li style="margin: 10px 0;">We aim to respond within 24 hours</li>
+                <li style="margin: 10px 0;">You'll receive a detailed response via email</li>
+              </ul>
+              <p style="margin-top: 20px;">
+                If you have any urgent questions, feel free to call us directly or visit our store.
+              </p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}" class="button">
+                  Visit Our Website
+                </a>
+              </div>
+              <p style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; color: #6b7280; font-size: 14px;">
+                Best regards,<br>
+                <strong>Mohit Computers Team</strong><br>
+                Customer Support
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Contact confirmation email sent to user:', info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending contact confirmation email:', error);
     return { success: false, error: error.message };
   }
 };

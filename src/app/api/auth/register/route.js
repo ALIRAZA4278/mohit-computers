@@ -31,18 +31,34 @@ export async function POST(request) {
       );
     }
 
-    // Check if user already exists
-    const { data: existingUser } = await supabase
+    // Check if user already exists with email
+    const { data: existingEmail } = await supabase
       .from('users')
       .select('email')
       .eq('email', email)
       .single();
 
-    if (existingUser) {
+    if (existingEmail) {
       return NextResponse.json(
         { error: 'User with this email already exists' },
         { status: 400 }
       );
+    }
+
+    // Check if phone number already exists (if phone is provided)
+    if (phone) {
+      const { data: existingPhone } = await supabase
+        .from('users')
+        .select('phone')
+        .eq('phone', phone)
+        .single();
+
+      if (existingPhone) {
+        return NextResponse.json(
+          { error: 'User with this phone number already exists' },
+          { status: 400 }
+        );
+      }
     }
 
     // Hash the password

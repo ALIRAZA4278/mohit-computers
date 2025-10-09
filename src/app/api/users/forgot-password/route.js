@@ -1,11 +1,22 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { sendUserPasswordEmail } from '@/lib/nodemailer';
+import bcrypt from 'bcryptjs';
+import { sendUserPasswordResetEmail } from '@/lib/nodemailer';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
+
+// Generate random password
+function generatePassword(length = 12) {
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    password += charset.charAt(Math.floor(Math.random() * charset.length));
+  }
+  return password;
+}
 
 export async function POST(request) {
   try {
@@ -21,7 +32,7 @@ export async function POST(request) {
     // Fetch user from database
     const { data: user, error } = await supabase
       .from('users')
-      .select('email, password, name')
+      .select('email, name')
       .eq('email', email)
       .single();
 
@@ -32,8 +43,28 @@ export async function POST(request) {
       );
     }
 
-    // Send password email
-    const emailResult = await sendUserPasswordEmail(user.email, user.password, user.name);
+    // Generate new temporary password
+    const newPassword = generatePassword(12);
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update user password in database
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ password: hashedPassword })
+      .eq('email', email);
+
+    if (updateError) {
+      console.error('Error updating password:', updateError);
+      return NextResponse.json(
+        { success: false, message: 'Failed to reset password' },
+        { status: 500 }
+      );
+    }
+
+    // Send new password via email
+    const emailResult = await sendUserPasswordResetEmail(user.email, newPassword, user.name);
 
     if (!emailResult.success) {
       return NextResponse.json(
@@ -44,7 +75,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Password has been sent to your email'
+      message: 'A new password has been sent to your email'
     });
   } catch (error) {
     console.error('Error in user forgot password:', error);

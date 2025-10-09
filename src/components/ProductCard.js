@@ -42,10 +42,15 @@ const ProductCard = ({ product, showCompare = true }) => {
   const category = product.category_id || product.category;
   const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
   const isFeatured = product.is_featured || product.featured;
-  
-  const discountPercentage = originalPrice 
+
+  const discountPercentage = originalPrice
     ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
     : 0;
+
+  // Check if product is new (created within last 30 days)
+  const isNew = product.created_at ?
+    (new Date() - new Date(product.created_at)) / (1000 * 60 * 60 * 24) <= 30
+    : false;
 
   // Get category badge info
   const getCategoryBadge = () => {
@@ -72,24 +77,32 @@ const ProductCard = ({ product, showCompare = true }) => {
   return (
     <div className="group h-full">
       <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-teal-200 h-full flex flex-col">
-        {/* Category Badge */}
-        <div className="absolute top-4 left-4 z-10">
-          <div className={`bg-gradient-to-r ${categoryBadge.gradient} text-white px-3 py-1 rounded-full text-xs font-bold shadow-md`}>
+        {/* Badges Container */}
+        <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-10 flex flex-col gap-2">
+          {/* NEW Badge */}
+          {isNew && (
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold shadow-md animate-pulse">
+              NEW
+            </div>
+          )}
+
+          {/* Category Badge */}
+          <div className={`bg-gradient-to-r ${categoryBadge.gradient} text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold shadow-md`}>
             {categoryBadge.text}
           </div>
         </div>
 
         {/* Discount Badge */}
         {discountPercentage > 0 && (
-          <div className="absolute top-4 right-4 z-10">
-            <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+          <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10">
+            <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold shadow-md">
               {discountPercentage}% OFF
             </div>
           </div>
         )}
         
         {/* Product Image */}
-        <div className="relative h-36 bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+        <div className="relative h-32 sm:h-36 bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4">
           <Image
             src={product.featured_image || product.image || "/next.svg"}
             alt={product.name}
@@ -103,23 +116,23 @@ const ProductCard = ({ product, showCompare = true }) => {
         </div>
         
         {/* Product Info */}
-        <div className="p-4 flex-1 flex flex-col justify-between">
+        <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
           <div className="flex-1">
             <Link href={`/products/${product.id}`}>
-              <h3 className="font-bold text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-teal-600 transition-colors cursor-pointer min-h-[3rem]">
+              <h3 className="font-bold text-sm sm:text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-teal-600 transition-colors cursor-pointer min-h-[2.5rem] sm:min-h-[3rem]">
                 {product.name}
               </h3>
             </Link>
 
           {/* Brand */}
           {product.brand && (
-            <p className="text-xs text-gray-500 mb-2 font-medium">
+            <p className="text-xs text-gray-500 mb-1 sm:mb-2 font-medium">
               Brand: {product.brand}
             </p>
           )}
 
           {/* Specifications */}
-          <div className="text-xs text-gray-600 mb-3 space-y-1 min-h-[3rem]">
+          <div className="text-xs text-gray-600 mb-2 sm:mb-3 space-y-1 min-h-[2rem] sm:min-h-[3rem]">
             {product.processor && (
               <div className="flex items-center">
                 <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
@@ -141,9 +154,9 @@ const ProductCard = ({ product, showCompare = true }) => {
           </div>
           
           {/* Price */}
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
             <div>
-              <span className="text-lg font-bold text-gray-900">
+              <span className="text-base sm:text-lg font-bold text-gray-900">
                 Rs:{product.price?.toLocaleString() || '0'}
               </span>
               {originalPrice && (
@@ -153,7 +166,7 @@ const ProductCard = ({ product, showCompare = true }) => {
               )}
             </div>
             {originalPrice && (
-              <div className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+              <div className="bg-green-100 text-green-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs font-medium">
                 Save Rs:{(originalPrice - product.price).toLocaleString()}
               </div>
             )}
@@ -175,14 +188,14 @@ const ProductCard = ({ product, showCompare = true }) => {
           
           {/* Action Buttons */}
           <div className="space-y-2">
-            <Link 
+            <Link
               href={`/products/${product.id}`}
-              className="w-full bg-teal-600 text-white py-2 px-3 rounded-lg text-center font-medium hover:bg-teal-700 transition-colors duration-200 block text-sm"
+              className="w-full bg-teal-600 text-white py-2 px-2 sm:px-3 rounded-lg text-center font-medium hover:bg-teal-700 transition-colors duration-200 block text-xs sm:text-sm"
             >
               View Details
             </Link>
-            
-            <div className="flex gap-1">
+
+            <div className="flex gap-1 sm:gap-2">
               <button
                 onClick={handleAddToCart}
                 disabled={!isActive}

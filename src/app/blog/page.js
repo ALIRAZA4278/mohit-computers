@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import BlogCard from '../../components/BlogCard';
+import NewsletterSubscribe from '../../components/NewsletterSubscribe';
 
 async function getBlogs() {
   try {
@@ -127,26 +128,7 @@ Our blogs
       )}
 
       {/* Newsletter Section */}
-      <section className="bg-white py-16 border-t">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <h3 className="text-2xl font-bold text-black mb-4">Stay Updated</h3>
-            <p className="text-gray-600 mb-8">
-              Get the latest tech news and product recommendations delivered to your inbox.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              />
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <NewsletterSubscribe />
     </div>
   );
 }

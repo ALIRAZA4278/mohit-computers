@@ -1,9 +1,71 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Users, Shield, Truck, HeadphonesIcon, CheckCircle, ArrowRight } from 'lucide-react';
 
 export default function Corporate() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    whatsapp: '',
+    message: '',
+    interests: []
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: '', text: '' });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      interests: checked
+        ? [...prev.interests, value]
+        : prev.interests.filter(item => item !== value)
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage({ type: '', text: '' });
+
+    try {
+      const response = await fetch('/api/corporate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMessage({ type: 'success', text: data.message });
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          whatsapp: '',
+          message: '',
+          interests: []
+        });
+      } else {
+        setMessage({ type: 'error', text: data.message });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to send inquiry. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -115,74 +177,102 @@ export default function Corporate() {
               <div className="w-24 h-1 bg-white/30 rounded-full mx-auto mt-6"></div>
             </div>
 
-            <form className="bg-white rounded-2xl shadow-2xl p-8 text-gray-800">
+            {message.text && (
+              <div className={`mb-6 p-4 rounded-lg ${
+                message.type === 'success'
+                  ? 'bg-green-100 text-green-700 border border-green-200'
+                  : 'bg-red-100 text-red-700 border border-red-200'
+              }`}>
+                {message.text}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-2xl p-8 text-gray-800">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name
+                    Full Name *
                   </label>
                   <input
                     type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    placeholder="Name"
+                    placeholder="Your Name"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
+                    Email *
                   </label>
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    placeholder="Email"
+                    placeholder="your.email@company.com"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Phone
                   </label>
                   <input
                     type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    placeholder="Phone"
+                    placeholder="+92 300 1234567"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Whatsapp Number
+                    WhatsApp Number
                   </label>
                   <input
                     type="tel"
+                    name="whatsapp"
+                    value={formData.whatsapp}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    placeholder=""
+                    placeholder="+92 300 1234567"
                   />
                 </div>
               </div>
-              
+
               <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Message
                 </label>
                 <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   rows="4"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  placeholder="Message"
+                  placeholder="Tell us about your requirements..."
                 ></textarea>
               </div>
 
               <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-700 mb-4">
-                  Interested in a
+                  Interested In
                 </label>
                 <div className="space-y-3">
                   <label className="flex items-center">
                     <input
                       type="checkbox"
+                      value="Laptops"
+                      checked={formData.interests.includes('Laptops')}
+                      onChange={handleCheckboxChange}
                       className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
                     />
                     <span className="ml-2 text-sm text-gray-700">Laptops</span>
@@ -190,6 +280,9 @@ export default function Corporate() {
                   <label className="flex items-center">
                     <input
                       type="checkbox"
+                      value="Chromebooks"
+                      checked={formData.interests.includes('Chromebooks')}
+                      onChange={handleCheckboxChange}
                       className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
                     />
                     <span className="ml-2 text-sm text-gray-700">Chromebooks</span>
@@ -197,19 +290,23 @@ export default function Corporate() {
                   <label className="flex items-center">
                     <input
                       type="checkbox"
+                      value="Workstations"
+                      checked={formData.interests.includes('Workstations')}
+                      onChange={handleCheckboxChange}
                       className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Workstation</span>
+                    <span className="ml-2 text-sm text-gray-700">Workstations</span>
                   </label>
                 </div>
               </div>
-              
+
               <div className="mt-8 text-center">
                 <button
                   type="submit"
-                  className="w-full bg-teal-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-600 transition-colors shadow-lg hover:shadow-xl"
+                  disabled={loading}
+                  className="w-full bg-teal-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-600 transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Submit
+                  {loading ? 'Sending...' : 'Submit Inquiry'}
                 </button>
               </div>
             </form>

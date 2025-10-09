@@ -14,7 +14,7 @@ export async function POST(request) {
     }
 
     // Check if email matches admin email
-    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL 
+    const adminEmail = "mohit316bwebsite@gmail.com"
 
     if (email !== adminEmail) {
       return NextResponse.json(
