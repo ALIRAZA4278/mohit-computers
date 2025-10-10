@@ -9,7 +9,8 @@ import {
   ShoppingCart,
   Settings,
   LogOut,
-  Store
+  Store,
+  Mail
 } from 'lucide-react';
 
 export default function AdminSidebar({ activeSection, setActiveSection, onLogout }) {
@@ -19,6 +20,7 @@ export default function AdminSidebar({ activeSection, setActiveSection, onLogout
     { id: 'products', label: 'Products', icon: Package },
     { id: 'users', label: 'Users', icon: Users },
     { id: 'blogs', label: 'Blogs', icon: FileText },
+    { id: 'subscribers', label: 'Subscribers', icon: Mail },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 

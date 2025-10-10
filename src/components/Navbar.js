@@ -172,7 +172,7 @@ const Navbar = () => {
                   )}
                 </div>
                 <div className="hidden lg:block">
-                  <div className="text-sm font-medium">Cart</div>
+                  <div className="text-sm font-medium text-black">Cart</div>
                   <div className="text-xs text-gray-600">{formatCurrency(getCartTotal())}</div>
                 </div>
               </Link>
@@ -334,7 +334,7 @@ const Navbar = () => {
                       </span>
                     )}
                   </div>
-                  <span className="text-xs font-medium">Wishlist</span>
+                  <span className="text-xs font-medium text-black">Wishlist</span>
                 </Link>
                 
                 <Link href="/compare" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
@@ -346,10 +346,10 @@ const Navbar = () => {
                       </span>
                     )}
                   </div>
-                  <span className="text-xs font-medium">Compare</span>
+                  <span className="text-xs font-medium text-black">Compare</span>
                 </Link>
                 
-                <Link href="/cart" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
+                <Link href="/cart" className="flex text-black flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
                   <div className="relative">
                     <ShoppingCart className="w-5 h-5 mb-1 text-black" />
                     {getCartItemsCount() > 0 && (
@@ -358,7 +358,7 @@ const Navbar = () => {
                       </span>
                     )}
                   </div>
-                  <span className="text-xs font-medium">Cart</span>
+                  <span className="text-xs font-medium text-black">Cart</span>
                 </Link>
               </div>
               

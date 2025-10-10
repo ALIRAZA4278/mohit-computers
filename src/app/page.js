@@ -288,14 +288,7 @@ export default function Home() {
                 >
                   {newArrivalProducts.map((product) => (
                     <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-                      <div className="relative">
-                        <div className="absolute -top-3 -right-3 z-10">
-                          <div className="bg-gradient-to-r from-green-400 to-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                            NEW
-                          </div>
-                        </div>
-                        <ProductCard product={product} />
-                      </div>
+                      <ProductCard product={product} />
                     </div>
                   ))}
                 </div>
@@ -357,14 +350,7 @@ export default function Home() {
                 >
                   {workstationProducts.map((product) => (
                     <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-                      <div className="relative">
-                        <div className="absolute -top-3 -right-3 z-10">
-                          <div className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                            PRO
-                          </div>
-                        </div>
-                        <ProductCard product={product} />
-                      </div>
+                      <ProductCard product={product} />
                     </div>
                   ))}
                 </div>

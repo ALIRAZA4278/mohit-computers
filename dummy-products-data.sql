@@ -10,9 +10,9 @@ VALUES
 
 ('HP Z8 G4 Workstation', 'HP', 'workstation', 349999, 'Ultimate professional workstation featuring dual Intel Xeon Gold processors, 128GB ECC RAM, NVIDIA RTX A6000 48GB, 2TB NVMe SSD + 4TB HDD. Ideal for rendering, simulation, and heavy computational tasks.', 'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&h=600&fit=crop', true, false, NOW(), NOW()),
 
-('Lenovo ThinkStation P620', 'Lenovo', 'workstation', 279999, 'AMD Ryzen Threadripper PRO 3975WX, 64GB RAM, NVIDIA Quadro RTX 4000, 1TB NVMe SSD. Excellent for content creation, engineering, and data science applications.', 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800&h=600&fit=crop', true, false, NOW(), NOW()),
+('Lenovo ThinkStation P620', 'Lenovo', 'workstation', 279999, 'AMD Ryzen Threadripper 3975WX, 64GB RAM, NVIDIA Quadro RTX 4000, 1TB NVMe SSD. Excellent for content creation, engineering, and data science applications.', 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800&h=600&fit=crop', true, false, NOW(), NOW()),
 
-('Custom Built Workstation Pro', 'Mohit Computers', 'workstation', 249999, 'Custom-built workstation: Intel Core i9-13900K, 64GB DDR5 RAM, NVIDIA RTX 4080 16GB, 2TB Gen4 NVMe SSD, 850W PSU, Liquid cooling. Built and tested by our expert team with 3-year warranty.', 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=800&h=600&fit=crop', true, false, NOW(), NOW());
+('Custom Built Workstation', 'Mohit Computers', 'workstation', 249999, 'Custom-built workstation: Intel Core i9-13900K, 64GB DDR5 RAM, NVIDIA RTX 4080 16GB, 2TB Gen4 NVMe SSD, 850W PSU, Liquid cooling. Built and tested by our expert team with 3-year warranty.', 'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=800&h=600&fit=crop', true, false, NOW(), NOW());
 
 
 -- ACCESSORIES (4 items)
@@ -42,7 +42,7 @@ VALUES
 -- SSD (4 items)
 INSERT INTO products (name, brand, category_id, price, description, featured_image, is_active, in_stock, created_at, updated_at)
 VALUES
-('Samsung 980 PRO 1TB NVMe Gen4 SSD', 'Samsung', 'ssd', 11999, 'Flagship NVMe Gen4 SSD, 1TB capacity, up to 7000MB/s read speed, PCIe 4.0 x4, V-NAND technology, 5-year warranty. Perfect for gaming and professional workloads.', 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800&h=600&fit=crop', true, false, NOW(), NOW()),
+('Samsung 980 1TB NVMe Gen4 SSD', 'Samsung', 'ssd', 11999, 'Flagship NVMe Gen4 SSD, 1TB capacity, up to 7000MB/s read speed, PCIe 4.0 x4, V-NAND technology, 5-year warranty. Perfect for gaming and professional workloads.', 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800&h=600&fit=crop', true, false, NOW(), NOW()),
 
 ('WD Black SN850X 2TB NVMe SSD', 'Western Digital', 'ssd', 16999, 'High-performance gaming SSD, 2TB capacity, up to 7300MB/s speeds, PCIe Gen4, Game Mode 2.0, RGB heatsink available. Ideal for PS5 and gaming PCs.', 'https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=800&h=600&fit=crop', true, false, NOW(), NOW()),
 

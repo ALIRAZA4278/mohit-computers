@@ -43,6 +43,11 @@ const ProductCard = ({ product, showCompare = true }) => {
   const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
   const isFeatured = product.is_featured || product.featured;
 
+  // Debug logging for category detection
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Product:', product.name, 'Category:', category, 'Is Workstation:', product.is_workstation);
+  }
+
   const discountPercentage = originalPrice
     ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
     : 0;
@@ -54,20 +59,38 @@ const ProductCard = ({ product, showCompare = true }) => {
 
   // Get category badge info
   const getCategoryBadge = () => {
-    if (category === 'laptop' || category === 'used-laptop') {
+    const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+    
+    // Check for workstation first (highest priority)
+    if (categoryLower.includes('workstation') || product.is_workstation) {
+      return { text: 'Workstation', gradient: 'from-slate-600 to-slate-700' };
+    }
+    if (categoryLower.includes('laptop') || categoryLower === 'used-laptop') {
       return { text: 'Laptop', gradient: 'from-blue-500 to-blue-600' };
     }
-    if (category === 'chromebook') {
-      return { text: 'Chromebook', gradient: 'from-green-500 to-green-600' };
+    if (categoryLower.includes('chromebook')) {
+      return { text: 'Chromebook', gradient: 'from-emerald-500 to-emerald-600' };
     }
-    if (category === 'accessories') {
-      return { text: 'Accessory', gradient: 'from-orange-400 to-red-500' };
+    if (categoryLower.includes('accessories') || categoryLower.includes('accessory')) {
+      return { text: 'Accessory', gradient: 'from-orange-500 to-orange-600' };
     }
-    if (category === 'ram') {
+    if (categoryLower.includes('ram') || categoryLower.includes('memory')) {
       return { text: 'RAM', gradient: 'from-purple-500 to-purple-600' };
     }
-    if (category === 'ssd') {
+    if (categoryLower.includes('ssd') || categoryLower.includes('storage')) {
       return { text: 'SSD', gradient: 'from-indigo-500 to-indigo-600' };
+    }
+    if (categoryLower.includes('keyboard')) {
+      return { text: 'Keyboard', gradient: 'from-teal-500 to-teal-600' };
+    }
+    if (categoryLower.includes('mouse')) {
+      return { text: 'Mouse', gradient: 'from-cyan-500 to-cyan-600' };
+    }
+    if (categoryLower.includes('ups') || categoryLower.includes('power')) {
+      return { text: 'UPS', gradient: 'from-yellow-500 to-yellow-600' };
+    }
+    if (categoryLower.includes('desktop') || categoryLower.includes('pc')) {
+      return { text: 'Desktop', gradient: 'from-gray-600 to-gray-700' };
     }
     return { text: 'Product', gradient: 'from-gray-500 to-gray-600' };
   };
@@ -77,25 +100,20 @@ const ProductCard = ({ product, showCompare = true }) => {
   return (
     <div className="group h-full">
       <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-teal-200 h-full flex flex-col">
-        {/* Badges Container */}
-        <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-10 flex flex-col gap-2">
+        {/* Badges Container - Removed category badges */}
+        <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
           {/* NEW Badge */}
           {isNew && (
-            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold shadow-md animate-pulse">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-green-400/20 backdrop-blur-sm">
               NEW
             </div>
           )}
-
-          {/* Category Badge */}
-          <div className={`bg-gradient-to-r ${categoryBadge.gradient} text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold shadow-md`}>
-            {categoryBadge.text}
-          </div>
         </div>
 
         {/* Discount Badge */}
         {discountPercentage > 0 && (
-          <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10">
-            <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 sm:px-3 py-1 rounded-full text-xs font-bold shadow-md">
+          <div className="absolute top-3 right-3 z-10">
+            <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-red-400/20 backdrop-blur-sm">
               {discountPercentage}% OFF
             </div>
           </div>
