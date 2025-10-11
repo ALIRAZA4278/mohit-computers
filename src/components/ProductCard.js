@@ -33,6 +33,10 @@ const ProductCard = ({ product, showCompare = true }) => {
   };
 
   const handleAddToCart = () => {
+    if (!isAvailableForPurchase) {
+      alert('Sorry, this product is currently out of stock.');
+      return;
+    }
     addToCart(product);
     // Optional: Show success message
   };
@@ -42,6 +46,18 @@ const ProductCard = ({ product, showCompare = true }) => {
   const category = product.category_id || product.category;
   const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
   const isFeatured = product.is_featured || product.featured;
+  
+  // Check if product is in stock - with fallback for existing products
+  // Set defaults based on category and product name
+  const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+  const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+  const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+    categoryLower.includes(cat) || productNameLower.includes(cat)
+  );
+  
+  const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+  const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+  const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
 
   // Debug logging for category detection
   if (process.env.NODE_ENV === 'development') {
@@ -102,8 +118,22 @@ const ProductCard = ({ product, showCompare = true }) => {
       <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-teal-200 h-full flex flex-col">
         {/* Badges Container - Removed category badges */}
         <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+          {/* Out of Stock Badge */}
+          {!isAvailableForPurchase && (
+            <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-red-400/20 backdrop-blur-sm">
+              OUT OF STOCK
+            </div>
+          )}
+          
+          {/* Low Stock Badge */}
+          {isAvailableForPurchase && stockQuantity <= 5 && stockQuantity > 0 && (
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-orange-400/20 backdrop-blur-sm">
+              LIMITED STOCK
+            </div>
+          )}
+          
           {/* NEW Badge */}
-          {isNew && (
+          {isAvailableForPurchase && isNew && (
             <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-green-400/20 backdrop-blur-sm">
               NEW
             </div>
@@ -111,7 +141,7 @@ const ProductCard = ({ product, showCompare = true }) => {
         </div>
 
         {/* Discount Badge */}
-        {discountPercentage > 0 && (
+        {isAvailableForPurchase && discountPercentage > 0 && (
           <div className="absolute top-3 right-3 z-10">
             <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-red-400/20 backdrop-blur-sm">
               {discountPercentage}% OFF
@@ -193,14 +223,14 @@ const ProductCard = ({ product, showCompare = true }) => {
           {/* Stock Status */}
           <div className="mb-2">
             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-              isActive 
+              isAvailableForPurchase 
                 ? 'bg-green-100 text-green-800' 
                 : 'bg-red-100 text-red-800'
             }`}>
               <span className={`w-1 h-1 rounded-full mr-1 ${
-                isActive ? 'bg-green-500' : 'bg-red-500'
+                isAvailableForPurchase ? 'bg-green-500' : 'bg-red-500'
               }`}></span>
-              {isActive ? 'In Stock' : 'Out of Stock'}
+              {isAvailableForPurchase ? 'In Stock' : 'Out of Stock'}
             </span>
           </div>
           
@@ -216,15 +246,16 @@ const ProductCard = ({ product, showCompare = true }) => {
             <div className="flex gap-1 sm:gap-2">
               <button
                 onClick={handleAddToCart}
-                disabled={!isActive}
+                disabled={!isAvailableForPurchase}
                 className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-colors ${
-                  isActive
+                  isAvailableForPurchase
                     ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                 }`}
+                title={!isAvailableForPurchase ? 'Out of stock' : 'Add to cart'}
               >
                 <ShoppingCart className="w-3 h-3 inline mr-1" />
-                Cart
+                {isAvailableForPurchase ? 'Cart' : 'Out of Stock'}
               </button>
               
               {/* Compare Button */}

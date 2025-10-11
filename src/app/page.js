@@ -113,7 +113,7 @@ export default function Home() {
             <div className="relative">
               <div className="bg-white rounded-2xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-500">
                 <Image
-                  src="/next.png"
+                  src="/images/hero/laptop-hero.svg"
                   alt="Premium Laptop"
                   width={500}
                   height={350}
@@ -145,37 +145,37 @@ export default function Home() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
-                <Image src="/next.svg" alt="HP" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
+                <Image src="/images/brands/hp-logo.svg" alt="HP" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">HP</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
-                <Image src="/next.svg" alt="Dell" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
+                <Image src="/images/brands/dell-logo.svg" alt="Dell" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Dell</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
-                <Image src="/next.svg" alt="Acer" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
+                <Image src="/images/brands/acer-logo.svg" alt="Acer" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Acer</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
-                <Image src="/next.svg" alt="Lenovo" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
+                <Image src="/images/brands/lenovo-logo.svg" alt="Lenovo" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Lenovo</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
-                <Image src="/next.svg" alt="Chromebook" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
+                <Image src="/images/brands/chromebook-logo.svg" alt="Chromebook" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Chromebook</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
-                <Image src="/next.svg" alt="Accessories" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
+                <Image src="/images/brands/accessories-logo.svg" alt="Accessories" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Accessories</p>
               </div>
             </div>
@@ -485,7 +485,7 @@ export default function Home() {
           
           <div className="text-center mt-12">
             <div className="inline-flex items-center px-6 py-3 bg-white/10 rounded-full backdrop-blur-sm border border-white/10">
-              <Image src="/next.svg" alt="Google" width={24} height={24} className="mr-3" />
+              <Image src="/images/brands/chromebook-logo.svg" alt="Google" width={24} height={24} className="mr-3" />
               <span className="text-sm font-medium text-gray-300">
                 4.9/5 rating based on 150+ Google reviews
               </span>

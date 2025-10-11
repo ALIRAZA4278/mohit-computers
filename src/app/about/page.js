@@ -58,7 +58,7 @@ export default function About() {
             <div className="relative">
               <div className="bg-white rounded-2xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-500">
                 <Image
-                  src="/next.svg"
+                  src="/images/hero/about-hero.svg"
                   alt="MOHIT COMPUTERS Office"
                   width={500}
                   height={400}
@@ -294,7 +294,7 @@ export default function About() {
             <div className="relative">
               <div className="bg-white rounded-2xl shadow-2xl p-8 transform -rotate-3 hover:rotate-0 transition-transform duration-500">
                 <Image
-                  src="/next.svg"
+                  src="/images/about/quality-laptops.svg"
                   alt="MOHIT COMPUTERS Laptops"
                   width={500}
                   height={400}

@@ -89,6 +89,30 @@ export default function ProductDetail() {
     : ['/placeholder-laptop.png'];
 
   const handleAddToCart = () => {
+    // Check stock availability - with fallback for existing products
+    // Set defaults based on category and product name
+    const category = product.category_id || product.category;
+    const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+    const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+    const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+      categoryLower.includes(cat) || productNameLower.includes(cat)
+    );
+    
+    const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+    const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+    const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+    const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
+    
+    if (!isAvailableForPurchase) {
+      alert('Sorry, this product is currently out of stock.');
+      return;
+    }
+    
+    if (quantity > stockQuantity) {
+      alert(`Sorry, only ${stockQuantity} items are available in stock.`);
+      return;
+    }
+    
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
@@ -284,6 +308,53 @@ export default function ProductDetail() {
                 </div>
               )}
 
+              {/* Stock Availability */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {(() => {
+                      const category = product.category_id || product.category;
+                      const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+                      const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+                      const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+                        categoryLower.includes(cat) || productNameLower.includes(cat)
+                      );
+                      
+                      const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+                      const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+                      const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+                      const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
+                      
+                      if (!isAvailableForPurchase) {
+                        return (
+                          <>
+                            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                            <span className="text-red-700 font-semibold">Out of Stock</span>
+                          </>
+                        );
+                      } else if (stockQuantity <= 5) {
+                        return (
+                          <>
+                            <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                            <span className="text-orange-700 font-semibold">Limited Stock</span>
+                          </>
+                        );
+                      } else {
+                        return (
+                          <>
+                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span className="text-green-700 font-semibold">In Stock</span>
+                          </>
+                        );
+                      }
+                    })()}
+                  </div>
+                  <div className="text-sm text-blue-600 font-medium">
+                    🚚 Free delivery available
+                  </div>
+                </div>
+              </div>
+
               {/* Quantity & Actions */}
               <div className="space-y-4">
                 {/* Quantity Selector */}
@@ -300,8 +371,14 @@ export default function ProductDetail() {
                       {quantity}
                     </span>
                     <button
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="px-4 py-2 bg-gray-50 hover:bg-gray-100 transition-colors font-semibold text-gray-700"
+                      onClick={() => {
+                        const stockQuantity = product.stock_quantity || 0;
+                        if (quantity < stockQuantity) {
+                          setQuantity(quantity + 1);
+                        }
+                      }}
+                      disabled={quantity >= (product.stock_quantity || 0)}
+                      className="px-4 py-2 bg-gray-50 hover:bg-gray-100 transition-colors font-semibold text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       +
                     </button>
@@ -310,13 +387,41 @@ export default function ProductDetail() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <button
-                    onClick={handleAddToCart}
-                    className="flex-1 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    Add to Cart
-                  </button>
+                  {(() => {
+                    const category = product.category_id || product.category;
+                    const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+                    const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+                    const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+                      categoryLower.includes(cat) || productNameLower.includes(cat)
+                    );
+                    
+                    const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+                    const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+                    const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+                    const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
+                    
+                    if (!isAvailableForPurchase) {
+                      return (
+                        <button
+                          disabled
+                          className="flex-1 bg-gray-400 text-white px-8 py-4 rounded-xl font-semibold text-lg cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                          <ShoppingCart className="w-5 h-5" />
+                          Out of Stock
+                        </button>
+                      );
+                    }
+                    
+                    return (
+                      <button
+                        onClick={handleAddToCart}
+                        className="flex-1 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                      >
+                        <ShoppingCart className="w-5 h-5" />
+                        Add to Cart
+                      </button>
+                    );
+                  })()}
                   <button
                     onClick={handleWishlist}
                     className={`px-6 py-4 rounded-xl font-semibold transition-all border-2 ${

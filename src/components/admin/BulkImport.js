@@ -263,6 +263,7 @@ export default function BulkImport({ onImportComplete }) {
           <li>• Required fields: <strong>name, price</strong></li>
           <li>• Optional fields: category, brand, description, specifications, etc.</li>
           <li>• For laptops, include model, processor, RAM, storage details</li>
+          <li>• <strong>Image Links:</strong> Add up to 5 product image URLs in &quot;Image URL 1&quot; through &quot;Image URL 5&quot; columns</li>
           <li>• Use &quot;true&quot;/&quot;false&quot; for boolean fields (featured, in_stock, charger_included)</li>
           <li>• Supported file types: CSV (.csv), Excel (.xlsx, .xls)</li>
         </ul>

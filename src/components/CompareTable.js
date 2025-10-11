@@ -555,21 +555,50 @@ const CompareTable = () => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <span className={`px-3 py-2 rounded-full text-sm font-medium flex items-center w-fit ${
-                    product.inStock 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
+                    (() => {
+                      const category = product.category_id || product.category;
+                      const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+                      const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+                      const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+                        categoryLower.includes(cat) || productNameLower.includes(cat)
+                      );
+                      
+                      const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+                      const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+                      const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+                      const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
+                      return isAvailableForPurchase ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                    })()
                   }`}>
-                    {product.inStock ? (
-                      <>
-                        <CheckCircle className="w-4 h-4 mr-1" />
-                        In Stock
-                      </>
-                    ) : (
-                      <>
-                        <XCircle className="w-4 h-4 mr-1" />
-                        Out of Stock
-                      </>
-                    )}
+                    {(() => {
+                      const category = product.category_id || product.category;
+                      const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+                      const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+                      const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+                        categoryLower.includes(cat) || productNameLower.includes(cat)
+                      );
+                      
+                      const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+                      const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+                      const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+                      const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
+                      
+                      if (isAvailableForPurchase) {
+                        return (
+                          <>
+                            <CheckCircle className="w-4 h-4 mr-1" />
+                            In Stock
+                          </>
+                        );
+                      } else {
+                        return (
+                          <>
+                            <XCircle className="w-4 h-4 mr-1" />
+                            Out of Stock
+                          </>
+                        );
+                      }
+                    })()}
                   </span>
                 </td>
               ))}
@@ -589,15 +618,46 @@ const CompareTable = () => {
                   <div className="space-y-3">
                     <button
                       onClick={(e) => handleAddToCart(product)}
-                      disabled={!product.inStock}
+                      disabled={(() => {
+                        const category = product.category_id || product.category;
+                        const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+                        const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+                      const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+                        categoryLower.includes(cat) || productNameLower.includes(cat)
+                      );
+                        
+                        const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+                        const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+                        const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+                        return !(isActive && inStock && stockQuantity > 0);
+                      })()}
                       className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-200 ${
-                        product.inStock
-                          ? 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5'
-                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        (() => {
+                          const category = product.category_id || product.category;
+                          const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+                          const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+                      const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+                        categoryLower.includes(cat) || productNameLower.includes(cat)
+                      );
+                          
+                          const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+                          const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+                          const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+                          const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
+                          return isAvailableForPurchase
+                            ? 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed';
+                        })()
                       }`}
                     >
                       <ShoppingCart className="w-5 h-5 inline mr-2" />
-                      {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                      {(() => {
+                        const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : 999; // Default to 999 for existing products
+                        const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : true); // Default to true
+                        const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+                        const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
+                        return isAvailableForPurchase ? 'Add to Cart' : 'Out of Stock';
+                      })()}
                     </button>
                     
                     <a 

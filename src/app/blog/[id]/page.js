@@ -5,6 +5,7 @@ import { Calendar, User, ArrowLeft, Tag, Facebook, Twitter, Linkedin, Share2, Me
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import BlogCard from '../../../components/BlogCard';
+import CommentSection from '../../../components/CommentSection';
 
 async function getBlog(slug) {
   try {
@@ -305,18 +306,8 @@ export default async function BlogDetail({ params }) {
             </div>
 
             {/* Comments Section */}
-            <div className="bg-white rounded-lg shadow-lg p-8 mt-8 border-t-4 border-blue-500">
-              <h3 className="text-2xl font-bold text-black mb-6 flex items-center">
-                <MessageCircle className="w-6 h-6 mr-3 text-blue-600" />
-                Comments
-              </h3>
-              <div className="text-center py-12 bg-gray-50 rounded-lg">
-                <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-black mb-6 font-medium">No comments yet. Be the first to share your thoughts!</p>
-                <button className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                  Leave a Comment
-                </button>
-              </div>
+            <div className="mt-8">
+              <CommentSection blogId={post.id || post._id} />
             </div>
           </article>
 

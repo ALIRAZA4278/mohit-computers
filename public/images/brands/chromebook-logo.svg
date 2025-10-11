@@ -1,0 +1,7 @@
+<svg width="120" height="80" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+  <rect width="120" height="80" fill="#4285F4" rx="8"/>
+  <circle cx="60" cy="40" r="20" fill="none" stroke="white" stroke-width="3"/>
+  <circle cx="60" cy="40" r="8" fill="white"/>
+  <text x="60" y="65" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">Chromebook</text>
+</svg>
+

@@ -62,15 +62,21 @@ function parseCSV(csvContent) {
     const dbProduct = {
       // Basic fields (mapped from CSV)
       name: model, // From "Model" column
-      category_id: 'laptop',
+      category_id: product.Category || 'laptop',
       brand: brand, // Auto-extracted from Model
       price: parseFloat(product['Selling Price'] || 0),
       is_featured: false,
       is_active: true,
 
-      // Image fields (empty by default, can be added manually later)
-      images: [],
-      featured_image: null,
+      // Image fields (from CSV import)
+      images: [
+        product['Image URL 1'],
+        product['Image URL 2'],
+        product['Image URL 3'],
+        product['Image URL 4'],
+        product['Image URL 5']
+      ].filter(url => url && url.trim() !== ''),
+      featured_image: product['Image URL 1'] || null,
 
       // CSV Import Fields (Exact Match)
       processor: product.Processor || null,
@@ -127,15 +133,21 @@ async function parseExcel(file) {
     const dbProduct = {
       // Basic fields (mapped from Excel)
       name: model, // From "Model" column
-      category_id: 'laptop',
+      category_id: row.Category || 'laptop',
       brand: brand, // Auto-extracted from Model
       price: parseFloat(row['Selling Price'] || 0),
       is_featured: false,
       is_active: true,
 
-      // Image fields (empty by default, can be added manually later)
-      images: [],
-      featured_image: null,
+      // Image fields (from Excel import)
+      images: [
+        row['Image URL 1'],
+        row['Image URL 2'],
+        row['Image URL 3'],
+        row['Image URL 4'],
+        row['Image URL 5']
+      ].filter(url => url && url.trim() !== ''),
+      featured_image: row['Image URL 1'] || null,
 
       // Excel Import Fields (Exact Match)
       processor: row.Processor || null,

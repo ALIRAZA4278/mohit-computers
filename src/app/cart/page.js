@@ -137,7 +137,7 @@ export default function Cart() {
                         {/* Product Image */}
                         <div className="flex-shrink-0">
                           <Image
-                            src="/next.png" // Placeholder
+                            src="/images/products/laptop-showcase.svg"
                             alt={item.name}
                             width={60}
                             height={45}
@@ -246,7 +246,7 @@ export default function Cart() {
                       {/* Product Image */}
                       <div className="flex-shrink-0">
                         <Image
-                          src="/next.png" // Placeholder
+                          src="/images/products/laptop-showcase.svg"
                           alt={item.name}
                           width={80}
                           height={60}

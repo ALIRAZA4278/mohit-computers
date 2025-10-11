@@ -1,0 +1,52 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d9488;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f766e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f0fdfa"/>
+  
+  <!-- Shopping Cart -->
+  <rect x="120" y="120" width="160" height="100" rx="8" fill="url(#cartGradient)"/>
+  <rect x="130" y="130" width="140" height="80" rx="4" fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Cart Items (Laptops) -->
+  <rect x="140" y="140" width="40" height="25" rx="3" fill="#374151"/>
+  <rect x="142" y="142" width="36" height="21" rx="2" fill="#3b82f6"/>
+  
+  <rect x="190" y="140" width="40" height="25" rx="3" fill="#374151"/>
+  <rect x="192" y="142" width="36" height="21" rx="2" fill="#10b981"/>
+  
+  <rect x="240" y="140" width="40" height="25" rx="3" fill="#374151"/>
+  <rect x="242" y="142" width="36" height="21" rx="2" fill="#ef4444"/>
+  
+  <!-- Accessories -->
+  <circle cx="155" cy="185" r="8" fill="#8b5cf6"/>
+  <rect x="175" y="177" width="16" height="16" rx="2" fill="#f59e0b"/>
+  <rect x="205" y="177" width="16" height="16" rx="2" fill="#06b6d4"/>
+  
+  <!-- Cart Handle -->
+  <rect x="90" y="140" width="8" height="60" rx="4" fill="#6b7280"/>
+  <rect x="85" y="135" width="18" height="8" rx="4" fill="#6b7280"/>
+  
+  <!-- Cart Wheels -->
+  <circle cx="140" cy="240" r="12" fill="#374151"/>
+  <circle cx="140" cy="240" r="6" fill="#6b7280"/>
+  <circle cx="260" cy="240" r="12" fill="#374151"/>
+  <circle cx="260" cy="240" r="6" fill="#6b7280"/>
+  
+  <!-- Price Tags -->
+  <rect x="300" y="80" width="60" height="30" rx="4" fill="#10b981"/>
+  <text x="330" y="100" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">SALE</text>
+  
+  <rect x="40" y="200" width="60" height="30" rx="4" fill="#ef4444"/>
+  <text x="70" y="220" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="white" text-anchor="middle">DISCOUNT</text>
+  
+  <!-- Checkmark -->
+  <circle cx="330" cy="180" r="25" fill="#10b981"/>
+  <path d="M320,180 L327,187 L340,174" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+

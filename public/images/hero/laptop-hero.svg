@@ -1,0 +1,42 @@
+<svg width="500" height="350" viewBox="0 0 500 350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="laptopGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1f2937;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#374151;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="screenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Laptop Base -->
+  <ellipse cx="250" cy="320" rx="200" ry="20" fill="#d1d5db" opacity="0.3"/>
+  <rect x="50" y="280" width="400" height="40" rx="20" fill="url(#laptopGradient)"/>
+  
+  <!-- Laptop Screen -->
+  <rect x="80" y="80" width="340" height="220" rx="15" fill="url(#laptopGradient)"/>
+  <rect x="100" y="100" width="300" height="180" rx="8" fill="url(#screenGradient)"/>
+  
+  <!-- Screen Content -->
+  <rect x="120" y="120" width="60" height="8" rx="4" fill="white" opacity="0.8"/>
+  <rect x="120" y="140" width="120" height="6" rx="3" fill="white" opacity="0.6"/>
+  <rect x="120" y="155" width="80" height="6" rx="3" fill="white" opacity="0.6"/>
+  
+  <rect x="300" y="120" width="80" height="60" rx="8" fill="white" opacity="0.2"/>
+  <rect x="120" y="200" width="260" height="4" rx="2" fill="white" opacity="0.4"/>
+  <rect x="120" y="215" width="200" height="4" rx="2" fill="white" opacity="0.4"/>
+  <rect x="120" y="230" width="240" height="4" rx="2" fill="white" opacity="0.4"/>
+  
+  <!-- Keyboard -->
+  <rect x="100" y="290" width="300" height="20" rx="4" fill="#4b5563"/>
+  <rect x="110" y="295" width="280" height="10" rx="2" fill="#6b7280"/>
+  
+  <!-- Trackpad -->
+  <rect x="220" y="315" width="60" height="40" rx="8" fill="#4b5563"/>
+  
+  <!-- Brand Badge -->
+  <circle cx="420" cy="120" r="25" fill="#10b981"/>
+  <text x="420" y="127" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle">✓</text>
+</svg>
+

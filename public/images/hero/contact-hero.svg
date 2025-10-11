@@ -1,0 +1,47 @@
+<svg width="500" height="350" viewBox="0 0 500 350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="phoneGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="500" height="350" fill="#f8fafc"/>
+  
+  <!-- Phone -->
+  <rect x="180" y="80" width="140" height="240" rx="20" fill="url(#phoneGradient)"/>
+  <rect x="195" y="110" width="110" height="180" rx="8" fill="#1e293b"/>
+  
+  <!-- Screen Content -->
+  <circle cx="250" cy="140" r="15" fill="#10b981"/>
+  <text x="250" y="147" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle">📞</text>
+  
+  <rect x="210" y="170" width="80" height="4" rx="2" fill="#64748b"/>
+  <rect x="210" y="185" width="60" height="4" rx="2" fill="#64748b"/>
+  <rect x="210" y="200" width="70" height="4" rx="2" fill="#64748b"/>
+  
+  <!-- Email Icon -->
+  <rect x="80" y="120" width="60" height="40" rx="8" fill="#ef4444"/>
+  <rect x="90" y="130" width="40" height="20" rx="4" fill="white"/>
+  <polygon points="90,130 110,145 130,130" fill="#ef4444"/>
+  
+  <!-- Location Icon -->
+  <circle cx="400" cy="140" r="30" fill="#10b981"/>
+  <path d="M400,125 C407,125 413,131 413,138 C413,148 400,160 400,160 C400,160 387,148 387,138 C387,131 393,125 400,125 Z" fill="white"/>
+  <circle cx="400" cy="138" r="5" fill="#10b981"/>
+  
+  <!-- Support Icon -->
+  <rect x="100" y="220" width="60" height="60" rx="15" fill="#8b5cf6"/>
+  <circle cx="130" cy="240" r="8" fill="white"/>
+  <rect x="125" y="250" width="10" height="15" rx="2" fill="white"/>
+  <rect x="120" y="268" width="20" height="4" rx="2" fill="white"/>
+  
+  <!-- Chat Bubbles -->
+  <ellipse cx="380" cy="250" rx="40" ry="25" fill="#0ea5e9"/>
+  <text x="380" y="257" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Hello!</text>
+  
+  <ellipse cx="350" cy="290" rx="35" ry="20" fill="#64748b"/>
+  <text x="350" y="296" font-family="Arial, sans-serif" font-size="10" fill="white" text-anchor="middle">How can we help?</text>
+</svg>
+
