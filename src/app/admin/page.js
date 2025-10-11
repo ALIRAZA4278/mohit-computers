@@ -10,6 +10,7 @@ import UsersManagement from '../../components/admin/UsersManagement';
 import OrdersManagement from '../../components/admin/OrdersManagement';
 import NewsletterSubscribers from '../../components/admin/NewsletterSubscribers';
 import CommentManagement from '../../components/admin/CommentManagement';
+import ReviewManagement from '../../components/admin/ReviewManagement';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -206,6 +207,8 @@ export default function AdminLogin() {
         return <NewsletterSubscribers />;
       case 'comments':
         return <CommentManagement />;
+      case 'reviews':
+        return <ReviewManagement />;
       case 'settings':
         return (
           <div className="p-6">

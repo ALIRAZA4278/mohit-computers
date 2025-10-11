@@ -97,7 +97,7 @@ const ProductCard = ({ product, showCompare = true }) => {
       return { text: 'SSD', gradient: 'from-indigo-500 to-indigo-600' };
     }
     if (categoryLower.includes('keyboard')) {
-      return { text: 'Keyboard', gradient: 'from-teal-500 to-teal-600' };
+      return { text: 'Keyboard', gradient: 'from-teal-500 to-[#6dc1c9]' };
     }
     if (categoryLower.includes('mouse')) {
       return { text: 'Mouse', gradient: 'from-cyan-500 to-cyan-600' };
@@ -167,7 +167,7 @@ const ProductCard = ({ product, showCompare = true }) => {
         <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
           <div className="flex-1">
             <Link href={`/products/${product.id}`}>
-              <h3 className="font-bold text-sm sm:text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-teal-600 transition-colors cursor-pointer min-h-[2.5rem] sm:min-h-[3rem]">
+              <h3 className="font-bold text-sm sm:text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-[#6dc1c9] transition-colors cursor-pointer min-h-[2.5rem] sm:min-h-[3rem]">
                 {product.name}
               </h3>
             </Link>
@@ -238,7 +238,7 @@ const ProductCard = ({ product, showCompare = true }) => {
           <div className="space-y-2">
             <Link
               href={`/products/${product.id}`}
-              className="w-full bg-teal-600 text-white py-2 px-2 sm:px-3 rounded-lg text-center font-medium hover:bg-teal-700 transition-colors duration-200 block text-xs sm:text-sm"
+              className="w-full bg-[#6dc1c9] text-white py-2 px-2 sm:px-3 rounded-lg text-center font-medium hover:bg-teal-700 transition-colors duration-200 block text-xs sm:text-sm"
             >
               View Details
             </Link>

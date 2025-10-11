@@ -212,7 +212,7 @@ export default function Checkout() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-teal-600 border-t-transparent mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#6dc1c9] border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600 font-medium">Loading checkout...</p>
         </div>
       </div>
@@ -231,7 +231,7 @@ export default function Checkout() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/cart" className="inline-flex items-center text-teal-600 hover:text-teal-700 font-medium mb-4">
+          <Link href="/cart" className="inline-flex items-center text-[#6dc1c9] hover:text-teal-700 font-medium mb-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Return to cart
           </Link>
@@ -316,11 +316,11 @@ export default function Checkout() {
                         type="button"
                         onClick={getCurrentLocation}
                         disabled={isGettingLocation}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-teal-600 hover:text-teal-700 hover:bg-teal-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-[#6dc1c9] hover:text-teal-700 hover:bg-teal-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         title="Use current location"
                       >
                         {isGettingLocation ? (
-                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-teal-600 border-t-transparent"></div>
+                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-[#6dc1c9] border-t-transparent"></div>
                         ) : (
                           <Navigation className="w-5 h-5" />
                         )}
@@ -478,7 +478,7 @@ export default function Checkout() {
                   <button
                     type="button"
                     onClick={() => setShowCoupon(!showCoupon)}
-                    className="text-teal-600 hover:text-teal-700 text-sm font-medium"
+                    className="text-[#6dc1c9] hover:text-teal-700 text-sm font-medium"
                   >
                     Have a coupon? Click here to enter your coupon code
                   </button>
@@ -508,7 +508,7 @@ export default function Checkout() {
                       name="payment"
                       checked
                       readOnly
-                      className="mt-1 w-4 h-4 text-teal-600 focus:ring-teal-500"
+                      className="mt-1 w-4 h-4 text-[#6dc1c9] focus:ring-teal-500"
                     />
                     <label htmlFor="cod" className="ml-3 flex-1">
                       <span className="font-medium text-gray-900 block mb-1">Cash on delivery</span>
@@ -531,7 +531,7 @@ export default function Checkout() {
                   className={`w-full py-4 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl ${
                     isSubmitting
                       ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                      : 'bg-teal-600 hover:bg-teal-700 text-white'
+                      : 'bg-[#6dc1c9] hover:bg-teal-700 text-white'
                   }`}
                 >
                   {isSubmitting ? (
@@ -551,7 +551,7 @@ export default function Checkout() {
                     <span>100% Secure Checkout</span>
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
-                    <Truck className="w-5 h-5 text-teal-600 mr-2 flex-shrink-0" />
+                    <Truck className="w-5 h-5 text-[#6dc1c9] mr-2 flex-shrink-0" />
                     <span>Free Delivery Across Pakistan</span>
                   </div>
                   <div className="flex items-center text-sm text-gray-600">

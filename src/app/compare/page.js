@@ -21,7 +21,7 @@ export default function Compare() {
                 Product Comparison
               </div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">Compare Products</h1>
-              <div className="w-16 sm:w-24 h-1 bg-teal-600 rounded-full mx-auto"></div>
+              <div className="w-16 sm:w-24 h-1 bg-[#6dc1c9] rounded-full mx-auto"></div>
             </div>
           </div>
         </section>
@@ -41,7 +41,7 @@ export default function Compare() {
                 </p>
                 <Link 
                   href="/products"
-                  className="bg-teal-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-sm sm:text-base lg:text-lg hover:bg-teal-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+                  className="bg-[#6dc1c9] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-sm sm:text-base lg:text-lg hover:bg-teal-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
                 >
                   Browse Laptops
                   <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
@@ -68,7 +68,7 @@ export default function Compare() {
             <p className="text-sm sm:text-base lg:text-lg text-gray-600 mb-4 sm:mb-6">
               Compare {compareItems.length} {compareItems.length === 1 ? 'product' : 'products'} side by side
             </p>
-            <div className="w-16 sm:w-24 h-1 bg-teal-600 rounded-full mx-auto"></div>
+            <div className="w-16 sm:w-24 h-1 bg-[#6dc1c9] rounded-full mx-auto"></div>
           </div>
         </div>
       </section>
@@ -84,7 +84,7 @@ export default function Compare() {
         <div className="mt-8 sm:mt-12 text-center">
           <Link 
             href="/products"
-            className="bg-teal-600 text-white px-6 sm:px-8 py-3 rounded-lg font-semibold text-sm sm:text-base hover:bg-teal-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+            className="bg-[#6dc1c9] text-white px-6 sm:px-8 py-3 rounded-lg font-semibold text-sm sm:text-base hover:bg-teal-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
           >
             Browse More Products
             <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />

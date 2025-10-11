@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import BlogCard from '../../components/BlogCard';
 import NewsletterSubscribe from '../../components/NewsletterSubscribe';
+import Banner from '../../components/Banner';
 
 async function getBlogs() {
   try {
@@ -53,10 +54,18 @@ export default async function Blog() {
   console.log('Blog page - received blogs:', blogs.length);
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Blog Hero Section - Matching Website Theme */}
-      <section className="bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/10 to-blue-600/10"></div>
-        <div className="container mx-auto px-4 py-12 sm:py-16 lg:py-20 relative">
+      {/* Blog Hero Banner */}
+      <Banner
+        desktopImage="/banners/blog c.jpg"
+        mobileImage="/banners/blog mobile banner.jpg"
+        alt="Blog & Resources"
+        height="400px"
+        priority={true}
+      />
+
+      {/* Blog Content Section */}
+      <section className="py-12 sm:py-16 lg:py-20">
+        <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
@@ -64,7 +73,7 @@ export default async function Blog() {
                 Tech Insights & Reviews
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight text-gray-900">
-                Smart Tech <span className="text-teal-600">Decisions</span> Start Here
+                Smart Tech <span className="text-[#6dc1c9]">Decisions</span> Start Here
               </h1>
               <p className="text-lg sm:text-xl mb-6 sm:mb-8 text-gray-600 leading-relaxed">
                 Expert guides, honest reviews, and practical tips to help you pick the right laptop, desktop, or accessory with confidence. Make informed decisions with our comprehensive tech insights.
@@ -72,14 +81,14 @@ export default async function Blog() {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-8">
                 <Link 
                   href="#articles" 
-                  className="bg-teal-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-teal-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  className="bg-[#6dc1c9] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-teal-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
                   Explore Articles
                   <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Link>
                 <Link 
                   href="/products" 
-                  className="border-2 border-teal-600 text-teal-600 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-teal-600 hover:text-white transition-all duration-300 inline-flex items-center justify-center"
+                  className="border-2 border-[#6dc1c9] text-[#6dc1c9] px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-[#6dc1c9] hover:text-white transition-all duration-300 inline-flex items-center justify-center"
                 >
                   Browse Products
                 </Link>
@@ -108,7 +117,7 @@ export default async function Blog() {
                   {/* Article 1 */}
                   <div className="bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl p-4 border border-teal-200">
                     <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className="w-12 h-12 bg-[#6dc1c9] rounded-lg flex items-center justify-center flex-shrink-0">
                         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
@@ -116,7 +125,7 @@ export default async function Blog() {
                       <div className="flex-1">
                         <h3 className="text-gray-900 font-semibold mb-1">Best Laptops Under 50K</h3>
                         <p className="text-gray-600 text-sm">Complete buying guide with top picks...</p>
-                        <div className="flex items-center mt-2 text-xs text-teal-600">
+                        <div className="flex items-center mt-2 text-xs text-[#6dc1c9]">
                           <span>5 min read</span>
                           <span className="mx-2">•</span>
                           <span>Featured</span>

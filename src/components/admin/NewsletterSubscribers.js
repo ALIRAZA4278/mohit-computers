@@ -77,7 +77,7 @@ export default function NewsletterSubscribers() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-teal-600 border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#6dc1c9] border-t-transparent"></div>
       </div>
     );
   }
@@ -100,7 +100,7 @@ export default function NewsletterSubscribers() {
           </button>
           <button
             onClick={exportToCSV}
-            className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2"
+            className="bg-[#6dc1c9] text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2"
           >
             <Download className="w-4 h-4" />
             Export CSV
@@ -115,7 +115,7 @@ export default function NewsletterSubscribers() {
             <p className="text-gray-600 text-sm font-medium">Total Subscribers</p>
             <p className="text-3xl font-bold text-black mt-1">{totalSubscribers}</p>
           </div>
-          <Users className="w-12 h-12 text-teal-600" />
+          <Users className="w-12 h-12 text-[#6dc1c9]" />
         </div>
       </div>
 

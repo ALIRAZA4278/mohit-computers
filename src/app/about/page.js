@@ -3,31 +3,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 import FAQSection from '../../components/FAQSection';
+import Banner from '../../components/Banner';
 
 export default function About() {
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/10 to-blue-600/10"></div>
-        <div className="container mx-auto px-4 py-20 relative">
-          <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
-              <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
-              About Us
-            </div>
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
-              Welcome to <span className="text-teal-600">Mohit Computers</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
-              Where trust comes first and customer satisfaction is at the heart of everything we do.
-            </p>
-            <div className="flex justify-center">
-              <div className="w-24 h-1 bg-teal-600 rounded-full"></div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Banner */}
+      <Banner
+        desktopImage="/banners/about banner.jpg"
+        mobileImage="/banners/about banner.jpg"
+        alt="About Mohit Computers"
+        height="400px"
+        priority={true}
+      />
 
       {/* Welcome Content */}
       <section className="py-20 bg-white">
@@ -36,7 +24,7 @@ export default function About() {
             <div>
               <div className="mb-8">
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
-                <div className="w-16 h-1 bg-teal-600 rounded-full mb-6"></div>
+                <div className="w-16 h-1 bg-[#6dc1c9] rounded-full mb-6"></div>
               </div>
               <p className="text-gray-600 mb-6 text-lg leading-relaxed">
                 With over 19 years of experience in the laptop industry, Mohit Computers has grown from a small retail store into a trusted name in imported used laptops and accessories, not just across Pakistan, but globally as well. What sets us apart isn&rsquo;t just the products we offer, it&rsquo;s the relationships we build.
@@ -46,7 +34,7 @@ export default function About() {
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <div className="text-center p-4 bg-teal-50 rounded-xl">
-                  <div className="text-2xl font-bold text-teal-600">19+</div>
+                  <div className="text-2xl font-bold text-[#6dc1c9]">19+</div>
                   <div className="text-sm text-gray-600">Years Experience</div>
                 </div>
                 <div className="text-center p-4 bg-blue-50 rounded-xl">
@@ -87,7 +75,7 @@ export default function About() {
                 From a small retail store to a global technology partner - discover how we&apos;ve been shaping the future of technology access in Pakistan for nearly two decades.
               </p>
               <div className="flex justify-center mt-6">
-                <div className="w-24 h-1 bg-teal-600 rounded-full"></div>
+                <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
               </div>
             </div>
             
@@ -96,7 +84,7 @@ export default function About() {
                 <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                   <div className="flex items-center mb-4">
                     <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mr-4">
-                      <span className="text-teal-600 font-bold text-lg">1</span>
+                      <span className="text-[#6dc1c9] font-bold text-lg">1</span>
                     </div>
                     <h3 className="text-xl font-bold text-gray-900">The Beginning</h3>
                   </div>
@@ -149,7 +137,7 @@ export default function About() {
       </section>
 
       {/* Global Presence & Mission */}
-      <section className="py-20 bg-gradient-to-r from-teal-600 to-teal-700 text-white relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-r from-[#6dc1c9] to-teal-700 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-32 translate-x-32"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-24 -translate-x-24"></div>
@@ -224,7 +212,7 @@ export default function About() {
             <div>
               <div className="space-y-6">
                 <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-teal-50 transition-colors duration-300">
-                  <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-[#6dc1c9] rounded-full flex items-center justify-center flex-shrink-0">
                     <CheckCircle className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -234,7 +222,7 @@ export default function About() {
                 </div>
                 
                 <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-teal-50 transition-colors duration-300">
-                  <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-[#6dc1c9] rounded-full flex items-center justify-center flex-shrink-0">
                     <CheckCircle className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -244,7 +232,7 @@ export default function About() {
                 </div>
                 
                 <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-teal-50 transition-colors duration-300">
-                  <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-[#6dc1c9] rounded-full flex items-center justify-center flex-shrink-0">
                     <CheckCircle className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -254,7 +242,7 @@ export default function About() {
                 </div>
                 
                 <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-teal-50 transition-colors duration-300">
-                  <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-[#6dc1c9] rounded-full flex items-center justify-center flex-shrink-0">
                     <CheckCircle className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -264,7 +252,7 @@ export default function About() {
                 </div>
                 
                 <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-teal-50 transition-colors duration-300">
-                  <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-[#6dc1c9] rounded-full flex items-center justify-center flex-shrink-0">
                     <CheckCircle className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -274,7 +262,7 @@ export default function About() {
                 </div>
                 
                 <div className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-teal-50 transition-colors duration-300">
-                  <div className="w-8 h-8 bg-teal-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 bg-[#6dc1c9] rounded-full flex items-center justify-center flex-shrink-0">
                     <CheckCircle className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -331,7 +319,7 @@ export default function About() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
               href="/products" 
-              className="bg-teal-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl"
+              className="bg-[#6dc1c9] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl"
             >
               Browse Products
             </Link>

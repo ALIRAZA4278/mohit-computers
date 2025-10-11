@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Users, Shield, Truck, HeadphonesIcon, CheckCircle, ArrowRight } from 'lucide-react';
+import Banner from '../../components/Banner';
 
 export default function Corporate() {
   const [formData, setFormData] = useState({
@@ -68,10 +69,18 @@ export default function Corporate() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
-        <div className="container mx-auto px-4 py-20 relative">
+      {/* Hero Banner */}
+      <Banner
+        desktopImage="/banners/coprate c.jpg"
+        mobileImage="/banners/coporate mobile banner.jpg"
+        alt="Corporate Solutions"
+        height="400px"
+        priority={true}
+      />
+
+      {/* Corporate Content Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-6">
               <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
@@ -82,19 +91,19 @@ export default function Corporate() {
               <span className="text-blue-600 block">That Scale</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
-              Equip your business with quality refurbished laptops and technology solutions. 
+              Equip your business with quality refurbished laptops and technology solutions.
               Trusted by 500+ companies worldwide for bulk orders and enterprise needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link 
-                href="#quote" 
+              <Link
+                href="#quote"
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
               >
                 Get a Quote
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
-              <Link 
-                href="#solutions" 
+              <Link
+                href="#solutions"
                 className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-colors inline-flex items-center"
               >
                 View Solutions
@@ -273,7 +282,7 @@ export default function Corporate() {
                       value="Laptops"
                       checked={formData.interests.includes('Laptops')}
                       onChange={handleCheckboxChange}
-                      className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+                      className="w-4 h-4 text-[#6dc1c9] bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
                     />
                     <span className="ml-2 text-sm text-gray-700">Laptops</span>
                   </label>
@@ -283,7 +292,7 @@ export default function Corporate() {
                       value="Chromebooks"
                       checked={formData.interests.includes('Chromebooks')}
                       onChange={handleCheckboxChange}
-                      className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+                      className="w-4 h-4 text-[#6dc1c9] bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
                     />
                     <span className="ml-2 text-sm text-gray-700">Chromebooks</span>
                   </label>
@@ -293,7 +302,7 @@ export default function Corporate() {
                       value="Workstations"
                       checked={formData.interests.includes('Workstations')}
                       onChange={handleCheckboxChange}
-                      className="w-4 h-4 text-teal-600 bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
+                      className="w-4 h-4 text-[#6dc1c9] bg-gray-100 border-gray-300 rounded focus:ring-teal-500 focus:ring-2"
                     />
                     <span className="ml-2 text-sm text-gray-700">Workstations</span>
                   </label>
@@ -304,7 +313,7 @@ export default function Corporate() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-teal-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-600 transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-teal-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#6dc1c9] transition-colors shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Sending...' : 'Submit Inquiry'}
                 </button>

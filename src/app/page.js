@@ -5,10 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
+import Banner from '../components/Banner';
 import { testimonials } from '../lib/data';
 import { productsAPI } from '../lib/supabase-db';
 
 export default function Home() {
+  const [heroIndex, setHeroIndex] = useState(0);
   const [featuredIndex, setFeaturedIndex] = useState(0);
   const [newArrivalIndex, setNewArrivalIndex] = useState(0);
   const [workstationIndex, setWorkstationIndex] = useState(0);
@@ -18,6 +20,21 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Hero banners carousel
+  const heroBanners = [
+    { desktop: '/banners/hero banner 1.jpg', mobile: '/banners/hero mobile banner 1.jpg' },
+    { desktop: '/banners/hero banner 2.jpg', mobile: '/banners/hero mobile banner 2.jpg' },
+    { desktop: '/banners/hero banner 3.jpg', mobile: '/banners/hero mobile banner 3.jpg' }
+  ];
+
+  // Auto-advance hero carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroBanners.length);
+    }, 5000); // Change every 5 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   // State for items per view (responsive)
   const [itemsPerView, setItemsPerView] = useState(4);
@@ -82,52 +99,54 @@ export default function Home() {
 
   return (
     <div>
-      {/* Landing Page - Hero Section */}
-            {/* Landing Page - Hero Section */}
-      <section className="bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/10 to-blue-600/10"></div>
-        <div className="container mx-auto px-4 py-12 sm:py-16 lg:py-20 relative">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div className="text-center lg:text-left">
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight text-gray-900">
-                Premium <span className="text-teal-600">Refurbished</span> Laptops
-              </h1>
-              <p className="text-lg sm:text-xl mb-6 sm:mb-8 text-gray-600 leading-relaxed">
-                Quality certified laptops with warranty. Experience professional performance at unbeatable prices with our comprehensive quality guarantee.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-                <Link 
-                  href="/products" 
-                  className="bg-teal-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-teal-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                >
-                  Shop Now <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
-                </Link>
-                <Link 
-                  href="/about" 
-                  className="border-2 border-teal-600 text-teal-600 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-teal-600 hover:text-white transition-all duration-300 inline-flex items-center justify-center"
-                >
-                  Learn More
-                </Link>
-              </div>
+      {/* Landing Page - Hero Section with Carousel */}
+      <section className="relative">
+        <div className="relative">
+          {/* Hero Banners Carousel */}
+          <div className="relative overflow-hidden">
+            <div
+              className="flex transition-transform duration-700 ease-in-out"
+              style={{ transform: `translateX(-${heroIndex * 100}%)` }}
+            >
+              {heroBanners.map((banner, index) => (
+                <div key={index} className="min-w-full">
+                  <Banner
+                    desktopImage={banner.desktop}
+                    mobileImage={banner.mobile}
+                    alt={`Hero Banner ${index + 1}`}
+                    height="500px"
+                    priority={index === 0}
+                  />
+                </div>
+              ))}
             </div>
-            <div className="relative">
-              <div className="bg-white rounded-2xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                <Image
-                  src="/images/hero/laptop-hero.svg"
-                  alt="Premium Laptop"
-                  width={500}
-                  height={350}
-                  className="rounded-lg w-full h-auto"
-                />
-              </div>
-              {/* Floating elements */}
-              <div className="absolute -top-4 -right-4 bg-yellow-400 text-gray-900 px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                Best Price
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-green-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                Warranty
-              </div>
-            </div>
+          </div>
+
+          {/* Carousel Controls */}
+          <button
+            onClick={() => setHeroIndex((prev) => (prev - 1 + heroBanners.length) % heroBanners.length)}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-xl rounded-full p-3 transition-all duration-300 hover:scale-110 z-10"
+          >
+            <ChevronLeft className="w-6 h-6 text-gray-700" />
+          </button>
+          <button
+            onClick={() => setHeroIndex((prev) => (prev + 1) % heroBanners.length)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-xl rounded-full p-3 transition-all duration-300 hover:scale-110 z-10"
+          >
+            <ChevronRight className="w-6 h-6 text-gray-700" />
+          </button>
+
+          {/* Carousel Indicators */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            {heroBanners.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setHeroIndex(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === heroIndex ? 'bg-white w-8' : 'bg-white/50'
+                }`}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -146,37 +165,37 @@ export default function Home() {
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
                 <Image src="/images/brands/hp-logo.svg" alt="HP" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">HP</p>
+                <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">HP</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
                 <Image src="/images/brands/dell-logo.svg" alt="Dell" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Dell</p>
+                <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Dell</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
                 <Image src="/images/brands/acer-logo.svg" alt="Acer" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Acer</p>
+                <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Acer</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
                 <Image src="/images/brands/lenovo-logo.svg" alt="Lenovo" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Lenovo</p>
+                <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Lenovo</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
                 <Image src="/images/brands/chromebook-logo.svg" alt="Chromebook" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Chromebook</p>
+                <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Chromebook</p>
               </div>
             </div>
             <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
               <div className="text-center">
                 <Image src="/images/brands/accessories-logo.svg" alt="Accessories" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-700 group-hover:text-teal-600 transition-colors">Accessories</p>
+                <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Accessories</p>
               </div>
             </div>
           </div>
@@ -184,18 +203,13 @@ export default function Home() {
       </section>
 
       {/* Feature Banner */}
-      <section className="py-16 bg-gradient-to-r from-teal-600 to-teal-700 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="container mx-auto px-4 text-center relative">
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">Featured Products</h2>
-          <p className="text-xl text-teal-100 mb-8 max-w-3xl mx-auto">
-            Discover our handpicked collection of premium refurbished laptops, 
-            carefully selected for their exceptional performance and value
-          </p>
-          <div className="flex justify-center">
-            <div className="w-24 h-1 bg-white/30 rounded-full"></div>
-          </div>
-        </div>
+      <section className="relative overflow-hidden">
+        <Banner
+          desktopImage="/banners/feature c.jpg"
+          mobileImage="/banners/feature c.jpg"
+          alt="Featured Products"
+          height="300px"
+        />
       </section>
 
       {/* Featured Products Slider */}
@@ -203,14 +217,14 @@ export default function Home() {
         <div className="container mx-auto px-4">
           {loading ? (
             <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal-600"></div>
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#6dc1c9]"></div>
             </div>
           ) : error ? (
             <div className="text-center py-20">
               <p className="text-red-600 text-lg mb-4">Error loading products: {error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                className="px-6 py-3 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-700"
               >
                 Retry
               </button>
@@ -257,23 +271,13 @@ export default function Home() {
       </section>
 
       {/* New Arrival Banner */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-700 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-32 translate-x-32"></div>
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-24 -translate-x-24"></div>
-        <div className="container mx-auto px-4 text-center relative">
-          <div className="inline-flex items-center px-4 py-2 bg-white/20 rounded-full text-sm font-medium mb-6 backdrop-blur-sm">
-            <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-            Just Added
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">New Arrivals</h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-            Discover the latest additions to our collection - Laptops, Accessories, RAM, SSD, and more
-          </p>
-          <div className="flex justify-center">
-            <div className="w-24 h-1 bg-white/30 rounded-full"></div>
-          </div>
-        </div>
+      <section className="relative overflow-hidden">
+        <Banner
+          desktopImage="/banners/Newarrival banner.jpg"
+          mobileImage="/banners/Newarrival banner.jpg"
+          alt="New Arrivals"
+          height="300px"
+        />
       </section>
 
       {/* New Arrival Products Slider */}
@@ -317,25 +321,13 @@ export default function Home() {
       </section>
 
       {/* Workstation Banner */}
-      <section className="py-16 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        </div>
-        <div className="container mx-auto px-4 text-center relative">
-          <div className="inline-flex items-center px-4 py-2 bg-white/20 rounded-full text-sm font-medium mb-6 backdrop-blur-sm">
-            <span className="w-2 h-2 bg-yellow-400 rounded-full mr-2"></span>
-            Professional Grade
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">Workstation Collection</h2>
-          <p className="text-xl text-indigo-100 mb-8 max-w-3xl mx-auto">
-            High-performance workstations engineered for demanding professional workflows,
-            3D modeling, video editing, and intensive computing tasks
-          </p>
-          <div className="flex justify-center">
-            <div className="w-24 h-1 bg-white/30 rounded-full"></div>
-          </div>
-        </div>
+      <section className="relative overflow-hidden">
+        <Banner
+          desktopImage="/banners/Work station banner.jpg"
+          mobileImage="/banners/Work station banner.jpg"
+          alt="Workstation Collection"
+          height="300px"
+        />
       </section>
 
       {/* Workstation Products Slider */}
@@ -378,21 +370,20 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Accessories Banner */}
+      <section className="relative overflow-hidden">
+        <Banner
+          desktopImage="/banners/Accessories banner.jpg"
+          mobileImage="/banners/Accessories banner.jpg"
+          alt="Premium Accessories"
+          height="300px"
+        />
+      </section>
+
       {/* Accessories Section */}
       <section className="py-20 bg-white relative">
         <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50"></div>
         <div className="container mx-auto px-4 relative">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
-              <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
-              Essential Add-ons
-            </div>
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Premium Accessories</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Enhance your computing experience with our carefully selected range of high-quality accessories 
-              designed to complement your laptop perfectly
-            </p>
-          </div>
           
           {/* Accessories Slider */}
           {!loading && !error && accessoryProducts.length > 0 && (
@@ -435,7 +426,7 @@ export default function Home() {
           <div className="text-center mt-12">
             <Link 
               href="/products?category=accessories"
-              className="inline-flex items-center px-8 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors duration-300 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center px-8 py-3 bg-[#6dc1c9] text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors duration-300 shadow-lg hover:shadow-xl"
             >
               View All Accessories
               <ArrowRight className="ml-2 w-5 h-5" />
@@ -471,7 +462,7 @@ export default function Home() {
                   &ldquo;{testimonial.content}&rdquo;
                 </p>
                 <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-teal-400 to-teal-600 rounded-full mr-4 flex items-center justify-center text-white font-bold text-lg">
+                  <div className="w-12 h-12 bg-gradient-to-r from-teal-400 to-[#6dc1c9] rounded-full mr-4 flex items-center justify-center text-white font-bold text-lg">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>

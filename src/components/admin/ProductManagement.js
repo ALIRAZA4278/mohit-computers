@@ -158,7 +158,7 @@ export default function ProductManagement() {
           </button>
           <button
             onClick={() => setShowEditor(true)}
-            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 font-medium shadow-md flex items-center gap-2"
+            className="bg-[#6dc1c9] text-white px-6 py-2 rounded-lg hover:bg-teal-700 font-medium shadow-md flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
             Add Product
@@ -196,7 +196,7 @@ export default function ProductManagement() {
       {/* Products Grid */}
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6dc1c9]"></div>
         </div>
       ) : filteredProducts.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-12 text-center border border-gray-200">
@@ -211,7 +211,7 @@ export default function ProductManagement() {
           {products.length === 0 && (
             <button
               onClick={() => setShowEditor(true)}
-              className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 font-medium"
+              className="bg-[#6dc1c9] text-white px-6 py-2 rounded-lg hover:bg-teal-700 font-medium"
             >
               Add Your First Product
             </button>
@@ -226,7 +226,7 @@ export default function ProductManagement() {
             >
               {/* Product Image/Icon */}
               <div className="h-48 bg-gradient-to-br from-teal-50 to-teal-100 flex items-center justify-center">
-                <Package className="w-20 h-20 text-teal-600" />
+                <Package className="w-20 h-20 text-[#6dc1c9]" />
               </div>
 
               {/* Product Info */}
@@ -257,7 +257,7 @@ export default function ProductManagement() {
                 <div className="flex gap-2 pt-3">
                   <button
                     onClick={() => handleEdit(product)}
-                    className="flex-1 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 font-medium flex items-center justify-center gap-2"
+                    className="flex-1 bg-[#6dc1c9] text-white py-2 rounded-lg hover:bg-teal-700 font-medium flex items-center justify-center gap-2"
                   >
                     <Edit className="w-4 h-4" />
                     Edit

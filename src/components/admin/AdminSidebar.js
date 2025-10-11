@@ -11,7 +11,8 @@ import {
   LogOut,
   Store,
   Mail,
-  MessageCircle
+  MessageCircle,
+  Star
 } from 'lucide-react';
 
 export default function AdminSidebar({ activeSection, setActiveSection, onLogout }) {
@@ -22,6 +23,7 @@ export default function AdminSidebar({ activeSection, setActiveSection, onLogout
     { id: 'users', label: 'Users', icon: Users },
     { id: 'blogs', label: 'Blogs', icon: FileText },
     { id: 'comments', label: 'Comments', icon: MessageCircle },
+    { id: 'reviews', label: 'Reviews', icon: Star },
     { id: 'subscribers', label: 'Subscribers', icon: Mail },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
@@ -31,7 +33,7 @@ export default function AdminSidebar({ activeSection, setActiveSection, onLogout
       {/* Header with Logo */}
       <div className="p-6 border-b border-gray-700/50">
         <div className="flex items-center gap-3 mb-2">
-          <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-[#6dc1c9] rounded-xl flex items-center justify-center shadow-lg">
             <Store className="w-7 h-7 text-white" />
           </div>
           <div>
@@ -52,7 +54,7 @@ export default function AdminSidebar({ activeSection, setActiveSection, onLogout
               onClick={() => setActiveSection(item.id)}
               className={`w-full flex items-center px-4 py-3.5 rounded-xl text-left transition-all duration-200 group ${
                 isActive
-                  ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/30 scale-105'
+                  ? 'bg-gradient-to-r from-teal-500 to-[#6dc1c9] text-white shadow-lg shadow-teal-500/30 scale-105'
                   : 'text-gray-300 hover:text-white hover:bg-gray-800/50 hover:scale-102'
               }`}
             >

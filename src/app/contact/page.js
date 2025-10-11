@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
+import Banner from '../../components/Banner';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -57,17 +58,14 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">Contact Us</h1>
-            <p className="text-xl lg:text-2xl text-blue-100 max-w-3xl mx-auto">
-              Get in touch with our team of experts. We&rsquo;re here to help you find the perfect technology solution
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Hero Banner */}
+      <Banner
+        desktopImage="/banners/contact banner.jpg"
+        mobileImage="/banners/contact mobile banner.jpg"
+        alt="Contact Us"
+        height="400px"
+        priority={true}
+      />
 
       {/* Contact Information */}
       <section className="py-16">

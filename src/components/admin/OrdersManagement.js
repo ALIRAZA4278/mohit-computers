@@ -114,7 +114,7 @@ export default function OrdersManagement() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6dc1c9]"></div>
       </div>
     );
   }
@@ -126,7 +126,7 @@ export default function OrdersManagement() {
         {/* Back Button */}
         <button
           onClick={() => setSelectedOrder(null)}
-          className="flex items-center gap-2 text-black hover:text-teal-600 mb-6 font-medium"
+          className="flex items-center gap-2 text-black hover:text-[#6dc1c9] mb-6 font-medium"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Orders
@@ -135,7 +135,7 @@ export default function OrdersManagement() {
         {/* Order Detail */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-teal-600 to-teal-700 p-6 text-white">
+          <div className="bg-gradient-to-r from-[#6dc1c9] to-teal-700 p-6 text-white">
             <div className="flex justify-between items-start">
               <div>
                 <h1 className="text-3xl font-bold mb-2">{selectedOrder.order_id}</h1>
@@ -288,7 +288,7 @@ export default function OrdersManagement() {
         <h1 className="text-3xl font-bold text-black">Orders Management</h1>
         <button
           onClick={fetchAllOrders}
-          className="flex items-center gap-2 bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 font-medium"
+          className="flex items-center gap-2 bg-[#6dc1c9] text-white px-4 py-2 rounded-lg hover:bg-teal-700 font-medium"
         >
           <RefreshCw className="w-4 h-4" />
           Refresh
@@ -377,7 +377,7 @@ export default function OrdersManagement() {
                 </div>
 
                 <div className="pt-3 border-t">
-                  <button className="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 font-medium flex items-center justify-center gap-2">
+                  <button className="w-full bg-[#6dc1c9] text-white py-2 rounded-lg hover:bg-teal-700 font-medium flex items-center justify-center gap-2">
                     <Eye className="w-4 h-4" />
                     View Details
                   </button>

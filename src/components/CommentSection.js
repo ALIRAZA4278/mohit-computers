@@ -181,7 +181,7 @@ export default function CommentSection({ blogId }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <MessageCircle className="w-6 h-6 text-teal-600" />
+          <MessageCircle className="w-6 h-6 text-[#6dc1c9]" />
           <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
             Comments ({comments.length})
           </h3>
@@ -190,7 +190,7 @@ export default function CommentSection({ blogId }) {
         {!showCommentForm && (
           <button
             onClick={() => setShowCommentForm(true)}
-            className="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2"
+            className="bg-[#6dc1c9] text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2"
           >
             <MessageCircle className="w-4 h-4" />
             Add Comment
@@ -231,7 +231,7 @@ export default function CommentSection({ blogId }) {
               {/* User Info */}
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-teal-600" />
+                  <User className="w-5 h-5 text-[#6dc1c9]" />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">
@@ -291,7 +291,7 @@ export default function CommentSection({ blogId }) {
                   </button>
                   <button
                     type="submit"
-                    className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="bg-[#6dc1c9] text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                     disabled={submitting || newComment.length < 3 || newComment.length > 1000}
                   >
                     {submitting ? (
@@ -331,7 +331,7 @@ export default function CommentSection({ blogId }) {
           {!showCommentForm && (
             <button
               onClick={() => setShowCommentForm(true)}
-              className="bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition-colors inline-flex items-center gap-2"
+              className="bg-[#6dc1c9] text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition-colors inline-flex items-center gap-2"
             >
               <MessageCircle className="w-5 h-5" />
               Write First Comment
@@ -352,7 +352,7 @@ export default function CommentSection({ blogId }) {
                   {comment.is_admin_comment ? (
                     <Shield className="w-5 h-5 text-blue-600" />
                   ) : (
-                    <User className="w-5 h-5 text-teal-600" />
+                    <User className="w-5 h-5 text-[#6dc1c9]" />
                   )}
                 </div>
                 
@@ -388,7 +388,7 @@ export default function CommentSection({ blogId }) {
                   {userAuth && !comment.is_admin_comment && (
                     <button
                       onClick={() => handleReply(comment.id, comment.user_name)}
-                      className="text-teal-600 hover:text-teal-700 text-sm font-medium flex items-center gap-1 transition-colors"
+                      className="text-[#6dc1c9] hover:text-teal-700 text-sm font-medium flex items-center gap-1 transition-colors"
                     >
                       <Reply className="w-3 h-3" />
                       Reply

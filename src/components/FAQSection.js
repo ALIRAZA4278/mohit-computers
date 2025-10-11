@@ -117,7 +117,7 @@ const FAQSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="tel:03368900349"
-                className="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors font-medium"
+                className="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-[#6dc1c9] transition-colors font-medium"
               >
                 Call us: 0336 8900349
               </a>

@@ -118,7 +118,7 @@ export default function UsersManagement() {
               <p className="text-gray-600 text-sm font-medium">Total Users</p>
               <p className="text-3xl font-bold text-black mt-1">{totalUsers}</p>
             </div>
-            <Users className="w-12 h-12 text-teal-600" />
+            <Users className="w-12 h-12 text-[#6dc1c9]" />
           </div>
         </div>
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
@@ -127,7 +127,7 @@ export default function UsersManagement() {
               <p className="text-gray-600 text-sm font-medium">Current Page</p>
               <p className="text-3xl font-bold text-black mt-1">{currentPage} / {totalPages}</p>
             </div>
-            <ChevronRight className="w-12 h-12 text-teal-600" />
+            <ChevronRight className="w-12 h-12 text-[#6dc1c9]" />
           </div>
         </div>
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
@@ -136,7 +136,7 @@ export default function UsersManagement() {
               <p className="text-gray-600 text-sm font-medium">Showing</p>
               <p className="text-3xl font-bold text-black mt-1">{users.length} users</p>
             </div>
-            <Eye className="w-12 h-12 text-teal-600" />
+            <Eye className="w-12 h-12 text-[#6dc1c9]" />
           </div>
         </div>
       </div>
@@ -161,7 +161,7 @@ export default function UsersManagement() {
       {/* Users Table */}
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6dc1c9]"></div>
         </div>
       ) : users.length === 0 ? (
         <div className="bg-white rounded-lg shadow-md p-12 text-center border border-gray-200">
@@ -199,7 +199,7 @@ export default function UsersManagement() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-10 w-10 bg-teal-100 rounded-full flex items-center justify-center">
-                            <span className="text-teal-600 font-bold">
+                            <span className="text-[#6dc1c9] font-bold">
                               {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
                             </span>
                           </div>
@@ -235,7 +235,7 @@ export default function UsersManagement() {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button
                           onClick={() => viewUserDetails(user)}
-                          className="text-teal-600 hover:text-teal-900 mr-3"
+                          className="text-[#6dc1c9] hover:text-teal-900 mr-3"
                           title="View Details"
                         >
                           <Eye className="w-5 h-5" />
@@ -286,7 +286,7 @@ export default function UsersManagement() {
       {showDetailsModal && selectedUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-200">
-            <div className="bg-gradient-to-r from-teal-600 to-teal-700 p-6 text-white">
+            <div className="bg-gradient-to-r from-[#6dc1c9] to-teal-700 p-6 text-white">
               <div className="flex justify-between items-start">
                 <h2 className="text-2xl font-bold">User Details</h2>
                 <button

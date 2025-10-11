@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 
 export default function Login() {
@@ -103,15 +104,19 @@ export default function Login() {
         {/* Header */}
         <div className="text-center">
           <Link href="/" className="inline-block mb-6">
-            <div className="bg-teal-600 text-white px-6 py-3 font-bold text-xl rounded-lg shadow-md">
-              <span className="text-white">MOHIT</span>
-              <span className="bg-white text-teal-600 px-2 py-1 rounded ml-1">COMPUTERS</span>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="Mohit Computers"
+              width={480}
+              height={180}
+                className="h-24 w-auto mx-auto"
+              priority
+            />
           </Link>
           <h2 className="text-3xl font-bold text-gray-900">Sign in to your account</h2>
           <p className="mt-2 text-gray-600">
             Or{' '}
-            <Link href="/register" className="text-teal-600 hover:text-teal-500 font-medium">
+            <Link href="/register" className="text-[#6dc1c9] hover:text-teal-500 font-medium">
               create a new account
             </Link>
           </p>
@@ -191,7 +196,7 @@ export default function Login() {
                   type="checkbox"
                   checked={formData.rememberMe}
                   onChange={handleChange}
-                  className="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-[#6dc1c9] focus:ring-teal-500 border-gray-300 rounded"
                 />
                 <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
                   Remember me
@@ -202,7 +207,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowForgotPassword(true)}
-                  className="text-teal-600 hover:text-teal-500 font-medium"
+                  className="text-[#6dc1c9] hover:text-teal-500 font-medium"
                 >
                   Forgot your password?
                 </button>
@@ -214,7 +219,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#6dc1c9] hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                   <ArrowRight className="h-5 w-5 text-teal-500 group-hover:text-teal-400" />
@@ -231,7 +236,7 @@ export default function Login() {
         <div className="text-center">
           <p className="text-sm text-gray-600">
             Don&apos;t have an account?{' '}
-            <Link href="/register" className="text-teal-600 hover:text-teal-500 font-medium">
+            <Link href="/register" className="text-[#6dc1c9] hover:text-teal-500 font-medium">
               Sign up now
             </Link>
           </p>
@@ -295,7 +300,7 @@ export default function Login() {
                 <button
                   type="submit"
                   disabled={forgotLoading}
-                  className="flex-1 px-4 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-3 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {forgotLoading ? 'Sending...' : 'Send Password'}
                 </button>

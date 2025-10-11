@@ -666,12 +666,6 @@ const CompareTable = () => {
                     >
                       View Details
                     </a>
-                    
-                    <div className="text-center">
-                      <span className="text-sm text-gray-500">
-                        🚚 Free delivery available
-                      </span>
-                    </div>
                   </div>
                 </td>
               ))}

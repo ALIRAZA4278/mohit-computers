@@ -56,7 +56,7 @@ export default function Cart() {
                 Shopping Cart
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Your Cart</h1>
-              <div className="w-24 h-1 bg-teal-600 rounded-full mx-auto"></div>
+              <div className="w-24 h-1 bg-[#6dc1c9] rounded-full mx-auto"></div>
             </div>
           </div>
         </section>
@@ -76,7 +76,7 @@ export default function Cart() {
                 </p>
                 <Link 
                   href="/products"
-                  className="bg-teal-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+                  className="bg-[#6dc1c9] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
                 >
                   Start Shopping
                   <ArrowRight className="ml-2 w-5 h-5" />
@@ -103,7 +103,7 @@ export default function Cart() {
             <p className="text-base sm:text-lg text-gray-600 mb-4 sm:mb-6">
               {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} ready for checkout
             </p>
-            <div className="w-16 sm:w-24 h-1 bg-teal-600 rounded-full mx-auto"></div>
+            <div className="w-16 sm:w-24 h-1 bg-[#6dc1c9] rounded-full mx-auto"></div>
           </div>
         </div>
       </section>
@@ -228,8 +228,8 @@ export default function Cart() {
                                 onClick={() => handleCompare(item)}
                                 className={`flex-1 py-2 px-3 rounded-lg transition-colors text-xs font-medium flex items-center justify-center ${
                                   isInCompare(item.id)
-                                    ? 'bg-teal-100 text-teal-600 hover:bg-teal-200'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-teal-100 hover:text-teal-600'
+                                    ? 'bg-teal-100 text-[#6dc1c9] hover:bg-teal-200'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-teal-100 hover:text-[#6dc1c9]'
                                 }`}
                               >
                                 <GitCompareArrows className="w-3 h-3 mr-1" />
@@ -319,8 +319,8 @@ export default function Cart() {
                             onClick={() => handleCompare(item)}
                             className={`p-2 rounded-lg transition-colors ${
                               isInCompare(item.id)
-                                ? 'bg-teal-100 text-teal-600 hover:bg-teal-200'
-                                : 'bg-gray-100 text-gray-600 hover:bg-teal-100 hover:text-teal-600'
+                                ? 'bg-teal-100 text-[#6dc1c9] hover:bg-teal-200'
+                                : 'bg-gray-100 text-gray-600 hover:bg-teal-100 hover:text-[#6dc1c9]'
                             }`}
                             title={isInCompare(item.id) ? 'Remove from Compare' : 'Add to Compare'}
                           >
@@ -379,7 +379,7 @@ export default function Cart() {
                         }
                       });
                     }}
-                    className="flex-1 bg-teal-50 text-teal-600 hover:bg-teal-100 px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center text-sm"
+                    className="flex-1 bg-teal-50 text-[#6dc1c9] hover:bg-teal-100 px-4 py-3 rounded-lg font-medium transition-colors flex items-center justify-center text-sm"
                   >
                     <GitCompareArrows className="w-4 h-4 mr-2" />
                     Compare Laptops
@@ -431,7 +431,7 @@ export default function Cart() {
 
               <button
                 onClick={handleCheckout}
-                className="w-full mt-4 sm:mt-6 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-colors shadow-lg hover:shadow-xl bg-teal-600 text-white hover:bg-teal-700"
+                className="w-full mt-4 sm:mt-6 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg transition-colors shadow-lg hover:shadow-xl bg-[#6dc1c9] text-white hover:bg-teal-700"
               >
                 Proceed to Checkout
               </button>

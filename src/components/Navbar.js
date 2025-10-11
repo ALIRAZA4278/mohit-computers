@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Search, ShoppingCart, Heart, GitCompareArrows, Menu, X, User, Phone, Mail } from 'lucide-react';
 import { useCart } from '../context/CartContext';
@@ -32,6 +33,11 @@ const Navbar = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const toggleProducts = () => setIsProductsOpen(!isProductsOpen);
+
+  // Close mobile menu when clicking on a link
+  const closeMobileMenu = () => {
+    setIsMenuOpen(false);
+  };
 
   const handleCategoryClick = (e, url) => {
     e.preventDefault();
@@ -98,12 +104,14 @@ const Navbar = () => {
           <div className="flex items-center justify-between py-4">
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0">
-              <div className="flex items-center">
-                <div className="bg-teal-600 text-white px-3 sm:px-4 lg:px-6 py-2 lg:py-3 font-bold text-lg sm:text-xl lg:text-2xl rounded-lg shadow-md">
-                  <span className="text-white">MOHIT</span>
-                  <span className="bg-white text-teal-600 px-1 sm:px-2 py-1 rounded ml-1 text-sm sm:text-base lg:text-lg">COMPUTERS</span>
-                </div>
-              </div>
+              <Image
+                src="/logo.png"
+                alt="Mohit Computers"
+                width={480}
+                height={180}
+                  className="h-20 sm:h-24 lg:h-28 w-auto"
+                priority
+              />
             </Link>
 
             {/* Search Bar (visible on medium screens and up) */}
@@ -119,7 +127,7 @@ const Navbar = () => {
                   />
                   <button
                     type="submit"
-                    className="px-4 md:px-6 py-2 md:py-3 bg-teal-600 text-white hover:bg-teal-700 transition-colors font-medium"
+                    className="px-4 md:px-6 py-2 md:py-3 bg-[#6dc1c9] text-white hover:bg-teal-700 transition-colors font-medium"
                   >
                     <Search className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
@@ -130,7 +138,7 @@ const Navbar = () => {
             {/* Cart Info & User Account - Hidden on mobile */}
             <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
               {isLoggedIn ? (
-                <Link href="/account" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/account" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   <User className="w-5 h-5 sm:w-6 sm:h-6" />
                   <div className="hidden lg:block">
                     <div className="text-sm font-medium">{user?.name?.split(' ')[0] || 'Account'}</div>
@@ -138,7 +146,7 @@ const Navbar = () => {
                   </div>
                 </Link>
               ) : (
-                <Link href="/login" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/login" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   <User className="w-5 h-5 sm:w-6 sm:h-6" />
                   <div className="hidden lg:block">
                     <div className="text-sm font-medium">Login</div>
@@ -146,7 +154,7 @@ const Navbar = () => {
                   </div>
                 </Link>
               )}
-              <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
+              <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
                 <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
                 {wishlistItems.length > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium">
@@ -154,7 +162,7 @@ const Navbar = () => {
                   </span>
                 )}
               </Link>
-              <Link href="/compare" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
+              <Link href="/compare" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
                 <GitCompareArrows className="w-5 h-5 sm:w-6 sm:h-6" />
                 {compareItems.length > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium">
@@ -162,7 +170,7 @@ const Navbar = () => {
                   </span>
                 )}
               </Link>
-              <Link href="/cart" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-teal-600 transition-colors">
+              <Link href="/cart" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
                 <div className="relative">
                   <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
                   {getCartItemsCount() > 0 && (
@@ -180,7 +188,7 @@ const Navbar = () => {
 
             {/* Mobile Menu Button (visible until large screens) */}
             <button
-              className="md:hidden p-2 text-gray-700 hover:text-teal-600 transition-colors ml-2"
+              className="md:hidden p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors ml-2"
               onClick={toggleMenu}
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -192,18 +200,18 @@ const Navbar = () => {
             <nav className="py-3">
               <ul className="flex justify-center items-center space-x-4 lg:space-x-8 text-gray-700">
                 <li>
-                  <Link href="/" className="hover:text-teal-600 font-medium py-2 px-3 rounded transition-colors">
+                  <Link href="/" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
                     Home
                   </Link>
                 </li>
                 <li>
-                  <Link href="/about" className="hover:text-teal-600 font-medium py-2 px-3 rounded transition-colors">
+                  <Link href="/about" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
                     About
                   </Link>
                 </li>
                 <li className="relative group">
                   <button 
-                    className="hover:text-teal-600 font-medium flex items-center py-2 px-3 rounded transition-colors"
+                    className="hover:text-[#6dc1c9] font-medium flex items-center py-2 px-3 rounded transition-colors"
                     onClick={toggleProducts}
                   >
                     Products
@@ -262,17 +270,17 @@ const Navbar = () => {
                   </div>
                 </li>
                 <li>
-                  <Link href="/blog" className="hover:text-teal-600 font-medium py-2 px-3 rounded transition-colors">
+                  <Link href="/blog" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
                     Blog
                   </Link>
                 </li>
                 <li>
-                  <Link href="/corporate" className="hover:text-teal-600 font-medium py-2 px-3 rounded transition-colors">
+                  <Link href="/corporate" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
                     Corporate
                   </Link>
                 </li>
                 <li>
-                  <Link href="/contact" className="hover:text-teal-600 font-medium py-2 px-3 rounded transition-colors">
+                  <Link href="/contact" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
                     Contact
                   </Link>
                 </li>
@@ -295,37 +303,37 @@ const Navbar = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 px-3 py-2 text-gray-700 focus:outline-none"
               />
-              <button type="submit" className="px-4 bg-teal-600 text-white hover:bg-teal-700 transition-colors">
+              <button type="submit" className="px-4 bg-[#6dc1c9] text-white hover:bg-teal-700 transition-colors">
                 <Search className="w-4 h-4" />
               </button>
             </form>
 
-            <Link href="/" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">Home</Link>
-            <Link href="/about" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">About</Link>
+            <Link href="/" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Home</Link>
+            <Link href="/about" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">About</Link>
             <div className="py-2">
               <div className="font-semibold mb-2 text-gray-800">Products</div>
               <div className="pl-4 space-y-1">
-                <Link href="/products?category=used-laptop" className="block py-1 text-sm text-gray-600 hover:text-teal-600">Used Laptops</Link>
+                <Link href="/products?category=used-laptop" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Used Laptops</Link>
                 <div className="pl-4 space-y-1">
-                  <Link href="/products?category=used-laptop&brand=hp" className="block py-1 text-xs text-gray-500 hover:text-teal-600">HP</Link>
-                  <Link href="/products?category=used-laptop&brand=dell" className="block py-1 text-xs text-gray-500 hover:text-teal-600">Dell</Link>
-                  <Link href="/products?category=used-laptop&brand=acer" className="block py-1 text-xs text-gray-500 hover:text-teal-600">Acer</Link>
-                  <Link href="/products?category=used-laptop&brand=lenovo" className="block py-1 text-xs text-gray-500 hover:text-teal-600">Lenovo</Link>
+                  <Link href="/products?category=used-laptop&brand=hp" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">HP</Link>
+                  <Link href="/products?category=used-laptop&brand=dell" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Dell</Link>
+                  <Link href="/products?category=used-laptop&brand=acer" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Acer</Link>
+                  <Link href="/products?category=used-laptop&brand=lenovo" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Lenovo</Link>
                 </div>
-                <Link href="/products?category=chromebook" className="block py-1 text-sm text-gray-600 hover:text-teal-600">Chrome Book</Link>
-                <Link href="/products?category=accessories" className="block py-1 text-sm text-gray-600 hover:text-teal-600">Accessories</Link>
-                <Link href="/products?category=ram" className="block py-1 text-sm text-gray-600 hover:text-teal-600">RAM</Link>
-                <Link href="/products?category=ssd" className="block py-1 text-sm text-gray-600 hover:text-teal-600">SSD</Link>
+                <Link href="/products?category=chromebook" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Chrome Book</Link>
+                <Link href="/products?category=accessories" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Accessories</Link>
+                <Link href="/products?category=ram" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">RAM</Link>
+                <Link href="/products?category=ssd" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">SSD</Link>
               </div>
             </div>
-            <Link href="/blog" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">Blog</Link>
-            <Link href="/corporate" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">Corporate</Link>
-            <Link href="/contact" className="block py-2 text-gray-700 hover:text-teal-600 font-medium">Contact</Link>
+            <Link href="/blog" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Blog</Link>
+            <Link href="/corporate" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Corporate</Link>
+            <Link href="/contact" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Contact</Link>
             
             {/* Mobile Action Buttons */}
             <div className="pt-3 border-t border-gray-200 mt-3">
               <div className="grid grid-cols-3 gap-3 mb-3">
-                <Link href="/wishlist" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
+                <Link href="/wishlist" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-[#6dc1c9] transition-colors">
                   <div className="relative">
                     <Heart className="w-5 h-5 mb-1 text-black" />
                     {wishlistItems.length > 0 && (
@@ -337,7 +345,7 @@ const Navbar = () => {
                   <span className="text-xs font-medium text-black">Wishlist</span>
                 </Link>
                 
-                <Link href="/compare" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
+                <Link href="/compare" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-[#6dc1c9] transition-colors">
                   <div className="relative">
                     <GitCompareArrows className="w-5 h-5 mb-1 text-black" />
                     {compareItems.length > 0 && (
@@ -349,7 +357,7 @@ const Navbar = () => {
                   <span className="text-xs font-medium text-black">Compare</span>
                 </Link>
                 
-                <Link href="/cart" className="flex text-black flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-teal-600 transition-colors">
+                <Link href="/cart" className="flex text-black flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-[#6dc1c9] transition-colors">
                   <div className="relative">
                     <ShoppingCart className="w-5 h-5 mb-1 text-black" />
                     {getCartItemsCount() > 0 && (

@@ -14,7 +14,7 @@ const Footer = () => {
             {/* Fast Delivery */}
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center">
-                <Truck className="w-6 h-6 text-teal-600" />
+                <Truck className="w-6 h-6 text-[#6dc1c9]" />
               </div>
               <div>
                 <h3 className="font-semibold text-gray-800 text-lg">Fast Delivery</h3>
@@ -36,7 +36,7 @@ const Footer = () => {
             {/* Money Back */}
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-teal-100 rounded-lg flex items-center justify-center">
-                <RotateCcw className="w-6 h-6 text-teal-600" />
+                <RotateCcw className="w-6 h-6 text-[#6dc1c9]" />
               </div>
               <div>
                 <h3 className="font-semibold text-gray-800 text-lg">Money Back</h3>
@@ -73,9 +73,9 @@ const Footer = () => {
                 <p className="font-semibold text-gray-800 mb-2">Got Question? Call us 24/7</p>
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center">
-                    <Phone className="w-4 h-4 text-teal-600" />
+                    <Phone className="w-4 h-4 text-[#6dc1c9]" />
                   </div>
-                  <a href="tel:03368900349" className="text-teal-600 font-semibold">
+                  <a href="tel:03368900349" className="text-[#6dc1c9] font-semibold">
                     0336 8900349
                   </a>
                 </div>
@@ -85,40 +85,40 @@ const Footer = () => {
 
           {/* Popular Categories */}
           <div>
-            <h3 className="font-bold text-teal-600 text-lg mb-4">Popular Categories</h3>
+            <h3 className="font-bold text-[#6dc1c9] text-lg mb-4">Popular Categories</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/products?category=used-laptop" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/products?category=used-laptop" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   Laptop
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=used-laptop" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/products?category=used-laptop" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   Used Laptop
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/products" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   New Laptops
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=accessories" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/products?category=accessories" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   Laptop Accessories
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=chromebook" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/products?category=chromebook" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   Chrome Book
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=ram" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/products?category=ram" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   RAM
                 </Link>
               </li>
               <li>
-                <Link href="/products?category=ssd" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/products?category=ssd" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   SSD
                 </Link>
               </li>
@@ -127,35 +127,35 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-bold text-teal-600 text-lg mb-4">Quick links</h3>
+            <h3 className="font-bold text-[#6dc1c9] text-lg mb-4">Quick links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/about" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/products" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   Shop
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/blog" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   Blogs
                 </Link>
               </li>
               <li>
-                <Link href="/corporate" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/corporate" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   Corporate
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-700 hover:text-teal-600 transition-colors">
+                <Link href="/contact" className="text-gray-700 hover:text-[#6dc1c9] transition-colors">
                   Contact
                 </Link>
               </li>
@@ -164,16 +164,16 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h3 className="font-bold text-teal-600 text-lg mb-4">Contact Info</h3>
+            <h3 className="font-bold text-[#6dc1c9] text-lg mb-4">Contact Info</h3>
             <div className="space-y-4">
               {/* Phone */}
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center mt-1">
-                  <Phone className="w-4 h-4 text-teal-600" />
+                  <Phone className="w-4 h-4 text-[#6dc1c9]" />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800">phone</p>
-                  <a href="tel:03368900349" className="text-gray-600 hover:text-teal-600 transition-colors text-sm">
+                  <a href="tel:03368900349" className="text-gray-600 hover:text-[#6dc1c9] transition-colors text-sm">
                     0336 8900349
                   </a>
                 </div>
@@ -182,11 +182,11 @@ const Footer = () => {
               {/* Email */}
               <div className="flex items-start space-x-3">
                 <div className="w-8 h-8 bg-teal-100 rounded-full flex items-center justify-center mt-1">
-                  <Mail className="w-4 h-4 text-teal-600" />
+                  <Mail className="w-4 h-4 text-[#6dc1c9]" />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-800">Email</p>
-                  <a href="mailto:info@mohitcomputers.pk" className="text-gray-600 hover:text-teal-600 transition-colors text-sm">
+                  <a href="mailto:info@mohitcomputers.pk" className="text-gray-600 hover:text-[#6dc1c9] transition-colors text-sm">
                     info@mohitcomputers.pk
                   </a>
                 </div>
@@ -209,21 +209,21 @@ const Footer = () => {
             <div className="flex items-center space-x-3">
               <a 
                 href="#" 
-                className="w-10 h-10 bg-teal-500 text-white rounded-lg flex items-center justify-center hover:bg-teal-600 transition-colors"
+                className="w-10 h-10 bg-teal-500 text-white rounded-lg flex items-center justify-center hover:bg-[#6dc1c9] transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="w-5 h-5" />
               </a>
               <a 
                 href="#" 
-                className="w-10 h-10 bg-teal-500 text-white rounded-lg flex items-center justify-center hover:bg-teal-600 transition-colors"
+                className="w-10 h-10 bg-teal-500 text-white rounded-lg flex items-center justify-center hover:bg-[#6dc1c9] transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a 
                 href="#" 
-                className="w-10 h-10 bg-teal-500 text-white rounded-lg flex items-center justify-center hover:bg-teal-600 transition-colors"
+                className="w-10 h-10 bg-teal-500 text-white rounded-lg flex items-center justify-center hover:bg-[#6dc1c9] transition-colors"
                 aria-label="TikTok"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

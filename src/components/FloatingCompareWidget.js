@@ -25,7 +25,7 @@ const FloatingCompareWidget = () => {
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center space-x-2 text-teal-600 hover:text-teal-700 transition-colors"
+              className="flex items-center space-x-2 text-[#6dc1c9] hover:text-teal-700 transition-colors"
             >
               <div className="relative">
                 <GitCompareArrows className="w-5 h-5" />
@@ -81,7 +81,7 @@ const FloatingCompareWidget = () => {
                     setIsModalOpen(true);
                     setIsExpanded(false);
                   }}
-                  className="w-full bg-teal-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-teal-700 transition-colors flex items-center justify-center"
+                  className="w-full bg-[#6dc1c9] text-white py-2 px-4 rounded-lg font-medium hover:bg-teal-700 transition-colors flex items-center justify-center"
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   Compare Now
@@ -94,7 +94,7 @@ const FloatingCompareWidget = () => {
           {!isExpanded && (
             <button
               onClick={() => setIsModalOpen(true)}
-              className="px-4 py-2 text-sm font-medium text-teal-600 hover:bg-teal-50 transition-colors rounded-b-2xl"
+              className="px-4 py-2 text-sm font-medium text-[#6dc1c9] hover:bg-teal-50 transition-colors rounded-b-2xl"
             >
               View Comparison
             </button>

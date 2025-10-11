@@ -262,7 +262,7 @@ export default function MyAccount() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6dc1c9] mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
@@ -284,7 +284,7 @@ export default function MyAccount() {
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="flex items-center mb-6">
                 <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center">
-                  <User className="w-8 h-8 text-teal-600" />
+                  <User className="w-8 h-8 text-[#6dc1c9]" />
                 </div>
                 <div className="ml-4">
                   <h3 className="font-semibold text-gray-800">{user.name || 'User'}</h3>
@@ -296,7 +296,7 @@ export default function MyAccount() {
                 <button
                   onClick={() => setActiveTab('profile')}
                   className={`flex items-center px-4 py-2 rounded-lg w-full text-left ${
-                    activeTab === 'profile' ? 'text-teal-600 bg-teal-50' : 'text-gray-700 hover:bg-gray-50'
+                    activeTab === 'profile' ? 'text-[#6dc1c9] bg-teal-50' : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   <User className="w-4 h-4 mr-3" />
@@ -305,13 +305,13 @@ export default function MyAccount() {
                 <button
                   onClick={() => setActiveTab('orders')}
                   className={`flex items-center px-4 py-2 rounded-lg w-full text-left ${
-                    activeTab === 'orders' ? 'text-teal-600 bg-teal-50' : 'text-gray-700 hover:bg-gray-50'
+                    activeTab === 'orders' ? 'text-[#6dc1c9] bg-teal-50' : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   <Package className="w-4 h-4 mr-3" />
                   Order History
                   {orders.length > 0 && (
-                    <span className="ml-auto bg-teal-100 text-teal-600 px-2 py-1 rounded-full text-xs">
+                    <span className="ml-auto bg-teal-100 text-[#6dc1c9] px-2 py-1 rounded-full text-xs">
                       {orders.length}
                     </span>
                   )}
@@ -319,13 +319,13 @@ export default function MyAccount() {
                 <button
                   onClick={() => setActiveTab('wishlist')}
                   className={`flex items-center px-4 py-2 rounded-lg w-full text-left ${
-                    activeTab === 'wishlist' ? 'text-teal-600 bg-teal-50' : 'text-gray-700 hover:bg-gray-50'
+                    activeTab === 'wishlist' ? 'text-[#6dc1c9] bg-teal-50' : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   <Heart className="w-4 h-4 mr-3" />
                   Wishlist
                   {wishlistItems.length > 0 && (
-                    <span className="ml-auto bg-teal-100 text-teal-600 px-2 py-1 rounded-full text-xs">
+                    <span className="ml-auto bg-teal-100 text-[#6dc1c9] px-2 py-1 rounded-full text-xs">
                       {wishlistItems.length}
                     </span>
                   )}
@@ -351,7 +351,7 @@ export default function MyAccount() {
                   {!isEditing ? (
                     <button
                       onClick={handleEditClick}
-                      className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-700 transition-colors"
                     >
                       <Edit2 className="w-4 h-4" />
                       Edit Profile
@@ -367,7 +367,7 @@ export default function MyAccount() {
                       <button
                         onClick={handleSaveProfile}
                         disabled={saveLoading}
-                        className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-2 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50"
                       >
                         <Save className="w-4 h-4" />
                         {saveLoading ? 'Saving...' : 'Save Changes'}
@@ -629,7 +629,7 @@ export default function MyAccount() {
                   <p className="text-gray-500 mb-6">You haven&apos;t placed any orders yet.</p>
                   <Link
                     href="/products"
-                    className="inline-block px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                    className="inline-block px-6 py-2 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-700"
                   >
                     Start Shopping
                   </Link>
@@ -684,7 +684,7 @@ export default function MyAccount() {
                     <p className="text-gray-500 mb-6">Save items you love to your wishlist.</p>
                     <Link
                       href="/products"
-                      className="inline-block px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                      className="inline-block px-6 py-2 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-700"
                     >
                       Browse Products
                     </Link>
@@ -709,7 +709,7 @@ export default function MyAccount() {
                         {/* Product Details */}
                         <div className="p-4">
                           <Link href={`/products/${product.id}`}>
-                            <h3 className="font-semibold text-gray-900 mb-2 hover:text-teal-600 transition-colors line-clamp-2">
+                            <h3 className="font-semibold text-gray-900 mb-2 hover:text-[#6dc1c9] transition-colors line-clamp-2">
                               {product.name}
                             </h3>
                           </Link>
@@ -751,7 +751,7 @@ export default function MyAccount() {
                           <div className="flex gap-2">
                             <Link
                               href={`/products/${product.id}`}
-                              className="flex-1 bg-teal-600 text-white py-2 px-4 rounded-lg text-center text-sm font-medium hover:bg-teal-700 transition-colors"
+                              className="flex-1 bg-[#6dc1c9] text-white py-2 px-4 rounded-lg text-center text-sm font-medium hover:bg-teal-700 transition-colors"
                             >
                               View Details
                             </Link>

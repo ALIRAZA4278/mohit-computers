@@ -9,6 +9,7 @@ import { useCart } from '../../../context/CartContext';
 import { useWishlist } from '../../../context/WishlistContext';
 import { useCompare } from '../../../context/CompareContext';
 import ProductCard from '../../../components/ProductCard';
+import ReviewSection from '../../../components/ReviewSection';
 
 export default function ProductDetail() {
   const params = useParams();
@@ -75,7 +76,7 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-teal-600 border-t-transparent mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#6dc1c9] border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600 font-medium">Loading product details...</p>
         </div>
       </div>
@@ -141,9 +142,9 @@ export default function ProductDetail() {
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center text-sm text-gray-600">
-            <Link href="/" className="hover:text-teal-600 transition-colors">Home</Link>
+            <Link href="/" className="hover:text-[#6dc1c9] transition-colors">Home</Link>
             <span className="mx-2">/</span>
-            <Link href="/products" className="hover:text-teal-600 transition-colors">Products</Link>
+            <Link href="/products" className="hover:text-[#6dc1c9] transition-colors">Products</Link>
             <span className="mx-2">/</span>
             <span className="text-gray-900 font-medium truncate">{product.name}</span>
           </div>
@@ -240,7 +241,7 @@ export default function ProductDetail() {
                   </div>
                   <span className="text-sm text-gray-600 font-medium">(5.0 Rating)</span>
                   <span className="text-sm text-gray-400">•</span>
-                  <span className="text-sm text-teal-600 font-medium">In Stock</span>
+                  <span className="text-sm text-[#6dc1c9] font-medium">In Stock</span>
                 </div>
               </div>
 
@@ -270,7 +271,7 @@ export default function ProductDetail() {
                   <div className="grid grid-cols-1 gap-3">
                     {product.processor && (
                       <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-teal-600 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
                         <div>
                           <span className="text-sm font-medium text-gray-900">Processor: </span>
                           <span className="text-sm text-gray-700">{product.processor}</span>
@@ -279,7 +280,7 @@ export default function ProductDetail() {
                     )}
                     {product.ram && (
                       <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-teal-600 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
                         <div>
                           <span className="text-sm font-medium text-gray-900">RAM: </span>
                           <span className="text-sm text-gray-700">{product.ram}</span>
@@ -288,7 +289,7 @@ export default function ProductDetail() {
                     )}
                     {product.hdd && (
                       <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-teal-600 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
                         <div>
                           <span className="text-sm font-medium text-gray-900">Storage: </span>
                           <span className="text-sm text-gray-700">{product.hdd}</span>
@@ -297,7 +298,7 @@ export default function ProductDetail() {
                     )}
                     {product.screensize && (
                       <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-teal-600 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
                         <div>
                           <span className="text-sm font-medium text-gray-900">Screen: </span>
                           <span className="text-sm text-gray-700">{product.screensize}</span>
@@ -349,9 +350,7 @@ export default function ProductDetail() {
                       }
                     })()}
                   </div>
-                  <div className="text-sm text-blue-600 font-medium">
-                    🚚 Free delivery available
-                  </div>
+                 
                 </div>
               </div>
 
@@ -415,7 +414,7 @@ export default function ProductDetail() {
                     return (
                       <button
                         onClick={handleAddToCart}
-                        className="flex-1 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                        className="flex-1 bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                       >
                         <ShoppingCart className="w-5 h-5" />
                         Add to Cart
@@ -449,7 +448,7 @@ export default function ProductDetail() {
               <div className="grid grid-cols-3 gap-4 pt-6 border-t">
                 <div className="text-center">
                   <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Truck className="w-6 h-6 text-teal-600" />
+                    <Truck className="w-6 h-6 text-[#6dc1c9]" />
                   </div>
                   <p className="text-xs font-medium text-gray-900">Fast Delivery</p>
                   <p className="text-xs text-gray-500">Within 2-3 days</p>
@@ -482,39 +481,39 @@ export default function ProductDetail() {
                 onClick={() => setActiveTab('description')}
                 className={`flex-1 px-6 py-4 font-semibold text-sm transition-all relative ${
                   activeTab === 'description'
-                    ? 'text-teal-600 bg-teal-50'
+                    ? 'text-[#6dc1c9] bg-teal-50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 Description
                 {activeTab === 'description' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-teal-600"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#6dc1c9]"></div>
                 )}
               </button>
               <button
                 onClick={() => setActiveTab('specification')}
                 className={`flex-1 px-6 py-4 font-semibold text-sm transition-all relative ${
                   activeTab === 'specification'
-                    ? 'text-teal-600 bg-teal-50'
+                    ? 'text-[#6dc1c9] bg-teal-50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 Specifications
                 {activeTab === 'specification' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-teal-600"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#6dc1c9]"></div>
                 )}
               </button>
               <button
                 onClick={() => setActiveTab('reviews')}
                 className={`flex-1 px-6 py-4 font-semibold text-sm transition-all relative ${
                   activeTab === 'reviews'
-                    ? 'text-teal-600 bg-teal-50'
+                    ? 'text-[#6dc1c9] bg-teal-50'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
                 Reviews
                 {activeTab === 'reviews' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-teal-600"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#6dc1c9]"></div>
                 )}
               </button>
             </nav>
@@ -539,7 +538,7 @@ export default function ProductDetail() {
                     <div className="space-y-2">
                       {product.condition && (
                         <div className="flex items-center gap-3">
-                          <CheckCircle className="w-5 h-5 text-teal-600" />
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9]" />
                           <p className="text-gray-700">
                             <strong>Condition:</strong> {product.condition}
                           </p>
@@ -547,7 +546,7 @@ export default function ProductDetail() {
                       )}
                       {product.warranty && (
                         <div className="flex items-center gap-3">
-                          <CheckCircle className="w-5 h-5 text-teal-600" />
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9]" />
                           <p className="text-gray-700">
                             <strong>Warranty:</strong> {product.warranty}
                           </p>
@@ -628,22 +627,13 @@ export default function ProductDetail() {
             )}
 
             {activeTab === 'reviews' && (
-              <div className="text-center py-16">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Star className="w-10 h-10 text-gray-400" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">No reviews yet</h3>
-                <p className="text-gray-600 mb-6">Be the first to review this product and help others!</p>
-                <button className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl">
-                  Write a Review
-                </button>
-              </div>
+              <ReviewSection productId={product.id} />
             )}
           </div>
         </div>
 
         {/* Contact Section */}
-        <div className="mt-8 bg-gradient-to-r from-teal-600 to-blue-600 rounded-2xl shadow-lg overflow-hidden">
+        <div className="mt-8 bg-gradient-to-r from-[#6dc1c9] to-blue-600 rounded-2xl shadow-lg overflow-hidden">
           <div className="p-8 lg:p-10 text-white">
             <div className="max-w-4xl mx-auto">
               <h3 className="text-2xl font-bold mb-2">Have Questions? Contact Mohit Computers</h3>
@@ -686,7 +676,7 @@ export default function ProductDetail() {
           <div className="mt-8 bg-white rounded-2xl shadow-sm p-8 lg:p-10">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-900">You May Also Like</h2>
-              <Link href="/products" className="text-teal-600 hover:text-teal-700 font-semibold text-sm">
+              <Link href="/products" className="text-[#6dc1c9] hover:text-teal-700 font-semibold text-sm">
                 View All →
               </Link>
             </div>

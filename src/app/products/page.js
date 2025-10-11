@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Filter, Grid, List, SortAsc, Loader } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar';
+import Banner from '../../components/Banner';
 
 function ProductsContent() {
   const searchParams = useSearchParams();
@@ -292,14 +293,16 @@ function ProductsContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Products Banner */}
+      <Banner
+        desktopImage="/banners/product banner.jpg"
+        mobileImage="/banners/product banner.jpg"
+        alt="Our Products"
+        height="300px"
+        priority={true}
+      />
+
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">Our Products</h1>
-          <p className="text-gray-600">
-            Discover our wide range of quality refurbished laptops and accessories
-          </p>
-        </div>
 
         <div className="flex">
           {/* Filter Sidebar */}
@@ -428,7 +431,7 @@ export default function Products() {
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-teal-600 border-t-transparent mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#6dc1c9] border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600 font-medium">Loading products...</p>
         </div>
       </div>

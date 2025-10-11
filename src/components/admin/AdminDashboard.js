@@ -85,7 +85,7 @@ export default function AdminDashboard() {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6dc1c9] mx-auto mb-4"></div>
           <p className="text-black font-medium">Loading Dashboard...</p>
         </div>
       </div>
@@ -220,7 +220,7 @@ export default function AdminDashboard() {
         <div className="space-y-6">
           <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
             <div className="flex items-center gap-3 mb-4">
-              <FileText className="w-6 h-6 text-teal-600" />
+              <FileText className="w-6 h-6 text-[#6dc1c9]" />
               <div>
                 <p className="text-sm text-gray-600">Total Blogs</p>
                 <p className="text-2xl font-bold text-black">{stats.totalBlogs}</p>

@@ -93,7 +93,7 @@ export default function BlogManagement() {
           </button>
           <button
             onClick={handleCreateNew}
-            className="bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2 font-medium shadow-md"
+            className="bg-[#6dc1c9] text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-2 font-medium shadow-md"
           >
             <Plus className="w-5 h-5" />
             New Blog Post
@@ -119,7 +119,7 @@ export default function BlogManagement() {
       {loading ? (
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6dc1c9] mx-auto mb-4"></div>
             <p className="text-gray-600 font-medium">Loading blogs...</p>
           </div>
         </div>
@@ -186,7 +186,7 @@ export default function BlogManagement() {
                       {new Date(blog.created_at || blog.createdAt).toLocaleDateString()}
                     </span>
                     {(blog.gallery_images?.length || blog.images?.length) > 0 && (
-                      <span className="text-teal-600 font-medium">
+                      <span className="text-[#6dc1c9] font-medium">
                         📸 {(blog.gallery_images?.length || blog.images?.length)} images
                       </span>
                     )}
@@ -200,7 +200,7 @@ export default function BlogManagement() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(blog)}
-                      className="flex-1 bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center gap-2 font-medium"
+                      className="flex-1 bg-[#6dc1c9] text-white py-2 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center gap-2 font-medium"
                     >
                       <Edit className="w-4 h-4" />
                       Edit

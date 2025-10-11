@@ -46,7 +46,7 @@ function OrderConfirmationContent() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-teal-600 border-t-transparent mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#6dc1c9] border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600 font-medium">Loading order details...</p>
         </div>
       </div>
@@ -64,7 +64,7 @@ function OrderConfirmationContent() {
         <div className="max-w-3xl mx-auto">
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             {/* Header */}
-            <div className="bg-gradient-to-r from-green-500 to-teal-600 p-8 text-center text-white">
+            <div className="bg-gradient-to-r from-green-500 to-[#6dc1c9] p-8 text-center text-white">
               <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
@@ -111,7 +111,7 @@ function OrderConfirmationContent() {
                 <h2 className="text-xl font-bold text-gray-900 mb-4">Delivery Information</h2>
                 <div className="bg-gray-50 rounded-xl p-6 space-y-3">
                   <div className="flex items-start">
-                    <Package className="w-5 h-5 text-teal-600 mr-3 mt-1 flex-shrink-0" />
+                    <Package className="w-5 h-5 text-[#6dc1c9] mr-3 mt-1 flex-shrink-0" />
                     <div>
                       <p className="font-medium text-gray-900">{order.customer_name}</p>
                       <p className="text-sm text-gray-600">{order.customer_phone}</p>
@@ -165,24 +165,24 @@ function OrderConfirmationContent() {
               {/* Next Steps */}
               <div className="bg-gradient-to-r from-teal-50 to-blue-50 rounded-xl p-6">
                 <h3 className="font-bold text-gray-900 mb-4 flex items-center">
-                  <Truck className="w-5 h-5 text-teal-600 mr-2" />
+                  <Truck className="w-5 h-5 text-[#6dc1c9] mr-2" />
                   What happens next?
                 </h3>
                 <ol className="space-y-3 text-sm text-gray-700">
                   <li className="flex items-start">
-                    <span className="font-bold text-teal-600 mr-3">1.</span>
+                    <span className="font-bold text-[#6dc1c9] mr-3">1.</span>
                     <span>We&apos;ll confirm your order via phone call within 24 hours</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="font-bold text-teal-600 mr-3">2.</span>
+                    <span className="font-bold text-[#6dc1c9] mr-3">2.</span>
                     <span>Your order will be carefully packed and dispatched</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="font-bold text-teal-600 mr-3">3.</span>
+                    <span className="font-bold text-[#6dc1c9] mr-3">3.</span>
                     <span>Delivery will be made to your address within 2-5 business days</span>
                   </li>
                   <li className="flex items-start">
-                    <span className="font-bold text-teal-600 mr-3">4.</span>
+                    <span className="font-bold text-[#6dc1c9] mr-3">4.</span>
                     <span>Pay cash when you receive your order</span>
                   </li>
                 </ol>
@@ -220,7 +220,7 @@ function OrderConfirmationContent() {
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
                 <Link
                   href="/account"
-                  className="flex-1 bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white py-3 px-6 rounded-xl font-semibold text-center transition-all shadow-lg hover:shadow-xl"
+                  className="flex-1 bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white py-3 px-6 rounded-xl font-semibold text-center transition-all shadow-lg hover:shadow-xl"
                 >
                   View My Orders
                 </Link>
@@ -239,7 +239,7 @@ function OrderConfirmationContent() {
           <div className="mt-6 text-center">
             <Link
               href={`/track-order?order_id=${order.order_id}`}
-              className="inline-flex items-center text-teal-600 hover:text-teal-700 font-semibold"
+              className="inline-flex items-center text-[#6dc1c9] hover:text-teal-700 font-semibold"
             >
               <Package className="w-5 h-5 mr-2" />
               Track Your Order
@@ -257,7 +257,7 @@ export default function OrderConfirmation() {
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-teal-600 border-t-transparent mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#6dc1c9] border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600 font-medium">Loading order details...</p>
         </div>
       </div>

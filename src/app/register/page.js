@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Eye, EyeOff, Mail, Lock, User, Phone, MapPin, ArrowRight, Navigation } from 'lucide-react';
 
 export default function Register() {
@@ -172,15 +173,19 @@ export default function Register() {
         {/* Header */}
         <div className="text-center">
           <Link href="/" className="inline-block mb-6">
-            <div className="bg-teal-600 text-white px-6 py-3 font-bold text-xl rounded-lg shadow-md">
-              <span className="text-white">MOHIT</span>
-              <span className="bg-white text-teal-600 px-2 py-1 rounded ml-1">COMPUTERS</span>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="Mohit Computers"
+              width={480}
+              height={180}
+              className="h-24 w-auto mx-auto"
+              priority
+            />
           </Link>
           <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>
           <p className="mt-2 text-gray-600">
             Already have an account?{' '}
-            <Link href="/login" className="text-teal-600 hover:text-teal-500 font-medium">
+            <Link href="/login" className="text-[#6dc1c9] hover:text-teal-500 font-medium">
               Sign in here
             </Link>
           </p>
@@ -362,7 +367,7 @@ export default function Register() {
                   type="button"
                   onClick={getCurrentLocation}
                   disabled={locationLoading}
-                  className="flex items-center text-sm text-teal-600 hover:text-teal-700 disabled:opacity-50"
+                  className="flex items-center text-sm text-[#6dc1c9] hover:text-teal-700 disabled:opacity-50"
                 >
                   <Navigation className="h-4 w-4 mr-1" />
                   {locationLoading ? 'Getting location...' : 'Use Current Location'}
@@ -394,15 +399,15 @@ export default function Register() {
                   required
                   checked={formData.agreeToTerms}
                   onChange={handleChange}
-                  className="mt-1 text-black h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                  className="mt-1 text-black h-4 w-4 text-[#6dc1c9] focus:ring-teal-500 border-gray-300 rounded"
                 />
                 <label htmlFor="agreeToTerms" className="ml-3 text-sm text-gray-700">
                   I agree to the{' '}
-                  <Link href="/terms" className="text-teal-600 hover:text-teal-500 font-medium">
+                  <Link href="/terms" className="text-[#6dc1c9] hover:text-teal-500 font-medium">
                     Terms of Service
                   </Link>
                   {' '}and{' '}
-                  <Link href="/privacy" className="text-teal-600 hover:text-teal-500 font-medium">
+                  <Link href="/privacy" className="text-[#6dc1c9] hover:text-teal-500 font-medium">
                     Privacy Policy
                   </Link>
                 </label>
@@ -415,7 +420,7 @@ export default function Register() {
                   type="checkbox"
                   checked={formData.subscribeNewsletter}
                   onChange={handleChange}
-                  className="mt-1 text-black h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                  className="mt-1 text-black h-4 w-4 text-[#6dc1c9] focus:ring-teal-500 border-gray-300 rounded"
                 />
                 <label htmlFor="subscribeNewsletter" className="ml-3 text-sm text-gray-700">
                   Subscribe to our newsletter for latest deals and updates
@@ -428,7 +433,7 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#6dc1c9] hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                   <ArrowRight className="h-5 w-5 text-teal-500 group-hover:text-teal-400" />
@@ -445,7 +450,7 @@ export default function Register() {
         <div className="text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <Link href="/login" className="text-teal-600 hover:text-teal-500 font-medium">
+            <Link href="/login" className="text-[#6dc1c9] hover:text-teal-500 font-medium">
               Sign in here
             </Link>
           </p>

@@ -67,7 +67,7 @@ function TrackOrderContent() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Package className="w-10 h-10 text-teal-600" />
+              <Package className="w-10 h-10 text-[#6dc1c9]" />
             </div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Track Your Order</h1>
             <p className="text-gray-600">Enter your order ID to track your order status</p>
@@ -91,7 +91,7 @@ function TrackOrderContent() {
                 className={`px-8 py-3 rounded-lg font-semibold transition-all shadow-lg hover:shadow-xl ${
                   isLoading
                     ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white'
+                    : 'bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white'
                 }`}
               >
                 {isLoading ? (
@@ -200,11 +200,11 @@ function TrackOrderContent() {
                           {order.shipping_postal_code && `, ${order.shipping_postal_code}`}
                         </p>
                         <p className="flex items-center">
-                          <Phone className="w-4 h-4 mr-2 text-teal-600" />
+                          <Phone className="w-4 h-4 mr-2 text-[#6dc1c9]" />
                           {order.customer_phone}
                         </p>
                         <p className="flex items-center">
-                          <Mail className="w-4 h-4 mr-2 text-teal-600" />
+                          <Mail className="w-4 h-4 mr-2 text-[#6dc1c9]" />
                           {order.customer_email}
                         </p>
                       </div>
@@ -244,13 +244,13 @@ function TrackOrderContent() {
               </div>
 
               {/* Need Help */}
-              <div className="bg-gradient-to-r from-teal-600 to-blue-600 rounded-2xl p-6 text-white text-center">
+              <div className="bg-gradient-to-r from-[#6dc1c9] to-blue-600 rounded-2xl p-6 text-white text-center">
                 <h3 className="font-bold text-xl mb-2">Need Help?</h3>
                 <p className="text-teal-100 mb-4">Contact us for any questions about your order</p>
                 <div className="flex justify-center gap-4">
                   <a
                     href="tel:03368900349"
-                    className="bg-white text-teal-600 px-6 py-2 rounded-lg font-semibold hover:bg-teal-50 transition-colors"
+                    className="bg-white text-[#6dc1c9] px-6 py-2 rounded-lg font-semibold hover:bg-teal-50 transition-colors"
                   >
                     Call Us
                   </a>
@@ -274,7 +274,7 @@ function TrackOrderContent() {
               </p>
               <Link
                 href="/account"
-                className="inline-block bg-teal-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors"
+                className="inline-block bg-[#6dc1c9] text-white px-6 py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors"
               >
                 View My Orders
               </Link>
@@ -291,7 +291,7 @@ export default function TrackOrder() {
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-teal-600 border-t-transparent mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#6dc1c9] border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600 font-medium">Loading...</p>
         </div>
       </div>
