@@ -109,7 +109,7 @@ const Navbar = () => {
                 alt="Mohit Computers"
                 width={480}
                 height={180}
-                  className="h-20 sm:h-24 lg:h-28 w-auto"
+                  className="h-14 sm:h-16 lg:h-18 w-auto"
                 priority
               />
             </Link>
