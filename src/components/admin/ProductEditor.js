@@ -23,7 +23,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     // Image fields
     featuredImage: '',
     images: [],
-    
+
     // Laptop specific fields
     model: '',
     processor: '',
@@ -42,6 +42,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
   });
 
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const featuredImageInputRef = React.useRef(null);
 
   useEffect(() => {
     if (product) {
@@ -139,6 +141,72 @@ export default function ProductEditor({ product, onSave, onCancel }) {
   const getBrandOptions = () => {
     const category = categories.find(cat => cat.id === formData.category);
     return category ? category.brands : laptopBrands;
+  };
+
+  const handleImageUpload = async (e, isFeatured = true) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    // Convert FileList to Array
+    const fileArray = Array.from(files);
+
+    // Validate all files
+    for (const file of fileArray) {
+      if (!file.type.startsWith('image/')) {
+        alert(`${file.name} is not an image file`);
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert(`${file.name} is larger than 5MB`);
+        return;
+      }
+    }
+
+    setUploading(true);
+    try {
+      // Upload files sequentially or in parallel
+      const uploadPromises = fileArray.map(async (file) => {
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
+        uploadFormData.append('bucket', 'products');
+
+        const response = await fetch('/api/supabase/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'Upload failed');
+        }
+
+        return data.url;
+      });
+
+      const uploadedUrls = await Promise.all(uploadPromises);
+
+      // Update form data with uploaded URLs
+      if (isFeatured) {
+        // For featured image, only use the first one
+        setFormData(prev => ({ ...prev, featuredImage: uploadedUrls[0] }));
+      } else {
+        // For gallery, add all uploaded images
+        setFormData(prev => ({
+          ...prev,
+          images: [...(prev.images || []), ...uploadedUrls]
+        }));
+      }
+
+      alert(`${uploadedUrls.length} image${uploadedUrls.length > 1 ? 's' : ''} uploaded successfully to Supabase!`);
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      alert('Failed to upload some images: ' + error.message);
+    } finally {
+      setUploading(false);
+      // Reset the input
+      e.target.value = '';
+    }
   };
 
   return (
@@ -367,15 +435,24 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 name="featuredImage"
                 value={formData.featuredImage || ''}
                 onChange={handleChange}
-                placeholder="https://example.com/image.jpg"
+                placeholder="https://example.com/image.jpg or upload below"
                 className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="file"
+                ref={featuredImageInputRef}
+                onChange={(e) => handleImageUpload(e, true)}
+                accept="image/*"
+                className="hidden"
               />
               <button
                 type="button"
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                onClick={() => featuredImageInputRef.current?.click()}
+                disabled={uploading}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Upload className="w-4 h-4" />
-                Upload
+                {uploading ? 'Uploading...' : 'Upload'}
               </button>
             </div>
             {formData.featuredImage && (
@@ -428,18 +505,36 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   </button>
                 </div>
               ))}
-              
-              <button
-                type="button"
-                onClick={() => {
-                  const newImages = [...(formData.images || []), ''];
-                  setFormData(prev => ({ ...prev, images: newImages }));
-                }}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
-              >
-                <Upload className="w-4 h-4" />
-                Add Image URL
-              </button>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newImages = [...(formData.images || []), ''];
+                    setFormData(prev => ({ ...prev, images: newImages }));
+                  }}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+                >
+                  <Upload className="w-4 h-4" />
+                  Add Image URL
+                </button>
+                <input
+                  type="file"
+                  id="gallery-upload"
+                  onChange={(e) => handleImageUpload(e, false)}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('gallery-upload')?.click()}
+                  disabled={uploading}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Upload className="w-4 h-4" />
+                  {uploading ? 'Uploading...' : 'Upload Image'}
+                </button>
+              </div>
             </div>
 
             {/* Gallery Preview */}

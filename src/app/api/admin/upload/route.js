@@ -6,6 +6,7 @@ export async function POST(request) {
   try {
     const data = await request.formData();
     const file = data.get('file');
+    const type = data.get('type') || 'blogs'; // blogs or products
 
     if (!file) {
       return NextResponse.json(
@@ -15,8 +16,8 @@ export async function POST(request) {
     }
 
     // Create uploads directory if it doesn't exist
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'blogs');
-    
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads', type);
+
     try {
       await mkdir(uploadsDir, { recursive: true });
     } catch (error) {
@@ -35,7 +36,7 @@ export async function POST(request) {
     await writeFile(filepath, buffer);
 
     // Return the URL path
-    const imageUrl = `/uploads/blogs/${filename}`;
+    const imageUrl = `/uploads/${type}/${filename}`;
 
     return NextResponse.json({
       success: true,
