@@ -79,38 +79,38 @@ export default function Corporate() {
       />
 
       {/* Corporate Content Section */}
-      <section className="py-20 bg-white">
+      <section className="py-12 sm:py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-6">
+          <div className="text-center mb-12 sm:mb-16">
+            <div className="inline-flex items-center px-3 sm:px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-4 sm:mb-6">
               <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
               Corporate Solutions
             </div>
-            <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
               Enterprise Solutions
               <span className="text-blue-600 block">That Scale</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed">
               Equip your business with quality refurbished laptops and technology solutions.
               Trusted by 500+ companies worldwide for bulk orders and enterprise needs.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-12 max-w-md sm:max-w-none mx-auto">
               <Link
                 href="#quote"
-                className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+                className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-700 transition-colors inline-flex items-center justify-center shadow-lg hover:shadow-xl"
               >
                 Get a Quote
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Link>
               <Link
                 href="#solutions"
-                className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-colors inline-flex items-center"
+                className="border-2 border-blue-600 text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-600 hover:text-white transition-colors inline-flex items-center justify-center"
               >
                 View Solutions
               </Link>
             </div>
             <div className="flex justify-center">
-              <div className="w-24 h-1 bg-blue-600 rounded-full"></div>
+              <div className="w-16 sm:w-24 h-1 bg-blue-600 rounded-full"></div>
             </div>
           </div>
 

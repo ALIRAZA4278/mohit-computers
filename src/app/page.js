@@ -234,38 +234,38 @@ export default function Home() {
               <p className="text-gray-600 text-lg">No featured products available at the moment.</p>
             </div>
           ) : (
-            <div className="relative">
-              <div className="overflow-hidden rounded-xl">
-                <div
-                  className="flex transition-transform duration-500 ease-in-out gap-6"
-                  style={{ transform: `translateX(-${getTransformPercentage(featuredIndex)}%)` }}
-                >
-                  {featuredProducts.map((product) => (
-                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-                      <ProductCard product={product} />
-                    </div>
-                  ))}
+              <div className="relative px-8 sm:px-4">
+                <div className="overflow-hidden rounded-xl">
+                  <div
+                    className="flex transition-transform duration-500 ease-in-out gap-4 sm:gap-6"
+                    style={{ transform: `translateX(-${getTransformPercentage(featuredIndex)}%)` }}
+                  >
+                    {featuredProducts.map((product) => (
+                      <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                        <ProductCard product={product} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
+                {featuredProducts.length > itemsPerView && (
+                  <>
+                    <button
+                      onClick={() => setFeaturedIndex(Math.max(0, featuredIndex - 1))}
+                      className="absolute left-0 sm:left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={featuredIndex === 0}
+                    >
+                      <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                    </button>
+                    <button
+                      onClick={() => setFeaturedIndex(Math.min(getMaxIndex(featuredProducts.length), featuredIndex + 1))}
+                      className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={featuredIndex >= getMaxIndex(featuredProducts.length)}
+                    >
+                      <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                    </button>
+                  </>
+                )}
               </div>
-              {featuredProducts.length > itemsPerView && (
-                <>
-                  <button
-                    onClick={() => setFeaturedIndex(Math.max(0, featuredIndex - 1))}
-                    className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={featuredIndex === 0}
-                  >
-                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
-                  </button>
-                  <button
-                    onClick={() => setFeaturedIndex(Math.min(getMaxIndex(featuredProducts.length), featuredIndex + 1))}
-                    className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={featuredIndex >= getMaxIndex(featuredProducts.length)}
-                  >
-                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
-                  </button>
-                </>
-              )}
-            </div>
           )}
         </div>
       </section>
@@ -284,10 +284,10 @@ export default function Home() {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           {!loading && !error && newArrivalProducts.length > 0 && (
-            <div className="relative">
+            <div className="relative px-8 sm:px-4">
               <div className="overflow-hidden rounded-xl">
                 <div
-                  className="flex transition-transform duration-500 ease-in-out gap-6"
+                  className="flex transition-transform duration-500 ease-in-out gap-4 sm:gap-6"
                   style={{ transform: `translateX(-${getTransformPercentage(newArrivalIndex)}%)` }}
                 >
                   {newArrivalProducts.map((product) => (
@@ -301,14 +301,14 @@ export default function Home() {
                 <>
                   <button
                     onClick={() => setNewArrivalIndex(Math.max(0, newArrivalIndex - 1))}
-                    className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="absolute left-0 sm:left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={newArrivalIndex === 0}
                   >
                     <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
                   </button>
                   <button
                     onClick={() => setNewArrivalIndex(Math.min(getMaxIndex(newArrivalProducts.length), newArrivalIndex + 1))}
-                    className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={newArrivalIndex >= getMaxIndex(newArrivalProducts.length)}
                   >
                     <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
@@ -334,10 +334,10 @@ export default function Home() {
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           {!loading && !error && workstationProducts.length > 0 && (
-            <div className="relative">
+            <div className="relative px-8 sm:px-4">
               <div className="overflow-hidden rounded-xl">
                 <div
-                  className="flex transition-transform duration-500 ease-in-out gap-6"
+                  className="flex transition-transform duration-500 ease-in-out gap-4 sm:gap-6"
                   style={{ transform: `translateX(-${getTransformPercentage(workstationIndex)}%)` }}
                 >
                   {workstationProducts.map((product) => (
@@ -351,14 +351,14 @@ export default function Home() {
                 <>
                   <button
                     onClick={() => setWorkstationIndex(Math.max(0, workstationIndex - 1))}
-                    className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="absolute left-0 sm:left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={workstationIndex === 0}
                   >
                     <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
                   </button>
                   <button
                     onClick={() => setWorkstationIndex(Math.min(getMaxIndex(workstationProducts.length), workstationIndex + 1))}
-                    className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={workstationIndex >= getMaxIndex(workstationProducts.length)}
                   >
                     <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
@@ -387,10 +387,10 @@ export default function Home() {
           
           {/* Accessories Slider */}
           {!loading && !error && accessoryProducts.length > 0 && (
-            <div className="relative">
+            <div className="relative px-8 sm:px-4">
               <div className="overflow-hidden rounded-xl">
                 <div
-                  className="flex transition-transform duration-500 ease-in-out gap-6"
+                  className="flex transition-transform duration-500 ease-in-out gap-4 sm:gap-6"
                   style={{ transform: `translateX(-${getTransformPercentage(accessoryIndex)}%)` }}
                 >
                   {accessoryProducts.map((product) => (
@@ -404,14 +404,14 @@ export default function Home() {
                 <>
                   <button
                     onClick={() => setAccessoryIndex(Math.max(0, accessoryIndex - 1))}
-                    className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="absolute left-0 sm:left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={accessoryIndex === 0}
                   >
                     <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
                   </button>
                   <button
                     onClick={() => setAccessoryIndex(Math.min(getMaxIndex(accessoryProducts.length), accessoryIndex + 1))}
-                    className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={accessoryIndex >= getMaxIndex(accessoryProducts.length)}
                   >
                     <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />

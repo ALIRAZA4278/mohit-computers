@@ -152,14 +152,14 @@ export default function ProductDetail() {
       </div>
 
       {/* Main Product Section */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-4 sm:py-8">
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="grid lg:grid-cols-2 gap-8 p-6 lg:p-10">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 p-4 sm:p-6 lg:p-10">
             {/* Left: Image Gallery */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {/* Main Image */}
               <div className="relative bg-gray-50 rounded-xl overflow-hidden group">
-                <div className="aspect-square flex items-center justify-center p-8">
+                <div className="aspect-square flex items-center justify-center p-4 sm:p-8">
                   <Image
                     src={productImages[selectedImage]}
                     alt={product.name || 'Product'}
@@ -172,14 +172,14 @@ export default function ProductDetail() {
                 {/* Zoom Icon */}
                 <button
                   onClick={() => setShowImageModal(true)}
-                  className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white/90 backdrop-blur-sm p-1.5 sm:p-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <ZoomIn className="w-5 h-5 text-gray-700" />
+                  <ZoomIn className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
                 </button>
 
                 {/* Discount Badge */}
                 {discountPercentage > 0 && (
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-full font-bold shadow-lg">
+                  <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-gradient-to-r from-red-500 to-red-600 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-full font-bold shadow-lg text-xs sm:text-sm">
                     {discountPercentage}% OFF
                   </div>
                 )}
@@ -187,7 +187,7 @@ export default function ProductDetail() {
 
               {/* Thumbnail Gallery */}
               {productImages.length > 1 && (
-                <div className="grid grid-cols-4 gap-3">
+                <div className="grid grid-cols-4 gap-2 sm:gap-3">
                   {productImages.map((img, index) => (
                     <button
                       key={index}
@@ -211,16 +211,16 @@ export default function ProductDetail() {
             </div>
 
             {/* Right: Product Info */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Brand & Category */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                 {product.brand && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                  <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
                     {product.brand}
                   </span>
                 )}
                 {product.category_id && (
-                  <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 capitalize">
+                  <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 capitalize">
                     {product.category_id.replace('-', ' ')}
                   </span>
                 )}
@@ -228,37 +228,37 @@ export default function ProductDetail() {
 
               {/* Product Title */}
               <div>
-                <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-3">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-2 sm:mb-3">
                   {product.name || 'Product Name'}
                 </h1>
 
                 {/* Rating */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600 font-medium">(5.0 Rating)</span>
-                  <span className="text-sm text-gray-400">•</span>
-                  <span className="text-sm text-[#6dc1c9] font-medium">In Stock</span>
+                  <span className="text-xs sm:text-sm text-gray-600 font-medium">(5.0 Rating)</span>
+                  <span className="text-xs sm:text-sm text-gray-400">•</span>
+                  <span className="text-xs sm:text-sm text-[#6dc1c9] font-medium">In Stock</span>
                 </div>
               </div>
 
               {/* Price Section */}
-              <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-xl p-6 border border-teal-100">
-                <div className="flex items-baseline gap-3 mb-2">
-                  <span className="text-4xl font-bold text-gray-900">
+              <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-xl p-4 sm:p-6 border border-teal-100">
+                <div className="flex items-baseline gap-2 sm:gap-3 mb-2 flex-wrap">
+                  <span className="text-2xl sm:text-4xl font-bold text-gray-900">
                     Rs {parseInt(product.price).toLocaleString()}
                   </span>
                   {product.original_price && (
-                    <span className="text-xl text-gray-500 line-through">
+                    <span className="text-lg sm:text-xl text-gray-500 line-through">
                       Rs {parseInt(product.original_price).toLocaleString()}
                     </span>
                   )}
                 </div>
                 {discountPercentage > 0 && (
-                  <p className="text-sm text-green-600 font-medium">
+                  <p className="text-xs sm:text-sm text-green-600 font-medium">
                     You save Rs {(product.original_price - product.price).toLocaleString()} ({discountPercentage}% off)
                   </p>
                 )}
@@ -403,9 +403,9 @@ export default function ProductDetail() {
                       return (
                         <button
                           disabled
-                          className="flex-1 bg-gray-400 text-white px-8 py-4 rounded-xl font-semibold text-lg cursor-not-allowed flex items-center justify-center gap-2"
+                          className="flex-1 bg-gray-400 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                          <ShoppingCart className="w-5 h-5" />
+                          <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
                           Out of Stock
                         </button>
                       );
@@ -414,55 +414,62 @@ export default function ProductDetail() {
                     return (
                       <button
                         onClick={handleAddToCart}
-                        className="flex-1 bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                        className="flex-1 bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                       >
-                        <ShoppingCart className="w-5 h-5" />
-                        Add to Cart
+                        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">Add to Cart</span>
+                        <span className="sm:hidden">Add to Cart</span>
                       </button>
                     );
                   })()}
-                  <button
-                    onClick={handleWishlist}
-                    className={`px-6 py-4 rounded-xl font-semibold transition-all border-2 ${
-                      isInWishlist(product.id)
-                        ? 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100'
-                        : 'bg-white border-gray-200 text-gray-700 hover:border-red-300 hover:bg-red-50'
-                    }`}
-                  >
-                    <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
-                  </button>
-                  <button
-                    onClick={handleCompare}
-                    className={`px-6 py-4 rounded-xl font-semibold transition-all border-2 ${
-                      isInCompare(product.id)
-                        ? 'bg-blue-50 border-blue-200 text-blue-600'
-                        : 'bg-white border-gray-200 text-gray-700 hover:border-blue-300 hover:bg-blue-50'
-                    }`}
-                  >
-                    <GitCompare className="w-5 h-5" />
-                  </button>
+                  
+                  {/* Wishlist and Compare buttons row for mobile */}
+                  <div className="flex gap-3 sm:contents">
+                    <button
+                      onClick={handleWishlist}
+                      className={`flex-1 sm:flex-none px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-semibold transition-all border-2 flex items-center justify-center gap-2 ${
+                        isInWishlist(product.id)
+                          ? 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100'
+                          : 'bg-white border-gray-200 text-gray-700 hover:border-red-300 hover:bg-red-50'
+                      }`}
+                    >
+                      <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                      <span className="text-sm sm:hidden">Wishlist</span>
+                    </button>
+                    <button
+                      onClick={handleCompare}
+                      className={`flex-1 sm:flex-none px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-semibold transition-all border-2 flex items-center justify-center gap-2 ${
+                        isInCompare(product.id)
+                          ? 'bg-blue-50 border-blue-200 text-blue-600'
+                          : 'bg-white border-gray-200 text-gray-700 hover:border-blue-300 hover:bg-blue-50'
+                      }`}
+                    >
+                      <GitCompare className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span className="text-sm sm:hidden">Compare</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
               {/* Trust Badges */}
-              <div className="grid grid-cols-3 gap-4 pt-6 border-t">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Truck className="w-6 h-6 text-[#6dc1c9]" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-[#6dc1c9]" />
                   </div>
                   <p className="text-xs font-medium text-gray-900">Fast Delivery</p>
                   <p className="text-xs text-gray-500">Within 2-3 days</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Shield className="w-6 h-6 text-blue-600" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                   </div>
                   <p className="text-xs font-medium text-gray-900">Warranty</p>
                   <p className="text-xs text-gray-500">{product.warranty || '6 Months'}</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <RotateCcw className="w-6 h-6 text-purple-600" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                   </div>
                   <p className="text-xs font-medium text-gray-900">Easy Return</p>
                   <p className="text-xs text-gray-500">7 Days policy</p>

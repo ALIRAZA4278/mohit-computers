@@ -68,12 +68,12 @@ export default function Contact() {
       />
 
       {/* Contact Information */}
-      <section className="py-16">
+      <section className="py-8 sm:py-16">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Contact Form */}
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Send us a Message</h2>
+            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Send us a Message</h2>
 
               {successMessage && (
                 <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
@@ -87,7 +87,7 @@ export default function Contact() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                   <input
@@ -96,7 +96,7 @@ export default function Contact() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                     placeholder="Your Name"
                   />
                 </div>
@@ -109,7 +109,7 @@ export default function Contact() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -122,7 +122,7 @@ export default function Contact() {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                     placeholder="What is this regarding?"
                   />
                 </div>
@@ -133,9 +133,9 @@ export default function Contact() {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    rows="5"
+                    rows="4"
                     required
-                    className="w-full text-black px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base resize-none"
                     placeholder="Your message..."
                   ></textarea>
                 </div>
@@ -143,7 +143,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
                   {loading ? 'Sending...' : 'Send Message'}
                 </button>
@@ -151,21 +151,21 @@ export default function Contact() {
             </div>
 
             {/* Contact Information */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Get in Touch</h2>
-              <p className="text-gray-600 mb-8">
+            <div className="mt-8 lg:mt-0">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Get in Touch</h2>
+              <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">
                 We&rsquo;d love to hear from you. Choose the best way to reach us and we&rsquo;ll respond as soon as possible.
               </p>
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {/* Address */}
                 <div className="flex items-start">
-                  <div className="bg-blue-100 p-3 rounded-full mr-4">
-                    <MapPin className="w-6 h-6 text-blue-600" />
+                  <div className="bg-blue-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                    <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-1">Visit Our Store</h4>
-                    <p className="text-gray-600">
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Visit Our Store</h4>
+                    <p className="text-gray-600 text-sm sm:text-base">
                       Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi
                     </p>
                   </div>
@@ -173,12 +173,12 @@ export default function Contact() {
 
                 {/* Phone */}
                 <div className="flex items-start">
-                  <div className="bg-green-100 p-3 rounded-full mr-4">
-                    <Phone className="w-6 h-6 text-green-600" />
+                  <div className="bg-green-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                    <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-1">Call Us</h4>
-                    <p className="text-gray-600">
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Call Us</h4>
+                    <p className="text-gray-600 text-sm sm:text-base">
                       0336-8900349<br />
                       021-3270070-6
                     </p>
@@ -187,12 +187,12 @@ export default function Contact() {
 
                 {/* Email */}
                 <div className="flex items-start">
-                  <div className="bg-yellow-100 p-3 rounded-full mr-4">
-                    <Mail className="w-6 h-6 text-yellow-600" />
+                  <div className="bg-yellow-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                    <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-1">Email Us</h4>
-                    <p className="text-gray-600">
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Email Us</h4>
+                    <p className="text-gray-600 text-sm sm:text-base">
                       info@mohitcomputers.pk
                     </p>
                   </div>
@@ -200,12 +200,12 @@ export default function Contact() {
 
                 {/* Hours */}
                 <div className="flex items-start">
-                  <div className="bg-purple-100 p-3 rounded-full mr-4">
-                    <Clock className="w-6 h-6 text-purple-600" />
+                  <div className="bg-purple-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-1">Business Hours</h4>
-                    <p className="text-gray-600">
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Business Hours</h4>
+                    <p className="text-gray-600 text-sm sm:text-base">
                       Monday to Thursday &amp; Saturday: 12:00 PM – 9:00 PM<br />
                       Friday: 2:00 PM – 9:00 PM
                     </p>
@@ -214,16 +214,16 @@ export default function Contact() {
 
                 {/* Live Chat */}
                 <div className="flex items-start">
-                  <div className="bg-red-100 p-3 rounded-full mr-4">
-                    <MessageCircle className="w-6 h-6 text-red-600" />
+                  <div className="bg-red-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                    <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-1">Live Chat</h4>
-                    <p className="text-gray-600">
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Live Chat</h4>
+                    <p className="text-gray-600 text-sm sm:text-base">
                       Chat with our experts in real-time<br />
                       Available: Monday - Saturday, 10 AM - 8 PM
                     </p>
-                    <button className="mt-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors">
+                    <button className="mt-2 bg-red-600 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-lg text-xs sm:text-sm hover:bg-red-700 transition-colors">
                       Start Chat
                     </button>
                   </div>
@@ -238,22 +238,22 @@ export default function Contact() {
    
 
       {/* Call to Action */}
-      <section className="py-16 bg-blue-900 text-white">
+      <section className="py-8 sm:py-16 bg-blue-900 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Still Have Questions?</h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Still Have Questions?</h2>
+          <p className="text-lg sm:text-xl text-blue-100 mb-6 sm:mb-8">
             Our expert team is here to help you make the right choice
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md sm:max-w-none mx-auto">
             <a 
               href="tel:+923368900349"
-              className="bg-yellow-400 text-black px-8 py-4 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+              className="bg-yellow-400 text-black px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-yellow-500 transition-colors text-sm sm:text-base"
             >
               Call Now: +92 336 8900349
             </a>
             <a 
               href="mailto:info@mohitcomputers.pk"
-              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-colors"
+              className="border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-colors text-sm sm:text-base"
             >
               Email Us
             </a>
