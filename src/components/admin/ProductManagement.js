@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Eye, Search, Package, Upload, ArrowLeft, RefreshCw, Download } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, Search, Package, Upload, ArrowLeft, RefreshCw } from 'lucide-react';
 import ProductEditor from './ProductEditor';
 import BulkImport from './BulkImport';
-import BulkUpdate from './BulkUpdate';
 
 export default function ProductManagement() {
   const [products, setProducts] = useState([]);
@@ -14,7 +13,6 @@ export default function ProductManagement() {
   const [showEditor, setShowEditor] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [showBulkImport, setShowBulkImport] = useState(false);
-  const [showBulkUpdate, setShowBulkUpdate] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -111,33 +109,6 @@ export default function ProductManagement() {
     );
   }
 
-  if (showBulkUpdate) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => setShowBulkUpdate(false)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">Bulk Update Products</h2>
-              <p className="text-gray-600">Update existing products from CSV/Excel file</p>
-            </div>
-          </div>
-        </div>
-        <BulkUpdate 
-          onUpdateComplete={() => {
-            fetchProducts();
-            setShowBulkUpdate(false);
-          }}
-        />
-      </div>
-    );
-  }
-
   if (showBulkImport) {
     return (
       <div className="space-y-6">
@@ -177,13 +148,6 @@ export default function ProductManagement() {
           >
             <RefreshCw className="w-4 h-4" />
             Refresh
-          </button>
-          <button
-            onClick={() => setShowBulkUpdate(true)}
-            className="bg-white text-black px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50 font-medium shadow-sm flex items-center gap-2"
-          >
-            <Download className="w-4 h-4" />
-            Bulk Update
           </button>
           <button
             onClick={() => setShowBulkImport(true)}

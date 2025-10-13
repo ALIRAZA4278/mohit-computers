@@ -116,11 +116,11 @@ export default function Home() {
                     alt={`Hero Banner ${index + 1}`}
                     height="500px"
                     priority={index === 0}
-                  />
-                </div>
+                />
+              </div>
               ))}
+              </div>
             </div>
-          </div>
 
           {/* Carousel Controls */}
           <button
@@ -235,37 +235,37 @@ export default function Home() {
             </div>
           ) : (
               <div className="relative px-8 sm:px-4">
-                <div className="overflow-hidden rounded-xl">
-                  <div
+              <div className="overflow-hidden rounded-xl">
+                <div
                     className="flex transition-transform duration-500 ease-in-out gap-4 sm:gap-6"
-                    style={{ transform: `translateX(-${getTransformPercentage(featuredIndex)}%)` }}
-                  >
-                    {featuredProducts.map((product) => (
-                      <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
-                        <ProductCard product={product} />
-                      </div>
-                    ))}
-                  </div>
+                  style={{ transform: `translateX(-${getTransformPercentage(featuredIndex)}%)` }}
+                >
+                  {featuredProducts.map((product) => (
+                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
                 </div>
-                {featuredProducts.length > itemsPerView && (
-                  <>
-                    <button
-                      onClick={() => setFeaturedIndex(Math.max(0, featuredIndex - 1))}
-                      className="absolute left-0 sm:left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={featuredIndex === 0}
-                    >
-                      <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
-                    </button>
-                    <button
-                      onClick={() => setFeaturedIndex(Math.min(getMaxIndex(featuredProducts.length), featuredIndex + 1))}
-                      className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={featuredIndex >= getMaxIndex(featuredProducts.length)}
-                    >
-                      <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
-                    </button>
-                  </>
-                )}
               </div>
+              {featuredProducts.length > itemsPerView && (
+                <>
+                  <button
+                    onClick={() => setFeaturedIndex(Math.max(0, featuredIndex - 1))}
+                      className="absolute left-0 sm:left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={featuredIndex === 0}
+                  >
+                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                  <button
+                    onClick={() => setFeaturedIndex(Math.min(getMaxIndex(featuredProducts.length), featuredIndex + 1))}
+                      className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={featuredIndex >= getMaxIndex(featuredProducts.length)}
+                  >
+                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                </>
+              )}
+            </div>
           )}
         </div>
       </section>

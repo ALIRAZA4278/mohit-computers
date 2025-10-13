@@ -68,10 +68,10 @@ export default async function Blog() {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
-                <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
+            <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
                 Tech Insights & Reviews
-              </div>
+            </div>
               <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight text-gray-900">
                 Smart Tech <span className="text-[#6dc1c9]">Decisions</span> Start Here
               </h1>
