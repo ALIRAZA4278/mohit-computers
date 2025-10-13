@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, ArrowLeft, Upload, X, Plus } from 'lucide-react';
+import { Save, ArrowLeft, Upload, X } from 'lucide-react';
 import { categories, laptopBrands, resolutionOptions, touchOptions, conditionOptions } from '@/lib/data';
 import Image from 'next/image';
 
@@ -43,7 +43,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
 
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [dragActive, setDragActive] = useState(false);
   const featuredImageInputRef = React.useRef(null);
 
   useEffect(() => {
@@ -145,17 +144,14 @@ export default function ProductEditor({ product, onSave, onCancel }) {
   };
 
   const handleImageUpload = async (e, isFeatured = true) => {
-    const files = e.target?.files || e.dataTransfer?.files;
+    const files = e.target.files;
     if (!files || files.length === 0) return;
 
     // Convert FileList to Array
     const fileArray = Array.from(files);
-    
-    // Limit files for gallery uploads (max 10)
-    const filesToUpload = isFeatured ? fileArray.slice(0, 1) : fileArray.slice(0, 10);
 
     // Validate all files
-    for (const file of filesToUpload) {
+    for (const file of fileArray) {
       if (!file.type.startsWith('image/')) {
         alert(`${file.name} is not an image file`);
         return;
@@ -169,7 +165,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     setUploading(true);
     try {
       // Upload files sequentially or in parallel
-      const uploadPromises = filesToUpload.map(async (file) => {
+      const uploadPromises = fileArray.map(async (file) => {
         const uploadFormData = new FormData();
         uploadFormData.append('file', file);
         uploadFormData.append('bucket', 'products');
@@ -209,28 +205,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     } finally {
       setUploading(false);
       // Reset the input
-      if (e.target?.value !== undefined) e.target.value = '';
-    }
-  };
-
-  // Drag and drop handlers
-  const handleDrag = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleImageUpload(e, false);
+      e.target.value = '';
     }
   };
 
@@ -504,31 +479,45 @@ export default function ProductEditor({ product, onSave, onCancel }) {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Additional Images (Gallery)
             </label>
-            
-            {/* Enhanced Upload Area */}
-            <div 
-              className={`border-2 border-dashed rounded-lg p-6 mb-4 transition-colors ${
-                dragActive 
-                  ? 'border-blue-400 bg-blue-50' 
-                  : 'border-gray-300 hover:border-gray-400'
-              }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              <div className="text-center">
-                <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                <div className="space-y-2">
-                  <p className="text-lg font-medium text-gray-900">Upload Multiple Images</p>
-                  <p className="text-sm text-gray-500">
-                    Drag and drop your images here, or click to select files
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    Supports: JPG, PNG, WebP • Max 10 images at once
-                  </p>
+            <div className="space-y-3">
+              {(formData.images || []).map((image, index) => (
+                <div key={index} className="flex items-center space-x-4">
+                  <input
+                    type="url"
+                    value={image}
+                    onChange={(e) => {
+                      const newImages = [...(formData.images || [])];
+                      newImages[index] = e.target.value;
+                      setFormData(prev => ({ ...prev, images: newImages }));
+                    }}
+                    placeholder="https://example.com/image.jpg"
+                    className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newImages = (formData.images || []).filter((_, i) => i !== index);
+                      setFormData(prev => ({ ...prev, images: newImages }));
+                    }}
+                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
-                
+              ))}
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newImages = [...(formData.images || []), ''];
+                    setFormData(prev => ({ ...prev, images: newImages }));
+                  }}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+                >
+                  <Upload className="w-4 h-4" />
+                  Add Image URL
+                </button>
                 <input
                   type="file"
                   id="gallery-upload"
@@ -537,133 +526,35 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   multiple
                   className="hidden"
                 />
-                
-                <div className="flex justify-center gap-3 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => document.getElementById('gallery-upload')?.click()}
-                    disabled={uploading}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-                  >
-                    <Upload className="w-5 h-5" />
-                    {uploading ? 'Uploading...' : 'Select Images'}
-                  </button>
-                  
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const newImages = [...(formData.images || []), ''];
-                      setFormData(prev => ({ ...prev, images: newImages }));
-                    }}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2 font-medium"
-                  >
-                    <Plus className="w-5 h-5" />
-                    Add URL
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('gallery-upload')?.click()}
+                  disabled={uploading}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Upload className="w-4 h-4" />
+                  {uploading ? 'Uploading...' : 'Upload Images'}
+                </button>
               </div>
             </div>
-
-            {/* Manual URL Inputs */}
-            {(formData.images || []).length > 0 && (
-              <div className="space-y-3 mb-4">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-medium text-gray-700">Manual Image URLs</h4>
-                  {(formData.images || []).length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFormData(prev => ({ ...prev, images: [] }));
-                      }}
-                      className="text-sm text-red-600 hover:text-red-800 font-medium"
-                    >
-                      Clear All
-                    </button>
-                  )}
-                </div>
-                {(formData.images || []).map((image, index) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <span className="text-xs text-gray-500 w-8 text-center">{index + 1}</span>
-                    <input
-                      type="url"
-                      value={image}
-                      onChange={(e) => {
-                        const newImages = [...(formData.images || [])];
-                        newImages[index] = e.target.value;
-                        setFormData(prev => ({ ...prev, images: newImages }));
-                      }}
-                      placeholder="https://example.com/image.jpg"
-                      className="flex-1 px-3 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newImages = (formData.images || []).filter((_, i) => i !== index);
-                        setFormData(prev => ({ ...prev, images: newImages }));
-                      }}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
 
             {/* Gallery Preview */}
             {formData.images && formData.images.length > 0 && (
               <div className="mt-4">
-                <div className="flex items-center justify-between mb-3">
-                  <p className="text-sm font-medium text-gray-700">
-                    Gallery Preview ({formData.images.filter(img => img).length} images)
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const validImages = (formData.images || []).filter(img => img && img.trim());
-                      setFormData(prev => ({ ...prev, images: validImages }));
-                    }}
-                    className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    Remove Empty
-                  </button>
-                </div>
-                <div className="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-3">
+                <p className="text-sm font-medium text-gray-700 mb-2">Gallery Preview:</p>
+                <div className="flex flex-wrap gap-3">
                   {formData.images.map((image, index) => (
                     image && (
-                      <div key={index} className="relative group">
-                        <div className="w-full aspect-square relative rounded-lg overflow-hidden border border-gray-300 bg-gray-100">
-                          <Image
-                            src={image}
-                            alt={`Product ${index + 1}`}
-                            fill
-                            sizes="(max-width: 640px) 25vw, (max-width: 1024px) 16.67vw, 12.5vw"
-                            className="object-cover"
-                            unoptimized
-                            onError={(e) => { 
-                              try { 
-                                e.currentTarget.style.display = 'none';
-                                e.currentTarget.parentElement.classList.add('bg-red-100');
-                                e.currentTarget.parentElement.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-red-500 text-xs">Failed</div>';
-                              } catch(err){} 
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newImages = (formData.images || []).filter((_, i) => i !== index);
-                                setFormData(prev => ({ ...prev, images: newImages }));
-                              }}
-                              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 bg-red-600 text-white rounded-full hover:bg-red-700"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </div>
-                        </div>
-                        <p className="text-xs text-gray-500 text-center mt-1 truncate">
-                          Image {index + 1}
-                        </p>
+                      <div key={index} className="w-20 h-20 relative">
+                        <Image
+                          src={image}
+                          alt={`Product ${index + 1}`}
+                          width={80}
+                          height={80}
+                          className="object-cover rounded border border-gray-300"
+                          unoptimized
+                          onError={(e) => { try { e.currentTarget.style.display = 'none'; } catch(err){} }}
+                        />
                       </div>
                     )
                   ))}
@@ -923,4 +814,3 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     </div>
   );
 }
-
