@@ -23,6 +23,7 @@ export default function AdminLogin() {
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotMessage, setForgotMessage] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Check for existing login session on component mount
   useEffect(() => {
@@ -240,8 +241,11 @@ export default function AdminLogin() {
           activeSection={activeSection}
           setActiveSection={setActiveSection}
           onLogout={handleLogout}
+          isSidebarOpen={isSidebarOpen}
+          setIsSidebarOpen={setIsSidebarOpen}
         />
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto lg:ml-0">
+          <div className="lg:hidden h-16"></div> {/* Spacer for mobile menu button */}
           {renderActiveSection()}
         </div>
       </div>

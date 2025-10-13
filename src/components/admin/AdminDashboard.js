@@ -124,66 +124,66 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-black">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Welcome to your admin dashboard</p>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-black">Dashboard</h1>
+        <p className="text-gray-600 mt-1 text-sm sm:text-base">Welcome to your admin dashboard</p>
       </div>
 
       {/* Main Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {mainStats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <div key={index} className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`${stat.color} p-3 rounded-lg`}>
-                  <Icon className="w-6 h-6 text-white" />
+            <div key={index} className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <div className={`${stat.color} p-2 sm:p-3 rounded-lg`}>
+                  <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
               </div>
-              <p className="text-sm text-gray-600 mb-1">{stat.title}</p>
-              <p className="text-3xl font-bold text-black">{stat.value}</p>
+              <p className="text-xs sm:text-sm text-gray-600 mb-1">{stat.title}</p>
+              <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-black">{stat.value}</p>
             </div>
           );
         })}
       </div>
 
       {/* Order Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-          <div className="flex items-center gap-3 mb-2">
-            <Clock className="w-5 h-5 text-yellow-600" />
-            <p className="text-sm font-medium text-gray-600">Pending Orders</p>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-200">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2">
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" />
+            <p className="text-xs sm:text-sm font-medium text-gray-600">Pending Orders</p>
           </div>
-          <p className="text-3xl font-bold text-black">{stats.pendingOrders}</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-black">{stats.pendingOrders}</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-          <div className="flex items-center gap-3 mb-2">
-            <Truck className="w-5 h-5 text-blue-600" />
-            <p className="text-sm font-medium text-gray-600">Total Orders</p>
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-200">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2">
+            <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+            <p className="text-xs sm:text-sm font-medium text-gray-600">Total Orders</p>
           </div>
-          <p className="text-3xl font-bold text-black">{stats.totalOrders}</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-black">{stats.totalOrders}</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-          <div className="flex items-center gap-3 mb-2">
-            <CheckCircle className="w-5 h-5 text-green-600" />
-            <p className="text-sm font-medium text-gray-600">Delivered</p>
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-200">
+          <div className="flex items-center gap-2 sm:gap-3 mb-2">
+            <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+            <p className="text-xs sm:text-sm font-medium text-gray-600">Delivered</p>
           </div>
-          <p className="text-3xl font-bold text-black">{stats.deliveredOrders}</p>
+          <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-black">{stats.deliveredOrders}</p>
         </div>
       </div>
 
       {/* Recent Orders and Info */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Recent Orders */}
         <div className="lg:col-span-2 bg-white rounded-lg shadow-md border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-black">Recent Orders</h2>
+          <div className="p-4 sm:p-6 border-b border-gray-200">
+            <h2 className="text-lg sm:text-xl font-bold text-black">Recent Orders</h2>
           </div>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {recentOrders.length === 0 ? (
               <div className="text-center py-12">
                 <ShoppingCart className="w-12 h-12 text-gray-300 mx-auto mb-3" />
@@ -194,17 +194,17 @@ export default function AdminDashboard() {
                 {recentOrders.map((order) => (
                   <div
                     key={order.id}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 bg-gray-50 rounded-lg border border-gray-200 gap-3 sm:gap-0"
                   >
-                    <div>
-                      <p className="font-bold text-black">{order.order_id}</p>
-                      <p className="text-sm text-gray-600">{order.customer_name}</p>
+                    <div className="flex-1">
+                      <p className="font-bold text-black text-sm sm:text-base">{order.order_id}</p>
+                      <p className="text-xs sm:text-sm text-gray-600">{order.customer_name}</p>
                       <p className="text-xs text-gray-500">
                         {new Date(order.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold text-black">Rs {parseFloat(order.total_amount).toLocaleString()}</p>
+                    <div className="text-left sm:text-right">
+                      <p className="font-bold text-black text-sm sm:text-base">Rs {parseFloat(order.total_amount).toLocaleString()}</p>
                       <span className="text-xs font-medium text-gray-600 bg-gray-200 px-2 py-1 rounded mt-1 inline-block">
                         {order.order_status}
                       </span>
@@ -217,33 +217,33 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Info */}
-        <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-            <div className="flex items-center gap-3 mb-4">
-              <FileText className="w-6 h-6 text-[#6dc1c9]" />
+        <div className="space-y-4 sm:space-y-6">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-200">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-[#6dc1c9]" />
               <div>
-                <p className="text-sm text-gray-600">Total Blogs</p>
-                <p className="text-2xl font-bold text-black">{stats.totalBlogs}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Total Blogs</p>
+                <p className="text-xl sm:text-2xl font-bold text-black">{stats.totalBlogs}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-            <div className="flex items-center gap-3 mb-4">
-              <Package className="w-6 h-6 text-purple-600" />
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-200">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <Package className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
               <div>
-                <p className="text-sm text-gray-600">Total Products</p>
-                <p className="text-2xl font-bold text-black">{stats.totalProducts}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Total Products</p>
+                <p className="text-xl sm:text-2xl font-bold text-black">{stats.totalProducts}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-            <div className="flex items-center gap-3 mb-4">
-              <Users className="w-6 h-6 text-orange-600" />
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-200">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+              <Users className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
               <div>
-                <p className="text-sm text-gray-600">Total Users</p>
-                <p className="text-2xl font-bold text-black">{stats.totalUsers}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Total Users</p>
+                <p className="text-xl sm:text-2xl font-bold text-black">{stats.totalUsers}</p>
               </div>
             </div>
           </div>
