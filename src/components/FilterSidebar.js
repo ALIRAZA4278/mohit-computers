@@ -164,20 +164,22 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
             category="generation" 
           />
 
-          {/* Condition Filter */}
-          <FilterSection 
-            title="Condition" 
-            options={filterOptions.condition} 
-            category="condition" 
-          />
-
           {/* In Stock Only */}
           <div className="mb-6">
             <label className="flex items-center">
               <input
                 type="checkbox"
                 checked={localFilters.inStock || false}
-                onChange={(e) => handleFilterChange('inStock', true, e.target.checked)}
+                onChange={(e) => {
+                  const newFilters = { ...localFilters };
+                  if (e.target.checked) {
+                    newFilters.inStock = true;
+                  } else {
+                    delete newFilters.inStock;
+                  }
+                  setLocalFilters(newFilters);
+                  onFiltersChange(newFilters);
+                }}
                 className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">In Stock Only</span>
@@ -190,7 +192,16 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
               <input
                 type="checkbox"
                 checked={localFilters.featured || false}
-                onChange={(e) => handleFilterChange('featured', true, e.target.checked)}
+                onChange={(e) => {
+                  const newFilters = { ...localFilters };
+                  if (e.target.checked) {
+                    newFilters.featured = true;
+                  } else {
+                    delete newFilters.featured;
+                  }
+                  setLocalFilters(newFilters);
+                  onFiltersChange(newFilters);
+                }}
                 className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
               <span className="text-sm text-gray-700">Featured Products Only</span>

@@ -185,52 +185,227 @@ function ProductsContent() {
 
     // Apply processor filter (database field: processor)
     if (filters.processors && filters.processors.length > 0) {
-      filtered = filtered.filter(product => 
-        filters.processors.some(proc => 
-          product.processor?.toLowerCase().includes(proc.toLowerCase())
-        )
-      );
+      const beforeFilter = filtered.length;
+      
+      filtered = filtered.filter(product => {
+        const productProcessor = (product.processor || '').toLowerCase();
+        
+        return filters.processors.some(filterProcessor => {
+          const filterProc = filterProcessor.toLowerCase();
+          
+          // Try exact match first
+          if (productProcessor === filterProc) {
+            return true;
+          }
+          
+          // Try contains match
+          if (productProcessor.includes(filterProc)) {
+            return true;
+          }
+          
+          // Special handling for processor variations
+          // Handle "Pentium / Celeron" matching both "Intel Pentium" and "Intel Celeron"
+          if (filterProc.includes('pentium') && productProcessor.includes('pentium')) {
+            return true;
+          }
+          if (filterProc.includes('celeron') && productProcessor.includes('celeron')) {
+            return true;
+          }
+          
+          // Handle Xeon variations (E3 v5, etc.)
+          if (filterProc.includes('xeon') && productProcessor.includes('xeon')) {
+            return true;
+          }
+          
+          // Handle AMD variations
+          if (filterProc.includes('amd') && productProcessor.includes('amd')) {
+            // More specific AMD matching
+            if (filterProc.includes('ryzen 3') && productProcessor.includes('ryzen 3')) return true;
+            if (filterProc.includes('ryzen 5') && productProcessor.includes('ryzen 5')) return true;
+            if (filterProc.includes('ryzen 7') && productProcessor.includes('ryzen 7')) return true;
+            if (filterProc.includes('pro apu') && productProcessor.includes('pro')) return true;
+          }
+          
+          return false;
+        });
+      });
+      
+      console.log(`✅ Processor filter (${filters.processors}): ${beforeFilter} → ${filtered.length} products`);
+      
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO PROCESSORS MATCHED!');
+        console.log('Sample processors from products:',
+          products.slice(0, 10).map(p => `"${p.processor}"`).filter(proc => proc !== '""')
+        );
+        console.log('Looking for:', filters.processors.map(p => `"${p}"`));
+      }
     }
 
     // Apply RAM filter (database field: ram)
     if (filters.ram && filters.ram.length > 0) {
-      filtered = filtered.filter(product => 
-        filters.ram.some(ram => 
-          product.ram?.includes(ram)
-        )
-      );
+      const beforeFilter = filtered.length;
+      
+      filtered = filtered.filter(product => {
+        const productRam = product.ram || '';
+        
+        return filters.ram.some(filterRam => {
+          // Try exact match first
+          if (productRam === filterRam) {
+            return true;
+          }
+          
+          // Try contains match
+          if (productRam.includes(filterRam)) {
+            return true;
+          }
+          
+          // Try reverse contains (filter contains product)
+          if (filterRam.includes(productRam)) {
+            return true;
+          }
+          
+          // Special handling for DDR5 - if filter is "32GB DDR5" and product is "32GB DDR5", match
+          // Or if filter is "32GB" and product is "32GB DDR5", also match
+          const cleanProductRam = productRam.replace(/\s*DDR\d*/i, '').trim();
+          const cleanFilterRam = filterRam.replace(/\s*DDR\d*/i, '').trim();
+          
+          if (cleanProductRam === cleanFilterRam) {
+            return true;
+          }
+          
+          return false;
+        });
+      });
+      
+      console.log(`✅ RAM filter (${filters.ram}): ${beforeFilter} → ${filtered.length} products`);
+      
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO RAM OPTIONS MATCHED!');
+        console.log('Sample RAM from products:',
+          products.slice(0, 10).map(p => `"${p.ram}"`).filter(r => r !== '""')
+        );
+        console.log('Looking for:', filters.ram.map(r => `"${r}"`));
+      }
     }
 
     // Apply storage filter (database field: hdd)
     if (filters.storage && filters.storage.length > 0) {
-      filtered = filtered.filter(product => 
-        filters.storage.some(storage => 
-          product.hdd?.includes(storage)
-        )
-      );
+      const beforeFilter = filtered.length;
+      
+      filtered = filtered.filter(product => {
+        const productStorage = product.hdd || '';
+        
+        return filters.storage.some(filterStorage => {
+          // Try exact match first
+          if (productStorage === filterStorage) {
+            return true;
+          }
+          
+          // Try contains match
+          if (productStorage.includes(filterStorage)) {
+            return true;
+          }
+          
+          // Try reverse contains (filter contains product)
+          if (filterStorage.includes(productStorage)) {
+            return true;
+          }
+          
+          return false;
+        });
+      });
+      
+      console.log(`✅ Storage filter (${filters.storage}): ${beforeFilter} → ${filtered.length} products`);
+      
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO STORAGE OPTIONS MATCHED!');
+        console.log('Sample storage from products:',
+          products.slice(0, 10).map(p => `"${p.hdd}"`).filter(s => s !== '""')
+        );
+        console.log('Looking for:', filters.storage.map(s => `"${s}"`));
+      }
     }
 
     // Apply display filter (database field: display_size)
     if (filters.display && filters.display.length > 0) {
-      filtered = filtered.filter(product => 
-        filters.display.some(display => 
-          product.display_size?.includes(display)
-        )
-      );
+      const beforeFilter = filtered.length;
+      
+      filtered = filtered.filter(product => {
+        const productDisplaySize = product.display_size || '';
+        
+        return filters.display.some(filterDisplay => {
+          // Try exact match first
+          if (productDisplaySize === filterDisplay) {
+            return true;
+          }
+          
+          // Try contains match
+          if (productDisplaySize.includes(filterDisplay)) {
+            return true;
+          }
+          
+          // Try reverse contains (filter contains product)
+          if (filterDisplay.includes(productDisplaySize)) {
+            return true;
+          }
+          
+          // Try removing quotes and special characters for flexible matching
+          const cleanProduct = productDisplaySize.replace(/[″"']/g, '"').trim();
+          const cleanFilter = filterDisplay.replace(/[″"']/g, '"').trim();
+          
+          return cleanProduct === cleanFilter || 
+                 cleanProduct.includes(cleanFilter) || 
+                 cleanFilter.includes(cleanProduct);
+        });
+      });
+      
+      console.log(`✅ Display filter (${filters.display}): ${beforeFilter} → ${filtered.length} products`);
+      
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO DISPLAY SIZES MATCHED!');
+        console.log('Sample display sizes from products:',
+          products.slice(0, 10).map(p => `"${p.display_size}"`).filter(d => d !== '""')
+        );
+        console.log('Looking for:', filters.display.map(d => `"${d}"`));
+      }
     }
 
     // Apply generation filter (database field: generation)
     if (filters.generation && filters.generation.length > 0) {
-      filtered = filtered.filter(product => 
-        filters.generation.includes(product.generation)
-      );
-    }
-
-    // Apply condition filter (database field: condition)
-    if (filters.condition && filters.condition.length > 0) {
-      filtered = filtered.filter(product => 
-        filters.condition.includes(product.condition)
-      );
+      const beforeFilter = filtered.length;
+      
+      filtered = filtered.filter(product => {
+        const productGeneration = product.generation || '';
+        
+        return filters.generation.some(filterGeneration => {
+          // Try exact match first
+          if (productGeneration === filterGeneration) {
+            return true;
+          }
+          
+          // Try contains match (for cases like "8th Gen" matching "8th")
+          if (productGeneration.includes(filterGeneration) || filterGeneration.includes(productGeneration)) {
+            return true;
+          }
+          
+          return false;
+        });
+      });
+      
+      console.log(`✅ Generation filter (${filters.generation}): ${beforeFilter} → ${filtered.length} products`);
+      
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO GENERATIONS MATCHED!');
+        console.log('Sample generations from products:',
+          products.slice(0, 10).map(p => `"${p.generation}"`).filter(g => g !== '""')
+        );
+        console.log('Looking for:', filters.generation.map(g => `"${g}"`));
+      }
     }
 
     // Apply price range filter

@@ -30,7 +30,7 @@ export default function ProductDetail() {
     if (params.id) {
       fetchProduct();
     }
-  }, [params.id]);
+  }, [params.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchProduct = async () => {
     try {
@@ -568,68 +568,238 @@ export default function ProductDetail() {
             {activeTab === 'specification' && (
               <div>
                 <h3 className="text-2xl font-bold mb-6 text-gray-900">Technical Specifications</h3>
-                <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
-                  {product.brand && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">Brand</span>
-                      <span className="text-gray-700">{product.brand}</span>
-                    </div>
-                  )}
-                  {product.processor && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">Processor</span>
-                      <span className="text-gray-700">{product.processor}</span>
-                    </div>
-                  )}
-                  {product.ram && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">RAM</span>
-                      <span className="text-gray-700">{product.ram}</span>
-                    </div>
-                  )}
-                  {product.hdd && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">Storage</span>
-                      <span className="text-gray-700">{product.hdd}</span>
-                    </div>
-                  )}
-                  {product.generation && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">Generation</span>
-                      <span className="text-gray-700">{product.generation}</span>
-                    </div>
-                  )}
-                  {product.graphics && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">Graphics</span>
-                      <span className="text-gray-700">{product.graphics}</span>
-                    </div>
-                  )}
-                  {product.screensize && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">Screen Size</span>
-                      <span className="text-gray-700">{product.screensize}</span>
-                    </div>
-                  )}
-                  {product.condition && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">Condition</span>
-                      <span className="text-gray-700">{product.condition}</span>
-                    </div>
-                  )}
-                  {product.warranty && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">Warranty</span>
-                      <span className="text-gray-700">{product.warranty}</span>
-                    </div>
-                  )}
-                  {product.category_id && (
-                    <div className="flex items-center justify-between py-4 border-b border-gray-200">
-                      <span className="font-semibold text-gray-900">Category</span>
-                      <span className="text-gray-700 capitalize">{product.category_id.replace('-', ' ')}</span>
-                    </div>
-                  )}
+                
+                {/* Basic Information */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Basic Information</h4>
+                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                    {product.brand && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Brand</span>
+                        <span className="text-gray-700 font-medium">{product.brand}</span>
+                      </div>
+                    )}
+                    {product.model && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Model</span>
+                        <span className="text-gray-700">{product.model}</span>
+                      </div>
+                    )}
+                    {product.category_id && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Category</span>
+                        <span className="text-gray-700 capitalize">{product.category_id.replace('-', ' ')}</span>
+                      </div>
+                    )}
+                    {product.condition && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Condition</span>
+                        <span className="text-gray-700">{product.condition}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
+
+                {/* Performance Specifications */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Performance</h4>
+                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                    {product.processor && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Processor</span>
+                        <span className="text-gray-700">{product.processor}</span>
+                      </div>
+                    )}
+                    {product.generation && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Generation</span>
+                        <span className="text-gray-700">{product.generation}</span>
+                      </div>
+                    )}
+                    {product.ram && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">RAM</span>
+                        <span className="text-gray-700">{product.ram}</span>
+                      </div>
+                    )}
+                    {product.hdd && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Storage</span>
+                        <span className="text-gray-700">{product.hdd}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Display & Graphics */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Display & Graphics</h4>
+                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                    {product.display_size && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Display Size</span>
+                        <span className="text-gray-700">{product.display_size}</span>
+                      </div>
+                    )}
+                    {product.screensize && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Screen Size</span>
+                        <span className="text-gray-700">{product.screensize}</span>
+                      </div>
+                    )}
+                    {product.resolution && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Resolution</span>
+                        <span className="text-gray-700">{product.resolution}</span>
+                      </div>
+                    )}
+                    {product.integrated_graphics && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Integrated Graphics</span>
+                        <span className="text-gray-700">{product.integrated_graphics}</span>
+                      </div>
+                    )}
+                    {product.discrete_graphics && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Discrete Graphics</span>
+                        <span className="text-gray-700">{product.discrete_graphics}</span>
+                      </div>
+                    )}
+                    {product.graphics && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Graphics</span>
+                        <span className="text-gray-700">{product.graphics}</span>
+                      </div>
+                    )}
+                    {product.touch_type && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Touch Type</span>
+                        <span className="text-gray-700">{product.touch_type}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Features & Connectivity */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Features & Connectivity</h4>
+                  <div className="grid md:grid-cols-1 gap-y-1">
+                    {product.operating_features && (
+                      <div className="flex items-start justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Operating Features</span>
+                        <span className="text-gray-700 text-right max-w-md">{product.operating_features}</span>
+                      </div>
+                    )}
+                    {product.extra_features && (
+                      <div className="flex items-start justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Extra Features</span>
+                        <span className="text-gray-700 text-right max-w-md">{product.extra_features}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Power & Battery */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Power & Battery</h4>
+                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                    {product.battery && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Battery</span>
+                        <span className="text-gray-700">{product.battery}</span>
+                      </div>
+                    )}
+                    {product.charger_included !== undefined && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Charger Included</span>
+                        <span className="text-gray-700">{product.charger_included ? 'Yes' : 'No'}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Warranty & Support */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Warranty & Support</h4>
+                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                    {product.warranty && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Warranty</span>
+                        <span className="text-gray-700">{product.warranty}</span>
+                      </div>
+                    )}
+                    {product.warranty_period && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Warranty Period</span>
+                        <span className="text-gray-700">{product.warranty_period} months</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Product Details */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Product Details</h4>
+                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                    {product.sku && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">SKU</span>
+                        <span className="text-gray-700 font-mono text-sm">{product.sku}</span>
+                      </div>
+                    )}
+                    {product.weight && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Weight</span>
+                        <span className="text-gray-700">{product.weight} kg</span>
+                      </div>
+                    )}
+                    {product.stock_quantity !== undefined && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Stock Quantity</span>
+                        <span className="text-gray-700">{product.stock_quantity}</span>
+                      </div>
+                    )}
+                    {product.is_featured !== undefined && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Featured Product</span>
+                        <span className="text-gray-700">{product.is_featured ? 'Yes' : 'No'}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Pricing Information */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Pricing</h4>
+                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                    {product.price && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Current Price</span>
+                        <span className="text-gray-700 font-semibold">Rs. {product.price.toLocaleString()}</span>
+                      </div>
+                    )}
+                    {product.sale_price && (
+                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                        <span className="font-medium text-gray-900">Sale Price</span>
+                        <span className="text-gray-700 font-semibold">Rs. {product.sale_price.toLocaleString()}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Additional Information */}
+                {(product.tags && product.tags.length > 0) && (
+                  <div className="mb-8">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Tags</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {product.tags.map((tag, index) => (
+                        <span key={index} className="px-3 py-1 bg-[#6dc1c9] bg-opacity-10 text-[#6dc1c9] rounded-full text-sm font-medium">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

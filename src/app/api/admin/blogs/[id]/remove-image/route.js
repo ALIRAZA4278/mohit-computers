@@ -17,8 +17,8 @@ export async function DELETE(request, { params }) {
     }
 
     // Find the blog
-    const blog = await blogsAPI.getById(params.id);
-    if (!blog) {
+    const { data: blog, error: fetchError } = await blogsAPI.getById(params.id);
+    if (fetchError || !blog) {
       return NextResponse.json(
         { success: false, error: 'Blog not found' },
         { status: 404 }

@@ -164,13 +164,12 @@ export const filterOptions = {
     'HP', 'Dell', 'Lenovo', 'Acer',
   ],
   processors: [
-    'Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Intel Celeron', 'AMD Ryzen 3', 'AMD Ryzen 5', 'AMD Ryzen 7'
+    'Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Intel Core i9', 'Intel Pentium', 'Intel Celeron', 'Intel Xeon', 'Intel Core M5', 'AMD Ryzen 3', 'AMD Ryzen 5', 'AMD Ryzen 7', 'AMD Pro APU'
   ],
-  ram: ['4GB', '8GB', '16GB', '32GB'],
-  storage: ['128GB SSD', '256GB SSD', '512GB SSD', '1TB SSD', '1TB HDD', '2TB HDD'],
-  display: ['11.6"', '13.3"', '14"', '15.6"', '17.3"'],
-  generation: ['8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen', 'Latest'],
-  condition: ['Excellent', 'Very Good', 'Good', 'Fair', 'New'],
+  ram: ['4GB', '8GB', '16GB', '32GB', '32GB DDR5'],
+  storage: ['128GB SSD', '240GB SSD', '256GB SSD', '512GB SSD', '1TB SSD'],
+  display: ['11.3″', '12″', '12.5″', '13.3″', '14″', '15.6″', '17″', '17.3″'],
+  generation: ['4th Gen', '5th Gen', '6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen'],
   priceRanges: [
     { label: 'Under Rs:20,000', min: 0, max: 20000 },
     { label: 'Rs:20,000 - Rs:40,000', min: 20000, max: 40000 },
