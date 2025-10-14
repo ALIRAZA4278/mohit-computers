@@ -187,16 +187,22 @@ const ProductCard = ({ product, showCompare = true }) => {
                 <span className="truncate">{product.processor}</span>
               </div>
             )}
+            {product.generation && (
+              <div className="flex items-center">
+                <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
+                <span className="truncate">{product.generation}</span>
+              </div>
+            )}
             {product.ram && (
               <div className="flex items-center">
                 <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
                 <span className="truncate">{product.ram} RAM, {product.hdd || product.storage}</span>
               </div>
             )}
-            {(product.display_size || product.display) && (
+            {(product.display_size || product.screensize || product.display) && (
               <div className="flex items-center">
                 <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                <span className="truncate">{product.display_size || product.display}</span>
+                <span className="truncate">{product.display_size || product.screensize || product.display}</span>
               </div>
             )}
           </div>
