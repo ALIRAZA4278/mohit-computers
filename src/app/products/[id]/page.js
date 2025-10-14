@@ -577,33 +577,33 @@ export default function ProductDetail() {
             {activeTab === 'specification' && (
               <div>
                 <h3 className="text-2xl font-bold mb-6 text-gray-900">Technical Specifications</h3>
-                
+
                 {/* Basic Information */}
                 <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Basic Information</h4>
-                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.brand && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Brand</span>
-                        <span className="text-gray-700 font-medium">{product.brand}</span>
-                      </div>
-                    )}
-                    {product.model && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Model</span>
-                        <span className="text-gray-700">{product.model}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Brand</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.brand}</div>
                       </div>
                     )}
                     {product.category_id && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Category</span>
-                        <span className="text-gray-700 capitalize">{product.category_id.replace('-', ' ')}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Category</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm capitalize">{product.category_id.replace('-', ' ')}</div>
+                      </div>
+                    )}
+                    {product.model && (
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Model</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.model}</div>
                       </div>
                     )}
                     {product.condition && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Condition</span>
-                        <span className="text-gray-700">{product.condition}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Condition</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.condition}</div>
                       </div>
                     )}
                   </div>
@@ -612,29 +612,29 @@ export default function ProductDetail() {
                 {/* Performance Specifications */}
                 <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Performance</h4>
-                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.processor && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Processor</span>
-                        <span className="text-gray-700">{product.processor}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Processor</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.processor}</div>
                       </div>
                     )}
                     {product.generation && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Generation</span>
-                        <span className="text-gray-700">{product.generation}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Generation</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.generation}</div>
                       </div>
                     )}
                     {product.ram && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">RAM</span>
-                        <span className="text-gray-700">{product.ram}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">RAM</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.ram}</div>
                       </div>
                     )}
                     {product.hdd && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Storage</span>
-                        <span className="text-gray-700">{product.hdd}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Storage</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.hdd}</div>
                       </div>
                     )}
                   </div>
@@ -643,47 +643,41 @@ export default function ProductDetail() {
                 {/* Display & Graphics */}
                 <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Display & Graphics</h4>
-                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
-                    {product.display_size && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Display Size</span>
-                        <span className="text-gray-700">{product.display_size}</span>
-                      </div>
-                    )}
-                    {product.screensize && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Screen Size</span>
-                        <span className="text-gray-700">{product.screensize}</span>
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    {(product.display_size || product.screensize) && (
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Display Size</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.display_size || product.screensize}</div>
                       </div>
                     )}
                     {product.resolution && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Resolution</span>
-                        <span className="text-gray-700">{product.resolution}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Resolution</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.resolution}</div>
                       </div>
                     )}
                     {product.integrated_graphics && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Integrated Graphics</span>
-                        <span className="text-gray-700">{product.integrated_graphics}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Integrated Graphics</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.integrated_graphics}</div>
                       </div>
                     )}
                     {product.discrete_graphics && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Discrete Graphics</span>
-                        <span className="text-gray-700">{product.discrete_graphics}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Discrete Graphics</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.discrete_graphics}</div>
                       </div>
                     )}
                     {product.graphics && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Graphics</span>
-                        <span className="text-gray-700">{product.graphics}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Graphics</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.graphics}</div>
                       </div>
                     )}
                     {product.touch_type && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Touch Type</span>
-                        <span className="text-gray-700">{product.touch_type}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Touch Type</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.touch_type}</div>
                       </div>
                     )}
                   </div>
@@ -692,17 +686,17 @@ export default function ProductDetail() {
                 {/* Features & Connectivity */}
                 <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Features & Connectivity</h4>
-                  <div className="grid md:grid-cols-1 gap-y-1">
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.operating_features && (
-                      <div className="flex items-start justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Operating Features</span>
-                        <span className="text-gray-700 text-right max-w-md">{product.operating_features}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Operating Features</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.operating_features}</div>
                       </div>
                     )}
                     {product.extra_features && (
-                      <div className="flex items-start justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Extra Features</span>
-                        <span className="text-gray-700 text-right max-w-md">{product.extra_features}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Extra Features</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.extra_features}</div>
                       </div>
                     )}
                   </div>
@@ -711,17 +705,17 @@ export default function ProductDetail() {
                 {/* Power & Battery */}
                 <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Power & Battery</h4>
-                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.battery && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Battery</span>
-                        <span className="text-gray-700">{product.battery}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Battery</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.battery}</div>
                       </div>
                     )}
                     {product.charger_included !== undefined && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Charger Included</span>
-                        <span className="text-gray-700">{product.charger_included ? 'Yes' : 'No'}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Charger Included</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.charger_included ? 'Yes' : 'No'}</div>
                       </div>
                     )}
                   </div>
@@ -730,17 +724,17 @@ export default function ProductDetail() {
                 {/* Warranty & Support */}
                 <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Warranty & Support</h4>
-                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.warranty && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Warranty</span>
-                        <span className="text-gray-700">{product.warranty}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.warranty}</div>
                       </div>
                     )}
                     {product.warranty_period && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Warranty Period</span>
-                        <span className="text-gray-700">{product.warranty_period} months</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty Period</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.warranty_period} months</div>
                       </div>
                     )}
                   </div>
@@ -749,29 +743,43 @@ export default function ProductDetail() {
                 {/* Product Details */}
                 <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Product Details</h4>
-                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.sku && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">SKU</span>
-                        <span className="text-gray-700 font-mono text-sm">{product.sku}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">SKU</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm font-mono">{product.sku}</div>
                       </div>
                     )}
                     {product.weight && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Weight</span>
-                        <span className="text-gray-700">{product.weight} kg</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Weight</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.weight} kg</div>
                       </div>
                     )}
-                    {product.stock_quantity !== undefined && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Stock Quantity</span>
-                        <span className="text-gray-700">{product.stock_quantity}</span>
+                    <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                      <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Availability</div>
+                      <div className="px-4 py-3 text-gray-700 text-sm">
+                        {(() => {
+                          const category = product.category_id || product.category;
+                          const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+                          const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+                          const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat =>
+                            categoryLower.includes(cat) || productNameLower.includes(cat)
+                          );
+
+                          const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+                          const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+                          const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+                          const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
+
+                          return isAvailableForPurchase ? 'In Stock' : 'Out of Stock';
+                        })()}
                       </div>
-                    )}
+                    </div>
                     {product.is_featured !== undefined && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Featured Product</span>
-                        <span className="text-gray-700">{product.is_featured ? 'Yes' : 'No'}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Featured Product</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm">{product.is_featured ? 'Yes' : 'No'}</div>
                       </div>
                     )}
                   </div>
@@ -780,17 +788,17 @@ export default function ProductDetail() {
                 {/* Pricing Information */}
                 <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Pricing</h4>
-                  <div className="grid md:grid-cols-2 gap-x-8 gap-y-1">
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.price && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Current Price</span>
-                        <span className="text-gray-700 font-semibold">Rs. {product.price.toLocaleString()}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Current Price</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm font-semibold">Rs. {product.price.toLocaleString()}</div>
                       </div>
                     )}
                     {product.sale_price && (
-                      <div className="flex items-center justify-between py-3 border-b border-gray-100">
-                        <span className="font-medium text-gray-900">Sale Price</span>
-                        <span className="text-gray-700 font-semibold">Rs. {product.sale_price.toLocaleString()}</span>
+                      <div className="grid grid-cols-2 divide-x divide-gray-200">
+                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Sale Price</div>
+                        <div className="px-4 py-3 text-gray-700 text-sm font-semibold">Rs. {product.sale_price.toLocaleString()}</div>
                       </div>
                     )}
                   </div>

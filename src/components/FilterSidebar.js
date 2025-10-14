@@ -128,7 +128,12 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
             options={filterOptions.brands} 
             category="brands" 
           />
-
+ {/* Generation Filter */}
+ <FilterSection 
+            title="Generation" 
+            options={filterOptions.generation} 
+            category="generation" 
+          />
           {/* Processor Filter */}
           <FilterSection 
             title="Processor" 
@@ -157,12 +162,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
             category="display" 
           />
 
-          {/* Generation Filter */}
-          <FilterSection 
-            title="Generation" 
-            options={filterOptions.generation} 
-            category="generation" 
-          />
+         
 
           {/* In Stock Only */}
           <div className="mb-6">
