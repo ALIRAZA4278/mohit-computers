@@ -265,7 +265,7 @@ export default function ProductDetail() {
               </div>
 
               {/* Key Specifications */}
-              {(product.processor || product.ram || product.hdd) && (
+              {(product.processor || product.ram || product.hdd || product.generation || product.display_size || product.screensize) && (
                 <div className="bg-gray-50 rounded-xl p-5 space-y-3">
                   <h3 className="font-semibold text-gray-900 mb-3">Key Specifications</h3>
                   <div className="grid grid-cols-1 gap-3">
@@ -275,6 +275,15 @@ export default function ProductDetail() {
                         <div>
                           <span className="text-sm font-medium text-gray-900">Processor: </span>
                           <span className="text-sm text-gray-700">{product.processor}</span>
+                        </div>
+                      </div>
+                    )}
+                    {product.generation && (
+                      <div className="flex items-start gap-3">
+                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                        <div>
+                          <span className="text-sm font-medium text-gray-900">Generation: </span>
+                          <span className="text-sm text-gray-700">{product.generation}</span>
                         </div>
                       </div>
                     )}
@@ -296,12 +305,12 @@ export default function ProductDetail() {
                         </div>
                       </div>
                     )}
-                    {product.screensize && (
+                    {(product.display_size || product.screensize) && (
                       <div className="flex items-start gap-3">
                         <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
                         <div>
-                          <span className="text-sm font-medium text-gray-900">Screen: </span>
-                          <span className="text-sm text-gray-700">{product.screensize}</span>
+                          <span className="text-sm font-medium text-gray-900">Display Size: </span>
+                          <span className="text-sm text-gray-700">{product.display_size || product.screensize}</span>
                         </div>
                       </div>
                     )}
@@ -472,7 +481,7 @@ export default function ProductDetail() {
                     <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                   </div>
                   <p className="text-xs font-medium text-gray-900">Easy Return</p>
-                  <p className="text-xs text-gray-500">7 Days policy</p>
+                  <p className="text-xs text-gray-500">3 Days policy</p>
                 </div>
               </div>
             </div>
