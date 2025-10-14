@@ -137,11 +137,14 @@ export default function Cart() {
                         {/* Product Image */}
                         <div className="flex-shrink-0">
                           <Image
-                            src="/images/products/laptop-showcase.svg"
+                            src={item.featured_image || item.image || "/next.svg"}
                             alt={item.name}
                             width={60}
                             height={45}
-                            className="rounded-lg"
+                            className="rounded-lg object-contain"
+                            onError={(e) => {
+                              e.target.src = "/next.svg";
+                            }}
                           />
                         </div>
 
@@ -246,11 +249,14 @@ export default function Cart() {
                       {/* Product Image */}
                       <div className="flex-shrink-0">
                         <Image
-                          src="/images/products/laptop-showcase.svg"
+                          src={item.featured_image || item.image || "/next.svg"}
                           alt={item.name}
                           width={80}
                           height={60}
-                          className="rounded-lg"
+                          className="rounded-lg object-contain"
+                          onError={(e) => {
+                            e.target.src = "/next.svg";
+                          }}
                         />
                       </div>
 

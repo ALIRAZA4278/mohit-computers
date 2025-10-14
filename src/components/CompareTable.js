@@ -125,11 +125,14 @@ const CompareTable = () => {
               <div className="flex items-start space-x-3 mb-4">
                 <div className="bg-white rounded-lg p-2 flex-shrink-0">
                   <Image
-                    src="/next.png"
+                    src={product.featured_image || product.image || "/next.svg"}
                     alt={product.name}
                     width={80}
                     height={60}
                     className="w-20 h-15 object-contain"
+                    onError={(e) => {
+                      e.target.src = "/next.svg";
+                    }}
                   />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -305,11 +308,14 @@ const CompareTable = () => {
                     {/* Product Image */}
                     <div className="bg-gray-100 rounded-lg p-4 mb-4">
                       <Image
-                        src="/next.png" // Fallback image
+                        src={product.featured_image || product.image || "/next.svg"}
                         alt={product.name}
                         width={250}
                         height={180}
                         className="w-full h-40 object-contain"
+                        onError={(e) => {
+                          e.target.src = "/next.svg";
+                        }}
                       />
                     </div>
                     
