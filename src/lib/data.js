@@ -176,5 +176,35 @@ export const filterOptions = {
     { label: 'Rs:40,000 - Rs:60,000', min: 40000, max: 60000 },
     { label: 'Rs:60,000 - Rs:80,000', min: 60000, max: 80000 },
     { label: 'Above Rs:80,000', min: 80000, max: Infinity }
+  ],
+  // RAM-specific filters
+  ramBrands: [
+    'Kingston', 'Samsung', 'Crucial', 'Hynix', 'Adata', 'Corsair', 'G.Skill', 'Transcend'
+  ],
+  ramType: [
+    'DDR3', 'DDR3L', 'DDR4', 'DDR5'
+  ],
+  ramFormFactor: [
+    'Laptop (SO-DIMM)', 'Desktop (DIMM)'
+  ],
+  ramCapacity: [
+    '2GB', '4GB', '8GB', '16GB', '32GB', '64GB'
+  ],
+  ramSpeed: [
+    '1333 MHz', '1600 MHz', '2133 MHz', '2400 MHz', '2666 MHz', '3200 MHz', '3600 MHz', '4800 MHz', '5600 MHz'
+  ],
+  ramCondition: [
+    'New', 'Used', 'Refurbished'
+  ],
+  ramWarranty: [
+    '15 Days', '3 Months', '6 Months', '1 Year', '2 Years'
+  ],
+  ramPriceRanges: [
+    { label: 'Under PKR 1,000', min: 0, max: 1000 },
+    { label: 'PKR 1,000 - 2,000', min: 1000, max: 2000 },
+    { label: 'PKR 2,000 - 3,000', min: 2000, max: 3000 },
+    { label: 'PKR 3,000 - 5,000', min: 3000, max: 5000 },
+    { label: 'PKR 5,000 - 10,000', min: 5000, max: 10000 },
+    { label: 'Above PKR 10,000', min: 10000, max: Infinity }
   ]
 };

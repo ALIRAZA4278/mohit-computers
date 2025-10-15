@@ -9,43 +9,93 @@ const FAQSection = () => {
   const faqs = [
     {
       id: 0,
+      category: "Products & Quality",
       question: "What types of laptops do you sell?",
       answer: "We deal in imported laptops from top brands like HP, Dell, Lenovo, and more. All units are in excellent condition and directly imported from international markets."
     },
     {
       id: 1,
+      category: "Products & Quality",
       question: "Are your laptops brand new or refurbished?",
-      answer: "We specialize in high-quality refurbished and used laptops that have been thoroughly tested and certified. All our laptops come with warranty and are in excellent working condition. We also have some brand new models available."
+      answer: "Our laptops are not refurbished. These are fresh-condition imported laptops that have not been used in Pakistan."
     },
     {
       id: 2,
+      category: "Products & Quality",
       question: "Can I customize the laptop specifications?",
-      answer: "Yes, we offer customization services for RAM and storage upgrades. You can upgrade your laptop's memory and add SSD storage to improve performance. Our technical team will help you choose the right specifications for your needs."
+      answer: "Yes! Share your requirements with us, and we'll help you find the best match according to your needs and budget."
     },
     {
       id: 3,
+      category: "Products & Quality",
       question: "Do you sell laptop accessories?",
-      answer: "Absolutely! We have a wide range of laptop accessories including chargers, bags, external keyboards, mice, laptop stands, cooling pads, and more. All accessories are compatible with major laptop brands."
+      answer: "Yes, we offer a wide range of laptop accessories, including chargers, bags, webcams, and more."
     },
     {
       id: 4,
-      question: "What warranty do you provide?",
-      answer: "We provide warranty on all our laptops ranging from 3 months to 1 year depending on the model and condition. The warranty covers hardware defects and functionality issues. Software-related issues are also covered in the first 30 days."
+      category: "Warranty & Returns",
+      question: "What kind of warranty do you offer?",
+      answer: "We provide a 15-day checking warranty with a minimum battery backup guarantee of 1.5 hours. Note: Issues like screen/display damage, physical damage, liquid/burn damage, keyboard, and speaker faults are not covered under warranty."
     },
     {
       id: 5,
-      question: "Do you offer home delivery?",
-      answer: "Yes, we offer free home delivery within Karachi. For other cities in Pakistan, we provide nationwide delivery through trusted courier services at minimal charges. All products are carefully packed to ensure safe delivery."
+      category: "Warranty & Returns",
+      question: "Can I return or exchange my order?",
+      answer: "Yes, returns and exchanges are accepted within 3 days, even in case of a change of mind, provided the product is in its original condition with complete packaging. We want you to be fully satisfied with your purchase."
     },
     {
       id: 6,
-      question: "What payment methods do you accept?",
-      answer: "We accept multiple payment methods including cash on delivery, bank transfers, JazzCash, EasyPaisa, and online banking. For corporate clients, we also accept cheque payments and can provide invoices."
+      category: "Warranty & Returns",
+      question: "What if my laptop has a problem after purchase?",
+      answer: "You can contact our support team at 0336-8900349. If the issue is covered under warranty, we will repair or replace the unit as appropriate."
     },
     {
       id: 7,
-      question: "Can I return or exchange a laptop?",
-      answer: "Yes, we have a 7-day return policy. If you're not satisfied with your purchase, you can return or exchange the laptop within 7 days of delivery. The laptop should be in original condition with all accessories."
+      category: "Business & Bulk Deals",
+      question: "Do you offer bulk purchases or business deals?",
+      answer: "Yes, we provide wholesale rates and special discounts for resellers, institutions, and corporate clients."
+    },
+    {
+      id: 8,
+      category: "Business & Bulk Deals",
+      question: "Can I trade in or sell my own laptop?",
+      answer: "No, we do not purchase or exchange laptops from customers. Our focus is on reliable, imported used laptops only."
+    },
+    {
+      id: 9,
+      category: "Pricing & Promotions",
+      question: "Do you offer any discounts or deals?",
+      answer: "Absolutely! We run weekly and monthly deals on our website, as well as special promotions during festive seasons and public holidays to make tech more affordable."
+    },
+    {
+      id: 10,
+      category: "Pricing & Promotions",
+      question: "Are your prices the lowest in the market?",
+      answer: "Since 2005, our mission has been to make technology affordable and accessible for everyone in Pakistan. We strive to offer the most competitive pricing. If you feel our prices can be improved, please reach out — we'll do our best to assist based on your request."
+    },
+    {
+      id: 11,
+      category: "Company Info & Contact",
+      question: "Is Mohit Computers reliable?",
+      answer: "We've been serving the market since 2005, with thousands of satisfied customers across Pakistan. Many of our first-time buyers become repeat customers and part of our extended family. We prioritize customer trust, product quality, and long-term satisfaction over just making a sale."
+    },
+    {
+      id: 12,
+      category: "Company Info & Contact",
+      question: "Where is your store located?",
+      answer: "You can visit us at: Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi (Just opposite the lift, near Skin Hospital/Chamra Hospital)"
+    },
+    {
+      id: 13,
+      category: "Company Info & Contact",
+      question: "How can I contact you?",
+      answer: "📞 0336-8900349 | 📧 supports@mohitcomputers.pk"
+    },
+    {
+      id: 14,
+      category: "Company Info & Contact",
+      question: "Can I send complaints or suggestions?",
+      answer: "Yes, we're always happy to hear from you. Please call or email us directly, and our team will respond promptly to assist you."
     }
   ];
 

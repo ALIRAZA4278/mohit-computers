@@ -18,6 +18,7 @@ function ProductsContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentCategory, setCurrentCategory] = useState(null);
 
 
   // Fetch products from database
@@ -77,8 +78,12 @@ function ProductsContent() {
         'ram': 'ram',
         'ssd': 'ssd'
       };
-      newFilters.category = [categoryMap[category] || category];
+      const mappedCategory = categoryMap[category] || category;
+      newFilters.category = [mappedCategory];
+      setCurrentCategory(mappedCategory);
       console.log('✅ Category filter set:', newFilters.category);
+    } else {
+      setCurrentCategory(null);
     }
 
     if (brand) {
@@ -408,10 +413,89 @@ function ProductsContent() {
       }
     }
 
+    // Apply RAM-specific filters
+    // RAM Type filter (DDR3, DDR4, DDR5, etc.)
+    if (filters.ramType && filters.ramType.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productRamType = (product.ram_type || '').toLowerCase();
+        return filters.ramType.some(filterType =>
+          productRamType === filterType.toLowerCase() ||
+          productRamType.includes(filterType.toLowerCase())
+        );
+      });
+      console.log(`✅ RAM Type filter (${filters.ramType}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // RAM Capacity filter (2GB, 4GB, 8GB, etc.)
+    if (filters.ramCapacity && filters.ramCapacity.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productRamCapacity = (product.ram_capacity || '').toLowerCase();
+        return filters.ramCapacity.some(filterCapacity =>
+          productRamCapacity === filterCapacity.toLowerCase() ||
+          productRamCapacity.includes(filterCapacity.toLowerCase())
+        );
+      });
+      console.log(`✅ RAM Capacity filter (${filters.ramCapacity}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // RAM Speed filter (1600 MHz, 2400 MHz, etc.)
+    if (filters.ramSpeed && filters.ramSpeed.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productRamSpeed = (product.ram_speed || '').toLowerCase();
+        return filters.ramSpeed.some(filterSpeed =>
+          productRamSpeed === filterSpeed.toLowerCase() ||
+          productRamSpeed.includes(filterSpeed.toLowerCase())
+        );
+      });
+      console.log(`✅ RAM Speed filter (${filters.ramSpeed}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // RAM Form Factor filter (SO-DIMM, DIMM)
+    if (filters.ramFormFactor && filters.ramFormFactor.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productRamFormFactor = (product.ram_form_factor || '').toLowerCase();
+        return filters.ramFormFactor.some(filterFormFactor =>
+          productRamFormFactor === filterFormFactor.toLowerCase() ||
+          productRamFormFactor.includes(filterFormFactor.toLowerCase())
+        );
+      });
+      console.log(`✅ RAM Form Factor filter (${filters.ramFormFactor}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // RAM Condition filter (New, Used, Refurbished)
+    if (filters.ramCondition && filters.ramCondition.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productRamCondition = (product.ram_condition || '').toLowerCase();
+        return filters.ramCondition.some(filterCondition =>
+          productRamCondition === filterCondition.toLowerCase() ||
+          productRamCondition.includes(filterCondition.toLowerCase())
+        );
+      });
+      console.log(`✅ RAM Condition filter (${filters.ramCondition}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // RAM Warranty filter (15 Days, 3 Months, etc.)
+    if (filters.ramWarranty && filters.ramWarranty.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productRamWarranty = (product.ram_warranty || '').toLowerCase();
+        return filters.ramWarranty.some(filterWarranty =>
+          productRamWarranty === filterWarranty.toLowerCase() ||
+          productRamWarranty.includes(filterWarranty.toLowerCase())
+        );
+      });
+      console.log(`✅ RAM Warranty filter (${filters.ramWarranty}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
     // Apply price range filter
     if (filters.priceRange) {
-      filtered = filtered.filter(product => 
-        product.price >= filters.priceRange.min && 
+      filtered = filtered.filter(product =>
+        product.price >= filters.priceRange.min &&
         product.price <= filters.priceRange.max
       );
     }
@@ -481,11 +565,12 @@ function ProductsContent() {
 
         <div className="flex">
           {/* Filter Sidebar */}
-          <FilterSidebar 
+          <FilterSidebar
             filters={filters}
             onFiltersChange={handleFiltersChange}
             isOpen={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}
+            category={currentCategory}
           />
 
           {/* Main Content */}

@@ -152,9 +152,9 @@ export default function Contact() {
 
             {/* Contact Information */}
             <div className="mt-8 lg:mt-0">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Get in Touch</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Contact Us</h2>
               <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">
-                We&rsquo;d love to hear from you. Choose the best way to reach us and we&rsquo;ll respond as soon as possible.
+                We&rsquo;re here to help! Whether you have a question, need support, or want to share feedback, feel free to reach out — our team is always ready to assist you.
               </p>
 
               <div className="space-y-4 sm:space-y-6">
@@ -164,9 +164,10 @@ export default function Contact() {
                     <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Visit Our Store</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">📍 Store Location</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi
+                      Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi<br />
+                      <span className="text-xs sm:text-sm text-gray-500">(Just opposite the lift, near Skin Hospital / Chamra Hospital)</span>
                     </p>
                   </div>
                 </div>
@@ -177,10 +178,16 @@ export default function Contact() {
                     <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Call Us</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">☎️ Phone / WhatsApp Support</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      0336-8900349<br />
-                      021-3270070-6
+                      Mobile / WhatsApp: <a href="tel:03368900349" className="text-blue-600 hover:underline">0336-8900349</a><br />
+                      PTCL Landline: <a href="tel:02132700706" className="text-blue-600 hover:underline">021-3270070-6</a>
+                    </p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-2">
+                      Available during business hours:<br />
+                      Monday to Thursday & Saturday: 12:00 PM – 9:00 PM<br />
+                      Friday: 2:00 PM – 9:00 PM<br />
+                      Sunday: Closed
                     </p>
                   </div>
                 </div>
@@ -191,41 +198,28 @@ export default function Contact() {
                     <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Email Us</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">📧 Email Support</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      info@mohitcomputers.pk
+                      General Inquiries, Complaints & Feedback:<br />
+                      <a href="mailto:supports@mohitcomputers.pk" className="text-blue-600 hover:underline">supports@mohitcomputers.pk</a>
+                    </p>
+                    <p className="text-gray-600 text-sm sm:text-base mt-2">
+                      Corporate & Business Inquiries:<br />
+                      <a href="mailto:corporate@mohitcomputers.pk" className="text-blue-600 hover:underline">corporate@mohitcomputers.pk</a>
                     </p>
                   </div>
                 </div>
 
-                {/* Hours */}
+                {/* Warranty Help */}
                 <div className="flex items-start">
                   <div className="bg-purple-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
-                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+                    <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Business Hours</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">📦 Need Help with an Order or Warranty?</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      Monday to Thursday &amp; Saturday: 12:00 PM – 9:00 PM<br />
-                      Friday: 2:00 PM – 9:00 PM
+                      If you&rsquo;re facing any issue with a recent purchase, please include your Invoice Number or Order Reference when contacting us for faster service.
                     </p>
-                  </div>
-                </div>
-
-                {/* Live Chat */}
-                <div className="flex items-start">
-                  <div className="bg-red-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
-                    <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
-                  </div>
-                  <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Live Chat</h4>
-                    <p className="text-gray-600 text-sm sm:text-base">
-                      Chat with our experts in real-time<br />
-                      Available: Monday - Saturday, 10 AM - 8 PM
-                    </p>
-                    <button className="mt-2 bg-red-600 text-white px-3 sm:px-4 py-1 sm:py-2 rounded-lg text-xs sm:text-sm hover:bg-red-700 transition-colors">
-                      Start Chat
-                    </button>
                   </div>
                 </div>
               </div>
@@ -238,24 +232,24 @@ export default function Contact() {
    
 
       {/* Call to Action */}
-      <section className="py-8 sm:py-16 bg-blue-900 text-white">
+      <section className="py-8 sm:py-16 bg-gradient-to-r from-[#6dc1c9] to-teal-700 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Still Have Questions?</h2>
-          <p className="text-lg sm:text-xl text-blue-100 mb-6 sm:mb-8">
-            Our expert team is here to help you make the right choice
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">✅ We&rsquo;re Here Because You Matter</h2>
+          <p className="text-lg sm:text-xl mb-6 sm:mb-8">
+            At Mohit Computers, we don&rsquo;t just deal in laptops and Accessories, we build long-term relationships through trusted products, reliable support, and personalized service.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md sm:max-w-none mx-auto">
-            <a 
-              href="tel:+923368900349"
-              className="bg-yellow-400 text-black px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-yellow-500 transition-colors text-sm sm:text-base"
+            <a
+              href="tel:03368900349"
+              className="bg-white text-teal-700 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
             >
-              Call Now: +92 336 8900349
+              Call: 0336-8900349
             </a>
-            <a 
-              href="mailto:info@mohitcomputers.pk"
-              className="border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-900 transition-colors text-sm sm:text-base"
+            <a
+              href="mailto:supports@mohitcomputers.pk"
+              className="border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-white hover:text-teal-700 transition-colors text-sm sm:text-base"
             >
-              Email Us
+              Email: supports@mohitcomputers.pk
             </a>
           </div>
         </div>

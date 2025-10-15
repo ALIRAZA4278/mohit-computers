@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { X, ShoppingCart, CheckCircle, XCircle, Star, Link } from 'lucide-react';
+import { X, ShoppingCart, CheckCircle, XCircle, Star, Link, GitCompareArrows } from 'lucide-react';
 import { useCompare } from '../context/CompareContext';
 import { useCart } from '../context/CartContext';
 
@@ -81,26 +81,40 @@ const CompareTable = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-          <div>
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2">Laptop Comparison</h2>
-            <p className="text-blue-100 text-sm sm:text-base">Compare {laptopItems.length} laptop{laptopItems.length > 1 ? 's' : ''} side by side</p>
+      <div className="bg-gradient-to-r from-[#6dc1c9] via-teal-600 to-teal-700 text-white p-6 sm:p-8 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px'}}></div>
+        </div>
+
+        <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                <GitCompareArrows className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-1">Product Comparison</h2>
+                <p className="text-teal-100 text-sm sm:text-base">Compare {laptopItems.length} laptop{laptopItems.length > 1 ? 's' : ''} side by side</p>
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-            <div className="text-left sm:text-right">
-              <div className="text-xs sm:text-sm text-blue-100">Best deals highlighted in</div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 bg-green-400 rounded-full mr-2"></div>
-                <span className="text-xs sm:text-sm">Green</span>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20">
+              <div className="text-xs text-teal-100 mb-1">Best values highlighted</div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg"></div>
+                <span className="text-sm font-semibold">Green Badge</span>
               </div>
             </div>
             <button
               onClick={clearCompare}
-              className="px-4 sm:px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium text-sm sm:text-base w-full sm:w-auto"
+              className="px-6 py-3 bg-white text-red-600 rounded-xl hover:bg-red-50 transition-all duration-200 font-semibold text-sm sm:text-base w-full sm:w-auto shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
+              <X className="w-4 h-4" />
               Clear All
             </button>
           </div>
@@ -109,21 +123,26 @@ const CompareTable = () => {
 
       {/* Mobile Layout */}
       <div className="block lg:hidden">
-        <div className="p-4 space-y-4">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-br from-gray-50 to-gray-100">
           {laptopItems.map((product, index) => (
-            <div key={product.id} className="bg-gray-50 rounded-lg p-4 relative">
+            <div key={product.id} className="bg-white rounded-2xl p-5 relative shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
               {/* Remove Button */}
               <button
                 onClick={() => removeFromCompare(product.id)}
-                className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg z-10"
+                className="absolute -top-2 -right-2 p-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl z-10 border-2 border-white"
                 title="Remove from comparison"
               >
                 <X className="w-4 h-4" />
               </button>
 
+              {/* Product Number Badge */}
+              <div className="absolute -top-2 -left-2 w-8 h-8 bg-gradient-to-br from-[#6dc1c9] to-teal-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg border-2 border-white">
+                {index + 1}
+              </div>
+
               {/* Product Header */}
-              <div className="flex items-start space-x-3 mb-4">
-                <div className="bg-white rounded-lg p-2 flex-shrink-0">
+              <div className="flex items-start space-x-4 mb-5 mt-2">
+                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3 flex-shrink-0 border border-gray-200 shadow-sm">
                   <Image
                     src={product.featured_image || product.image || "/next.svg"}
                     alt={product.name}
@@ -136,15 +155,15 @@ const CompareTable = () => {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-gray-800 text-base mb-1 line-clamp-2">
+                  <h3 className="font-bold text-gray-900 text-base mb-2 line-clamp-2 leading-tight">
                     {product.name}
                   </h3>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="bg-gradient-to-r from-teal-50 to-teal-100 text-teal-700 px-3 py-1 rounded-full text-xs font-semibold border border-teal-200">
                       {product.brand}
                     </span>
                     {product.featured && (
-                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium flex items-center">
+                      <span className="bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-semibold flex items-center border border-yellow-200">
                         <Star className="w-3 h-3 mr-1 fill-current" />
                         Featured
                       </span>
@@ -154,9 +173,9 @@ const CompareTable = () => {
               </div>
 
               {/* Specifications Grid */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {/* Price */}
-                <div className={`flex justify-between items-center p-3 rounded-lg ${isHighlight(product, 'price') ? 'bg-green-100 border border-green-200' : 'bg-white'}`}>
+                <div className={`flex justify-between items-center p-4 rounded-xl transition-all duration-200 ${isHighlight(product, 'price') ? 'bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-300 shadow-md' : 'bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200'}`}>
                   <div className="flex items-center">
                     <span className="text-lg mr-2">💰</span>
                     <span className="font-medium text-gray-700">Price</span>
@@ -175,41 +194,47 @@ const CompareTable = () => {
                 </div>
 
                 {/* Processor */}
-                <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                  <div className="flex items-center">
-                    <span className="text-lg mr-2">🖥️</span>
-                    <span className="font-medium text-gray-700">Processor</span>
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <span className="text-base">🖥️</span>
+                    </div>
+                    <span className="font-semibold text-gray-800 text-sm">Processor</span>
                   </div>
-                  <div className="text-right text-sm text-gray-800 max-w-32 truncate">
+                  <div className="text-right text-sm text-gray-800 max-w-32 truncate font-medium">
                     {product.processor || 'Not specified'}
                   </div>
                 </div>
 
                 {/* RAM */}
-                <div className={`flex justify-between items-center p-3 rounded-lg ${isHighlight(product, 'ram') ? 'bg-green-100 border border-green-200' : 'bg-white'}`}>
-                  <div className="flex items-center">
-                    <span className="text-lg mr-2">🧠</span>
-                    <span className="font-medium text-gray-700">RAM</span>
+                <div className={`flex justify-between items-center p-4 rounded-xl transition-all duration-200 ${isHighlight(product, 'ram') ? 'bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-300 shadow-md' : 'bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200'}`}>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isHighlight(product, 'ram') ? 'bg-green-200' : 'bg-purple-100'}`}>
+                      <span className="text-base">🧠</span>
+                    </div>
+                    <span className="font-semibold text-gray-800 text-sm">RAM</span>
                   </div>
-                  <div className={`text-right font-medium ${isHighlight(product, 'ram') ? 'text-green-600' : 'text-gray-800'}`}>
+                  <div className={`text-right font-bold text-sm ${isHighlight(product, 'ram') ? 'text-green-700' : 'text-gray-800'}`}>
                     {product.ram || 'Not specified'}
                     {isHighlight(product, 'ram') && <span className="ml-1 text-xs">🏆</span>}
                   </div>
                 </div>
 
                 {/* Storage */}
-                <div className={`flex justify-between items-center p-3 rounded-lg ${isHighlight(product, 'storage') ? 'bg-green-100 border border-green-200' : 'bg-white'}`}>
-                  <div className="flex items-center">
-                    <span className="text-lg mr-2">💾</span>
-                    <span className="font-medium text-gray-700">Storage</span>
+                <div className={`flex justify-between items-center p-4 rounded-xl transition-all duration-200 ${isHighlight(product, 'storage') ? 'bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-300 shadow-md' : 'bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200'}`}>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isHighlight(product, 'storage') ? 'bg-green-200' : 'bg-indigo-100'}`}>
+                      <span className="text-base">💾</span>
+                    </div>
+                    <span className="font-semibold text-gray-800 text-sm">Storage</span>
                   </div>
                   <div className="text-right">
-                    <div className={`font-medium ${isHighlight(product, 'storage') ? 'text-green-600' : 'text-gray-800'}`}>
-                      {product.storage || 'Not specified'}
+                    <div className={`font-bold text-sm ${isHighlight(product, 'storage') ? 'text-green-700' : 'text-gray-800'}`}>
+                      {product.storage || product.hdd || 'Not specified'}
                       {isHighlight(product, 'storage') && <span className="ml-1 text-xs">🏆</span>}
                     </div>
-                    {(product.storage?.includes('SSD')) && (
-                      <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded mt-1 inline-block">
+                    {(product.storage?.includes('SSD') || product.hdd?.includes('SSD')) && (
+                      <div className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full mt-1 inline-flex items-center font-semibold">
                         ⚡ SSD
                       </div>
                     )}
@@ -217,24 +242,26 @@ const CompareTable = () => {
                 </div>
 
                 {/* Condition */}
-                <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                  <div className="flex items-center">
-                    <span className="text-lg mr-2">✨</span>
-                    <span className="font-medium text-gray-700">Condition</span>
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                      <span className="text-base">✨</span>
+                    </div>
+                    <span className="font-semibold text-gray-800 text-sm">Condition</span>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    product.condition === 'Excellent' ? 'bg-green-100 text-green-800' :
-                    product.condition === 'Very Good' ? 'bg-blue-100 text-blue-800' :
-                    product.condition === 'Good' ? 'bg-yellow-100 text-yellow-800' :
-                    product.condition === 'New' ? 'bg-purple-100 text-purple-800' :
-                    'bg-gray-100 text-gray-800'
+                  <span className={`px-3 py-1.5 rounded-full text-xs font-bold shadow-sm ${
+                    product.condition === 'Excellent' ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300' :
+                    product.condition === 'Very Good' ? 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300' :
+                    product.condition === 'Good' ? 'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300' :
+                    product.condition === 'New' ? 'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border border-purple-300' :
+                    'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300'
                   }`}>
                     {product.condition || 'Good'}
                   </span>
                 </div>
 
                 {/* Stock Status */}
-                <div className="flex justify-between items-center p-3 bg-white rounded-lg">
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
                   <div className="flex items-center">
                     <span className="text-lg mr-2">📦</span>
                     <span className="font-medium text-gray-700">Stock</span>
@@ -260,25 +287,25 @@ const CompareTable = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-4 space-y-2">
+              <div className="mt-5 space-y-3">
                 <button
                   onClick={(e) => handleAddToCart(product)}
                   disabled={!product.inStock}
-                  className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-200 text-sm ${
+                  className={`w-full py-3.5 px-4 rounded-xl font-bold transition-all duration-200 text-sm shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
                     product.inStock
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      ? 'bg-gradient-to-r from-[#6dc1c9] to-teal-600 text-white hover:from-teal-600 hover:to-teal-700 transform hover:-translate-y-0.5'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   }`}
                 >
-                  <ShoppingCart className="w-4 h-4 inline mr-2" />
+                  <ShoppingCart className="w-4 h-4" />
                   {product.inStock ? 'Add to Cart' : 'Out of Stock'}
                 </button>
-                
-                <a 
+
+                <a
                   href={`/products/${product.id}`}
-                  className="w-full py-2 px-4 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-200 font-medium block text-center text-sm"
+                  className="w-full py-3 px-4 border-2 border-[#6dc1c9] text-[#6dc1c9] rounded-xl hover:bg-[#6dc1c9] hover:text-white transition-all duration-200 font-semibold block text-center text-sm shadow-md hover:shadow-lg"
                 >
-                  View Details
+                  View Full Details
                 </a>
               </div>
             </div>
@@ -290,23 +317,28 @@ const CompareTable = () => {
       <div className="hidden lg:block overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr>
-              <td className="p-6 font-semibold text-gray-700 bg-gray-50 sticky left-0 z-10 border-r border-gray-200">
-                <div className="text-lg">Specification</div>
+            <tr className="border-b-2 border-gray-200">
+              <td className="p-6 font-bold text-gray-800 bg-gradient-to-r from-gray-50 to-gray-100 sticky left-0 z-10 border-r border-gray-200">
+                <div className="text-xl">Specification</div>
               </td>
               {laptopItems.map((product, index) => (
-                <td key={product.id} className="p-4 lg:p-6 bg-gray-50 min-w-64 lg:min-w-80 border-r border-gray-200 last:border-r-0">
+                <td key={product.id} className="p-6 bg-gradient-to-br from-gray-50 to-white min-w-72 lg:min-w-80 border-r border-gray-200 last:border-r-0 relative">
                   <div className="relative">
+                    {/* Product Number Badge */}
+                    <div className="absolute -top-3 -left-3 w-10 h-10 bg-gradient-to-br from-[#6dc1c9] to-teal-600 text-white rounded-full flex items-center justify-center font-bold shadow-lg border-2 border-white z-20">
+                      {index + 1}
+                    </div>
+
                     <button
                       onClick={() => removeFromCompare(product.id)}
-                      className="absolute -top-3 -right-3 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors shadow-lg z-10"
+                      className="absolute -top-3 -right-3 p-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl z-20 border-2 border-white"
                       title="Remove from comparison"
                     >
                       <X className="w-4 h-4" />
                     </button>
-                    
+
                     {/* Product Image */}
-                    <div className="bg-gray-100 rounded-lg p-4 mb-4">
+                    <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl p-5 mb-4 shadow-sm border border-gray-200 mt-4">
                       <Image
                         src={product.featured_image || product.image || "/next.svg"}
                         alt={product.name}
@@ -318,19 +350,19 @@ const CompareTable = () => {
                         }}
                       />
                     </div>
-                    
+
                     {/* Product Title */}
-                    <h3 className="font-bold text-gray-800 text-lg mb-2 line-clamp-2">
+                    <h3 className="font-bold text-gray-900 text-lg mb-3 line-clamp-2 min-h-[3.5rem]">
                       {product.name}
                     </h3>
-                    
+
                     {/* Brand Badge */}
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className="bg-gradient-to-r from-teal-50 to-teal-100 text-teal-700 px-3 py-1.5 rounded-full text-sm font-semibold border border-teal-200 shadow-sm">
                         {product.brand}
                       </span>
                       {product.featured && (
-                        <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-medium flex items-center">
+                        <span className="bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-700 px-2 py-1 rounded-full text-xs font-semibold flex items-center border border-yellow-200 shadow-sm">
                           <Star className="w-3 h-3 mr-1 fill-current" />
                           Featured
                         </span>
@@ -681,39 +713,40 @@ const CompareTable = () => {
       </div>
       
       {/* Bottom Summary */}
-      <div className="bg-gray-50 p-4 sm:p-6 border-t border-gray-200">
-        <div className="text-center">
-          {/* Mobile Summary */}
-          <div className="block sm:hidden mb-4 space-y-2">
-            <p className="text-gray-600 text-xs">
-              📊 Comparison completed for {laptopItems.length} laptop{laptopItems.length > 1 ? 's' : ''}
-            </p>
-            <p className="text-gray-600 text-xs">
-              🏆 Best values highlighted in green
-            </p>
-            <p className="text-gray-600 text-xs">
-              💡 <strong>Need help choosing?</strong> <a href="/contact" className="text-blue-600 hover:underline">Contact our experts</a>
-            </p>
+      <div className="bg-gradient-to-r from-gray-50 via-white to-gray-50 p-6 sm:p-8 border-t-2 border-gray-200">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200">
+              <div className="text-3xl mb-2">📊</div>
+              <div className="font-bold text-gray-900">{laptopItems.length} Product{laptopItems.length > 1 ? 's' : ''}</div>
+              <div className="text-xs text-gray-500">Compared</div>
+            </div>
+            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200">
+              <div className="text-3xl mb-2">🏆</div>
+              <div className="font-bold text-gray-900">Best Values</div>
+              <div className="text-xs text-gray-500">Highlighted in Green</div>
+            </div>
+            <div className="bg-white rounded-xl p-4 shadow-md border border-gray-200">
+              <div className="text-3xl mb-2">💡</div>
+              <div className="font-bold text-gray-900">Need Help?</div>
+              <div className="text-xs text-gray-500">
+                <a href="/contact" className="text-[#6dc1c9] hover:underline font-semibold">Contact Experts</a>
+              </div>
+            </div>
           </div>
-          
-          {/* Desktop Summary */}
-          <p className="hidden sm:block text-gray-600 mb-4 text-sm sm:text-base">
-            📊 Comparison completed for {laptopItems.length} laptop{laptopItems.length > 1 ? 's' : ''} • 
-            🏆 Best values highlighted in green • 
-            💡 <strong>Need help choosing?</strong> <a href="/contact" className="text-blue-600 hover:underline">Contact our experts</a>
-          </p>
-          
-          <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <button
               onClick={clearCompare}
-              className="px-4 sm:px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
+              className="px-6 py-3 bg-white text-gray-700 rounded-xl hover:bg-gray-100 transition-all duration-200 font-semibold text-sm sm:text-base border-2 border-gray-300 shadow-md hover:shadow-lg"
             >
               Clear Comparison
             </button>
-            <Link href="/products?category=used-laptop"
-              className="px-4 sm:px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base text-center"
+            <Link href="/products"
+              className="px-6 py-3 bg-gradient-to-r from-[#6dc1c9] to-teal-600 text-white rounded-xl hover:from-teal-600 hover:to-teal-700 transition-all duration-200 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl"
             >
-              Browse More Laptops
+              Browse More Products
             </Link>
           </div>
         </div>

@@ -265,57 +265,114 @@ export default function ProductDetail() {
               </div>
 
               {/* Key Specifications */}
-              {(product.processor || product.ram || product.hdd || product.generation || product.display_size || product.screensize) && (
-                <div className="bg-gray-50 rounded-xl p-5 space-y-3">
-                  <h3 className="font-semibold text-gray-900 mb-3">Key Specifications</h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    {product.processor && (
-                      <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                        <div>
-                          <span className="text-sm font-medium text-gray-900">Processor: </span>
-                          <span className="text-sm text-gray-700">{product.processor}</span>
+              {product.category_id === 'ram' ? (
+                // RAM-specific Key Specifications
+                (product.ram_type || product.ram_capacity || product.ram_speed || product.ram_form_factor) && (
+                  <div className="bg-gray-50 rounded-xl p-5 space-y-3">
+                    <h3 className="font-semibold text-gray-900 mb-3">Key Specifications</h3>
+                    <div className="grid grid-cols-1 gap-3">
+                      {product.ram_type && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Type: </span>
+                            <span className="text-sm text-gray-700">{product.ram_type}</span>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    {product.generation && (
-                      <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                        <div>
-                          <span className="text-sm font-medium text-gray-900">Generation: </span>
-                          <span className="text-sm text-gray-700">{product.generation}</span>
+                      )}
+                      {product.ram_capacity && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Capacity: </span>
+                            <span className="text-sm text-gray-700">{product.ram_capacity}</span>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    {product.ram && (
-                      <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                        <div>
-                          <span className="text-sm font-medium text-gray-900">RAM: </span>
-                          <span className="text-sm text-gray-700">{product.ram}</span>
+                      )}
+                      {product.ram_speed && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Speed: </span>
+                            <span className="text-sm text-gray-700">{product.ram_speed}</span>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    {product.hdd && (
-                      <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                        <div>
-                          <span className="text-sm font-medium text-gray-900">Storage: </span>
-                          <span className="text-sm text-gray-700">{product.hdd}</span>
+                      )}
+                      {product.ram_form_factor && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Form Factor: </span>
+                            <span className="text-sm text-gray-700">{product.ram_form_factor}</span>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    {(product.display_size || product.screensize) && (
-                      <div className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                        <div>
-                          <span className="text-sm font-medium text-gray-900">Display Size: </span>
-                          <span className="text-sm text-gray-700">{product.display_size || product.screensize}</span>
+                      )}
+                      {product.ram_condition && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Condition: </span>
+                            <span className="text-sm text-gray-700">{product.ram_condition}</span>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
+                )
+              ) : (
+                // Laptop-specific Key Specifications
+                (product.processor || product.ram || product.hdd || product.generation || product.display_size || product.screensize) && (
+                  <div className="bg-gray-50 rounded-xl p-5 space-y-3">
+                    <h3 className="font-semibold text-gray-900 mb-3">Key Specifications</h3>
+                    <div className="grid grid-cols-1 gap-3">
+                      {product.processor && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Processor: </span>
+                            <span className="text-sm text-gray-700">{product.processor}</span>
+                          </div>
+                        </div>
+                      )}
+                      {product.generation && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Generation: </span>
+                            <span className="text-sm text-gray-700">{product.generation}</span>
+                          </div>
+                        </div>
+                      )}
+                      {product.ram && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">RAM: </span>
+                            <span className="text-sm text-gray-700">{product.ram}</span>
+                          </div>
+                        </div>
+                      )}
+                      {product.hdd && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Storage: </span>
+                            <span className="text-sm text-gray-700">{product.hdd}</span>
+                          </div>
+                        </div>
+                      )}
+                      {(product.display_size || product.screensize) && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Display Size: </span>
+                            <span className="text-sm text-gray-700">{product.display_size || product.screensize}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
               )}
 
               {/* Stock Availability */}
@@ -609,8 +666,56 @@ export default function ProductDetail() {
                   </div>
                 </div>
 
-                {/* Performance Specifications */}
-                <div className="mb-8">
+                {/* RAM-specific Specifications */}
+                {product.category_id === 'ram' && (
+                  <>
+                    <div className="mb-8">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">RAM Specifications</h4>
+                      <div className="border border-gray-200 rounded-lg overflow-hidden">
+                        {product.ram_type && (
+                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Type</div>
+                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_type}</div>
+                          </div>
+                        )}
+                        {product.ram_capacity && (
+                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Capacity</div>
+                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_capacity}</div>
+                          </div>
+                        )}
+                        {product.ram_speed && (
+                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Speed (Frequency)</div>
+                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_speed}</div>
+                          </div>
+                        )}
+                        {product.ram_form_factor && (
+                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Form Factor</div>
+                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_form_factor}</div>
+                          </div>
+                        )}
+                        {product.ram_condition && (
+                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Condition</div>
+                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_condition}</div>
+                          </div>
+                        )}
+                        {product.ram_warranty && (
+                          <div className="grid grid-cols-2 divide-x divide-gray-200">
+                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty</div>
+                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_warranty}</div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Performance Specifications (for Laptop) */}
+                {product.category_id !== 'ram' && (product.processor || product.generation || product.ram || product.hdd) && (
+                  <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Performance</h4>
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.processor && (
@@ -639,9 +744,11 @@ export default function ProductDetail() {
                     )}
                   </div>
                 </div>
+                )}
 
-                {/* Display & Graphics */}
-                <div className="mb-8">
+                {/* Display & Graphics (for Laptop) */}
+                {product.category_id !== 'ram' && (product.display_size || product.screensize || product.resolution || product.integrated_graphics || product.discrete_graphics || product.graphics || product.touch_type) && (
+                  <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Display & Graphics</h4>
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {(product.display_size || product.screensize) && (
@@ -682,9 +789,11 @@ export default function ProductDetail() {
                     )}
                   </div>
                 </div>
+                )}
 
-                {/* Features & Connectivity */}
-                <div className="mb-8">
+                {/* Features & Connectivity (for Laptop) */}
+                {product.category_id !== 'ram' && (product.operating_features || product.extra_features) && (
+                  <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Features & Connectivity</h4>
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.operating_features && (
@@ -701,9 +810,11 @@ export default function ProductDetail() {
                     )}
                   </div>
                 </div>
+                )}
 
-                {/* Power & Battery */}
-                <div className="mb-8">
+                {/* Power & Battery (for Laptop) */}
+                {product.category_id !== 'ram' && (product.battery || product.charger_included !== undefined) && (
+                  <div className="mb-8">
                   <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Power & Battery</h4>
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
                     {product.battery && (
@@ -720,6 +831,7 @@ export default function ProductDetail() {
                     )}
                   </div>
                 </div>
+                )}
 
                 {/* Warranty & Support */}
                 <div className="mb-8">

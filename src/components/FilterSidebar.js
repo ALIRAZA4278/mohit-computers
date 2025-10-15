@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { X, Filter } from 'lucide-react';
 import { filterOptions } from '../lib/data';
 
-const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
+const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category }) => {
   const [localFilters, setLocalFilters] = useState(filters);
 
   // Sync local filters with parent filters when they change (from URL/navbar)
@@ -107,7 +107,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
           <div className="mb-6">
             <h4 className="font-semibold text-gray-800 mb-3">Price Range</h4>
             <div className="space-y-2">
-              {filterOptions.priceRanges.map((range) => (
+              {(category === 'ram' ? filterOptions.ramPriceRanges : filterOptions.priceRanges).map((range) => (
                 <label key={range.label} className="flex items-center">
                   <input
                     type="radio"
@@ -122,47 +122,104 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Brand Filter */}
-          <FilterSection 
-            title="Brand" 
-            options={filterOptions.brands} 
-            category="brands" 
-          />
- {/* Generation Filter */}
- <FilterSection 
-            title="Generation" 
-            options={filterOptions.generation} 
-            category="generation" 
-          />
-          {/* Processor Filter */}
-          <FilterSection 
-            title="Processor" 
-            options={filterOptions.processors} 
-            category="processors" 
-          />
+          {/* Category-specific filters for RAM */}
+          {category === 'ram' ? (
+            <>
+              {/* Brand Filter - RAM specific brands */}
+              <FilterSection
+                title="Brand"
+                options={filterOptions.ramBrands}
+                category="brands"
+              />
 
-          {/* RAM Filter */}
-          <FilterSection 
-            title="RAM" 
-            options={filterOptions.ram} 
-            category="ram" 
-          />
+              {/* RAM Type Filter */}
+              <FilterSection
+                title="Type"
+                options={filterOptions.ramType}
+                category="ramType"
+              />
 
-          {/* Storage Filter */}
-          <FilterSection 
-            title="Storage" 
-            options={filterOptions.storage} 
-            category="storage" 
-          />
+              {/* RAM Form Factor Filter */}
+              <FilterSection
+                title="Form Factor"
+                options={filterOptions.ramFormFactor}
+                category="ramFormFactor"
+              />
 
-          {/* Display Size Filter */}
-          <FilterSection 
-            title="Display Size" 
-            options={filterOptions.display} 
-            category="display" 
-          />
+              {/* RAM Capacity Filter */}
+              <FilterSection
+                title="Capacity"
+                options={filterOptions.ramCapacity}
+                category="ramCapacity"
+              />
 
-         
+              {/* RAM Speed Filter */}
+              <FilterSection
+                title="Speed (Frequency)"
+                options={filterOptions.ramSpeed}
+                category="ramSpeed"
+              />
+
+              {/* RAM Condition Filter */}
+              <FilterSection
+                title="Condition"
+                options={filterOptions.ramCondition}
+                category="ramCondition"
+              />
+
+              {/* RAM Warranty Filter */}
+              <FilterSection
+                title="Warranty"
+                options={filterOptions.ramWarranty}
+                category="ramWarranty"
+              />
+            </>
+          ) : (
+            <>
+              {/* Default filters for laptops and other categories */}
+              {/* Brand Filter */}
+              <FilterSection
+                title="Brand"
+                options={filterOptions.brands}
+                category="brands"
+              />
+
+              {/* Generation Filter */}
+              <FilterSection
+                title="Generation"
+                options={filterOptions.generation}
+                category="generation"
+              />
+
+              {/* Processor Filter */}
+              <FilterSection
+                title="Processor"
+                options={filterOptions.processors}
+                category="processors"
+              />
+
+              {/* RAM Filter */}
+              <FilterSection
+                title="RAM"
+                options={filterOptions.ram}
+                category="ram"
+              />
+
+              {/* Storage Filter */}
+              <FilterSection
+                title="Storage"
+                options={filterOptions.storage}
+                category="storage"
+              />
+
+              {/* Display Size Filter */}
+              <FilterSection
+                title="Display Size"
+                options={filterOptions.display}
+                category="display"
+              />
+            </>
+          )}
 
           {/* In Stock Only */}
           <div className="mb-6">

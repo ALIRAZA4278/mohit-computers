@@ -27,101 +27,162 @@ const CompareModal = ({ isOpen, onClose }) => {
     </div>
   );
 
-  const renderProductSlot = (product) => (
-    <div key={product.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      {/* Remove Button */}
-      <div className="relative">
-        <button
-          onClick={() => removeFromCompare(product.id)}
-          className="absolute top-2 right-2 z-10 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-          title="Remove from comparison"
-        >
-          <X className="w-4 h-4" />
-        </button>
-        
-        {/* Product Image */}
-        <div className="h-40 bg-gray-50 p-4">
-          <Image
-            src="/next.svg"
-            alt={product.name}
-            width={200}
-            height={120}
-            className="w-full h-full object-contain"
-          />
-        </div>
-      </div>
+  const renderProductSlot = (product) => {
+    // Calculate stock availability
+    const category = product.category_id || product.category;
+    const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
+    const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
+    const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat =>
+      categoryLower.includes(cat) || productNameLower.includes(cat)
+    );
 
-      {/* Product Info */}
-      <div className="p-4">
-        <h3 className="font-semibold text-sm text-gray-900 mb-2 line-clamp-2">
-          {product.name}
-        </h3>
-        
-        <div className="text-xs text-gray-600 mb-3 space-y-1">
-          {product.brand && (
-            <div className="flex justify-between">
-              <span>Brand:</span>
-              <span className="font-medium">{product.brand}</span>
-            </div>
-          )}
-          {product.processor && (
-            <div className="flex justify-between">
-              <span>CPU:</span>
-              <span className="font-medium text-right">{product.processor}</span>
-            </div>
-          )}
-          {product.ram && (
-            <div className="flex justify-between">
-              <span>RAM:</span>
-              <span className="font-medium">{product.ram}</span>
-            </div>
-          )}
-          {product.storage && (
-            <div className="flex justify-between">
-              <span>Storage:</span>
-              <span className="font-medium">{product.storage}</span>
-            </div>
-          )}
-          {product.display && (
-            <div className="flex justify-between">
-              <span>Display:</span>
-              <span className="font-medium text-right">{product.display}</span>
-            </div>
-          )}
-        </div>
+    const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
+    const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
+    const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
+    const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
 
-        {/* Price */}
-        <div className="mb-3">
-          <div className="text-lg font-bold text-gray-900">
-            Rs:{product.price.toLocaleString()}
-          </div>
-          {product.originalPrice && (
-            <div className="text-xs text-gray-500 line-through">
-              Rs:{product.originalPrice.toLocaleString()}
-            </div>
-          )}
-        </div>
+    const originalPrice = product.original_price || product.originalPrice;
+    const discountPercentage = originalPrice
+      ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
+      : 0;
 
-        {/* Action Buttons */}
-        <div className="space-y-2">
-          <Link
-            href={`/products/${product.id}`}
-            className="w-full bg-[#6dc1c9] text-white py-2 px-3 rounded-lg text-xs font-medium hover:bg-teal-700 transition-colors flex items-center justify-center"
-          >
-            <Eye className="w-3 h-3 mr-1" />
-            View Details
-          </Link>
+    return (
+      <div key={product.id} className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+        {/* Remove Button & Badges */}
+        <div className="relative">
           <button
-            onClick={() => handleAddToCart(product)}
-            className="w-full bg-gray-100 text-gray-700 py-2 px-3 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors flex items-center justify-center"
+            onClick={() => removeFromCompare(product.id)}
+            className="absolute top-3 right-3 z-10 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full p-2 hover:from-red-600 hover:to-red-700 transition-all shadow-lg border-2 border-white"
+            title="Remove from comparison"
           >
-            <ShoppingCart className="w-3 h-3 mr-1" />
-            Add to Cart
+            <X className="w-4 h-4" />
           </button>
+
+          {/* Discount Badge */}
+          {discountPercentage > 0 && (
+            <div className="absolute top-3 left-3 z-10 bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-1 rounded-lg text-xs font-bold shadow-lg border border-red-400/20">
+              {discountPercentage}% OFF
+            </div>
+          )}
+
+          {/* Product Image */}
+          <div className="h-36 bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+            <Image
+              src={product.featured_image || product.image || "/next.svg"}
+              alt={product.name}
+              width={200}
+              height={120}
+              className="w-full h-full object-contain"
+              onError={(e) => {
+                e.target.src = "/next.svg";
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Product Info */}
+        <div className="p-4">
+          <h3 className="font-bold text-sm text-gray-900 mb-2 line-clamp-2 min-h-[2.5rem]">
+            {product.name}
+          </h3>
+
+          {/* Brand Badge */}
+          {product.brand && (
+            <span className="inline-block bg-gradient-to-r from-teal-50 to-teal-100 text-teal-700 px-2 py-1 rounded-full text-xs font-semibold mb-3 border border-teal-200">
+              {product.brand}
+            </span>
+          )}
+
+          {/* Specifications */}
+          <div className="text-xs text-gray-600 mb-3 space-y-1.5 bg-gray-50 rounded-lg p-3">
+            {product.processor && (
+              <div className="flex items-center">
+                <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
+                <span className="truncate">{product.processor}</span>
+              </div>
+            )}
+            {product.generation && (
+              <div className="flex items-center">
+                <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
+                <span className="truncate">{product.generation}</span>
+              </div>
+            )}
+            {product.ram && (
+              <div className="flex items-center">
+                <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
+                <span className="truncate">{product.ram} RAM{product.hdd || product.storage ? `, ${product.hdd || product.storage}` : ''}</span>
+              </div>
+            )}
+            {(product.display_size || product.screensize || product.display) && (
+              <div className="flex items-center">
+                <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
+                <span className="truncate">{product.display_size || product.screensize || product.display}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Price */}
+          <div className="mb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="text-base font-bold text-gray-900">
+                  Rs {product.price?.toLocaleString() || '0'}
+                </div>
+                {originalPrice && (
+                  <div className="text-xs text-gray-500 line-through">
+                    Rs {originalPrice.toLocaleString()}
+                  </div>
+                )}
+              </div>
+              {originalPrice && (
+                <div className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                  Save Rs {(originalPrice - product.price).toLocaleString()}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Stock Status */}
+          <div className="mb-3">
+            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+              isAvailableForPurchase
+                ? 'bg-green-100 text-green-800'
+                : 'bg-red-100 text-red-800'
+            }`}>
+              <span className={`w-1 h-1 rounded-full mr-1 ${
+                isAvailableForPurchase ? 'bg-green-500' : 'bg-red-500'
+              }`}></span>
+              {isAvailableForPurchase ? 'In Stock' : 'Out of Stock'}
+            </span>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="space-y-2">
+            <Link
+              href={`/products/${product.id}`}
+              className="w-full bg-gradient-to-r from-[#6dc1c9] to-teal-600 text-white py-2.5 px-3 rounded-lg text-xs font-semibold hover:from-teal-600 hover:to-teal-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1"
+            >
+              <Eye className="w-3 h-3" />
+              View Details
+            </Link>
+            <button
+              onClick={() => handleAddToCart(product)}
+              disabled={!isAvailableForPurchase}
+              className={`w-full py-2.5 px-3 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1 ${
+                isAvailableForPurchase
+                  ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+              }`}
+              title={!isAvailableForPurchase ? 'Out of stock' : 'Add to cart'}
+            >
+              <ShoppingCart className="w-3 h-3" />
+              {isAvailableForPurchase ? 'Add to Cart' : 'Out of Stock'}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">

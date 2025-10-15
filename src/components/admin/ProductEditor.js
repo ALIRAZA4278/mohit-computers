@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft, Upload, X } from 'lucide-react';
-import { categories, laptopBrands, resolutionOptions, touchOptions, conditionOptions } from '@/lib/data';
+import { categories, laptopBrands, resolutionOptions, touchOptions, conditionOptions, filterOptions } from '@/lib/data';
 import Image from 'next/image';
 
 export default function ProductEditor({ product, onSave, onCancel }) {
@@ -38,7 +38,15 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     operatingFeatures: '',
     extraFeatures: '',
     battery: '',
-    chargerIncluded: false
+    chargerIncluded: false,
+
+    // RAM specific fields
+    ramType: '',
+    ramCapacity: '',
+    ramSpeed: '',
+    ramFormFactor: '',
+    ramCondition: '',
+    ramWarranty: ''
   });
 
   const [loading, setLoading] = useState(false);
@@ -79,7 +87,15 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         operatingFeatures: product.operating_features || '',
         extraFeatures: product.extra_features || '',
         battery: product.battery || '',
-        chargerIncluded: product.charger_included || false
+        chargerIncluded: product.charger_included || false,
+
+        // RAM specific fields
+        ramType: product.ram_type || '',
+        ramCapacity: product.ram_capacity || '',
+        ramSpeed: product.ram_speed || '',
+        ramFormFactor: product.ram_form_factor || '',
+        ramCondition: product.ram_condition || '',
+        ramWarranty: product.ram_warranty || ''
       });
     }
   }, [product]);
@@ -119,9 +135,17 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         condition: formData.condition || 'Good',
         battery: formData.battery || null,
         charger_included: formData.chargerIncluded || false,
-        warranty: formData.warranty || null
+        warranty: formData.warranty || null,
+
+        // RAM specific fields
+        ram_type: formData.ramType || null,
+        ram_capacity: formData.ramCapacity || null,
+        ram_speed: formData.ramSpeed || null,
+        ram_form_factor: formData.ramFormFactor || null,
+        ram_condition: formData.ramCondition || null,
+        ram_warranty: formData.ramWarranty || null
       };
-      
+
       await onSave(productData);
     } catch (error) {
       console.error('Error saving product:', error);
@@ -563,6 +587,141 @@ export default function ProductEditor({ product, onSave, onCancel }) {
             )}
           </div>
         </div>
+
+        {/* RAM Specific Fields */}
+        {formData.category === 'ram' && (
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">RAM Specifications</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* RAM Type */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Type *
+                </label>
+                <select
+                  name="ramType"
+                  value={formData.ramType}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select RAM Type</option>
+                  {filterOptions.ramType.map(type => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* RAM Capacity */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Capacity *
+                </label>
+                <select
+                  name="ramCapacity"
+                  value={formData.ramCapacity}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Capacity</option>
+                  {filterOptions.ramCapacity.map(capacity => (
+                    <option key={capacity} value={capacity}>
+                      {capacity}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* RAM Speed */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Speed (Frequency) *
+                </label>
+                <select
+                  name="ramSpeed"
+                  value={formData.ramSpeed}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Speed</option>
+                  {filterOptions.ramSpeed.map(speed => (
+                    <option key={speed} value={speed}>
+                      {speed}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* RAM Form Factor */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Form Factor *
+                </label>
+                <select
+                  name="ramFormFactor"
+                  value={formData.ramFormFactor}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Form Factor</option>
+                  {filterOptions.ramFormFactor.map(formFactor => (
+                    <option key={formFactor} value={formFactor}>
+                      {formFactor}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* RAM Condition */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Condition *
+                </label>
+                <select
+                  name="ramCondition"
+                  value={formData.ramCondition}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Condition</option>
+                  {filterOptions.ramCondition.map(condition => (
+                    <option key={condition} value={condition}>
+                      {condition}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* RAM Warranty */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Warranty *
+                </label>
+                <select
+                  name="ramWarranty"
+                  value={formData.ramWarranty}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Warranty</option>
+                  {filterOptions.ramWarranty.map(warranty => (
+                    <option key={warranty} value={warranty}>
+                      {warranty}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Laptop Specific Fields */}
         {formData.category === 'laptop' && (
