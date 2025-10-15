@@ -170,6 +170,34 @@ export const filterOptions = {
   storage: ['128GB SSD', '240GB SSD', '256GB SSD', '512GB SSD', '1TB SSD'],
   display: ['11.3″', '12″', '12.5″', '13.3″', '14″', '15.6″', '17″', '17.3″'],
   generation: ['4th Gen', '5th Gen', '6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen'],
+  graphics: [
+    'Intel HD Graphics',
+    'Intel UHD Graphics',
+    'NVIDIA GeForce MX',
+    'NVIDIA GeForce GTX',
+    'NVIDIA GeForce RTX',
+    'NVIDIA Quadro',
+    'AMD Radeon',
+    'AMD Radeon Pro'
+  ],
+  touchType: ['Touch', 'Non-touch', 'X360 (Convertible)'],
+  resolution: [
+    'HD (1366x768)',
+    'Full HD (1920x1080)',
+    'QHD (2560x1440)',
+    '4K UHD (3840x2160)',
+    'Retina Display'
+  ],
+  operatingSystem: [
+    'Windows 10',
+    'Windows 11',
+    'Windows 10 Pro',
+    'Windows 11 Pro',
+    'macOS',
+    'Chrome OS',
+    'Linux',
+    'DOS'
+  ],
   priceRanges: [
     { label: 'Under Rs:20,000', min: 0, max: 20000 },
     { label: 'Rs:20,000 - Rs:40,000', min: 20000, max: 40000 },

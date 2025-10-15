@@ -218,6 +218,34 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category }) 
                 options={filterOptions.display}
                 category="display"
               />
+
+              {/* Graphics Card Filter */}
+              <FilterSection
+                title="Graphics Card"
+                options={filterOptions.graphics}
+                category="graphics"
+              />
+
+              {/* Touch Type Filter */}
+              <FilterSection
+                title="Touch Type"
+                options={filterOptions.touchType}
+                category="touchType"
+              />
+
+              {/* Resolution Filter */}
+              <FilterSection
+                title="Resolution"
+                options={filterOptions.resolution}
+                category="resolution"
+              />
+
+              {/* Operating System Filter */}
+              <FilterSection
+                title="Operating System"
+                options={filterOptions.operatingSystem}
+                category="operatingSystem"
+              />
             </>
           )}
 

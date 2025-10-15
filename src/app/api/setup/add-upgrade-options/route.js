@@ -45,8 +45,12 @@ ALTER TABLE products ADD COLUMN IF NOT EXISTS upgrade_options JSONB DEFAULT '{
   "ram32gb": {"enabled": false, "price": ""}
 }'::JSONB;
 
--- Create GIN index
+-- Add custom_upgrades column
+ALTER TABLE products ADD COLUMN IF NOT EXISTS custom_upgrades JSONB DEFAULT '[]'::JSONB;
+
+-- Create GIN indexes
 CREATE INDEX IF NOT EXISTS idx_products_upgrade_options ON products USING GIN (upgrade_options);
+CREATE INDEX IF NOT EXISTS idx_products_custom_upgrades ON products USING GIN (custom_upgrades);
           `
         },
         { status: 500 }
