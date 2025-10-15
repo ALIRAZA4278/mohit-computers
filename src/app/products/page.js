@@ -510,15 +510,31 @@ function ProductsContent() {
       filtered = filtered.filter(product => product.is_featured);
     }
 
-    // Apply search query
+    // Apply search query - match individual words
     if (searchQuery) {
-      filtered = filtered.filter(product => 
-        product.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category_id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.processor?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.ram?.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+      const searchWords = searchQuery.toLowerCase().trim().split(/\s+/).filter(word => word.length > 0);
+
+      filtered = filtered.filter(product => {
+        // Create searchable text from all relevant product fields
+        const searchableText = [
+          product.name,
+          product.brand,
+          product.category_id,
+          product.processor,
+          product.ram,
+          product.hdd,
+          product.display_size,
+          product.generation,
+          product.graphics,
+          product.description
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+
+        // Check if ALL search words are found in the searchable text
+        return searchWords.every(word => searchableText.includes(word));
+      });
     }
 
     // Apply sorting
