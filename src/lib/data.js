@@ -169,7 +169,10 @@ export const filterOptions = {
   ram: ['4GB', '8GB', '16GB', '32GB', '32GB DDR5'],
   storage: ['128GB SSD', '240GB SSD', '256GB SSD', '512GB SSD', '1TB SSD'],
   display: ['11.3″', '12″', '12.5″', '13.3″', '14″', '15.6″', '17″', '17.3″'],
-  generation: ['4th Gen', '5th Gen', '6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen'],
+  generation: [
+    '4th Gen', '5th Gen', '6th Gen', '7th Gen', '8th Gen', '9th Gen',
+    '10th Gen', '11th Gen', '12th Gen', 
+  ],
   graphics: [
     'Intel HD Graphics',
     'Intel UHD Graphics',

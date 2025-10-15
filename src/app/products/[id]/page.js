@@ -151,6 +151,32 @@ export default function ProductDetail() {
     ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
     : 0;
 
+  // Check if there are any upgrade options available
+  const hasUpgradeOptions = () => {
+    if (!product.upgrade_options && (!product.custom_upgrades || product.custom_upgrades.length === 0)) {
+      return false;
+    }
+
+    // Check if any predefined upgrade is enabled
+    if (product.upgrade_options) {
+      const hasEnabledOption =
+        product.upgrade_options.ssd256?.enabled ||
+        product.upgrade_options.ssd512?.enabled ||
+        product.upgrade_options.ram8gb?.enabled ||
+        product.upgrade_options.ram16gb?.enabled ||
+        product.upgrade_options.ram32gb?.enabled;
+
+      if (hasEnabledOption) return true;
+    }
+
+    // Check if there are custom upgrades
+    if (product.custom_upgrades && product.custom_upgrades.length > 0) {
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
@@ -391,7 +417,7 @@ export default function ProductDetail() {
               )}
 
               {/* Upgrade Options - Only for Laptop category */}
-              {product.category_id === 'laptop' && (product.upgrade_options || product.custom_upgrades) && (
+              {product.category_id === 'laptop' && hasUpgradeOptions() && (
                 <div className="bg-white border-2 border-gray-200 rounded-xl p-5 space-y-5">
                   <h3 className="font-bold text-gray-900 text-lg">Customize Your Laptop</h3>
 
