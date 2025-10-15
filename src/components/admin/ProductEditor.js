@@ -1191,7 +1191,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h4 className="font-semibold text-gray-800">Custom Upgrade Options</h4>
-                    <p className="text-sm text-gray-600 mt-1">Add custom storage or memory options that aren't listed above</p>
+                    <p className="text-sm text-gray-600 mt-1">Add custom storage or memory options that are not listed above</p>
                   </div>
                   <button
                     type="button"
@@ -1286,7 +1286,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 {(!formData.customUpgrades || formData.customUpgrades.length === 0) && (
                   <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
                     <p>No custom upgrade options added yet.</p>
-                    <p className="text-sm mt-1">Click "Add Custom Option" to create a new upgrade option</p>
+                    <p className="text-sm mt-1">Click Add Custom Option to create a new upgrade option</p>
                   </div>
                 )}
               </div>
