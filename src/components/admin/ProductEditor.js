@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Save, ArrowLeft, Upload, X } from 'lucide-react';
+import { Save, ArrowLeft, Upload, X, Plus } from 'lucide-react';
 import { categories, laptopBrands, resolutionOptions, touchOptions, conditionOptions, filterOptions } from '@/lib/data';
 import Image from 'next/image';
 
@@ -46,7 +46,19 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     ramSpeed: '',
     ramFormFactor: '',
     ramCondition: '',
-    ramWarranty: ''
+    ramWarranty: '',
+
+    // Upgrade Options
+    upgradeOptions: {
+      ssd256: { enabled: false, price: '' },
+      ssd512: { enabled: false, price: '' },
+      ram8gb: { enabled: false, price: '' },
+      ram16gb: { enabled: false, price: '' },
+      ram32gb: { enabled: false, price: '' }
+    },
+
+    // Custom Upgrade Options
+    customUpgrades: []
   });
 
   const [loading, setLoading] = useState(false);
@@ -95,7 +107,19 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         ramSpeed: product.ram_speed || '',
         ramFormFactor: product.ram_form_factor || '',
         ramCondition: product.ram_condition || '',
-        ramWarranty: product.ram_warranty || ''
+        ramWarranty: product.ram_warranty || '',
+
+        // Upgrade Options
+        upgradeOptions: product.upgrade_options || {
+          ssd256: { enabled: false, price: '' },
+          ssd512: { enabled: false, price: '' },
+          ram8gb: { enabled: false, price: '' },
+          ram16gb: { enabled: false, price: '' },
+          ram32gb: { enabled: false, price: '' }
+        },
+
+        // Custom Upgrade Options
+        customUpgrades: product.custom_upgrades || []
       });
     }
   }, [product]);
@@ -135,16 +159,24 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         condition: formData.condition || 'Good',
         battery: formData.battery || null,
         charger_included: formData.chargerIncluded || false,
-        warranty: formData.warranty || null,
-
-        // RAM specific fields
-        ram_type: formData.ramType || null,
-        ram_capacity: formData.ramCapacity || null,
-        ram_speed: formData.ramSpeed || null,
-        ram_form_factor: formData.ramFormFactor || null,
-        ram_condition: formData.ramCondition || null,
-        ram_warranty: formData.ramWarranty || null
+        warranty: formData.warranty || null
       };
+
+      // Only add RAM specific fields if category is 'ram'
+      if (formData.category === 'ram') {
+        productData.ram_type = formData.ramType || null;
+        productData.ram_capacity = formData.ramCapacity || null;
+        productData.ram_speed = formData.ramSpeed || null;
+        productData.ram_form_factor = formData.ramFormFactor || null;
+        productData.ram_condition = formData.ramCondition || null;
+        productData.ram_warranty = formData.ramWarranty || null;
+      }
+
+      // Only add upgrade options if category is 'laptop'
+      if (formData.category === 'laptop') {
+        productData.upgrade_options = formData.upgradeOptions;
+        productData.custom_upgrades = formData.customUpgrades || [];
+      }
 
       await onSave(productData);
     } catch (error) {
@@ -159,6 +191,45 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleUpgradeOptionChange = (optionKey, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      upgradeOptions: {
+        ...prev.upgradeOptions,
+        [optionKey]: {
+          ...prev.upgradeOptions[optionKey],
+          [field]: value
+        }
+      }
+    }));
+  };
+
+  const addCustomUpgrade = () => {
+    setFormData(prev => ({
+      ...prev,
+      customUpgrades: [
+        ...(prev.customUpgrades || []),
+        { type: 'storage', label: '', capacity: '', price: '' }
+      ]
+    }));
+  };
+
+  const removeCustomUpgrade = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      customUpgrades: (prev.customUpgrades || []).filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateCustomUpgrade = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      customUpgrades: (prev.customUpgrades || []).map((upgrade, i) =>
+        i === index ? { ...upgrade, [field]: value } : upgrade
+      )
     }));
   };
 
@@ -946,6 +1017,278 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   />
                   <span className="ml-2 text-sm text-gray-700">Charger Included</span>
                 </label>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Upgrade Options - Only for Laptop category */}
+        {formData.category === 'laptop' && (
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Upgrade Options</h3>
+            <p className="text-sm text-gray-600 mb-6">Enable upgrade options that customers can select when purchasing this laptop</p>
+
+            <div className="space-y-6">
+              {/* SSD Storage Section */}
+              <div>
+                <h4 className="font-semibold text-gray-800 mb-4">SSD Storage</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* 256GB SSD */}
+                  <div className="border border-gray-300 rounded-lg p-4">
+                    <label className="flex items-center mb-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.upgradeOptions.ssd256.enabled}
+                        onChange={(e) => handleUpgradeOptionChange('ssd256', 'enabled', e.target.checked)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 font-medium text-gray-700">256GB SSD</span>
+                    </label>
+                    {formData.upgradeOptions.ssd256.enabled && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price (Rs)
+                        </label>
+                        <input
+                          type="number"
+                          value={formData.upgradeOptions.ssd256.price}
+                          onChange={(e) => handleUpgradeOptionChange('ssd256', 'price', e.target.value)}
+                          min="0"
+                          step="0.01"
+                          placeholder="e.g., 4000"
+                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 512GB SSD */}
+                  <div className="border border-gray-300 rounded-lg p-4">
+                    <label className="flex items-center mb-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.upgradeOptions.ssd512.enabled}
+                        onChange={(e) => handleUpgradeOptionChange('ssd512', 'enabled', e.target.checked)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 font-medium text-gray-700">512GB SSD</span>
+                    </label>
+                    {formData.upgradeOptions.ssd512.enabled && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price (Rs)
+                        </label>
+                        <input
+                          type="number"
+                          value={formData.upgradeOptions.ssd512.price}
+                          onChange={(e) => handleUpgradeOptionChange('ssd512', 'price', e.target.value)}
+                          min="0"
+                          step="0.01"
+                          placeholder="e.g., 4500"
+                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Memory (RAM) Section */}
+              <div>
+                <h4 className="font-semibold text-gray-800 mb-4">Memory (RAM)</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* 8GB RAM */}
+                  <div className="border border-gray-300 rounded-lg p-4">
+                    <label className="flex items-center mb-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.upgradeOptions.ram8gb.enabled}
+                        onChange={(e) => handleUpgradeOptionChange('ram8gb', 'enabled', e.target.checked)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 font-medium text-gray-700">8GB DDR4</span>
+                    </label>
+                    {formData.upgradeOptions.ram8gb.enabled && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price (Rs)
+                        </label>
+                        <input
+                          type="number"
+                          value={formData.upgradeOptions.ram8gb.price}
+                          onChange={(e) => handleUpgradeOptionChange('ram8gb', 'price', e.target.value)}
+                          min="0"
+                          step="0.01"
+                          placeholder="e.g., 4500"
+                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 16GB RAM */}
+                  <div className="border border-gray-300 rounded-lg p-4">
+                    <label className="flex items-center mb-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.upgradeOptions.ram16gb.enabled}
+                        onChange={(e) => handleUpgradeOptionChange('ram16gb', 'enabled', e.target.checked)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 font-medium text-gray-700">16GB DDR4</span>
+                    </label>
+                    {formData.upgradeOptions.ram16gb.enabled && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price (Rs)
+                        </label>
+                        <input
+                          type="number"
+                          value={formData.upgradeOptions.ram16gb.price}
+                          onChange={(e) => handleUpgradeOptionChange('ram16gb', 'price', e.target.value)}
+                          min="0"
+                          step="0.01"
+                          placeholder="e.g., 11000"
+                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 32GB RAM */}
+                  <div className="border border-gray-300 rounded-lg p-4">
+                    <label className="flex items-center mb-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.upgradeOptions.ram32gb.enabled}
+                        onChange={(e) => handleUpgradeOptionChange('ram32gb', 'enabled', e.target.checked)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 font-medium text-gray-700">32GB DDR4</span>
+                    </label>
+                    {formData.upgradeOptions.ram32gb.enabled && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Price (Rs)
+                        </label>
+                        <input
+                          type="number"
+                          value={formData.upgradeOptions.ram32gb.price}
+                          onChange={(e) => handleUpgradeOptionChange('ram32gb', 'price', e.target.value)}
+                          min="0"
+                          step="0.01"
+                          placeholder="e.g., 11000"
+                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Custom/Manual Upgrade Options */}
+              <div className="mt-8 pt-6 border-t border-gray-300">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 className="font-semibold text-gray-800">Custom Upgrade Options</h4>
+                    <p className="text-sm text-gray-600 mt-1">Add custom storage or memory options that aren't listed above</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={addCustomUpgrade}
+                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Custom Option
+                  </button>
+                </div>
+
+                {formData.customUpgrades && formData.customUpgrades.length > 0 && (
+                  <div className="space-y-4">
+                    {formData.customUpgrades.map((upgrade, index) => (
+                      <div key={index} className="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                        <div className="flex items-start justify-between mb-3">
+                          <span className="text-sm font-medium text-gray-700">Custom Option #{index + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => removeCustomUpgrade(index)}
+                            className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                          {/* Type Selection */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Type
+                            </label>
+                            <select
+                              value={upgrade.type}
+                              onChange={(e) => updateCustomUpgrade(index, 'type', e.target.value)}
+                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="storage">SSD Storage</option>
+                              <option value="memory">Memory (RAM)</option>
+                            </select>
+                          </div>
+
+                          {/* Label/Name */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Label/Name
+                            </label>
+                            <input
+                              type="text"
+                              value={upgrade.label}
+                              onChange={(e) => updateCustomUpgrade(index, 'label', e.target.value)}
+                              placeholder="e.g., Premium"
+                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+
+                          {/* Capacity */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Capacity
+                            </label>
+                            <input
+                              type="text"
+                              value={upgrade.capacity}
+                              onChange={(e) => updateCustomUpgrade(index, 'capacity', e.target.value)}
+                              placeholder={upgrade.type === 'storage' ? 'e.g., 1TB SSD' : 'e.g., 64GB DDR4'}
+                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+
+                          {/* Price */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Price (Rs)
+                            </label>
+                            <input
+                              type="number"
+                              value={upgrade.price}
+                              onChange={(e) => updateCustomUpgrade(index, 'price', e.target.value)}
+                              min="0"
+                              step="0.01"
+                              placeholder="e.g., 15000"
+                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {(!formData.customUpgrades || formData.customUpgrades.length === 0) && (
+                  <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                    <p>No custom upgrade options added yet.</p>
+                    <p className="text-sm mt-1">Click "Add Custom Option" to create a new upgrade option</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
