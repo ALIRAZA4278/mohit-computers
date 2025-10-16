@@ -10,6 +10,7 @@ import { useWishlist } from '../../../context/WishlistContext';
 import { useCompare } from '../../../context/CompareContext';
 import ProductCard from '../../../components/ProductCard';
 import ReviewSection from '../../../components/ReviewSection';
+import { getRAMOptionsByGeneration, getSSDUpgradeOptions, getRAMTypeByGeneration, getAllSSDOptions } from '../../../lib/upgradeOptions';
 
 export default function ProductDetail() {
   const params = useParams();
@@ -24,6 +25,8 @@ export default function ProductDetail() {
   const [selectedStorage, setSelectedStorage] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [customUpgradePrice, setCustomUpgradePrice] = useState(0);
+  const [availableRAMOptions, setAvailableRAMOptions] = useState([]);
+  const [availableSSDOptions, setAvailableSSDOptions] = useState([]);
 
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
@@ -34,6 +37,22 @@ export default function ProductDetail() {
       fetchProduct();
     }
   }, [params.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Calculate available RAM options based on processor generation
+  useEffect(() => {
+    if (product?.generation && product?.category_id === 'laptop') {
+      const ramOptions = getRAMOptionsByGeneration(product.generation);
+      setAvailableRAMOptions(ramOptions);
+    }
+  }, [product]);
+
+  // Show all SSD options for every laptop (not dependent on current storage)
+  useEffect(() => {
+    if (product?.category_id === 'laptop') {
+      const ssdOptions = getAllSSDOptions();
+      setAvailableSSDOptions(ssdOptions);
+    }
+  }, [product]);
 
   useEffect(() => {
     // Calculate custom upgrade price
@@ -151,22 +170,16 @@ export default function ProductDetail() {
     ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
     : 0;
 
-  // Check if there are any upgrade options available
+  // Check if there are any upgrade options available (dynamic options)
   const hasUpgradeOptions = () => {
-    if (!product.upgrade_options && (!product.custom_upgrades || product.custom_upgrades.length === 0)) {
-      return false;
+    // Check if there are dynamic RAM options from generation
+    if (availableRAMOptions && availableRAMOptions.length > 0) {
+      return true;
     }
 
-    // Check if any predefined upgrade is enabled
-    if (product.upgrade_options) {
-      const hasEnabledOption =
-        product.upgrade_options.ssd256?.enabled ||
-        product.upgrade_options.ssd512?.enabled ||
-        product.upgrade_options.ram8gb?.enabled ||
-        product.upgrade_options.ram16gb?.enabled ||
-        product.upgrade_options.ram32gb?.enabled;
-
-      if (hasEnabledOption) return true;
+    // Check if there are dynamic SSD options from current storage
+    if (availableSSDOptions && availableSSDOptions.length > 0) {
+      return true;
     }
 
     // Check if there are custom upgrades
@@ -416,172 +429,83 @@ export default function ProductDetail() {
                 )
               )}
 
-              {/* Upgrade Options - Only for Laptop category */}
-              {product.category_id === 'laptop' && hasUpgradeOptions() && (
+              {/* Upgrade Options - Only for Laptop category with generation defined */}
+              {product.category_id === 'laptop' && product.generation && hasUpgradeOptions() && (
                 <div className="bg-white border-2 border-gray-200 rounded-xl p-5 space-y-5">
                   <h3 className="font-bold text-gray-900 text-lg">Customize Your Laptop</h3>
 
-                  {/* Predefined SSD Storage Options */}
-                  {product.upgrade_options && (
-                    product.upgrade_options.ssd256?.enabled ||
-                    product.upgrade_options.ssd512?.enabled
-                  ) && (
+                  {/* Dynamic SSD Storage Options */}
+                  {availableSSDOptions && availableSSDOptions.length > 0 && (
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-3">SSD Storage</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {product.upgrade_options.ssd256?.enabled && (
+                      <h4 className="font-semibold text-gray-800 mb-3">SSD Storage Upgrade</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {availableSSDOptions.map((ssdOption, index) => (
                           <button
+                            key={index}
                             onClick={() => setSelectedStorage(
-                              selectedStorage?.id === 'ssd256' ? null : { id: 'ssd256', ...product.upgrade_options.ssd256 }
+                              selectedStorage?.capacity === ssdOption.capacity ? null : ssdOption
                             )}
                             className={`border-2 rounded-lg p-4 text-left transition-all ${
-                              selectedStorage?.id === 'ssd256'
+                              selectedStorage?.capacity === ssdOption.capacity
                                 ? 'border-[#6dc1c9] bg-teal-50'
                                 : 'border-gray-300 hover:border-gray-400'
                             }`}
                           >
                             <div className="flex items-center justify-between">
                               <div>
-                                <div className="font-semibold text-gray-900">256GB SSD</div>
-                                <div className="text-sm text-gray-600">+Rs {parseInt(product.upgrade_options.ssd256.price).toLocaleString()}</div>
+                                <div className="font-semibold text-gray-900">{ssdOption.capacity} SSD</div>
+                                <div className="text-sm text-gray-600">+Rs {ssdOption.price.toLocaleString()}</div>
                               </div>
                               <div className={`w-5 h-5 rounded-full border-2 ${
-                                selectedStorage?.id === 'ssd256'
+                                selectedStorage?.capacity === ssdOption.capacity
                                   ? 'border-[#6dc1c9] bg-[#6dc1c9]'
                                   : 'border-gray-300'
                               }`}>
-                                {selectedStorage?.id === 'ssd256' && (
+                                {selectedStorage?.capacity === ssdOption.capacity && (
                                   <CheckCircle className="w-4 h-4 text-white" />
                                 )}
                               </div>
                             </div>
                           </button>
-                        )}
-                        {product.upgrade_options.ssd512?.enabled && (
-                          <button
-                            onClick={() => setSelectedStorage(
-                              selectedStorage?.id === 'ssd512' ? null : { id: 'ssd512', ...product.upgrade_options.ssd512 }
-                            )}
-                            className={`border-2 rounded-lg p-4 text-left transition-all ${
-                              selectedStorage?.id === 'ssd512'
-                                ? 'border-[#6dc1c9] bg-teal-50'
-                                : 'border-gray-300 hover:border-gray-400'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="font-semibold text-gray-900">512GB SSD</div>
-                                <div className="text-sm text-gray-600">+Rs {parseInt(product.upgrade_options.ssd512.price).toLocaleString()}</div>
-                              </div>
-                              <div className={`w-5 h-5 rounded-full border-2 ${
-                                selectedStorage?.id === 'ssd512'
-                                  ? 'border-[#6dc1c9] bg-[#6dc1c9]'
-                                  : 'border-gray-300'
-                              }`}>
-                                {selectedStorage?.id === 'ssd512' && (
-                                  <CheckCircle className="w-4 h-4 text-white" />
-                                )}
-                              </div>
-                            </div>
-                          </button>
-                        )}
+                        ))}
                       </div>
                     </div>
                   )}
 
-                  {/* Predefined Memory (RAM) Options */}
-                  {product.upgrade_options && (
-                    product.upgrade_options.ram8gb?.enabled ||
-                    product.upgrade_options.ram16gb?.enabled ||
-                    product.upgrade_options.ram32gb?.enabled
-                  ) && (
+                  {/* Dynamic Memory (RAM) Options */}
+                  {availableRAMOptions && availableRAMOptions.length > 0 && (
                     <div>
-                      <h4 className="font-semibold text-gray-800 mb-3">Memory (RAM)</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {product.upgrade_options.ram8gb?.enabled && (
+                      <h4 className="font-semibold text-gray-800 mb-3">Memory (RAM) Upgrade</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {availableRAMOptions.map((ramOption, index) => (
                           <button
+                            key={index}
                             onClick={() => setSelectedMemory(
-                              selectedMemory?.id === 'ram8gb' ? null : { id: 'ram8gb', ...product.upgrade_options.ram8gb }
+                              selectedMemory?.label === ramOption.label ? null : ramOption
                             )}
                             className={`border-2 rounded-lg p-4 text-left transition-all ${
-                              selectedMemory?.id === 'ram8gb'
+                              selectedMemory?.label === ramOption.label
                                 ? 'border-[#6dc1c9] bg-teal-50'
                                 : 'border-gray-300 hover:border-gray-400'
                             }`}
                           >
                             <div className="flex items-center justify-between">
                               <div>
-                                <div className="font-semibold text-gray-900">8GB DDR4</div>
-                                <div className="text-sm text-gray-600">+Rs {parseInt(product.upgrade_options.ram8gb.price).toLocaleString()}</div>
+                                <div className="font-semibold text-gray-900">{ramOption.label}</div>
+                                <div className="text-sm text-gray-600">+Rs {ramOption.price.toLocaleString()}</div>
                               </div>
                               <div className={`w-5 h-5 rounded-full border-2 ${
-                                selectedMemory?.id === 'ram8gb'
+                                selectedMemory?.label === ramOption.label
                                   ? 'border-[#6dc1c9] bg-[#6dc1c9]'
                                   : 'border-gray-300'
                               }`}>
-                                {selectedMemory?.id === 'ram8gb' && (
+                                {selectedMemory?.label === ramOption.label && (
                                   <CheckCircle className="w-4 h-4 text-white" />
                                 )}
                               </div>
                             </div>
                           </button>
-                        )}
-                        {product.upgrade_options.ram16gb?.enabled && (
-                          <button
-                            onClick={() => setSelectedMemory(
-                              selectedMemory?.id === 'ram16gb' ? null : { id: 'ram16gb', ...product.upgrade_options.ram16gb }
-                            )}
-                            className={`border-2 rounded-lg p-4 text-left transition-all ${
-                              selectedMemory?.id === 'ram16gb'
-                                ? 'border-[#6dc1c9] bg-teal-50'
-                                : 'border-gray-300 hover:border-gray-400'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="font-semibold text-gray-900">16GB DDR4</div>
-                                <div className="text-sm text-gray-600">+Rs {parseInt(product.upgrade_options.ram16gb.price).toLocaleString()}</div>
-                              </div>
-                              <div className={`w-5 h-5 rounded-full border-2 ${
-                                selectedMemory?.id === 'ram16gb'
-                                  ? 'border-[#6dc1c9] bg-[#6dc1c9]'
-                                  : 'border-gray-300'
-                              }`}>
-                                {selectedMemory?.id === 'ram16gb' && (
-                                  <CheckCircle className="w-4 h-4 text-white" />
-                                )}
-                              </div>
-                            </div>
-                          </button>
-                        )}
-                        {product.upgrade_options.ram32gb?.enabled && (
-                          <button
-                            onClick={() => setSelectedMemory(
-                              selectedMemory?.id === 'ram32gb' ? null : { id: 'ram32gb', ...product.upgrade_options.ram32gb }
-                            )}
-                            className={`border-2 rounded-lg p-4 text-left transition-all ${
-                              selectedMemory?.id === 'ram32gb'
-                                ? 'border-[#6dc1c9] bg-teal-50'
-                                : 'border-gray-300 hover:border-gray-400'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="font-semibold text-gray-900">32GB DDR4</div>
-                                <div className="text-sm text-gray-600">+Rs {parseInt(product.upgrade_options.ram32gb.price).toLocaleString()}</div>
-                              </div>
-                              <div className={`w-5 h-5 rounded-full border-2 ${
-                                selectedMemory?.id === 'ram32gb'
-                                  ? 'border-[#6dc1c9] bg-[#6dc1c9]'
-                                  : 'border-gray-300'
-                              }`}>
-                                {selectedMemory?.id === 'ram32gb' && (
-                                  <CheckCircle className="w-4 h-4 text-white" />
-                                )}
-                              </div>
-                            </div>
-                          </button>
-                        )}
+                        ))}
                       </div>
                     </div>
                   )}

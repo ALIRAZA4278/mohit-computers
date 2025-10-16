@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft, Upload, X, Plus } from 'lucide-react';
 import { categories, laptopBrands, resolutionOptions, touchOptions, conditionOptions, filterOptions } from '@/lib/data';
+import { getRAMOptionsByGeneration, getSSDUpgradeOptions, getRAMTypeByGeneration } from '@/lib/upgradeOptions';
 import Image from 'next/image';
 
 export default function ProductEditor({ product, onSave, onCancel }) {
@@ -63,6 +64,9 @@ export default function ProductEditor({ product, onSave, onCancel }) {
 
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [availableRAMOptions, setAvailableRAMOptions] = useState([]);
+  const [availableSSDOptions, setAvailableSSDOptions] = useState([]);
+  const [enableCustomUpgrades, setEnableCustomUpgrades] = useState(false);
   const featuredImageInputRef = React.useRef(null);
 
   useEffect(() => {
@@ -121,8 +125,29 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         // Custom Upgrade Options
         customUpgrades: product.custom_upgrades || []
       });
+
+      // Check if product has custom upgrades enabled
+      if (product.custom_upgrades && product.custom_upgrades.length > 0) {
+        setEnableCustomUpgrades(true);
+      }
     }
   }, [product]);
+
+  // Update available RAM options based on processor generation
+  useEffect(() => {
+    if (formData.generation && formData.category === 'laptop') {
+      const ramOptions = getRAMOptionsByGeneration(formData.generation);
+      setAvailableRAMOptions(ramOptions);
+    }
+  }, [formData.generation, formData.category]);
+
+  // Update available SSD options based on current storage
+  useEffect(() => {
+    if (formData.hdd && formData.category === 'laptop') {
+      const ssdOptions = getSSDUpgradeOptions(formData.hdd);
+      setAvailableSSDOptions(ssdOptions);
+    }
+  }, [formData.hdd, formData.category]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -1026,177 +1051,125 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         {formData.category === 'laptop' && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Upgrade Options</h3>
-            <p className="text-sm text-gray-600 mb-6">Enable upgrade options that customers can select when purchasing this laptop</p>
+            <p className="text-sm text-gray-600 mb-6">
+              Customize upgrade options based on processor generation and current storage.
+              These options will be automatically calculated for customers.
+            </p>
+
+            {/* Info Box for Dynamic Pricing */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                Automatic Pricing System
+              </h4>
+              <div className="text-sm text-blue-800 space-y-1">
+                <p><strong>Generation:</strong> {formData.generation || 'Not set - enter generation above'}</p>
+                <p><strong>Current Storage:</strong> {formData.hdd || 'Not set - enter storage above'}</p>
+                {formData.generation && (
+                  <p><strong>RAM Type:</strong> {getRAMTypeByGeneration(formData.generation)}</p>
+                )}
+              </div>
+            </div>
 
             <div className="space-y-6">
-              {/* SSD Storage Section */}
+              {/* Dynamic RAM Upgrade Options */}
               <div>
-                <h4 className="font-semibold text-gray-800 mb-4">SSD Storage</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* 256GB SSD */}
-                  <div className="border border-gray-300 rounded-lg p-4">
-                    <label className="flex items-center mb-3">
-                      <input
-                        type="checkbox"
-                        checked={formData.upgradeOptions.ssd256.enabled}
-                        onChange={(e) => handleUpgradeOptionChange('ssd256', 'enabled', e.target.checked)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 font-medium text-gray-700">256GB SSD</span>
-                    </label>
-                    {formData.upgradeOptions.ssd256.enabled && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price (Rs)
-                        </label>
-                        <input
-                          type="number"
-                          value={formData.upgradeOptions.ssd256.price}
-                          onChange={(e) => handleUpgradeOptionChange('ssd256', 'price', e.target.value)}
-                          min="0"
-                          step="0.01"
-                          placeholder="e.g., 4000"
-                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 512GB SSD */}
-                  <div className="border border-gray-300 rounded-lg p-4">
-                    <label className="flex items-center mb-3">
-                      <input
-                        type="checkbox"
-                        checked={formData.upgradeOptions.ssd512.enabled}
-                        onChange={(e) => handleUpgradeOptionChange('ssd512', 'enabled', e.target.checked)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 font-medium text-gray-700">512GB SSD</span>
-                    </label>
-                    {formData.upgradeOptions.ssd512.enabled && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price (Rs)
-                        </label>
-                        <input
-                          type="number"
-                          value={formData.upgradeOptions.ssd512.price}
-                          onChange={(e) => handleUpgradeOptionChange('ssd512', 'price', e.target.value)}
-                          min="0"
-                          step="0.01"
-                          placeholder="e.g., 4500"
-                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                    )}
-                  </div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-semibold text-gray-800">Memory (RAM) Upgrade Options</h4>
+                  {!formData.generation && (
+                    <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                      Set processor generation above
+                    </span>
+                  )}
                 </div>
+
+                {formData.generation && availableRAMOptions.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {availableRAMOptions.map((ramOption, index) => (
+                      <div key={index} className="border-2 border-teal-200 bg-teal-50 rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <p className="font-medium text-gray-900">{ramOption.label}</p>
+                            <p className="text-2xl font-bold text-teal-600">Rs {ramOption.price.toLocaleString()}</p>
+                          </div>
+                          <svg className="w-5 h-5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <p className="text-xs text-gray-600">Auto-calculated based on {formData.generation}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : formData.generation ? (
+                  <div className="text-center py-6 text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
+                    <p>No RAM upgrade options available for {formData.generation}</p>
+                  </div>
+                ) : (
+                  <div className="text-center py-6 text-amber-600 bg-amber-50 rounded-lg border border-amber-200">
+                    <p>Please enter processor generation in Laptop Specifications section above</p>
+                  </div>
+                )}
               </div>
 
-              {/* Memory (RAM) Section */}
+              {/* Dynamic SSD Upgrade Options */}
               <div>
-                <h4 className="font-semibold text-gray-800 mb-4">Memory (RAM)</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* 8GB RAM */}
-                  <div className="border border-gray-300 rounded-lg p-4">
-                    <label className="flex items-center mb-3">
-                      <input
-                        type="checkbox"
-                        checked={formData.upgradeOptions.ram8gb.enabled}
-                        onChange={(e) => handleUpgradeOptionChange('ram8gb', 'enabled', e.target.checked)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 font-medium text-gray-700">8GB DDR4</span>
-                    </label>
-                    {formData.upgradeOptions.ram8gb.enabled && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price (Rs)
-                        </label>
-                        <input
-                          type="number"
-                          value={formData.upgradeOptions.ram8gb.price}
-                          onChange={(e) => handleUpgradeOptionChange('ram8gb', 'price', e.target.value)}
-                          min="0"
-                          step="0.01"
-                          placeholder="e.g., 4500"
-                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 16GB RAM */}
-                  <div className="border border-gray-300 rounded-lg p-4">
-                    <label className="flex items-center mb-3">
-                      <input
-                        type="checkbox"
-                        checked={formData.upgradeOptions.ram16gb.enabled}
-                        onChange={(e) => handleUpgradeOptionChange('ram16gb', 'enabled', e.target.checked)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 font-medium text-gray-700">16GB DDR4</span>
-                    </label>
-                    {formData.upgradeOptions.ram16gb.enabled && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price (Rs)
-                        </label>
-                        <input
-                          type="number"
-                          value={formData.upgradeOptions.ram16gb.price}
-                          onChange={(e) => handleUpgradeOptionChange('ram16gb', 'price', e.target.value)}
-                          min="0"
-                          step="0.01"
-                          placeholder="e.g., 11000"
-                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 32GB RAM */}
-                  <div className="border border-gray-300 rounded-lg p-4">
-                    <label className="flex items-center mb-3">
-                      <input
-                        type="checkbox"
-                        checked={formData.upgradeOptions.ram32gb.enabled}
-                        onChange={(e) => handleUpgradeOptionChange('ram32gb', 'enabled', e.target.checked)}
-                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 font-medium text-gray-700">32GB DDR4</span>
-                    </label>
-                    {formData.upgradeOptions.ram32gb.enabled && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Price (Rs)
-                        </label>
-                        <input
-                          type="number"
-                          value={formData.upgradeOptions.ram32gb.price}
-                          onChange={(e) => handleUpgradeOptionChange('ram32gb', 'price', e.target.value)}
-                          min="0"
-                          step="0.01"
-                          placeholder="e.g., 11000"
-                          className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                    )}
-                  </div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="font-semibold text-gray-800">SSD Storage Upgrade Options</h4>
+                  {!formData.hdd && (
+                    <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                      Set current storage above
+                    </span>
+                  )}
                 </div>
+
+                {formData.hdd && availableSSDOptions.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {availableSSDOptions.map((ssdOption, index) => (
+                      <div key={index} className="border-2 border-purple-200 bg-purple-50 rounded-lg p-4">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <p className="font-medium text-gray-900">{ssdOption.label}</p>
+                            <p className="text-xs text-gray-600 mb-1">From {ssdOption.from} → {ssdOption.capacity}</p>
+                            <p className="text-2xl font-bold text-purple-600">Rs {ssdOption.price.toLocaleString()}</p>
+                          </div>
+                          <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <p className="text-xs text-gray-600">Auto-calculated upgrade path</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : formData.hdd ? (
+                  <div className="text-center py-6 text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
+                    <p>No SSD upgrade paths available from {formData.hdd}</p>
+                    <p className="text-xs mt-1">Current storage may already be at maximum upgrade tier</p>
+                  </div>
+                ) : (
+                  <div className="text-center py-6 text-amber-600 bg-amber-50 rounded-lg border border-amber-200">
+                    <p>Please enter current HDD/Storage in Laptop Specifications section above</p>
+                  </div>
+                )}
               </div>
 
               {/* Custom/Manual Upgrade Options */}
-              <div className="mt-8 pt-6 border-t border-gray-300">
+              <div className="mt-8 pt-6 border-t-2 border-gray-300">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h4 className="font-semibold text-gray-800">Custom Upgrade Options</h4>
-                    <p className="text-sm text-gray-600 mt-1">Add custom storage or memory options that are not listed above</p>
+                    <h4 className="font-semibold text-gray-800 flex items-center gap-2">
+                      Custom Upgrade Options
+                      <span className="text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded">Optional</span>
+                    </h4>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Add custom storage or memory options beyond the automatic ones
+                    </p>
                   </div>
                   <button
                     type="button"
                     onClick={addCustomUpgrade}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm"
                   >
                     <Plus className="w-4 h-4" />
                     Add Custom Option
@@ -1206,15 +1179,18 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 {formData.customUpgrades && formData.customUpgrades.length > 0 && (
                   <div className="space-y-4">
                     {formData.customUpgrades.map((upgrade, index) => (
-                      <div key={index} className="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                      <div key={index} className="border-2 border-gray-300 rounded-lg p-4 bg-gradient-to-r from-gray-50 to-white">
                         <div className="flex items-start justify-between mb-3">
-                          <span className="text-sm font-medium text-gray-700">Custom Option #{index + 1}</span>
+                          <span className="text-sm font-semibold text-gray-700 bg-gray-200 px-3 py-1 rounded">
+                            Custom Option #{index + 1}
+                          </span>
                           <button
                             type="button"
                             onClick={() => removeCustomUpgrade(index)}
-                            className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
+                            className="p-1.5 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                            title="Remove this option"
                           >
-                            <X className="w-4 h-4" />
+                            <X className="w-5 h-5" />
                           </button>
                         </div>
 
@@ -1222,12 +1198,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                           {/* Type Selection */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Type
+                              Type *
                             </label>
                             <select
                               value={upgrade.type}
                               onChange={(e) => updateCustomUpgrade(index, 'type', e.target.value)}
-                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
                             >
                               <option value="storage">SSD Storage</option>
                               <option value="memory">Memory (RAM)</option>
@@ -1237,44 +1213,44 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                           {/* Label/Name */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Label/Name
+                              Label/Name *
                             </label>
                             <input
                               type="text"
                               value={upgrade.label}
                               onChange={(e) => updateCustomUpgrade(index, 'label', e.target.value)}
-                              placeholder="e.g., Premium"
-                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder="e.g., Premium, Ultimate"
+                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             />
                           </div>
 
                           {/* Capacity */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Capacity
+                              Capacity *
                             </label>
                             <input
                               type="text"
                               value={upgrade.capacity}
                               onChange={(e) => updateCustomUpgrade(index, 'capacity', e.target.value)}
-                              placeholder={upgrade.type === 'storage' ? 'e.g., 1TB SSD' : 'e.g., 64GB DDR4'}
-                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              placeholder={upgrade.type === 'storage' ? 'e.g., 2TB SSD' : 'e.g., 32GB DDR5'}
+                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             />
                           </div>
 
                           {/* Price */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Price (Rs)
+                              Price (Rs) *
                             </label>
                             <input
                               type="number"
                               value={upgrade.price}
                               onChange={(e) => updateCustomUpgrade(index, 'price', e.target.value)}
                               min="0"
-                              step="0.01"
+                              step="1"
                               placeholder="e.g., 15000"
-                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full px-3 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                             />
                           </div>
                         </div>
@@ -1285,11 +1261,38 @@ export default function ProductEditor({ product, onSave, onCancel }) {
 
                 {(!formData.customUpgrades || formData.customUpgrades.length === 0) && (
                   <div className="text-center py-8 text-gray-500 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-                    <p>No custom upgrade options added yet.</p>
-                    <p className="text-sm mt-1">Click Add Custom Option to create a new upgrade option</p>
+                    <svg className="w-12 h-12 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <p className="font-medium">No custom upgrade options added yet</p>
+                    <p className="text-sm mt-1">Click "Add Custom Option" to create a new upgrade option</p>
                   </div>
                 )}
               </div>
+
+              {/* Summary Section */}
+              {(availableRAMOptions.length > 0 || availableSSDOptions.length > 0 || (formData.customUpgrades && formData.customUpgrades.length > 0)) && (
+                <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-teal-50 border-2 border-blue-200 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">Upgrade Options Summary</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <p className="text-gray-600">RAM Options:</p>
+                      <p className="font-bold text-teal-700">{availableRAMOptions.length} available</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">SSD Options:</p>
+                      <p className="font-bold text-purple-700">{availableSSDOptions.length} available</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-600">Custom Options:</p>
+                      <p className="font-bold text-green-700">{formData.customUpgrades?.length || 0} added</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-3 border-t border-blue-200 pt-2">
+                    These upgrade options will be displayed to customers on the product detail page
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         )}
