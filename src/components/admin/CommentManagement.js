@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   MessageCircle, 
   Check, 
@@ -34,11 +34,7 @@ export default function CommentManagement() {
 
   const itemsPerPage = 10;
 
-  useEffect(() => {
-    fetchComments();
-  }, [filter, searchTerm, currentPage]);
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -65,7 +61,11 @@ export default function CommentManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter, searchTerm, currentPage]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const handleApprove = async (commentId, currentStatus) => {
     try {

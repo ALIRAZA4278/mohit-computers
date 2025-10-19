@@ -521,7 +521,7 @@ export default function Settings() {
           </li>
           <li className="flex items-start gap-2">
             <span className="font-bold mt-0.5">•</span>
-            <span><strong>No Generation:</strong> If a laptop doesn't have a generation defined, no upgrade options will be displayed on the product page.</span>
+            <span><strong>No Generation:</strong> If a laptop doesn&apos;t have a generation defined, no upgrade options will be displayed on the product page.</span>
           </li>
         </ul>
       </div>

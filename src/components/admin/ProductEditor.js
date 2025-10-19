@@ -503,7 +503,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 name="active"
                 checked={formData.active}
                 onChange={handleChange}
-                className="rounded text-black border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded text-black border-gray-300  focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-700">Active (Show Product)</span>
             </label>
@@ -513,7 +513,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 name="inStock"
                 checked={formData.inStock}
                 onChange={handleChange}
-                className="rounded text-black border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded text-black border-gray-300  focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-700">In Stock (Allow Orders)</span>
             </label>
@@ -523,7 +523,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 name="featured"
                 checked={formData.featured}
                 onChange={handleChange}
-                className="rounded text-black border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded text-black border-gray-300  focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-700">Featured Product</span>
             </label>
@@ -533,7 +533,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 name="workstation"
                 checked={formData.workstation}
                 onChange={handleChange}
-                className="rounded text-black border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded text-black border-gray-300  focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-700">Workstation Product</span>
             </label>
@@ -1265,7 +1265,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                     <p className="font-medium">No custom upgrade options added yet</p>
-                    <p className="text-sm mt-1">Click "Add Custom Option" to create a new upgrade option</p>
+                    <p className="text-sm mt-1">Click &quot;Add Custom Option&quot; to create a new upgrade option</p>
                   </div>
                 )}
               </div>
