@@ -10,6 +10,7 @@ import { useWishlist } from '../../../context/WishlistContext';
 import { useCompare } from '../../../context/CompareContext';
 import ProductCard from '../../../components/ProductCard';
 import ReviewSection from '../../../components/ReviewSection';
+import LaptopCustomizer from '../../../components/LaptopCustomizer';
 import { getRAMOptionsByGeneration, getSSDUpgradeOptions, getRAMTypeByGeneration, getAllSSDOptions } from '../../../lib/upgradeOptions';
 
 export default function ProductDetail() {
@@ -27,6 +28,12 @@ export default function ProductDetail() {
   const [customUpgradePrice, setCustomUpgradePrice] = useState(0);
   const [availableRAMOptions, setAvailableRAMOptions] = useState([]);
   const [availableSSDOptions, setAvailableSSDOptions] = useState([]);
+  const [laptopCustomization, setLaptopCustomization] = useState({
+    customizations: { ramUpgrade: null, ssdUpgrade: null },
+    additionalCost: 0,
+    totalPrice: 0,
+    updatedSpecs: null
+  });
 
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
@@ -166,6 +173,26 @@ export default function ProductDetail() {
     addToCompare(product);
   };
 
+  const handleCustomizationChange = (customizationData) => {
+    console.log('Customization data received:', customizationData);
+    console.log('Updated specs:', customizationData.updatedSpecs);
+    setLaptopCustomization(customizationData);
+  };
+
+  const handleAddToCartWithCustomization = () => {
+    const productWithCustomization = {
+      ...product,
+      customizations: laptopCustomization.customizations,
+      originalPrice: product.price,
+      finalPrice: laptopCustomization.totalPrice || product.price,
+      customizationCost: laptopCustomization.additionalCost || 0
+    };
+    
+    // Add to cart with customization
+    addToCart(productWithCustomization);
+    setQuantity(1);
+  };
+
   const discountPercentage = product.original_price
     ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
     : 0;
@@ -303,17 +330,27 @@ export default function ProductDetail() {
               <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-xl p-4 sm:p-6 border border-teal-100">
                 <div className="flex items-baseline gap-2 sm:gap-3 mb-2 flex-wrap">
                   <span className="text-2xl sm:text-4xl font-bold text-gray-900">
-                    Rs {parseInt(product.price).toLocaleString()}
+                    Rs {(laptopCustomization.totalPrice > 0 ? laptopCustomization.totalPrice : parseInt(product.price)).toLocaleString()}
                   </span>
                   {product.original_price && (
                     <span className="text-lg sm:text-xl text-gray-500 line-through">
                       Rs {parseInt(product.original_price).toLocaleString()}
                     </span>
                   )}
+                  {laptopCustomization.additionalCost > 0 && (
+                    <span className="text-sm bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
+                      Rs {laptopCustomization.additionalCost.toLocaleString()} upgrades
+                    </span>
+                  )}
                 </div>
                 {discountPercentage > 0 && (
                   <p className="text-xs sm:text-sm text-green-600 font-medium">
                     You save Rs {(product.original_price - product.price).toLocaleString()} ({discountPercentage}% off)
+                  </p>
+                )}
+                {laptopCustomization.additionalCost > 0 && (
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                    Base price: Rs {parseInt(product.price).toLocaleString()} | Upgrades: Rs {laptopCustomization.additionalCost.toLocaleString()}
                   </p>
                 )}
               </div>
@@ -402,7 +439,14 @@ export default function ProductDetail() {
                           <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
                           <div>
                             <span className="text-sm font-medium text-gray-900">RAM: </span>
-                            <span className="text-sm text-gray-700">{product.ram}</span>
+                            <span className="text-sm text-gray-700">
+                              {laptopCustomization.updatedSpecs?.ram || product.ram}
+                            </span>
+                            {laptopCustomization.customizations.ramUpgrade && (
+                              <span className="ml-2 text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
+                                Upgraded
+                              </span>
+                            )}
                           </div>
                         </div>
                       )}
@@ -411,7 +455,14 @@ export default function ProductDetail() {
                           <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
                           <div>
                             <span className="text-sm font-medium text-gray-900">Storage: </span>
-                            <span className="text-sm text-gray-700">{product.hdd}</span>
+                            <span className="text-sm text-gray-700">
+                              {laptopCustomization.updatedSpecs?.storage || product.hdd}
+                            </span>
+                            {laptopCustomization.customizations.ssdUpgrade && (
+                              <span className="ml-2 text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
+                                Upgraded
+                              </span>
+                            )}
                           </div>
                         </div>
                       )}
@@ -429,8 +480,18 @@ export default function ProductDetail() {
                 )
               )}
 
-              {/* Upgrade Options - Only for Laptop category with generation defined */}
-              {product.category_id === 'laptop' && product.generation && hasUpgradeOptions() && (
+              {/* Laptop Customizer - New customizer component */}
+              {product.category_id === 'laptop' && (
+                <div className="mt-6">
+                  <LaptopCustomizer 
+                    product={product}
+                    onCustomizationChange={handleCustomizationChange}
+                  />
+                </div>
+              )}
+
+              {/* Old customization section removed - using LaptopCustomizer component instead */}
+              {false && (
                 <div className="bg-white border-2 border-gray-200 rounded-xl p-5 space-y-5">
                   <h3 className="font-bold text-gray-900 text-lg">Customize Your Laptop</h3>
 
@@ -688,11 +749,16 @@ export default function ProductDetail() {
                     
                     return (
                       <button
-                        onClick={handleAddToCart}
+                        onClick={product.category_id === 'laptop' ? handleAddToCartWithCustomization : handleAddToCart}
                         className="flex-1 bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                       >
                         <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="hidden sm:inline">Add to Cart</span>
+                        <span className="hidden sm:inline">
+                          {product.category_id === 'laptop' && (laptopCustomization.additionalCost > 0) 
+                            ? `Add to Cart (Rs:${laptopCustomization.totalPrice?.toLocaleString()})` 
+                            : 'Add to Cart'
+                          }
+                        </span>
                         <span className="sm:hidden">Add to Cart</span>
                       </button>
                     );
