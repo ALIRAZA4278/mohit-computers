@@ -89,7 +89,7 @@ SELECT
     custom_upgrades
 FROM products
 WHERE category_id = 'laptop'
-LIMIT 5;
+LIMIT 5000;
 
 COMMENT ON COLUMN products.upgrade_options IS 'JSONB column storing dynamic upgrade options for RAM and SSD based on generation and current storage';
 COMMENT ON COLUMN products.custom_upgrades IS 'JSONB array storing custom/manual upgrade options added by admin';
