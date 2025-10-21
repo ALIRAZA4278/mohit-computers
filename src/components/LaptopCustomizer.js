@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Minus, Info, Zap, HardDrive, Cpu } from 'lucide-react';
+import {  Info, Zap, HardDrive, Cpu } from 'lucide-react';
 
 export default function LaptopCustomizer({ product, onCustomizationChange }) {
   const [customizations, setCustomizations] = useState({

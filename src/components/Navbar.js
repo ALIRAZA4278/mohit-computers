@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Search, ShoppingCart, Heart, GitCompareArrows, Menu, X, User, Phone, Mail } from 'lucide-react';
+import { Search, ShoppingCart, Heart, GitCompareArrows, Menu, X, User, Phone, Mail, Clock, Tag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCompare } from '../context/CompareContext';
@@ -15,6 +15,12 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const searchRef = useRef(null);
+  const suggestionsRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,6 +31,111 @@ const Navbar = () => {
       setIsLoggedIn(true);
       setUser(JSON.parse(userData));
     }
+  }, []);
+
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce(async (query) => {
+      if (query.length < 2) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
+
+      setIsSearchLoading(true);
+      try {
+        const response = await fetch(`/api/search/suggestions?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        setSuggestions(data.suggestions || []);
+        setShowSuggestions(true);
+        setSelectedSuggestionIndex(-1);
+      } catch (error) {
+        console.error('Error fetching suggestions:', error);
+        setSuggestions([]);
+      } finally {
+        setIsSearchLoading(false);
+      }
+    }, 300),
+    []
+  );
+
+  // Debounce utility function
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // Handle search input change
+  const handleSearchInputChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    debouncedSearch(value);
+  };
+
+  // Handle suggestion click
+  const handleSuggestionClick = (suggestion) => {
+    if (suggestion.type === 'product') {
+      router.push(`/products/${suggestion.id}`);
+    } else if (suggestion.type === 'category') {
+      router.push(`/products?category=${suggestion.slug}`);
+    } else if (suggestion.type === 'popular') {
+      setSearchQuery(suggestion.name);
+      router.push(`/products?search=${encodeURIComponent(suggestion.name)}`);
+    }
+    setShowSuggestions(false);
+    setSuggestions([]);
+  };
+
+  // Handle keyboard navigation
+  const handleKeyDown = (e) => {
+    if (!showSuggestions || suggestions.length === 0) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => prev > 0 ? prev - 1 : -1);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (selectedSuggestionIndex >= 0) {
+          handleSuggestionClick(suggestions[selectedSuggestionIndex]);
+        } else {
+          handleSearch(e);
+        }
+        break;
+      case 'Escape':
+        setShowSuggestions(false);
+        setSelectedSuggestionIndex(-1);
+        break;
+    }
+  };
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+        setSelectedSuggestionIndex(-1);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const { getCartItemsCount, getCartTotal } = useCart();
@@ -116,23 +227,102 @@ const Navbar = () => {
 
             {/* Search Bar (visible on medium screens and up) */}
             <div className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-8">
-              <form onSubmit={handleSearch} className="w-full">
-                <div className="flex rounded-lg shadow-sm border border-gray-300 overflow-hidden">
-                  <input
-                    type="text"
-                    placeholder="Search for laptops, accessories..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1 px-3 md:px-4 py-2 md:py-3 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-inset text-sm md:text-base"
-                  />
-                  <button
-                    type="submit"
-                    className="px-4 md:px-6 py-2 md:py-3 bg-[#6dc1c9] text-white hover:bg-teal-700 transition-colors font-medium"
+              <div ref={searchRef} className="relative w-full">
+                <form onSubmit={handleSearch} className="w-full">
+                  <div className="flex rounded-lg shadow-sm border border-gray-300 overflow-hidden">
+                    <input
+                      ref={searchRef}
+                      type="text"
+                      placeholder="Search for laptops, accessories..."
+                      value={searchQuery}
+                      onChange={handleSearchInputChange}
+                      onKeyDown={handleKeyDown}
+                      onFocus={() => {
+                        if (suggestions.length > 0) {
+                          setShowSuggestions(true);
+                        }
+                      }}
+                      className="flex-1 px-3 md:px-4 py-2 md:py-3 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-inset text-sm md:text-base"
+                    />
+                    <button
+                      type="submit"
+                      className="px-4 md:px-6 py-2 md:py-3 bg-[#6dc1c9] text-white hover:bg-teal-700 transition-colors font-medium"
+                    >
+                      <Search className="w-4 h-4 md:w-5 md:h-5" />
+                    </button>
+                  </div>
+                </form>
+
+                {/* Search Suggestions Dropdown */}
+                {showSuggestions && suggestions.length > 0 && (
+                  <div 
+                    ref={suggestionsRef}
+                    className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto"
                   >
-                    <Search className="w-4 h-4 md:w-5 md:h-5" />
-                  </button>
-                </div>
-              </form>
+                    <div className="py-2">
+                      {suggestions.map((suggestion, index) => (
+                        <div
+                          key={`${suggestion.type}-${suggestion.id || suggestion.name}`}
+                          onClick={() => handleSuggestionClick(suggestion)}
+                          className={`px-4 py-3 cursor-pointer transition-colors flex items-center space-x-3 ${
+                            index === selectedSuggestionIndex
+                              ? 'bg-teal-50 border-l-4 border-teal-500'
+                              : 'hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="flex-shrink-0">
+                            {suggestion.type === 'product' && (
+                              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <Search className="w-4 h-4 text-blue-600" />
+                              </div>
+                            )}
+                            {suggestion.type === 'category' && (
+                              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <Tag className="w-4 h-4 text-green-600" />
+                              </div>
+                            )}
+                            {suggestion.type === 'popular' && (
+                              <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                                <Clock className="w-4 h-4 text-orange-600" />
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-gray-900 truncate">
+                              {suggestion.name}
+                            </div>
+                            {suggestion.brand && (
+                              <div className="text-sm text-gray-500 truncate">
+                                {suggestion.brand} • {suggestion.category}
+                              </div>
+                            )}
+                            {suggestion.type === 'popular' && (
+                              <div className="text-sm text-gray-500">
+                                Popular search
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-shrink-0">
+                            <div className="text-xs text-gray-400 uppercase font-medium">
+                              {suggestion.type}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Loading indicator */}
+                    {isSearchLoading && (
+                      <div className="px-4 py-3 text-center text-gray-500">
+                        <div className="flex items-center justify-center space-x-2">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-500"></div>
+                          <span className="text-sm">Searching...</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Cart Info & User Account - Hidden on mobile */}
@@ -295,18 +485,81 @@ const Navbar = () => {
         <div className="md:hidden bg-white border-t shadow-lg">
           <div className="px-4 py-4 space-y-3">
             {/* Mobile Search */}
-            <form onSubmit={handleSearch} className="flex rounded-lg border border-gray-300 overflow-hidden">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 px-3 py-2 text-gray-700 focus:outline-none"
-              />
-              <button type="submit" className="px-4 bg-[#6dc1c9] text-white hover:bg-teal-700 transition-colors">
-                <Search className="w-4 h-4" />
-              </button>
-            </form>
+            <div ref={searchRef} className="relative">
+              <form onSubmit={handleSearch} className="flex rounded-lg border border-gray-300 overflow-hidden">
+                <input
+                  ref={searchRef}
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => {
+                    if (suggestions.length > 0) {
+                      setShowSuggestions(true);
+                    }
+                  }}
+                  className="flex-1 px-3 py-2 text-gray-700 focus:outline-none"
+                />
+                <button type="submit" className="px-4 bg-[#6dc1c9] text-white hover:bg-teal-700 transition-colors">
+                  <Search className="w-4 h-4" />
+                </button>
+              </form>
+
+              {/* Mobile Search Suggestions */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div 
+                  ref={suggestionsRef}
+                  className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
+                >
+                  <div className="py-2">
+                    {suggestions.map((suggestion, index) => (
+                      <div
+                        key={`${suggestion.type}-${suggestion.id || suggestion.name}`}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className={`px-3 py-2 cursor-pointer transition-colors flex items-center space-x-2 ${
+                          index === selectedSuggestionIndex
+                            ? 'bg-teal-50 border-l-4 border-teal-500'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex-shrink-0">
+                          {suggestion.type === 'product' && (
+                            <Search className="w-4 h-4 text-blue-600" />
+                          )}
+                          {suggestion.type === 'category' && (
+                            <Tag className="w-4 h-4 text-green-600" />
+                          )}
+                          {suggestion.type === 'popular' && (
+                            <Clock className="w-4 h-4 text-orange-600" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-gray-900 truncate text-sm">
+                            {suggestion.name}
+                          </div>
+                          {suggestion.brand && (
+                            <div className="text-xs text-gray-500 truncate">
+                              {suggestion.brand} • {suggestion.category}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Mobile Loading indicator */}
+                  {isSearchLoading && (
+                    <div className="px-3 py-2 text-center text-gray-500">
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-teal-500"></div>
+                        <span className="text-xs">Searching...</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
 
             <Link href="/" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Home</Link>
             <Link href="/about" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">About</Link>
