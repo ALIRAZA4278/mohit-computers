@@ -82,13 +82,13 @@ export default function Corporate() {
       <section className="py-12 sm:py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center px-3 sm:px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-4 sm:mb-6">
-              <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+            <div className="inline-flex items-center px-3 sm:px-4 py-2 bg-blue-100 text-[#6dc1c9]  rounded-full text-sm font-medium mb-4 sm:mb-6">
+              <span className="w-2 h-2 bg-[#6dc1c9] rounded-full mr-2"></span>
               Corporate Solutions
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
               Enterprise Solutions
-              <span className="text-blue-600 block">That Scale</span>
+              <span className="text-[#6dc1c9] block">That Scale</span>
             </h1>
             <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 max-w-4xl mx-auto leading-relaxed">
               Equip your business with quality refurbished laptops and technology solutions.
@@ -97,20 +97,20 @@ export default function Corporate() {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-12 max-w-md sm:max-w-none mx-auto">
               <Link
                 href="#quote"
-                className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-700 transition-colors inline-flex items-center justify-center shadow-lg hover:shadow-xl"
+                className="bg-[#6dc1c9] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-700 transition-colors inline-flex items-center justify-center shadow-lg hover:shadow-xl"
               >
                 Get a Quote
                 <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
               </Link>
               <Link
                 href="#solutions"
-                className="border-2 border-blue-600 text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-blue-600 hover:text-white transition-colors inline-flex items-center justify-center"
+                className="border-2 border-[#6dc1c9] text-[#6dc1c9] px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-[#6dc1c9] hover:text-white transition-colors inline-flex items-center justify-center"
               >
                 View Solutions
               </Link>
             </div>
             <div className="flex justify-center">
-              <div className="w-16 sm:w-24 h-1 bg-blue-600 rounded-full"></div>
+              <div className="w-16 sm:w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
             </div>
           </div>
 
@@ -132,7 +132,7 @@ export default function Corporate() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors duration-300">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-blue-600" />
+                <Users className="w-8 h-8 text-[#6dc1c9]" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Bulk Pricing</h3>
               <p className="text-gray-600">
@@ -142,7 +142,7 @@ export default function Corporate() {
 
             <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors duration-300">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-blue-600" />
+                <Shield className="w-8 h-8 text-[#6dc1c9]" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Quality Assured</h3>
               <p className="text-gray-600">
@@ -152,7 +152,7 @@ export default function Corporate() {
 
             <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors duration-300">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Truck className="w-8 h-8 text-blue-600" />
+                <Truck className="w-8 h-8 text-[#6dc1c9]" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Fast Delivery</h3>
               <p className="text-gray-600">
@@ -162,7 +162,7 @@ export default function Corporate() {
 
             <div className="text-center p-6 bg-gray-50 rounded-2xl hover:bg-blue-50 transition-colors duration-300">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <HeadphonesIcon className="w-8 h-8 text-blue-600" />
+                <HeadphonesIcon className="w-8 h-8 text-[#6dc1c9]" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Dedicated Support</h3>
               <p className="text-gray-600">
@@ -173,14 +173,14 @@ export default function Corporate() {
         </div>
       </section>
 
-     
+
       {/* Get Quote Form */}
-      <section id="quote" className="py-20 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+      <section id="quote" className="py-20  text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4">Get a Custom Quote</h2>
-              <p className="text-xl text-blue-100">
+              <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-[#6dc1c9]">Get a Custom Quote</h2>
+              <p className="text-xl text-black">
                 Tell us about your requirements and we&rsquo;ll create a tailored solution for your business
               </p>
               <div className="w-24 h-1 bg-white/30 rounded-full mx-auto mt-6"></div>

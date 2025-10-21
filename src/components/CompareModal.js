@@ -160,6 +160,7 @@ const CompareModal = ({ isOpen, onClose }) => {
           <div className="space-y-2">
             <Link
               href={`/products/${product.id}`}
+              onClick={onClose}
               className="w-full bg-gradient-to-r from-[#6dc1c9] to-teal-600 text-white py-2.5 px-3 rounded-lg text-xs font-semibold hover:from-teal-600 hover:to-teal-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-1"
             >
               <Eye className="w-3 h-3" />
@@ -255,6 +256,7 @@ const CompareModal = ({ isOpen, onClose }) => {
                 <div className="mt-8 flex justify-center space-x-4">
                   <Link
                     href="/compare"
+                    onClick={onClose}
                     className="px-6 py-3 bg-[#6dc1c9] text-white rounded-lg font-medium hover:bg-teal-700 transition-colors"
                   >
                     View Detailed Comparison
