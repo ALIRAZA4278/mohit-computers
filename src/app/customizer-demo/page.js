@@ -1,7 +1,8 @@
 'use client';
 
+import LaptopCustomizer from '@/components/LaptopCustomizer';
 import React from 'react';
-import LaptopCustomizer from '../components/LaptopCustomizer';
+
 
 export default function CustomizerDemo() {
   // Sample laptop product for testing
@@ -43,7 +44,7 @@ export default function CustomizerDemo() {
 
         {/* Laptop Customizer Component */}
         <div className="max-w-4xl mx-auto">
-          <LaptopCustomizer 
+          <LaptopCustomizer
             product={sampleLaptop}
             onCustomizationChange={handleCustomizationChange}
           />
