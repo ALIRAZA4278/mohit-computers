@@ -175,17 +175,34 @@ export default function Cart() {
                               {item.ram && <span>{item.ram} RAM</span>}
                               {item.storage && <span>{item.storage}</span>}
                             </div>
+                            {/* Customization Details */}
+                            {item.hasCustomizations && (
+                              <div className="mt-2 pt-2 border-t border-teal-200 bg-teal-50 rounded px-2 py-1">
+                                <div className="font-semibold text-teal-700 mb-1">Customizations:</div>
+                                {item.customizations?.ramUpgrade && (
+                                  <div className="text-gray-700">• +{item.customizations.ramUpgrade.size} RAM</div>
+                                )}
+                                {item.customizations?.ssdUpgrade && (
+                                  <div className="text-gray-700">• {item.customizations.ssdUpgrade.size} SSD</div>
+                                )}
+                              </div>
+                            )}
                           </div>
 
                           {/* Price & Quantity Row */}
                           <div className="flex justify-between items-center">
                             <div>
                               <div className="text-lg font-bold text-gray-800">
-                                Rs{(item.price * item.quantity).toLocaleString()}
+                                Rs{((item.finalPrice || item.price) * item.quantity).toLocaleString()}
                               </div>
                               <div className="text-xs text-gray-500">
-                                Rs{item.price.toLocaleString()} each
+                                Rs{(item.finalPrice || item.price).toLocaleString()} each
                               </div>
+                              {item.customizationCost > 0 && (
+                                <div className="text-xs text-teal-600 mt-1">
+                                  +Rs{item.customizationCost.toLocaleString()} customization
+                                </div>
+                              )}
                             </div>
 
                             {/* Quantity Controls */}
@@ -270,6 +287,18 @@ export default function Cart() {
                           {item.processor && <div>{item.processor}</div>}
                           {item.ram && <div>{item.ram} RAM</div>}
                           {item.storage && <div>{item.storage}</div>}
+                          {/* Customization Details */}
+                          {item.hasCustomizations && (
+                            <div className="mt-2 p-2 bg-teal-50 border border-teal-200 rounded text-xs">
+                              <div className="font-semibold text-teal-700 mb-1">Customizations:</div>
+                              {item.customizations?.ramUpgrade && (
+                                <div className="text-gray-700">• +{item.customizations.ramUpgrade.size} RAM Module (+Rs{item.customizations.ramUpgrade.price.toLocaleString()})</div>
+                              )}
+                              {item.customizations?.ssdUpgrade && (
+                                <div className="text-gray-700">• {item.customizations.ssdUpgrade.size} SSD Upgrade (+Rs{item.customizations.ssdUpgrade.price.toLocaleString()})</div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -297,11 +326,16 @@ export default function Cart() {
                       {/* Price */}
                       <div className="text-right">
                         <div className="text-lg font-bold text-gray-800">
-                          Rs{(item.price * item.quantity).toLocaleString()}
+                          Rs{((item.finalPrice || item.price) * item.quantity).toLocaleString()}
                         </div>
                         <div className="text-sm text-gray-500">
-                          Rs{item.price.toLocaleString()} each
+                          Rs{(item.finalPrice || item.price).toLocaleString()} each
                         </div>
+                        {item.customizationCost > 0 && (
+                          <div className="text-xs text-teal-600 mt-1">
+                            +Rs{item.customizationCost.toLocaleString()} customization
+                          </div>
+                        )}
                       </div>
 
                       {/* Action Buttons */}

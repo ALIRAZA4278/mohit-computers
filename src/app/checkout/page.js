@@ -148,17 +148,22 @@ export default function Checkout() {
     setIsSubmitting(true);
 
     try {
-      // Prepare order items
+      // Prepare order items with customization details
       const orderItems = cartItems.map(item => ({
         id: item.id,
         name: item.name,
         brand: item.brand,
-        price: item.price,
+        price: item.finalPrice || item.price, // Use final price if customized
+        originalPrice: item.originalPrice || item.price,
         quantity: item.quantity,
         image: item.featured_image || item.image,
         processor: item.processor,
         ram: item.ram,
-        storage: item.hdd || item.storage
+        storage: item.hdd || item.storage,
+        // Include customization details if present
+        customizations: item.customizations || null,
+        customizationCost: item.customizationCost || 0,
+        hasCustomizations: !!(item.customizations && (item.customizations.ramUpgrade || item.customizations.ssdUpgrade))
       }));
 
       // Calculate total
@@ -451,13 +456,21 @@ export default function Checkout() {
 
                   <div className="space-y-3 mb-4">
                     {cartItems.map((item) => (
-                      <div key={item.id} className="flex justify-between text-sm">
-                        <span className="text-gray-700">
-                          {item.name} <span className="text-gray-500">× {item.quantity}</span>
-                        </span>
-                        <span className="font-medium text-gray-900">
-                          Rs {(item.price * item.quantity).toLocaleString()}
-                        </span>
+                      <div key={item.id} className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-700">
+                            {item.name} <span className="text-gray-500">× {item.quantity}</span>
+                          </span>
+                          <span className="font-medium text-gray-900">
+                            Rs {((item.finalPrice || item.price) * item.quantity).toLocaleString()}
+                          </span>
+                        </div>
+                        {item.hasCustomizations && (
+                          <div className="ml-4 text-xs text-teal-600">
+                            {item.customizations?.ramUpgrade && <div>+ {item.customizations.ramUpgrade.size} RAM</div>}
+                            {item.customizations?.ssdUpgrade && <div>+ {item.customizations.ssdUpgrade.size} SSD</div>}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

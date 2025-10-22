@@ -225,14 +225,59 @@ export default function OrdersManagement() {
                   </thead>
                   <tbody className="divide-y">
                     {selectedOrder.order_items.map((item, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
-                        <td className="px-4 py-4 text-black font-medium">{item.name}</td>
-                        <td className="px-4 py-4 text-black text-center font-medium">{item.quantity}</td>
-                        <td className="px-4 py-4 text-black text-right font-medium">Rs {item.price.toLocaleString()}</td>
-                        <td className="px-4 py-4 text-black text-right font-bold">
-                          Rs {(item.price * item.quantity).toLocaleString()}
-                        </td>
-                      </tr>
+                      <React.Fragment key={index}>
+                        <tr className="hover:bg-gray-50">
+                          <td className="px-4 py-4 text-black">
+                            <div className="font-medium">{item.name}</div>
+                            {item.hasCustomizations && (
+                              <div className="mt-2 text-xs bg-teal-50 border border-teal-200 rounded-lg p-2">
+                                <div className="font-bold text-teal-700 mb-1 flex items-center gap-1">
+                                  <Package className="w-3 h-3" />
+                                  Customizations:
+                                </div>
+                                {item.customizations?.ramUpgrade && (
+                                  <div className="flex justify-between items-center mb-1">
+                                    <span className="text-gray-700">
+                                      • RAM Module: {item.customizations.ramUpgrade.size}
+                                    </span>
+                                    <span className="font-medium text-teal-600">
+                                      +Rs {item.customizations.ramUpgrade.price.toLocaleString()}
+                                    </span>
+                                  </div>
+                                )}
+                                {item.customizations?.ssdUpgrade && (
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-gray-700">
+                                      • SSD Upgrade: {item.customizations.ssdUpgrade.size}
+                                    </span>
+                                    <span className="font-medium text-teal-600">
+                                      +Rs {item.customizations.ssdUpgrade.price.toLocaleString()}
+                                    </span>
+                                  </div>
+                                )}
+                                {item.customizationCost > 0 && (
+                                  <div className="mt-1 pt-1 border-t border-teal-200 flex justify-between">
+                                    <span className="font-bold text-gray-700">Total Customization:</span>
+                                    <span className="font-bold text-teal-700">
+                                      Rs {item.customizationCost.toLocaleString()}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {item.originalPrice && item.originalPrice !== item.price && (
+                              <div className="mt-1 text-xs text-gray-500">
+                                Base price: Rs {item.originalPrice.toLocaleString()}
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-4 py-4 text-black text-center font-medium">{item.quantity}</td>
+                          <td className="px-4 py-4 text-black text-right font-medium">Rs {item.price.toLocaleString()}</td>
+                          <td className="px-4 py-4 text-black text-right font-bold">
+                            Rs {(item.price * item.quantity).toLocaleString()}
+                          </td>
+                        </tr>
+                      </React.Fragment>
                     ))}
                   </tbody>
                   <tfoot className="bg-gray-50">

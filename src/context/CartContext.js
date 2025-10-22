@@ -126,7 +126,11 @@ export const CartProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return state.items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return state.items.reduce((total, item) => {
+      // Use finalPrice if available (for customized products), otherwise use regular price
+      const itemPrice = item.finalPrice || item.price;
+      return total + (itemPrice * item.quantity);
+    }, 0);
   };
 
   const getCartItemsCount = () => {
