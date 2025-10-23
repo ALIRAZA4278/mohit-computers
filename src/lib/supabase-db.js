@@ -161,6 +161,88 @@ export const productsAPI = {
       .delete()
       .eq('id', id)
     return { error }
+  },
+
+  // Get clearance products
+  async getClearance(limit = 100) {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('is_clearance', true)
+      .eq('is_active', true)
+      .order('clearance_date', { ascending: false })
+      .limit(limit)
+    return { data, error }
+  },
+
+  // Mark product as clearance (Admin)
+  async markAsClearance(id, reason = null) {
+    const { data, error } = await supabase
+      .from('products')
+      .update({ 
+        is_clearance: true, 
+        clearance_reason: reason,
+        clearance_date: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single()
+    return { data, error }
+  },
+
+  // Remove from clearance (Admin)
+  async removeFromClearance(id) {
+    const { data, error } = await supabase
+      .from('products')
+      .update({ 
+        is_clearance: false, 
+        clearance_reason: null,
+        clearance_date: null
+      })
+      .eq('id', id)
+      .select()
+      .single()
+    return { data, error }
+  },
+
+  // Get discounted products
+  async getDiscounted(limit = 100) {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('is_discounted', true)
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(limit)
+    return { data, error }
+  },
+
+  // Mark product as discounted (Admin)
+  async markAsDiscounted(id, discountPercentage = null) {
+    const { data, error } = await supabase
+      .from('products')
+      .update({ 
+        is_discounted: true, 
+        discount_percentage: discountPercentage
+      })
+      .eq('id', id)
+      .select()
+      .single()
+    return { data, error }
+  },
+
+  // Remove discount flag (Admin)
+  async removeDiscount(id) {
+    const { data, error } = await supabase
+      .from('products')
+      .update({ 
+        is_discounted: false, 
+        discount_percentage: null
+      })
+      .eq('id', id)
+      .select()
+      .single()
+    return { data, error }
   }
 }
 

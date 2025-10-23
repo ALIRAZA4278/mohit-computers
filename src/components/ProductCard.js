@@ -64,9 +64,10 @@ const ProductCard = ({ product, showCompare = true }) => {
     console.log('Product:', product.name, 'Category:', category, 'Is Workstation:', product.is_workstation);
   }
 
-  const discountPercentage = originalPrice
-    ? Math.round(((originalPrice - product.price) / originalPrice) * 100)
-    : 0;
+  // Calculate discount percentage - use admin set value if available, else calculate
+  const discountPercentage = product.is_discounted && product.discount_percentage 
+    ? product.discount_percentage
+    : (originalPrice ? Math.round(((originalPrice - product.price) / originalPrice) * 100) : 0);
 
   // Check if product is new (created within last 30 days)
   const isNew = product.created_at ?
@@ -133,9 +134,23 @@ const ProductCard = ({ product, showCompare = true }) => {
           )}
           
           {/* NEW Badge */}
-          {isAvailableForPurchase && isNew && (
+          {isAvailableForPurchase && isNew && !product.is_clearance && !product.is_discounted && (
             <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-green-400/20 backdrop-blur-sm">
               NEW
+            </div>
+          )}
+
+          {/* Clearance Badge */}
+          {isAvailableForPurchase && product.is_clearance && (
+            <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-orange-400/20 backdrop-blur-sm">
+              CLEARANCE
+            </div>
+          )}
+
+          {/* Discounted Badge */}
+          {isAvailableForPurchase && product.is_discounted && !product.is_clearance && (
+            <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-purple-400/20 backdrop-blur-sm">
+              SPECIAL OFFER
             </div>
           )}
         </div>

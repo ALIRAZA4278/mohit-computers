@@ -5,7 +5,9 @@
       "Bash(npm install:*)",
       "Bash(node:*)",
       "Bash(npm run build:*)",
-      "Bash(npx next lint:*)"
+      "Bash(npx next lint:*)",
+      "Bash(dir:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

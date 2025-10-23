@@ -219,23 +219,20 @@ export const filterOptions = {
     'Laptop (SO-DIMM)', 'Desktop (DIMM)'
   ],
   ramCapacity: [
-    '2GB', '4GB', '8GB', '16GB', '32GB', '64GB'
+    '2GB', '4GB', '8GB', '16GB', '32GB'
   ],
   ramSpeed: [
-    '1333 MHz', '1600 MHz', '2133 MHz', '2400 MHz', '2666 MHz', '3200 MHz', '3600 MHz', '4800 MHz', '5600 MHz'
+    '1333 MHz', '1600 MHz', '2133 MHz', '2400 MHz', '2666 MHz', '3200 MHz', '4800 MHz'
   ],
   ramCondition: [
     'New', 'Used', 'Refurbished'
   ],
   ramWarranty: [
-    '15 Days', '3 Months', '6 Months', '1 Year', '2 Years'
+    '15 days', '3 Months', '6 Months', '1 Year', '2 Year'
   ],
   ramPriceRanges: [
-    { label: 'Under PKR 1,000', min: 0, max: 1000 },
-    { label: 'PKR 1,000 - 2,000', min: 1000, max: 2000 },
-    { label: 'PKR 2,000 - 3,000', min: 2000, max: 3000 },
+    { label: 'Under PKR 3,000', min: 0, max: 3000 },
     { label: 'PKR 3,000 - 5,000', min: 3000, max: 5000 },
-    { label: 'PKR 5,000 - 10,000', min: 5000, max: 10000 },
-    { label: 'Above PKR 10,000', min: 10000, max: Infinity }
+    { label: 'Above PKR 5,000', min: 5000, max: Infinity }
   ]
 };

@@ -6,6 +6,8 @@ import { filterOptions } from '../lib/data';
 
 const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category }) => {
   const [localFilters, setLocalFilters] = useState(filters);
+  const [customPriceMin, setCustomPriceMin] = useState('');
+  const [customPriceMax, setCustomPriceMax] = useState('');
 
   // Sync local filters with parent filters when they change (from URL/navbar)
   React.useEffect(() => {
@@ -35,10 +37,44 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category }) 
     onFiltersChange(newFilters);
   };
 
+  const handleCustomPriceChange = (min, max) => {
+    setCustomPriceMin(min);
+    setCustomPriceMax(max);
+
+    if (min === '' && max === '') {
+      const newFilters = { ...localFilters };
+      delete newFilters.priceRange;
+      setLocalFilters(newFilters);
+      onFiltersChange(newFilters);
+      return;
+    }
+
+    const minPrice = min === '' ? 0 : parseInt(min);
+    const maxPrice = max === '' ? Number.POSITIVE_INFINITY : parseInt(max);
+    
+    // Validate: min should not be greater than max
+    if (minPrice > maxPrice && maxPrice !== Number.POSITIVE_INFINITY) {
+      return; // Don't update if invalid range
+    }
+    
+    const customRange = {
+      label: `Rs ${minPrice.toLocaleString()} - ${maxPrice === Number.POSITIVE_INFINITY ? '∞' : `Rs ${maxPrice.toLocaleString()}`}`,
+      min: minPrice,
+      max: maxPrice
+    };
+
+    const newFilters = { ...localFilters, priceRange: customRange };
+    setLocalFilters(newFilters);
+    onFiltersChange(newFilters);
+  };
+
   const clearAllFilters = () => {
     const emptyFilters = {};
     setLocalFilters(emptyFilters);
     onFiltersChange(emptyFilters);
+    // Clear custom price inputs
+    setCustomPriceMin('');
+    setCustomPriceMax('');
   };
 
   const FilterSection = ({ title, options, category }) => (
@@ -106,19 +142,80 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category }) 
           {/* Price Range */}
           <div className="mb-6">
             <h4 className="font-semibold text-gray-800 mb-3">Price Range</h4>
-            <div className="space-y-2">
-              {(category === 'ram' ? filterOptions.ramPriceRanges : filterOptions.priceRanges).map((range) => (
-                <label key={range.label} className="flex items-center">
-                  <input
-                    type="radio"
-                    name="priceRange"
-                    checked={localFilters.priceRange?.label === range.label}
-                    onChange={() => handlePriceRangeChange(range)}
-                    className="mr-2 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-gray-700">{range.label}</span>
-                </label>
-              ))}
+            
+            {/* Custom Price Range Inputs */}
+            <div className="mb-4 p-2 sm:p-3 bg-gray-50 rounded-lg">
+              <p className="text-xs text-gray-600 mb-2">Custom Range:</p>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                <input
+                  type="number"
+                  placeholder="Min"
+                  min="0"
+                  value={customPriceMin}
+                  className="w-full sm:w-16 px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  onChange={(e) => {
+                    const minValue = e.target.value;
+                    handleCustomPriceChange(minValue, customPriceMax);
+                  }}
+                />
+                <span className="text-gray-500 text-xs text-center sm:text-left py-1 sm:py-0">to</span>
+                <input
+                  type="number"
+                  placeholder="Max"
+                  min="0"
+                  value={customPriceMax}
+                  className="w-full sm:w-16 px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  onChange={(e) => {
+                    const maxValue = e.target.value;
+                    handleCustomPriceChange(customPriceMin, maxValue);
+                  }}
+                />
+              </div>
+              {customPriceMin && customPriceMax && parseInt(customPriceMin) > parseInt(customPriceMax) && (
+                <div className="mt-2 text-xs text-red-500">
+                  Min price cannot be greater than max price
+                </div>
+              )}
+              {localFilters.priceRange && (
+                <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-1 sm:space-y-0">
+                  <div className="text-xs text-blue-600 font-medium break-all">
+                    Active: {localFilters.priceRange.label}
+                  </div>
+                  <button
+                    onClick={() => {
+                      const newFilters = { ...localFilters };
+                      delete newFilters.priceRange;
+                      setLocalFilters(newFilters);
+                      onFiltersChange(newFilters);
+                      // Clear the input state
+                      setCustomPriceMin('');
+                      setCustomPriceMax('');
+                    }}
+                    className="text-xs text-red-500 hover:text-red-700 underline self-start sm:self-auto"
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Preset Price Ranges */}
+            <div className="space-y-3 sm:space-y-2">
+              <p className="text-xs text-gray-600 mb-2">Quick Select:</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+                {(category === 'ram' ? filterOptions.ramPriceRanges : filterOptions.priceRanges).map((range) => (
+                  <label key={range.label} className="flex items-center p-2 sm:p-1 hover:bg-gray-50 rounded cursor-pointer">
+                    <input
+                      type="radio"
+                      name="priceRange"
+                      checked={localFilters.priceRange?.label === range.label}
+                      onChange={() => handlePriceRangeChange(range)}
+                      className="mr-2 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+                    />
+                    <span className="text-sm text-gray-700 leading-tight">{range.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
 

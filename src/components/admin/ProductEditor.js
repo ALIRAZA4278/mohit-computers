@@ -21,6 +21,14 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     featured: false,
     workstation: false,
 
+    // Clearance fields
+    clearance: false,
+    clearanceReason: '',
+
+    // Discount fields
+    discounted: false,
+    discountPercentage: '',
+
     // Image fields
     featuredImage: '',
     images: [],
@@ -84,6 +92,14 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         active: product.is_active !== false,
         featured: product.is_featured || false,
         workstation: product.is_workstation || false,
+
+        // Clearance fields
+        clearance: product.is_clearance || false,
+        clearanceReason: product.clearance_reason || '',
+
+        // Discount fields
+        discounted: product.is_discounted || false,
+        discountPercentage: product.discount_percentage || '',
 
         // Image fields
         featuredImage: product.featured_image || '',
@@ -164,6 +180,11 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         is_active: formData.active,
         is_featured: formData.featured,
         is_workstation: formData.workstation,
+        is_clearance: formData.clearance,
+        clearance_reason: formData.clearance ? formData.clearanceReason : null,
+        clearance_date: formData.clearance && !product?.is_clearance ? new Date().toISOString() : (product?.clearance_date || null),
+        is_discounted: formData.discounted,
+        discount_percentage: formData.discounted && formData.discountPercentage ? parseInt(formData.discountPercentage) : null,
 
         // Image fields
         featured_image: formData.featuredImage || null,
@@ -537,7 +558,77 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               />
               <span className="ml-2 text-sm text-gray-700">Workstation Product</span>
             </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="clearance"
+                checked={formData.clearance}
+                onChange={handleChange}
+                className="rounded text-black border-gray-300  focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-700">Clearance Item</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="discounted"
+                checked={formData.discounted}
+                onChange={handleChange}
+                className="rounded text-black border-gray-300  focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-700">Discounted Product</span>
+            </label>
           </div>
+          
+          {/* Clearance Reason */}
+          {formData.clearance && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Clearance Reason (Optional)
+              </label>
+              <select
+                name="clearanceReason"
+                value={formData.clearanceReason}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="">Select a reason...</option>
+                <option value="End of line">End of line</option>
+                <option value="Overstock">Overstock</option>
+                <option value="Damaged box">Damaged box (product fine)</option>
+                <option value="Display model">Display model</option>
+                <option value="Refurbished">Refurbished</option>
+                <option value="Discontinued">Discontinued</option>
+                <option value="Seasonal clearance">Seasonal clearance</option>
+                <option value="Store closing">Store closing</option>
+              </select>
+            </div>
+          )}
+
+          {/* Discount Percentage */}
+          {formData.discounted && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Discount Percentage (Optional)
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="number"
+                  name="discountPercentage"
+                  value={formData.discountPercentage}
+                  onChange={handleChange}
+                  min="0"
+                  max="100"
+                  placeholder="e.g. 25"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                />
+                <span className="text-gray-500">%</span>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                This helps track and display discount badges. Leave empty for auto-calculation.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Product Images */}

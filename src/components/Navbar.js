@@ -474,6 +474,11 @@ const Navbar = () => {
                     Contact
                   </Link>
                 </li>
+                <li>
+                  <Link href="/clearance" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
+                    Clearance
+                  </Link>
+                </li>
               </ul>
             </nav>
           </div>
@@ -582,6 +587,7 @@ const Navbar = () => {
             <Link href="/blog" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Blog</Link>
             <Link href="/corporate" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Corporate</Link>
             <Link href="/contact" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Contact</Link>
+            <Link href="/clearance" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Clearance</Link>
             
             {/* Mobile Action Buttons */}
             <div className="pt-3 border-t border-gray-200 mt-3">

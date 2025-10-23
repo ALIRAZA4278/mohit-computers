@@ -228,8 +228,57 @@ export default function Contact() {
         </div>
       </section>
 
-    
-   
+      {/* Location Map */}
+      <section className="py-8 sm:py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Find Us on Map</h2>
+            <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
+              Visit our store at Regal Trade Square, Saddar, Karachi. We&rsquo;re conveniently located opposite the lift, near Skin Hospital.
+            </p>
+          </div>
+          
+          <div className="flex justify-center">
+            <div className="w-full max-w-4xl">
+              <div className="relative w-full h-64 sm:h-96 lg:h-[450px] rounded-lg overflow-hidden shadow-lg">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d452.5112864214508!2d67.02374982740054!3d24.860765600000015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33e6d5d17c9e1%3A0x53e76be30a899943!2s28%20Regal%20Chowk%2C%20Saddar%20Karachi%2C%2074400%2C%20Pakistan!5e0!3m2!1sen!2s!4v1761234419203!5m2!1sen!2s" 
+                  width="100%" 
+                  height="100%" 
+                  style={{border: 0}} 
+                  allowFullScreen="" 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Mohit Computers Location - Regal Trade Square, Saddar, Karachi"
+                >
+                </iframe>
+              </div>
+              
+              {/* Map Info */}
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <div className="grid sm:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">📍 Exact Address:</h4>
+                    <p className="text-gray-600">
+                      Suite No. 316-B, 3rd Floor<br />
+                      Regal Trade Square, Saddar<br />
+                      Karachi, Pakistan
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">🕒 Business Hours:</h4>
+                    <p className="text-gray-600">
+                      Mon-Thu & Sat: 12:00 PM – 9:00 PM<br />
+                      Friday: 2:00 PM – 9:00 PM<br />
+                      Sunday: Closed
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Call to Action */}
       <section className="py-8 sm:py-16 bg-gradient-to-r from-[#6dc1c9] to-teal-700 text-white">

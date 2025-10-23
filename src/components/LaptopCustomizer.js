@@ -11,7 +11,7 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
 
   const [totalPrice, setTotalPrice] = useState(product?.price || 0);
 
-  // RAM module options (these are additive modules that will be ADDED to current RAM)
+  // RAM upgrade options (these replace existing RAM, similar to SSD)
   const getCurrentRAMSize = useCallback(() => {
     const ramText = product?.ram || '8GB';
     const ramNumber = parseInt(ramText);
@@ -49,12 +49,16 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
     return 0;
   }, [getGenerationNumber]);
 
-  const ramModules = useMemo(() => ([
-    { id: 'ram-4gb', size: '4GB', sizeNumber: 4, description: 'Add 4GB RAM module' },
-    { id: 'ram-8gb', size: '8GB', sizeNumber: 8, description: 'Add 8GB RAM module' },
-    { id: 'ram-16gb', size: '16GB', sizeNumber: 16, description: 'Add 16GB RAM module' },
-    { id: 'ram-32gb', size: '32GB', sizeNumber: 32, description: 'Add 32GB RAM module' }
-  ].map(m => ({ ...m, price: getRamModulePrice(m.sizeNumber) }))), [getRamModulePrice]);
+  const ramModules = useMemo(() => {
+    const currentRAM = getCurrentRAMSize();
+    return [
+      { id: 'ram-4gb', size: '4GB', sizeNumber: 4, description: 'Upgrade to 4GB RAM' },
+      { id: 'ram-8gb', size: '8GB', sizeNumber: 8, description: 'Upgrade to 8GB RAM' },
+      { id: 'ram-16gb', size: '16GB', sizeNumber: 16, description: 'Upgrade to 16GB RAM' },
+      { id: 'ram-32gb', size: '32GB', sizeNumber: 32, description: 'Upgrade to 32GB RAM' }
+    ].map(m => ({ ...m, price: getRamModulePrice(m.sizeNumber) }))
+     .filter(ram => ram.sizeNumber > currentRAM); // Only show larger RAM sizes
+  }, [getRamModulePrice, getCurrentRAMSize]);
 
   // SSD upgrade options (replaces existing drive) - show only larger capacities than current storage
   const parseStorageToGB = (storageText) => {
@@ -90,11 +94,10 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
     };
     
     if (customizations.ramUpgrade) {
-      // Additive module: simply add module price to cost
+      // Replace existing RAM: add upgrade price to cost
       additionalCost += customizations.ramUpgrade.price || 0;
-      // Update RAM specification - sum original + module
-      const current = getCurrentRAMSize();
-      updatedSpecs.ram = `${current + (customizations.ramUpgrade.sizeNumber || 0)}GB`;
+      // Update RAM specification - replace with new RAM size
+      updatedSpecs.ram = `${customizations.ramUpgrade.size}`;
     }
     
     if (customizations.ssdUpgrade) {
@@ -134,9 +137,10 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
   };
 
   const getCurrentRam = () => {
-    const current = getCurrentRAMSize();
-    const added = customizations.ramUpgrade?.sizeNumber || 0;
-    return `${current + added}GB`;
+    if (customizations.ramUpgrade) {
+      return customizations.ramUpgrade.size;
+    }
+    return product?.ram || '8GB';
   };
 
   const getCurrentStorage = () => {
@@ -174,11 +178,11 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
       <div className="mb-8">
         <div className="flex items-center mb-4">
           <Cpu className="w-5 h-5 text-teal-600 mr-2" />
-          <h4 className="text-lg font-semibold text-gray-800">Add RAM Module</h4>
+          <h4 className="text-lg font-semibold text-gray-800">RAM Upgrade</h4>
           <div className="group relative ml-2">
             <Info className="w-4 h-4 text-gray-400" />
             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
-              RAM modules are added to your current RAM. Select a module to increase total memory (e.g., 8GB + 4GB = 12GB total).
+              RAM upgrades replace your current RAM with a larger capacity. Only sizes larger than your current RAM are shown.
             </div>
           </div>
         </div>
@@ -196,15 +200,15 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
             >
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <h5 className="font-semibold text-gray-800">+{ram.size} RAM Module</h5>
+                  <h5 className="font-semibold text-gray-800">{ram.size} RAM</h5>
                   <p className="text-sm text-gray-600">{ram.description}</p>
                   <p className="text-xs text-gray-500 mt-1">
-                    Result: {getCurrentRAMSize()}GB + {ram.sizeNumber}GB = {getCurrentRAMSize() + ram.sizeNumber}GB Total
+                    Upgrade from {product?.ram || '8GB'} to {ram.size}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-teal-600">+Rs:{ram.price.toLocaleString()}</p>
-                  <p className="text-sm text-gray-500">Module Price</p>
+                  <p className="font-bold text-teal-600">Rs:{ram.price.toLocaleString()}</p>
+                  <p className="text-sm text-gray-500">Upgrade Price</p>
                 </div>
               </div>
               {customizations.ramUpgrade?.id === ram.id && (
@@ -272,8 +276,8 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
             
             {customizations.ramUpgrade && (
               <div className="flex justify-between text-teal-600">
-                <span>RAM Module (+{customizations.ramUpgrade.size}):</span>
-                <span>+Rs:{customizations.ramUpgrade.price.toLocaleString()}</span>
+                <span>RAM Upgrade ({customizations.ramUpgrade.size}):</span>
+                <span>Rs:{customizations.ramUpgrade.price.toLocaleString()}</span>
               </div>
             )}
             

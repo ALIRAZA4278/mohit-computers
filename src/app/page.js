@@ -162,42 +162,42 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
-            <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
+            <Link href="/products?brand=hp" className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white cursor-pointer">
               <div className="text-center">
                 <Image src="/images/brands/hp-logo.svg" alt="HP" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">HP</p>
               </div>
-            </div>
-            <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
+            </Link>
+            <Link href="/products?brand=dell" className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white cursor-pointer">
               <div className="text-center">
                 <Image src="/images/brands/dell-logo.svg" alt="Dell" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Dell</p>
               </div>
-            </div>
-            <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
+            </Link>
+            <Link href="/products?brand=acer" className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white cursor-pointer">
               <div className="text-center">
                 <Image src="/images/brands/acer-logo.svg" alt="Acer" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Acer</p>
               </div>
-            </div>
-            <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
+            </Link>
+            <Link href="/products?brand=lenovo" className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white cursor-pointer">
               <div className="text-center">
                 <Image src="/images/brands/lenovo-logo.svg" alt="Lenovo" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Lenovo</p>
               </div>
-            </div>
-            <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
+            </Link>
+            <Link href="/products?category=chromebook" className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white cursor-pointer">
               <div className="text-center">
                 <Image src="/images/brands/chromebook-logo.svg" alt="Chromebook" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Chromebook</p>
               </div>
-            </div>
-            <div className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white">
+            </Link>
+            <Link href="/products?category=accessories" className="group flex justify-center items-center p-8 bg-gray-50 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:bg-white cursor-pointer">
               <div className="text-center">
                 <Image src="/images/brands/accessories-logo.svg" alt="Accessories" width={60} height={45} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto mb-2" />
                 <p className="text-sm font-semibold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Accessories</p>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>

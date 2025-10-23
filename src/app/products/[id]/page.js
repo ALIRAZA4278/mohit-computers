@@ -11,6 +11,7 @@ import { useCompare } from '../../../context/CompareContext';
 import ProductCard from '../../../components/ProductCard';
 import ReviewSection from '../../../components/ReviewSection';
 import LaptopCustomizer from '../../../components/LaptopCustomizer';
+import RAMCustomizer from '../../../components/RAMCustomizer';
 import { getRAMOptionsByGeneration, getSSDUpgradeOptions, getRAMTypeByGeneration, getAllSSDOptions } from '../../../lib/upgradeOptions';
 
 export default function ProductDetail() {
@@ -33,6 +34,13 @@ export default function ProductDetail() {
     additionalCost: 0,
     totalPrice: 0,
     updatedSpecs: null
+  });
+  const [ramCustomization, setRamCustomization] = useState({
+    brand: null,
+    speed: null,
+    totalPrice: 0,
+    additionalCost: 0,
+    specs: null
   });
 
   const { addToCart } = useCart();
@@ -136,25 +144,42 @@ export default function ProductDetail() {
     const category = product.category_id || product.category;
     const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
     const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
-    const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+    const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat =>
       categoryLower.includes(cat) || productNameLower.includes(cat)
     );
-    
+
     const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
     const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
     const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
     const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
-    
+
     if (!isAvailableForPurchase) {
       alert('Sorry, this product is currently out of stock.');
       return;
     }
-    
+
     if (quantity > stockQuantity) {
       alert(`Sorry, only ${stockQuantity} items are available in stock.`);
       return;
     }
-    
+
+    // Handle RAM customization
+    if (product.category_id === 'ram' && ramCustomization.specs) {
+      const productWithRAMCustomization = {
+        ...product,
+        ramCustomization: ramCustomization,
+        finalPrice: ramCustomization.totalPrice || product.price,
+        customizationCost: ramCustomization.additionalCost || 0,
+        displayName: `${product.name} - ${ramCustomization.specs.brand} ${ramCustomization.specs.speed}`
+      };
+
+      for (let i = 0; i < quantity; i++) {
+        addToCart(productWithRAMCustomization);
+      }
+      setQuantity(1);
+      return;
+    }
+
     for (let i = 0; i < quantity; i++) {
       addToCart(product);
     }
@@ -177,6 +202,11 @@ export default function ProductDetail() {
     console.log('Customization data received:', customizationData);
     console.log('Updated specs:', customizationData.updatedSpecs);
     setLaptopCustomization(customizationData);
+  };
+
+  const handleRAMCustomizationChange = (customizationData) => {
+    console.log('RAM Customization data received:', customizationData);
+    setRamCustomization(customizationData);
   };
 
   const handleAddToCartWithCustomization = () => {
@@ -330,7 +360,11 @@ export default function ProductDetail() {
               <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-xl p-4 sm:p-6 border border-teal-100">
                 <div className="flex items-baseline gap-2 sm:gap-3 mb-2 flex-wrap">
                   <span className="text-2xl sm:text-4xl font-bold text-gray-900">
-                    Rs {(laptopCustomization.totalPrice > 0 ? laptopCustomization.totalPrice : parseInt(product.price)).toLocaleString()}
+                    Rs {(
+                      product.category_id === 'ram' && ramCustomization.totalPrice > 0
+                        ? ramCustomization.totalPrice
+                        : (laptopCustomization.totalPrice > 0 ? laptopCustomization.totalPrice : parseInt(product.price))
+                    ).toLocaleString()}
                   </span>
                   {product.original_price && (
                     <span className="text-lg sm:text-xl text-gray-500 line-through">
@@ -342,6 +376,11 @@ export default function ProductDetail() {
                       Rs {laptopCustomization.additionalCost.toLocaleString()} upgrades
                     </span>
                   )}
+                  {product.category_id === 'ram' && ramCustomization.additionalCost > 0 && (
+                    <span className="text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                      +Rs {ramCustomization.additionalCost.toLocaleString()}
+                    </span>
+                  )}
                 </div>
                 {discountPercentage > 0 && (
                   <p className="text-xs sm:text-sm text-green-600 font-medium">
@@ -351,6 +390,11 @@ export default function ProductDetail() {
                 {laptopCustomization.additionalCost > 0 && (
                   <p className="text-xs sm:text-sm text-gray-600 mt-1">
                     Base price: Rs {parseInt(product.price).toLocaleString()} | Upgrades: Rs {laptopCustomization.additionalCost.toLocaleString()}
+                  </p>
+                )}
+                {product.category_id === 'ram' && ramCustomization.specs && (
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                    Selected: {ramCustomization.specs.brand} • {ramCustomization.specs.speed}
                   </p>
                 )}
               </div>
@@ -483,9 +527,19 @@ export default function ProductDetail() {
               {/* Laptop Customizer - New customizer component */}
               {product.category_id === 'laptop' && (
                 <div className="mt-6">
-                  <LaptopCustomizer 
+                  <LaptopCustomizer
                     product={product}
                     onCustomizationChange={handleCustomizationChange}
+                  />
+                </div>
+              )}
+
+              {/* RAM Customizer - For RAM products */}
+              {product.category_id === 'ram' && (
+                <div className="mt-6">
+                  <RAMCustomizer
+                    product={product}
+                    onCustomizationChange={handleRAMCustomizationChange}
                   />
                 </div>
               )}

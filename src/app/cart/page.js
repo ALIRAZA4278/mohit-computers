@@ -153,7 +153,7 @@ export default function Cart() {
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex-1">
                               <h3 className="text-base font-semibold text-gray-800 line-clamp-2">
-                                {item.name}
+                                {item.displayName || item.name}
                               </h3>
                               <p className="text-sm text-gray-500">{item.brand}</p>
                             </div>
@@ -175,7 +175,7 @@ export default function Cart() {
                               {item.ram && <span>{item.ram} RAM</span>}
                               {item.storage && <span>{item.storage}</span>}
                             </div>
-                            {/* Customization Details */}
+                            {/* Laptop Customization Details */}
                             {item.hasCustomizations && (
                               <div className="mt-2 pt-2 border-t border-teal-200 bg-teal-50 rounded px-2 py-1">
                                 <div className="font-semibold text-teal-700 mb-1">Customizations:</div>
@@ -185,6 +185,14 @@ export default function Cart() {
                                 {item.customizations?.ssdUpgrade && (
                                   <div className="text-gray-700">• {item.customizations.ssdUpgrade.size} SSD</div>
                                 )}
+                              </div>
+                            )}
+                            {/* RAM Customization Details */}
+                            {item.ramCustomization && (
+                              <div className="mt-2 pt-2 border-t border-blue-200 bg-blue-50 rounded px-2 py-1">
+                                <div className="font-semibold text-blue-700 mb-1">Configuration:</div>
+                                <div className="text-gray-700">• Brand: {item.ramCustomization.specs.brand}</div>
+                                <div className="text-gray-700">• Speed: {item.ramCustomization.specs.speed}</div>
                               </div>
                             )}
                           </div>
@@ -280,14 +288,14 @@ export default function Cart() {
                       {/* Product Details */}
                       <div className="flex-1 min-w-0">
                         <h3 className="text-lg font-semibold text-gray-800 truncate">
-                          {item.name}
+                          {item.displayName || item.name}
                         </h3>
                         <p className="text-sm text-gray-500">{item.brand}</p>
                         <div className="text-sm text-gray-600 mt-1">
                           {item.processor && <div>{item.processor}</div>}
                           {item.ram && <div>{item.ram} RAM</div>}
                           {item.storage && <div>{item.storage}</div>}
-                          {/* Customization Details */}
+                          {/* Laptop Customization Details */}
                           {item.hasCustomizations && (
                             <div className="mt-2 p-2 bg-teal-50 border border-teal-200 rounded text-xs">
                               <div className="font-semibold text-teal-700 mb-1">Customizations:</div>
@@ -297,6 +305,15 @@ export default function Cart() {
                               {item.customizations?.ssdUpgrade && (
                                 <div className="text-gray-700">• {item.customizations.ssdUpgrade.size} SSD Upgrade (+Rs{item.customizations.ssdUpgrade.price.toLocaleString()})</div>
                               )}
+                            </div>
+                          )}
+                          {/* RAM Customization Details */}
+                          {item.ramCustomization && (
+                            <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+                              <div className="font-semibold text-blue-700 mb-1">Selected Configuration:</div>
+                              <div className="text-gray-700">• Brand: {item.ramCustomization.specs.brand}</div>
+                              <div className="text-gray-700">• Speed: {item.ramCustomization.specs.speed}</div>
+                              <div className="text-gray-700">• Capacity: {item.ramCustomization.specs.capacity}</div>
                             </div>
                           )}
                         </div>
