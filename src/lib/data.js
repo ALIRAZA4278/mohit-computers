@@ -135,7 +135,7 @@ export const blogPosts = [
 export const testimonials = [
   {
     id: 1,
-    name: "Rahul Sharma",
+    name: "Ahmed Hassan",
     role: "Software Developer",
     content: "Great quality laptops at amazing prices. The HP EliteBook I bought is working perfectly for my development work.",
     rating: 5,
@@ -143,7 +143,7 @@ export const testimonials = [
   },
   {
     id: 2,
-    name: "Priya Patel",
+    name: "Fatima Khan",
     role: "Student",
     content: "Excellent customer service and fast delivery. The Chromebook is perfect for my college work.",
     rating: 5,
@@ -151,7 +151,7 @@ export const testimonials = [
   },
   {
     id: 3,
-    name: "Amit Kumar",
+    name: "Muhammad Ali",
     role: "Business Owner",
     content: "Bought 10 laptops for my office. All are in excellent condition and the bulk discount was great!",
     rating: 5,

@@ -2,19 +2,20 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { 
-  Star, 
-  ThumbsUp, 
-  MessageSquare, 
-  User, 
-  Calendar, 
+import {
+  Star,
+  ThumbsUp,
+  MessageSquare,
+  User,
+  Calendar,
   ShoppingBag,
   CheckCircle,
   AlertCircle,
   Send,
   Image as ImageIcon,
   Filter,
-  Trash2
+  Trash2,
+  ExternalLink
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -331,7 +332,7 @@ export default function ReviewSection({ productId }) {
             Customer Reviews ({reviewStats.totalReviews})
           </h3>
         </div>
-        
+
         {userAuth && canReview && !showReviewForm && (
           <button
             onClick={() => setShowReviewForm(true)}
@@ -341,6 +342,34 @@ export default function ReviewSection({ productId }) {
             Write Review
           </button>
         )}
+      </div>
+
+      {/* Google Business Review Banner */}
+      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <Star className="w-5 h-5 text-blue-600 fill-current" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-1">
+                Love our products? Share your experience!
+              </h4>
+              <p className="text-sm text-gray-600">
+                Help others discover us by leaving a review on Google Business
+              </p>
+            </div>
+          </div>
+          <a
+            href="https://g.page/r/CXHJJmG3XcUzEBM/review"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors flex items-center gap-2 font-medium border border-blue-200 shadow-sm whitespace-nowrap"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Review on Google
+          </a>
+        </div>
       </div>
 
       {/* Rating Summary */}
@@ -606,7 +635,6 @@ export default function ReviewSection({ productId }) {
                       <div className="flex items-center gap-3 mb-1">
                         <h5 className="font-semibold text-gray-900">
                           {review.user_name || 'Anonymous User'}
-                          {console.log('Displaying review from:', review.user_name, 'Full review data:', review)}
                         </h5>
                         {review.is_verified && (
                           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -670,13 +698,8 @@ export default function ReviewSection({ productId }) {
                       <ThumbsUp className="w-4 h-4" />
                       Helpful ({review.helpful_count || 0})
                     </button>
-                    
+
                     {/* Delete button - only show for user's own reviews */}
-                    {console.log('Delete button visibility check:', {
-                      userAuth: !!userAuth,
-                      reviewId: review.id,
-                      isUserReview: isUserReview(review)
-                    })}
                     {isUserReview(review) && (
                       <button 
                         onClick={() => handleDeleteReview(review.id)}

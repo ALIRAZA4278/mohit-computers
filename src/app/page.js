@@ -475,12 +475,17 @@ export default function Home() {
           </div>
           
           <div className="text-center mt-12">
-            <div className="inline-flex items-center px-6 py-3 bg-white/10 rounded-full backdrop-blur-sm border border-white/10">
+            <a
+              href="https://g.page/r/CXHJJmG3XcUzEBM/review"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-6 py-3 bg-white/10 rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-105 cursor-pointer"
+            >
               <Image src="/images/brands/chromebook-logo.svg" alt="Google" width={24} height={24} className="mr-3" />
               <span className="text-sm font-medium text-gray-300">
                 4.9/5 rating based on 150+ Google reviews
               </span>
-            </div>
+            </a>
           </div>
         </div>
       </section>
