@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -24,6 +24,7 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [showImageModal, setShowImageModal] = useState(false);
   const [imageZoom, setImageZoom] = useState(false);
+  const [imageErrors, setImageErrors] = useState({});
   const [selectedStorage, setSelectedStorage] = useState(null);
   const [selectedMemory, setSelectedMemory] = useState(null);
   const [customUpgradePrice, setCustomUpgradePrice] = useState(0);
@@ -46,6 +47,18 @@ export default function ProductDetail() {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCompare, isInCompare } = useCompare();
+
+  // Define handlers with useCallback to prevent infinite loops
+  const handleCustomizationChange = useCallback((customizationData) => {
+    console.log('Customization data received:', customizationData);
+    console.log('Updated specs:', customizationData.updatedSpecs);
+    setLaptopCustomization(customizationData);
+  }, []);
+
+  const handleRAMCustomizationChange = useCallback((customizationData) => {
+    console.log('RAM Customization data received:', customizationData);
+    setRamCustomization(customizationData);
+  }, []);
 
   useEffect(() => {
     if (params.id) {
@@ -132,11 +145,45 @@ export default function ProductDetail() {
     );
   }
 
-  const productImages = product.images
-    ? (typeof product.images === 'string' ? JSON.parse(product.images) : product.images)
-    : product.featured_image
-    ? [product.featured_image]
-    : ['/placeholder-laptop.png'];
+  // Parse product images safely
+  let productImages = ['/placeholder-laptop.png'];
+  
+  try {
+    console.log('Product images data:', product.images);
+    console.log('Product featured_image:', product.featured_image);
+    
+    if (product.images) {
+      const parsedImages = typeof product.images === 'string' 
+        ? JSON.parse(product.images) 
+        : product.images;
+      
+      console.log('Parsed images:', parsedImages);
+      
+      // Filter out null/undefined/empty values and ensure we have valid image paths
+      const validImages = Array.isArray(parsedImages)
+        ? parsedImages.filter(img => img && typeof img === 'string' && img.trim() !== '')
+        : [];
+      
+      console.log('Valid images after filtering:', validImages);
+      
+      if (validImages.length > 0) {
+        productImages = validImages;
+      } else if (product.featured_image && product.featured_image.trim() !== '') {
+        productImages = [product.featured_image];
+      }
+    } else if (product.featured_image && product.featured_image.trim() !== '') {
+      productImages = [product.featured_image];
+    }
+    
+    console.log('Final productImages:', productImages);
+  } catch (error) {
+    console.error('Error parsing product images:', error);
+    console.error('Product data:', product);
+    // Fallback to featured_image or placeholder
+    if (product.featured_image && product.featured_image.trim() !== '') {
+      productImages = [product.featured_image];
+    }
+  }
 
   const handleAddToCart = () => {
     // Check stock availability - with fallback for existing products
@@ -170,7 +217,8 @@ export default function ProductDetail() {
         ramCustomization: ramCustomization,
         finalPrice: ramCustomization.totalPrice || product.price,
         customizationCost: ramCustomization.additionalCost || 0,
-        displayName: `${product.name} - ${ramCustomization.specs.brand} ${ramCustomization.specs.speed}`
+        displayName: `${product.name} - ${ramCustomization.specs.brand} ${ramCustomization.specs.speed}`,
+        hasRAMCustomization: true
       };
 
       for (let i = 0; i < quantity; i++) {
@@ -198,15 +246,16 @@ export default function ProductDetail() {
     addToCompare(product);
   };
 
-  const handleCustomizationChange = (customizationData) => {
-    console.log('Customization data received:', customizationData);
-    console.log('Updated specs:', customizationData.updatedSpecs);
-    setLaptopCustomization(customizationData);
+  const handleImageError = (index) => {
+    console.error(`Image failed to load at index ${index}:`, productImages[index]);
+    setImageErrors(prev => ({ ...prev, [index]: true }));
   };
 
-  const handleRAMCustomizationChange = (customizationData) => {
-    console.log('RAM Customization data received:', customizationData);
-    setRamCustomization(customizationData);
+  const getImageSrc = (index) => {
+    if (imageErrors[index]) {
+      return '/placeholder-laptop.png';
+    }
+    return productImages[index] || '/placeholder-laptop.png';
   };
 
   const handleAddToCartWithCustomization = () => {
@@ -215,7 +264,9 @@ export default function ProductDetail() {
       customizations: laptopCustomization.customizations,
       originalPrice: product.price,
       finalPrice: laptopCustomization.totalPrice || product.price,
-      customizationCost: laptopCustomization.additionalCost || 0
+      customizationCost: laptopCustomization.additionalCost || 0,
+      hasCustomizations: true,
+      displayName: product.name
     };
     
     // Add to cart with customization
@@ -272,12 +323,14 @@ export default function ProductDetail() {
               <div className="relative bg-gray-50 rounded-xl overflow-hidden group">
                 <div className="aspect-square flex items-center justify-center p-4 sm:p-8">
                   <Image
-                    src={productImages[selectedImage]}
+                    src={getImageSrc(selectedImage)}
                     alt={product.name || 'Product'}
                     width={600}
                     height={600}
                     className="object-contain w-full h-full cursor-zoom-in transition-transform group-hover:scale-105"
                     onClick={() => setShowImageModal(true)}
+                    onError={() => handleImageError(selectedImage)}
+                    priority
                   />
                 </div>
                 {/* Zoom Icon */}
@@ -310,10 +363,11 @@ export default function ProductDetail() {
                       }`}
                     >
                       <Image
-                        src={img}
+                        src={getImageSrc(index)}
                         alt={`${product.name} - ${index + 1}`}
                         fill
                         className="object-cover"
+                        onError={() => handleImageError(index)}
                       />
                     </button>
                   ))}
@@ -524,8 +578,8 @@ export default function ProductDetail() {
                 )
               )}
 
-              {/* Laptop Customizer - New customizer component */}
-              {product.category_id === 'laptop' && (
+              {/* Laptop Customizer - New customizer component (if enabled in admin) */}
+              {product.category_id === 'laptop' && product.show_laptop_customizer !== false && (
                 <div className="mt-6">
                   <LaptopCustomizer
                     product={product}
@@ -534,8 +588,8 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {/* RAM Customizer - For RAM products */}
-              {product.category_id === 'ram' && (
+              {/* RAM Customizer - For RAM products (if enabled in admin) */}
+              {product.category_id === 'ram' && product.show_ram_customizer !== false && (
                 <div className="mt-6">
                   <RAMCustomizer
                     product={product}
@@ -1335,11 +1389,12 @@ export default function ProductDetail() {
           </button>
           <div className="relative max-w-6xl w-full h-full flex items-center justify-center">
             <Image
-              src={productImages[selectedImage]}
+              src={getImageSrc(selectedImage)}
               alt={product.name}
               width={1200}
               height={1200}
               className="object-contain max-h-full max-w-full"
+              onError={() => handleImageError(selectedImage)}
             />
           </div>
           {productImages.length > 1 && (

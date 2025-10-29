@@ -6,12 +6,15 @@ import { X, ShoppingCart, CheckCircle, XCircle, Star, Link, GitCompareArrows } f
 import { useCompare } from '../context/CompareContext';
 import { useCart } from '../context/CartContext';
 
-const CompareTable = () => {
-  const { compareItems, removeFromCompare, clearCompare } = useCompare();
+const CompareTable = ({ products }) => {
+  const { removeFromCompare, clearCompare } = useCompare();
   const { addToCart } = useCart();
 
+  // Use products from props (fresh data from API) if available, otherwise fallback to context
+  const compareItems = products || [];
+
   // Filter only laptop products for comparison
-  const laptopItems = compareItems.filter(item => 
+  const laptopItems = compareItems.filter(item =>
     item.category === 'laptop' || item.category_id === 'laptop'
   );
 

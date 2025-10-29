@@ -31,7 +31,7 @@ export default function Home() {
   // Auto-advance hero carousel
   useEffect(() => {
     const interval = setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % heroBanners.length);
+      setHeroIndex((prev) => (prev + 1) % 3);
     }, 5000); // Change every 5 seconds
     return () => clearInterval(interval);
   }, []);
@@ -85,16 +85,19 @@ export default function Home() {
 
   const featuredProducts = products.filter(product => product.is_featured);
   const newArrivalProducts = products.slice(0, 8); // Latest 8 products - all categories
-  const workstationProducts = products.filter(product => product.category_id === 'workstation');
+  const workstationProducts = products.filter(product => 
+    product.is_workstation === true || product.category_id === 'workstation'
+  );
   const accessoryProducts = products.filter(product => product.category_id === 'accessories');
 
   // Calculate max index for each carousel
-  const getMaxIndex = (productCount) => Math.max(0, productCount - itemsPerView);
+  const getMaxIndex = (productCount) => {
+    return Math.max(0, productCount - itemsPerView);
+  };
 
   // Calculate transform percentage based on items per view
   const getTransformPercentage = (index) => {
-    const slideWidth = 100 / itemsPerView;
-    return index * slideWidth;
+    return index * (100 / itemsPerView);
   };
 
   return (
@@ -235,13 +238,17 @@ export default function Home() {
             </div>
           ) : (
               <div className="relative px-8 sm:px-4">
-              <div className="overflow-hidden rounded-xl">
+              <div className="overflow-hidden rounded-xl -mx-2 sm:-mx-3">
                 <div
-                    className="flex transition-transform duration-500 ease-in-out gap-4 sm:gap-6"
+                  className="flex transition-transform duration-500 ease-in-out"
                   style={{ transform: `translateX(-${getTransformPercentage(featuredIndex)}%)` }}
                 >
                   {featuredProducts.map((product) => (
-                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                    <div
+                      key={product.id}
+                      className="flex-none px-2 sm:px-3"
+                      style={{ width: `${100 / itemsPerView}%` }}
+                    >
                       <ProductCard product={product} />
                     </div>
                   ))}
@@ -251,14 +258,14 @@ export default function Home() {
                 <>
                   <button
                     onClick={() => setFeaturedIndex(Math.max(0, featuredIndex - 1))}
-                      className="absolute left-0 sm:left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="absolute left-0 sm:left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={featuredIndex === 0}
                   >
                     <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
                   </button>
                   <button
                     onClick={() => setFeaturedIndex(Math.min(getMaxIndex(featuredProducts.length), featuredIndex + 1))}
-                      className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={featuredIndex >= getMaxIndex(featuredProducts.length)}
                   >
                     <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
@@ -285,13 +292,17 @@ export default function Home() {
         <div className="container mx-auto px-4">
           {!loading && !error && newArrivalProducts.length > 0 && (
             <div className="relative px-8 sm:px-4">
-              <div className="overflow-hidden rounded-xl">
+              <div className="overflow-hidden rounded-xl -mx-2 sm:-mx-3">
                 <div
-                  className="flex transition-transform duration-500 ease-in-out gap-4 sm:gap-6"
+                  className="flex transition-transform duration-500 ease-in-out"
                   style={{ transform: `translateX(-${getTransformPercentage(newArrivalIndex)}%)` }}
                 >
                   {newArrivalProducts.map((product) => (
-                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                    <div
+                      key={product.id}
+                      className="flex-none px-2 sm:px-3"
+                      style={{ width: `${100 / itemsPerView}%` }}
+                    >
                       <ProductCard product={product} />
                     </div>
                   ))}
@@ -333,15 +344,22 @@ export default function Home() {
       {/* Workstation Products Slider */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
+          
+
+          {/* Workstation Slider - Same as other sliders */}
           {!loading && !error && workstationProducts.length > 0 && (
             <div className="relative px-8 sm:px-4">
-              <div className="overflow-hidden rounded-xl">
+              <div className="overflow-hidden rounded-xl -mx-2 sm:-mx-3">
                 <div
-                  className="flex transition-transform duration-500 ease-in-out gap-4 sm:gap-6"
+                  className="flex transition-transform duration-500 ease-in-out"
                   style={{ transform: `translateX(-${getTransformPercentage(workstationIndex)}%)` }}
                 >
                   {workstationProducts.map((product) => (
-                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                    <div
+                      key={product.id}
+                      className="flex-none px-2 sm:px-3"
+                      style={{ width: `${100 / itemsPerView}%` }}
+                    >
                       <ProductCard product={product} />
                     </div>
                   ))}
@@ -367,6 +385,20 @@ export default function Home() {
               )}
             </div>
           )}
+          {/* Section Header with View All Button */}
+          <div className="flex items-center justify-between mt-8">
+            <div>
+              
+            </div>
+            <Link 
+              href="/workstation"
+              className="bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+            >
+              View All
+              <ChevronRight className="w-5 h-5" />
+            </Link>
+          </div>
+          
         </div>
       </section>
 
@@ -388,13 +420,17 @@ export default function Home() {
           {/* Accessories Slider */}
           {!loading && !error && accessoryProducts.length > 0 && (
             <div className="relative px-8 sm:px-4">
-              <div className="overflow-hidden rounded-xl">
+              <div className="overflow-hidden rounded-xl -mx-2 sm:-mx-3">
                 <div
-                  className="flex transition-transform duration-500 ease-in-out gap-4 sm:gap-6"
+                  className="flex transition-transform duration-500 ease-in-out"
                   style={{ transform: `translateX(-${getTransformPercentage(accessoryIndex)}%)` }}
                 >
                   {accessoryProducts.map((product) => (
-                    <div key={product.id} className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-1/4">
+                    <div
+                      key={product.id}
+                      className="flex-none px-2 sm:px-3"
+                      style={{ width: `${100 / itemsPerView}%` }}
+                    >
                       <ProductCard product={product} />
                     </div>
                   ))}

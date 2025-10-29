@@ -10,80 +10,108 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
   });
 
   const [totalPrice, setTotalPrice] = useState(product?.price || 0);
+  const [upgradeOptions, setUpgradeOptions] = useState({ ram: [], ssd: [] });
+  const [loading, setLoading] = useState(true);
 
-  // RAM upgrade options (these replace existing RAM, similar to SSD)
-  const getCurrentRAMSize = useCallback(() => {
+  // Fetch upgrade options from database
+  useEffect(() => {
+    const fetchUpgradeOptions = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/laptop-upgrade-options?active=true');
+        const data = await response.json();
+        if (data.success) {
+          const ramOpts = data.options.filter(opt => opt.option_type === 'ram');
+          const ssdOpts = data.options.filter(opt => opt.option_type === 'ssd');
+          setUpgradeOptions({ ram: ramOpts, ssd: ssdOpts });
+          console.log('Loaded upgrade options from database:', { ramOpts, ssdOpts });
+        }
+      } catch (error) {
+        console.error('Failed to fetch upgrade options:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUpgradeOptions();
+  }, []);
+
+  // Get filtered RAM options based on current RAM size and generation
+  const ramModules = useMemo(() => {
     const ramText = product?.ram || '8GB';
     const ramNumber = parseInt(ramText);
-    return isNaN(ramNumber) ? 8 : ramNumber;
-  }, [product?.ram]);
-
-  // Determine generation number (best-effort parse)
-  const getGenerationNumber = useCallback(() => {
+    const currentRAM = isNaN(ramNumber) ? 8 : ramNumber;
+    
     const gen = product?.generation;
-    if (!gen) return null;
-    const n = parseInt(String(gen));
-    if (!isNaN(n)) return n;
-    const match = String(gen).match(/\d+/);
-    return match ? parseInt(match[0]) : null;
-  }, [product?.generation]);
-
-  // Price lookup for a RAM module (add-on) based on CPU generation / DDR type
-  const getRamModulePrice = useCallback((sizeNumber) => {
-    const gen = getGenerationNumber();
-
-    // DDR3 (3rd to 5th generation)
-    if (gen && gen >= 3 && gen <= 5) {
-      if (sizeNumber === 4) return 1000;
-      if (sizeNumber === 8) return 2500;
-      // larger modules - fallback to DDR4-like pricing
+    let genNumber = null;
+    if (gen) {
+      const n = parseInt(String(gen));
+      if (!isNaN(n)) {
+        genNumber = n;
+      } else {
+        const match = String(gen).match(/\d+/);
+        genNumber = match ? parseInt(match[0]) : null;
+      }
     }
-
-    // DDR4 (6th to 11th generation) and default
-    if (sizeNumber === 4) return 3200;
-    if (sizeNumber === 8) return 6000;
-    if (sizeNumber === 16) return 11500;
-    if (sizeNumber === 32) return 25000;
-
-    // default fallback
-    return 0;
-  }, [getGenerationNumber]);
-
-  const ramModules = useMemo(() => {
-    const currentRAM = getCurrentRAMSize();
-    return [
-      { id: 'ram-4gb', size: '4GB', sizeNumber: 4, description: 'Upgrade to 4GB RAM' },
-      { id: 'ram-8gb', size: '8GB', sizeNumber: 8, description: 'Upgrade to 8GB RAM' },
-      { id: 'ram-16gb', size: '16GB', sizeNumber: 16, description: 'Upgrade to 16GB RAM' },
-      { id: 'ram-32gb', size: '32GB', sizeNumber: 32, description: 'Upgrade to 32GB RAM' }
-    ].map(m => ({ ...m, price: getRamModulePrice(m.sizeNumber) }))
-     .filter(ram => ram.sizeNumber > currentRAM); // Only show larger RAM sizes
-  }, [getRamModulePrice, getCurrentRAMSize]);
+    
+    console.log('Filtering RAM options:', { currentRAM, generation: genNumber, totalOptions: upgradeOptions.ram.length });
+    
+    return upgradeOptions.ram
+      .filter(opt => {
+        // Filter by generation
+        if (opt.min_generation && genNumber && genNumber < opt.min_generation) return false;
+        if (opt.max_generation && genNumber && genNumber > opt.max_generation) return false;
+        
+        // Filter by applicable type (ddr3/ddr4)
+        if (genNumber && genNumber >= 3 && genNumber <= 5) {
+          // 3rd-5th gen uses DDR3
+          if (opt.applicable_to !== 'ddr3') return false;
+        } else if (genNumber && genNumber >= 6) {
+          // 6th gen and above uses DDR4
+          if (opt.applicable_to !== 'ddr4' && opt.applicable_to !== 'all') return false;
+        }
+        
+        // Only show larger sizes than current RAM
+        return opt.size_number > currentRAM;
+      })
+      .map(opt => ({
+        id: `ram-${opt.id}`,
+        size: opt.size,
+        sizeNumber: opt.size_number,
+        description: opt.description || opt.display_label,
+        price: opt.price,
+        label: opt.display_label
+      }))
+      .sort((a, b) => a.sizeNumber - b.sizeNumber); // Sort by size
+  }, [upgradeOptions.ram, product?.ram, product?.generation]);
 
   // SSD upgrade options (replaces existing drive) - show only larger capacities than current storage
-  const parseStorageToGB = (storageText) => {
-    if (!storageText) return 0;
+  const ssdUpgrades = useMemo(() => {
+    const storageText = product?.hdd || '256GB';
     const text = String(storageText).toUpperCase().trim();
+    let currentSSDSize = 0;
+    
     if (text.includes('TB')) {
       const n = parseFloat(text.replace(/[^0-9\.]/g, '')) || 0;
-      return Math.round(n * 1024);
+      currentSSDSize = Math.round(n * 1024);
+    } else {
+      const n = parseFloat(text.replace(/[^0-9\.]/g, '')) || 0;
+      currentSSDSize = Math.round(n);
     }
-    // fallback to GB
-    const n = parseFloat(text.replace(/[^0-9\.]/g, '')) || 0;
-    return Math.round(n);
-  };
-
-  const getCurrentSSDSizeNumber = () => {
-    const storageText = product?.hdd || '256GB';
-    return parseStorageToGB(storageText);
-  };
-
-  const ssdUpgrades = [
-    { id: 'ssd-128gb', size: '128GB', sizeNumber: 128, price: 2000, description: 'Replace with 128GB NVMe SSD' },
-    { id: 'ssd-256gb', size: '256GB', sizeNumber: 256, price: 4000, description: 'Replace with 256GB NVMe SSD' },
-    { id: 'ssd-512gb', size: '512GB', sizeNumber: 512, price: 7500, description: 'Replace with 512GB NVMe SSD' },
-    { id: 'ssd-1tb', size: '1TB', sizeNumber: 1024, price: 15000, description: 'Replace with 1TB NVMe SSD' }
-  ].filter(ssd => ssd.sizeNumber > getCurrentSSDSizeNumber()); // Show only larger sizes
+    
+    console.log('Filtering SSD options:', { currentSSDSize, totalOptions: upgradeOptions.ssd.length });
+    
+    return upgradeOptions.ssd
+      .filter(opt => opt.size_number > currentSSDSize)
+      .map(opt => ({
+        id: `ssd-${opt.id}`,
+        size: opt.size,
+        sizeNumber: opt.size_number,
+        description: opt.description || opt.display_label,
+        price: opt.price,
+        label: opt.display_label
+      }))
+      .sort((a, b) => a.sizeNumber - b.sizeNumber); // Sort by size
+  }, [upgradeOptions.ssd, product?.hdd]);
 
   // Calculate total price when customizations change
   useEffect(() => {
@@ -120,7 +148,7 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
       console.log('Sending customization data:', dataToSend);
       onCustomizationChange(dataToSend);
     }
-  }, [customizations, product?.price, product?.ram, product?.hdd, onCustomizationChange, getCurrentRAMSize]);
+  }, [customizations, product?.price, product?.ram, product?.hdd, onCustomizationChange]);
 
   const handleRamUpgrade = (ramOption) => {
     setCustomizations(prev => ({
@@ -175,6 +203,7 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
       </div>
 
       {/* RAM Modules */}
+      {product?.show_ram_options !== false && (
       <div className="mb-8">
         <div className="flex items-center mb-4">
           <Cpu className="w-5 h-5 text-teal-600 mr-2" />
@@ -187,7 +216,18 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-4 border-teal-500 border-t-transparent mx-auto"></div>
+            <p className="text-sm text-gray-500 mt-2">Loading upgrade options...</p>
+          </div>
+        ) : ramModules.length === 0 ? (
+          <div className="text-center py-8 bg-gray-50 rounded-lg">
+            <p className="text-gray-600">No RAM upgrade options available for this laptop.</p>
+            <p className="text-sm text-gray-500 mt-1">Current RAM: {product?.ram || '8GB'}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {ramModules.map((ram) => (
             <div
               key={ram.id}
@@ -219,9 +259,12 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
             </div>
           ))}
         </div>
+        )}
       </div>
+      )}
 
       {/* SSD Upgrades */}
+      {product?.show_ssd_options !== false && (
       <div className="mb-8">
         <div className="flex items-center mb-4">
           <HardDrive className="w-5 h-5 text-teal-600 mr-2" />
@@ -234,7 +277,18 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-4 border-teal-500 border-t-transparent mx-auto"></div>
+            <p className="text-sm text-gray-500 mt-2">Loading upgrade options...</p>
+          </div>
+        ) : ssdUpgrades.length === 0 ? (
+          <div className="text-center py-8 bg-gray-50 rounded-lg">
+            <p className="text-gray-600">No SSD upgrade options available for this laptop.</p>
+            <p className="text-sm text-gray-500 mt-1">Current Storage: {product?.hdd || '256GB SSD'}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {ssdUpgrades.map((ssd) => (
             <div
               key={ssd.id}
@@ -262,7 +316,9 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
             </div>
           ))}
         </div>
+        )}
       </div>
+      )}
 
       {/* Price Summary */}
       <div className="border-t pt-6">
@@ -292,17 +348,6 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
               <span>Total Price:</span>
               <span className="text-teal-600">Rs:{totalPrice.toLocaleString()}</span>
             </div>
-            
-            {(customizations.ramUpgrade || customizations.ssdUpgrade) && (
-              <div className="text-sm text-gray-600">
-                <p className="font-medium text-green-600">
-                  You save Rs:{((product?.price || 0) * 0.1).toLocaleString()} with customization!
-                </p>
-                <p className="text-xs mt-1">
-                  Includes professional installation and 6-month warranty on upgrades.
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>

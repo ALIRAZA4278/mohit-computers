@@ -1,9 +1,9 @@
-'use client';
+  'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Search, ShoppingCart, Heart, GitCompareArrows, Menu, X, User, Phone, Mail, Clock, Tag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -20,8 +20,12 @@ const Navbar = () => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const searchRef = useRef(null);
+  const searchInputRef = useRef(null);
+  const mobileSearchRef = useRef(null);
+  const mobileSearchInputRef = useRef(null);
   const suggestionsRef = useRef(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     // Check if user is logged in
@@ -32,6 +36,13 @@ const Navbar = () => {
       setUser(JSON.parse(userData));
     }
   }, []);
+
+  // Close dropdowns when route changes
+  useEffect(() => {
+    setIsProductsOpen(false);
+    setIsMenuOpen(false);
+    setShowSuggestions(false);
+  }, [pathname]);
 
   // Debounced search function
   const debouncedSearch = useCallback(
@@ -126,7 +137,10 @@ const Navbar = () => {
   // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
+      const isClickOutsideSearch = searchRef.current && !searchRef.current.contains(event.target);
+      const isClickOutsideMobileSearch = mobileSearchRef.current && !mobileSearchRef.current.contains(event.target);
+
+      if (isClickOutsideSearch && isClickOutsideMobileSearch) {
         setShowSuggestions(false);
         setSelectedSuggestionIndex(-1);
       }
@@ -150,10 +164,9 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  const handleCategoryClick = (e, url) => {
-    e.preventDefault();
+  // Close dropdown menu when clicking on a category link
+  const handleCategoryClick = () => {
     setIsProductsOpen(false);
-    router.push(url);
   };
 
   const handleSearch = (e) => {
@@ -231,7 +244,7 @@ const Navbar = () => {
                 <form onSubmit={handleSearch} className="w-full">
                   <div className="flex rounded-lg shadow-sm border border-gray-300 overflow-hidden">
                     <input
-                      ref={searchRef}
+                      ref={searchInputRef}
                       type="text"
                       placeholder="Search for laptops, accessories..."
                       value={searchQuery}
@@ -414,7 +427,7 @@ const Navbar = () => {
                     <div className="py-2">
                       {/* Used Laptops with brand submenu */}
                       <div className="relative group/submenu">
-                        <Link href="/products?category=used-laptop" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop')} className="flex items-center justify-between px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                        <Link href="/products?category=used-laptop" onClick={handleCategoryClick} className="flex items-center justify-between px-4 py-3 hover:bg-gray-100 cursor-pointer">
                           <span className="font-medium text-gray-800">Used Laptops</span>
                           <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -423,16 +436,16 @@ const Navbar = () => {
                         {/* Brand Submenu */}
                         <div className="absolute left-full top-0 mt-0 w-48 bg-white shadow-xl rounded-lg hidden group-hover/submenu:block border-l border-gray-200">
                           <div className="py-2">
-                            <Link href="/products?category=used-laptop&brand=HP" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop&brand=HP')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
+                            <Link href="/products?category=used-laptop&brand=HP" onClick={handleCategoryClick} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
                               HP
                             </Link>
-                            <Link href="/products?category=used-laptop&brand=Dell" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop&brand=Dell')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
+                            <Link href="/products?category=used-laptop&brand=Dell" onClick={handleCategoryClick} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
                               Dell
                             </Link>
-                            <Link href="/products?category=used-laptop&brand=Acer" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop&brand=Acer')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
+                            <Link href="/products?category=used-laptop&brand=Acer" onClick={handleCategoryClick} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
                               Acer
                             </Link>
-                            <Link href="/products?category=used-laptop&brand=Lenovo" onClick={(e) => handleCategoryClick(e, '/products?category=used-laptop&brand=Lenovo')} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
+                            <Link href="/products?category=used-laptop&brand=Lenovo" onClick={handleCategoryClick} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
                               Lenovo
                             </Link>
                           </div>
@@ -441,20 +454,27 @@ const Navbar = () => {
 
                       <div className="border-t border-gray-100"></div>
 
-                      <Link href="/products?category=chromebook" onClick={(e) => handleCategoryClick(e, '/products?category=chromebook')} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                      <Link href="/products?category=chromebook" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">Chrome Book</div>
                       </Link>
 
-                      <Link href="/products?category=accessories" onClick={(e) => handleCategoryClick(e, '/products?category=accessories')} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                      <Link href="/products?category=accessories" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">Accessories</div>
                       </Link>
 
-                      <Link href="/products?category=ram" onClick={(e) => handleCategoryClick(e, '/products?category=ram')} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                      <Link href="/products?category=ram" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">RAM</div>
                       </Link>
 
-                      <Link href="/products?category=ssd" onClick={(e) => handleCategoryClick(e, '/products?category=ssd')} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                      <Link href="/products?category=ssd" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">SSD</div>
+                      </Link>
+
+                      <div className="border-t border-gray-100"></div>
+
+                      <Link href="/workstation" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                        <div className="font-medium text-gray-800">Workstations</div>
+                        <div className="text-xs text-gray-500 mt-0.5">Professional workstations</div>
                       </Link>
                     </div>
                   </div>
@@ -490,10 +510,10 @@ const Navbar = () => {
         <div className="md:hidden bg-white border-t shadow-lg">
           <div className="px-4 py-4 space-y-3">
             {/* Mobile Search */}
-            <div ref={searchRef} className="relative">
+            <div ref={mobileSearchRef} className="relative">
               <form onSubmit={handleSearch} className="flex rounded-lg border border-gray-300 overflow-hidden">
                 <input
-                  ref={searchRef}
+                  ref={mobileSearchInputRef}
                   type="text"
                   placeholder="Search products..."
                   value={searchQuery}
@@ -573,15 +593,16 @@ const Navbar = () => {
               <div className="pl-4 space-y-1">
                 <Link href="/products?category=used-laptop" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Used Laptops</Link>
                 <div className="pl-4 space-y-1">
-                  <Link href="/products?category=used-laptop&brand=hp" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">HP</Link>
-                  <Link href="/products?category=used-laptop&brand=dell" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Dell</Link>
-                  <Link href="/products?category=used-laptop&brand=acer" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Acer</Link>
-                  <Link href="/products?category=used-laptop&brand=lenovo" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Lenovo</Link>
+                  <Link href="/products?category=used-laptop&brand=HP" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">HP</Link>
+                  <Link href="/products?category=used-laptop&brand=Dell" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Dell</Link>
+                  <Link href="/products?category=used-laptop&brand=Acer" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Acer</Link>
+                  <Link href="/products?category=used-laptop&brand=Lenovo" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Lenovo</Link>
                 </div>
                 <Link href="/products?category=chromebook" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Chrome Book</Link>
                 <Link href="/products?category=accessories" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Accessories</Link>
                 <Link href="/products?category=ram" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">RAM</Link>
                 <Link href="/products?category=ssd" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">SSD</Link>
+                <Link href="/workstation" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9] font-semibold">Workstations</Link>
               </div>
             </div>
             <Link href="/blog" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Blog</Link>

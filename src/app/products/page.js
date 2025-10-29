@@ -413,6 +413,195 @@ function ProductsContent() {
       }
     }
 
+    // Apply resolution filter (database field: resolution)
+    if (filters.resolution && filters.resolution.length > 0) {
+      const beforeFilter = filtered.length;
+      
+      filtered = filtered.filter(product => {
+        const productResolution = (product.resolution || '').toLowerCase();
+        
+        return filters.resolution.some(filterResolution => {
+          const filterRes = filterResolution.toLowerCase();
+          
+          // Try exact match first
+          if (productResolution === filterRes) {
+            return true;
+          }
+          
+          // Try contains match
+          if (productResolution.includes(filterRes) || filterRes.includes(productResolution)) {
+            return true;
+          }
+          
+          // Special handling for resolution variations
+          // Match "HD" with "HD (1366x768)"
+          if (filterRes.includes('hd') && productResolution.includes('hd')) {
+            if (filterRes.includes('full hd') && productResolution.includes('full hd')) return true;
+            if (filterRes.includes('qhd') && productResolution.includes('qhd')) return true;
+            if (filterRes.includes('4k') && productResolution.includes('4k')) return true;
+            // Just "HD" (not Full HD)
+            if (filterRes.match(/^hd\s*\(/i) && productResolution.match(/^hd\s*\(/i)) return true;
+          }
+          
+          // Match resolution numbers like "1920x1080" with "Full HD (1920x1080)"
+          if (filterRes.includes('1920') && productResolution.includes('1920')) return true;
+          if (filterRes.includes('1366') && productResolution.includes('1366')) return true;
+          if (filterRes.includes('2560') && productResolution.includes('2560')) return true;
+          if (filterRes.includes('3840') && productResolution.includes('3840')) return true;
+          
+          return false;
+        });
+      });
+      
+      console.log(`✅ Resolution filter (${filters.resolution}): ${beforeFilter} → ${filtered.length} products`);
+      
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO RESOLUTIONS MATCHED!');
+        console.log('Sample resolutions from products:',
+          products.slice(0, 10).map(p => `"${p.resolution}"`).filter(r => r !== '""')
+        );
+        console.log('Looking for:', filters.resolution.map(r => `"${r}"`));
+      }
+    }
+
+    // Apply graphics filter (database field: graphics)
+    if (filters.graphics && filters.graphics.length > 0) {
+      const beforeFilter = filtered.length;
+      
+      filtered = filtered.filter(product => {
+        const productGraphics = (product.graphics || '').toLowerCase();
+        
+        return filters.graphics.some(filterGraphics => {
+          const filterGfx = filterGraphics.toLowerCase();
+          
+          // Try exact match first
+          if (productGraphics === filterGfx) {
+            return true;
+          }
+          
+          // Try contains match
+          if (productGraphics.includes(filterGfx) || filterGfx.includes(productGraphics)) {
+            return true;
+          }
+          
+          // Special handling for graphics variations
+          if (filterGfx.includes('intel') && productGraphics.includes('intel')) {
+            if (filterGfx.includes('uhd') && productGraphics.includes('uhd')) return true;
+            if (filterGfx.includes('hd') && productGraphics.includes('hd')) return true;
+            if (filterGfx.includes('iris') && productGraphics.includes('iris')) return true;
+          }
+          
+          if (filterGfx.includes('nvidia') && productGraphics.includes('nvidia')) {
+            if (filterGfx.includes('gtx') && productGraphics.includes('gtx')) return true;
+            if (filterGfx.includes('rtx') && productGraphics.includes('rtx')) return true;
+            if (filterGfx.includes('quadro') && productGraphics.includes('quadro')) return true;
+          }
+          
+          if (filterGfx.includes('amd') && productGraphics.includes('amd')) {
+            if (filterGfx.includes('radeon') && productGraphics.includes('radeon')) return true;
+          }
+          
+          return false;
+        });
+      });
+      
+      console.log(`✅ Graphics filter (${filters.graphics}): ${beforeFilter} → ${filtered.length} products`);
+      
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO GRAPHICS CARDS MATCHED!');
+        console.log('Sample graphics from products:',
+          products.slice(0, 10).map(p => `"${p.graphics}"`).filter(g => g !== '""')
+        );
+        console.log('Looking for:', filters.graphics.map(g => `"${g}"`));
+      }
+    }
+
+    // Apply touch type filter (database field: touch_type)
+    if (filters.touchType && filters.touchType.length > 0) {
+      const beforeFilter = filtered.length;
+      
+      filtered = filtered.filter(product => {
+        const productTouchType = (product.touch_type || '').toLowerCase();
+        
+        return filters.touchType.some(filterTouchType => {
+          const filterTouch = filterTouchType.toLowerCase();
+          
+          // Try exact match first
+          if (productTouchType === filterTouch) {
+            return true;
+          }
+          
+          // Try contains match
+          if (productTouchType.includes(filterTouch) || filterTouch.includes(productTouchType)) {
+            return true;
+          }
+          
+          // Special handling for touch variations
+          if (filterTouch.includes('x360') && productTouchType.includes('x360')) return true;
+          if (filterTouch.includes('convertible') && productTouchType.includes('convertible')) return true;
+          if (filterTouch.includes('non') && productTouchType.includes('non')) return true;
+          
+          return false;
+        });
+      });
+      
+      console.log(`✅ Touch Type filter (${filters.touchType}): ${beforeFilter} → ${filtered.length} products`);
+      
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO TOUCH TYPES MATCHED!');
+        console.log('Sample touch types from products:',
+          products.slice(0, 10).map(p => `"${p.touch_type}"`).filter(t => t !== '""')
+        );
+        console.log('Looking for:', filters.touchType.map(t => `"${t}"`));
+      }
+    }
+
+    // Apply operating system filter (database field: os)
+    if (filters.operatingSystem && filters.operatingSystem.length > 0) {
+      const beforeFilter = filtered.length;
+      
+      filtered = filtered.filter(product => {
+        const productOS = (product.os || '').toLowerCase();
+        
+        return filters.operatingSystem.some(filterOS => {
+          const filterOSLower = filterOS.toLowerCase();
+          
+          // Try exact match first
+          if (productOS === filterOSLower) {
+            return true;
+          }
+          
+          // Try contains match
+          if (productOS.includes(filterOSLower) || filterOSLower.includes(productOS)) {
+            return true;
+          }
+          
+          // Special handling for OS variations
+          if (filterOSLower.includes('windows 10') && productOS.includes('windows 10')) return true;
+          if (filterOSLower.includes('windows 11') && productOS.includes('windows 11')) return true;
+          if (filterOSLower.includes('macos') && productOS.includes('mac')) return true;
+          if (filterOSLower.includes('chrome') && productOS.includes('chrome')) return true;
+          if (filterOSLower.includes('linux') && productOS.includes('linux')) return true;
+          
+          return false;
+        });
+      });
+      
+      console.log(`✅ Operating System filter (${filters.operatingSystem}): ${beforeFilter} → ${filtered.length} products`);
+      
+      // Debug if no products matched
+      if (filtered.length === 0 && beforeFilter > 0) {
+        console.log('❌ NO OPERATING SYSTEMS MATCHED!');
+        console.log('Sample OS from products:',
+          products.slice(0, 10).map(p => `"${p.os}"`).filter(os => os !== '""')
+        );
+        console.log('Looking for:', filters.operatingSystem.map(os => `"${os}"`));
+      }
+    }
+
     // Apply RAM-specific filters
     // RAM Type filter (DDR3, DDR4, DDR5, etc.)
     if (filters.ramType && filters.ramType.length > 0) {

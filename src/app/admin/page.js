@@ -12,6 +12,8 @@ import NewsletterSubscribers from '../../components/admin/NewsletterSubscribers'
 import CommentManagement from '../../components/admin/CommentManagement';
 import ReviewManagement from '../../components/admin/ReviewManagement';
 import Settings from '../../components/admin/Settings';
+import UpgradePricingManager from '../../components/admin/UpgradePricingManager';
+import LaptopUpgradeOptionsManager from '../../components/admin/LaptopUpgradeOptionsManager';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -211,6 +213,10 @@ export default function AdminLogin() {
         return <CommentManagement />;
       case 'reviews':
         return <ReviewManagement />;
+      case 'pricing':
+        return <UpgradePricingManager />;
+      case 'laptop-options':
+        return <LaptopUpgradeOptionsManager />;
       case 'settings':
         return <Settings />;
       default:

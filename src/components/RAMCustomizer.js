@@ -7,44 +7,60 @@ export default function RAMCustomizer({ product, onCustomizationChange }) {
   // Get base price from product
   const basePrice = product?.price || 0;
 
-  // RAM brands available (all same price, no modifiers)
-  const brands = [
-    { id: 'kingston', name: 'Kingston', priceModifier: 0 },
-    { id: 'samsung', name: 'Samsung', priceModifier: 0 },
-    { id: 'crucial', name: 'Crucial', priceModifier: 0 },
-    { id: 'hynix', name: 'Hynix', priceModifier: 0 },
-    { id: 'adata', name: 'Adata', priceModifier: 0 },
-    { id: 'corsair', name: 'Corsair', priceModifier: 0 },
-    { id: 'gskill', name: 'G.Skill', priceModifier: 0 },
-    { id: 'transcend', name: 'Transcend', priceModifier: 0 }
-  ];
+  // RAM brands available (displayed only, not selectable)
+  const brands = ['Kingston', 'Samsung', 'Crucial', 'Hynix', 'Adata', 'Corsair', 'G.Skill', 'Transcend'];
 
   // Get capacity from product
   const capacity = product?.ram_capacity || '4GB';
   const capacityNum = parseInt(capacity);
 
+  // State for global pricing from database
+  const [globalPricing, setGlobalPricing] = useState(null);
+
+  // Fetch global pricing on component mount
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const response = await fetch('/api/upgrade-pricing');
+        const data = await response.json();
+        setGlobalPricing(data);
+      } catch (error) {
+        console.error('Error fetching RAM speed pricing:', error);
+      }
+    };
+    fetchPricing();
+  }, []);
+
   // Speed options with price modifiers based on capacity
   const getSpeedOptions = () => {
+    // Check if product has custom prices, otherwise use global pricing from database
+    const customPrices = product?.ram_speed_prices || {};
+    
+    // Use custom prices if available, otherwise use global pricing, finally fallback to defaults
+    const price2400 = customPrices['2400'] || globalPricing?.ram_speed_2400 || 300;
+    const price2666 = customPrices['2666'] || globalPricing?.ram_speed_2666 || 600;
+    const price3200 = customPrices['3200'] || globalPricing?.ram_speed_3200 || 900;
+    
     if (capacityNum === 4) {
       return [
         { id: '2133', name: '2133 MHz', priceModifier: 0, description: 'Standard speed' },
-        { id: '2400', name: '2400 MHz', priceModifier: 50, description: 'Faster performance' },
-        { id: '2666', name: '2666 MHz', priceModifier: 100, description: 'Enhanced speed' },
-        { id: '3200', name: '3200 MHz', priceModifier: 300, description: 'Maximum performance' }
+        { id: '2400', name: '2400 MHz', priceModifier: price2400, description: 'Faster performance' },
+        { id: '2666', name: '2666 MHz', priceModifier: price2666, description: 'Enhanced speed' },
+        { id: '3200', name: '3200 MHz', priceModifier: price3200, description: 'Maximum performance' }
       ];
     } else if (capacityNum === 8) {
       return [
         { id: '2133', name: '2133 MHz', priceModifier: 0, description: 'Standard speed' },
-        { id: '2400', name: '2400 MHz', priceModifier: 200, description: 'Faster performance' },
-        { id: '2666', name: '2666 MHz', priceModifier: 400, description: 'Enhanced speed' },
-        { id: '3200', name: '3200 MHz', priceModifier: 600, description: 'Maximum performance' }
+        { id: '2400', name: '2400 MHz', priceModifier: price2400, description: 'Faster performance' },
+        { id: '2666', name: '2666 MHz', priceModifier: price2666, description: 'Enhanced speed' },
+        { id: '3200', name: '3200 MHz', priceModifier: price3200, description: 'Maximum performance' }
       ];
     } else if (capacityNum === 16) {
       return [
         { id: '2133', name: '2133 MHz', priceModifier: 0, description: 'Standard speed' },
-        { id: '2400', name: '2400 MHz', priceModifier: 300, description: 'Faster performance' },
-        { id: '2666', name: '2666 MHz', priceModifier: 600, description: 'Enhanced speed' },
-        { id: '3200', name: '3200 MHz', priceModifier: 900, description: 'Maximum performance' }
+        { id: '2400', name: '2400 MHz', priceModifier: price2400, description: 'Faster performance' },
+        { id: '2666', name: '2666 MHz', priceModifier: price2666, description: 'Enhanced speed' },
+        { id: '3200', name: '3200 MHz', priceModifier: price3200, description: 'Maximum performance' }
       ];
     }
     return [
@@ -55,33 +71,42 @@ export default function RAMCustomizer({ product, onCustomizationChange }) {
   const speedOptions = getSpeedOptions();
 
   // State for selections
-  const [selectedBrand, setSelectedBrand] = useState(brands[0]);
   const [selectedSpeed, setSelectedSpeed] = useState(speedOptions[0]);
   const [totalPrice, setTotalPrice] = useState(basePrice);
 
+  // Update selected speed when globalPricing loads (only first time)
+  useEffect(() => {
+    if (globalPricing) {
+      const options = getSpeedOptions();
+      if (options.length > 0) {
+        setSelectedSpeed(options[0]);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [globalPricing]);
+
   // Calculate total price when selections change
   useEffect(() => {
-    const brandModifier = selectedBrand?.priceModifier || 0;
     const speedModifier = selectedSpeed?.priceModifier || 0;
-    const newTotalPrice = basePrice + brandModifier + speedModifier;
+    const newTotalPrice = basePrice + speedModifier;
     setTotalPrice(newTotalPrice);
 
     // Notify parent component
     if (onCustomizationChange) {
       onCustomizationChange({
-        brand: selectedBrand,
+        brand: 'MIX BRAND',
         speed: selectedSpeed,
         totalPrice: newTotalPrice,
-        additionalCost: brandModifier + speedModifier,
+        additionalCost: speedModifier,
         specs: {
-          brand: selectedBrand.name,
+          brand: 'MIX BRAND',
           speed: selectedSpeed.name,
           capacity: capacity,
           type: product?.ram_type || 'DDR4'
         }
       });
     }
-  }, [selectedBrand, selectedSpeed, basePrice, capacity, product?.ram_type, onCustomizationChange]);
+  }, [selectedSpeed, basePrice, capacity, product?.ram_type, onCustomizationChange]);
 
   return (
     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 shadow-lg border border-blue-200">
@@ -95,28 +120,27 @@ export default function RAMCustomizer({ product, onCustomizationChange }) {
         </div>
       </div>
 
-      {/* Brand Selection */}
+      {/* Brand Display (Non-selectable) */}
       <div className="mb-6">
         <label className="flex items-center gap-2 text-sm font-semibold text-gray-800 mb-3">
           <Award className="w-4 h-4 text-blue-600" />
-          Select Brand
+          Available Brands (MIX BRAND)
         </label>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {brands.map((brand) => (
-            <button
-              key={brand.id}
-              onClick={() => setSelectedBrand(brand)}
-              className={`p-3 rounded-lg border-2 transition-all duration-200 ${
-                selectedBrand.id === brand.id
-                  ? 'border-blue-600 bg-blue-100 shadow-md scale-105'
-                  : 'border-gray-300 bg-white hover:border-blue-400 hover:shadow'
-              }`}
-            >
-              <div className="text-center">
-                <div className="font-semibold text-gray-900">{brand.name}</div>
-              </div>
-            </button>
-          ))}
+        <div className="p-4 rounded-lg border-2 border-gray-300 bg-gray-50">
+          <div className="text-center mb-2">
+            <div className="text-lg font-bold text-blue-600">MIX BRAND</div>
+            <div className="text-xs text-gray-600 mt-1">Any of the following brands may be provided based on availability</div>
+          </div>
+          <div className="flex flex-wrap justify-center gap-2 mt-3">
+            {brands.map((brand) => (
+              <span
+                key={brand}
+                className="px-3 py-1 bg-white border border-gray-300 rounded-full text-xs font-medium text-gray-700"
+              >
+                {brand}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -183,7 +207,7 @@ export default function RAMCustomizer({ product, onCustomizationChange }) {
       <div className="mt-4 p-3 bg-blue-100 rounded-lg border border-blue-300">
         <div className="text-sm font-semibold text-gray-800 mb-1">Your Configuration:</div>
         <div className="text-sm text-gray-700">
-          {selectedBrand.name} {capacity} {product?.ram_type || 'DDR4'} {selectedSpeed.name} - {product?.ram_form_factor || 'Laptop (SO-DIMM)'}
+          MIX BRAND {capacity} {product?.ram_type || 'DDR4'} {selectedSpeed.name} - {product?.ram_form_factor || 'Laptop (SO-DIMM)'}
         </div>
       </div>
     </div>

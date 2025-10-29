@@ -372,6 +372,250 @@ export default function ReviewSection({ productId }) {
         </div>
       </div>
 
+      {/* Google Business Reviews Section */}
+      <div className="mb-8 p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+              <Star className="w-6 h-6 text-white fill-current" />
+            </div>
+            <div>
+              <h4 className="text-xl font-bold text-gray-900">
+                Google Business Reviews
+              </h4>
+              <p className="text-sm text-gray-600">Real reviews from our customers</p>
+            </div>
+          </div>
+          <a
+            href="https://g.page/r/CXHJJmG3XcUzEBM/review"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+          >
+            View All
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Review 1 - Taha Farooqui */}
+          <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-900">Taha Farooqui</h5>
+                  <p className="text-xs text-gray-500">Local Guide · 99 reviews</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              Had the experience of buying two laptops back in 2020 (during COVID, they made home delivery) and in 2021. Their products are in really good condition, plus if any defect comes up even after the checking warranty period, they make sure to help.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">1 year ago</p>
+          </div>
+
+          {/* Review 2 - Ahsan Ali */}
+          <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-teal-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-teal-600" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-900">Ahsan Ali</h5>
+                  <p className="text-xs text-gray-500">1 review</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              I recently had the pleasure of purchasing a laptop from Mohit Computers, and I must say, I am thoroughly impressed with both the product and the service I received. From start to finish, the experience was seamless and exceeded my expectations.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">1 year ago</p>
+          </div>
+
+          {/* Review 3 - Uzair Memon */}
+          <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-orange-600" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-900">Uzair Memon</h5>
+                  <p className="text-xs text-gray-500">1 review</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              I've bought over seven laptops, and each time, the experience has been superb. Their service and approach are top-notch. highly recommend them. 10/10
+            </p>
+            <p className="text-xs text-gray-500 mt-2">1 year ago</p>
+          </div>
+
+          {/* Review 4 - Azfar Ulislam */}
+          <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-red-100 to-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-900">Azfar Ulislam</h5>
+                  <p className="text-xs text-gray-500">3 reviews</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              100 % recommendation i already bought 4 laptops from here. The owner is a very nice person; he deals with every client very calmly and then suggests the best laptop according to the client's budget and requirements.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">1 year ago</p>
+          </div>
+
+          {/* Review 5 - Hasssnain Khaaan */}
+          <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-indigo-600" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-900">Hasssnain Khaaan</h5>
+                  <p className="text-xs text-gray-500">2 reviews</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              I got my laptop from a store called Mohit Computers. They had a great selection, and the staff was super helpful in guiding me through the different options. Best rates and great service.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">8 months ago</p>
+          </div>
+
+          {/* Review 6 - ShahRukh Ashar */}
+          <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-cyan-600" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-900">ShahRukh Ashar</h5>
+                  <p className="text-xs text-gray-500">2 reviews</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              Best dealer of laptops. I have purchased many laptops but never ever had any complaint.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">1 year ago</p>
+          </div>
+
+          {/* Review 7 - Rajiv Kumar */}
+          <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-lime-100 to-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-lime-600" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-900">Rajiv Kumar Chandwani</h5>
+                  <p className="text-xs text-gray-500">4 reviews</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              Bought my laptop from them. They have the best prices with very quality and reliable products. They have exceptional customer support.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">3 years ago</p>
+          </div>
+
+          {/* Review 8 - Kunal Vidhani */}
+          <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-amber-600" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-900">Kunal Vidhani</h5>
+                  <p className="text-xs text-gray-500">6 reviews</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              Great after sales service, very gentle in handling customers and prices are unbeatable. Thanks surely gonna buy more products.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">4 years ago</p>
+          </div>
+
+          {/* Review 9 - Ayaz Ahmed */}
+          <div className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-rose-100 to-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-rose-600" />
+                </div>
+                <div>
+                  <h5 className="font-semibold text-gray-900">Ayaz Ahmed</h5>
+                  <p className="text-xs text-gray-500">1 review</p>
+                </div>
+              </div>
+              <div className="flex gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-3 h-3 text-yellow-400 fill-current" />
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              Best price with best services as well excellent customer service. Highly recommended.
+            </p>
+            <p className="text-xs text-gray-500 mt-2">1 year ago</p>
+          </div>
+        </div>
+      </div>
+
       {/* Rating Summary */}
       {reviewStats.totalReviews > 0 && (
         <div className="grid md:grid-cols-2 gap-8 mb-8 p-6 bg-gray-50 rounded-xl">

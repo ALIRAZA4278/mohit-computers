@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, ArrowLeft, Upload, X, Plus } from 'lucide-react';
 import { categories, laptopBrands, resolutionOptions, touchOptions, conditionOptions, filterOptions } from '@/lib/data';
-import { getRAMOptionsByGeneration, getSSDUpgradeOptions, getRAMTypeByGeneration } from '@/lib/upgradeOptions';
+import { getRAMTypeByGeneration } from '@/lib/upgradeOptions';
 import Image from 'next/image';
 
 export default function ProductEditor({ product, onSave, onCancel }) {
@@ -48,6 +48,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     extraFeatures: '',
     battery: '',
     chargerIncluded: false,
+    showLaptopCustomizer: true, // Show laptop customizer by default
+    showRAMOptions: true, // Show RAM upgrade options by default
+    showSSDOptions: true, // Show SSD upgrade options by default
+    
+    // Custom pricing for this specific product's upgrade options
+    customUpgradePricing: {}, // e.g., { 'ram-4GB-ddr4': 3500, 'ssd-512GB': 8000 }
 
     // RAM specific fields
     ramType: '',
@@ -56,6 +62,14 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     ramFormFactor: '',
     ramCondition: '',
     ramWarranty: '',
+    showRamCustomizer: true, // Show RAM customizer by default
+
+    // RAM Speed Customizer Prices (for RAM products)
+    ramSpeedPrices: {
+      '2400': 0,  // Default prices for different speeds
+      '2666': 0,
+      '3200': 0
+    },
 
     // Upgrade Options
     upgradeOptions: {
@@ -120,6 +134,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         extraFeatures: product.extra_features || '',
         battery: product.battery || '',
         chargerIncluded: product.charger_included || false,
+        showLaptopCustomizer: product.show_laptop_customizer !== false, // Default to true
+        showRAMOptions: product.show_ram_options !== false, // Default to true
+        showSSDOptions: product.show_ssd_options !== false, // Default to true
+        
+        // Custom pricing for this specific product
+        customUpgradePricing: product.custom_upgrade_pricing || {},
 
         // RAM specific fields
         ramType: product.ram_type || '',
@@ -128,6 +148,14 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         ramFormFactor: product.ram_form_factor || '',
         ramCondition: product.ram_condition || '',
         ramWarranty: product.ram_warranty || '',
+        showRamCustomizer: product.show_ram_customizer !== false, // Default to true
+
+        // RAM Speed Customizer Prices
+        ramSpeedPrices: product.ram_speed_prices || {
+          '2400': 0,
+          '2666': 0,
+          '3200': 0
+        },
 
         // Upgrade Options
         upgradeOptions: product.upgrade_options || {
@@ -149,21 +177,133 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     }
   }, [product]);
 
-  // Update available RAM options based on processor generation
+  // Update available RAM options based on processor generation - FROM DATABASE
   useEffect(() => {
-    if (formData.generation && formData.category === 'laptop') {
-      const ramOptions = getRAMOptionsByGeneration(formData.generation);
-      setAvailableRAMOptions(ramOptions);
-    }
-  }, [formData.generation, formData.category]);
+    const fetchRAMOptions = async () => {
+      if (formData.generation && formData.category === 'laptop') {
+        try {
+          const response = await fetch('/api/laptop-upgrade-options?active=true&type=ram');
+          const data = await response.json();
+          
+          if (data.success) {
+            // Parse generation number
+            const gen = formData.generation;
+            let genNumber = null;
+            if (gen) {
+              const n = parseInt(String(gen));
+              if (!isNaN(n)) {
+                genNumber = n;
+              } else {
+                const match = String(gen).match(/\d+/);
+                genNumber = match ? parseInt(match[0]) : null;
+              }
+            }
+            
+            // Get current RAM size for filtering
+            const ramText = formData.ram || '8GB';
+            const ramNumber = parseInt(ramText);
+            const currentRAM = isNaN(ramNumber) ? 8 : ramNumber;
+            
+            // Filter options by generation and current RAM
+            const filtered = data.options
+              .filter(opt => {
+                // Filter by generation
+                if (opt.min_generation && genNumber && genNumber < opt.min_generation) return false;
+                if (opt.max_generation && genNumber && genNumber > opt.max_generation) return false;
+                
+                // Filter by applicable type (ddr3/ddr4)
+                if (genNumber && genNumber >= 3 && genNumber <= 5) {
+                  if (opt.applicable_to !== 'ddr3') return false;
+                } else if (genNumber && genNumber >= 6) {
+                  if (opt.applicable_to !== 'ddr4' && opt.applicable_to !== 'all') return false;
+                }
+                
+                // Only show larger sizes
+                return opt.size_number > currentRAM;
+              })
+              .map(opt => {
+                const optionKey = `ram-${opt.id}`;
+                const customPrice = formData.customUpgradePricing?.[optionKey];
+                return {
+                  id: opt.id,
+                  label: opt.display_label || opt.size,
+                  price: customPrice !== undefined ? customPrice : opt.price,
+                  defaultPrice: opt.price,
+                  size: opt.size,
+                  optionKey: optionKey
+                };
+              })
+              .sort((a, b) => parseInt(a.size) - parseInt(b.size));
+            
+            setAvailableRAMOptions(filtered);
+            console.log('Loaded RAM options from database:', filtered);
+          }
+        } catch (error) {
+          console.error('Failed to fetch RAM options:', error);
+          setAvailableRAMOptions([]);
+        }
+      } else {
+        setAvailableRAMOptions([]);
+      }
+    };
+    
+    fetchRAMOptions();
+  }, [formData.generation, formData.category, formData.ram, formData.customUpgradePricing]);
 
-  // Update available SSD options based on current storage
+  // Update available SSD options based on current storage - FROM DATABASE
   useEffect(() => {
-    if (formData.hdd && formData.category === 'laptop') {
-      const ssdOptions = getSSDUpgradeOptions(formData.hdd);
-      setAvailableSSDOptions(ssdOptions);
-    }
-  }, [formData.hdd, formData.category]);
+    const fetchSSDOptions = async () => {
+      if (formData.hdd && formData.category === 'laptop') {
+        try {
+          const response = await fetch('/api/laptop-upgrade-options?active=true&type=ssd');
+          const data = await response.json();
+          
+          if (data.success) {
+            // Parse current storage to GB
+            const storageText = formData.hdd || '256GB';
+            const text = String(storageText).toUpperCase().trim();
+            let currentSSDSize = 0;
+            
+            if (text.includes('TB')) {
+              const n = parseFloat(text.replace(/[^0-9\.]/g, '')) || 0;
+              currentSSDSize = Math.round(n * 1024);
+            } else {
+              const n = parseFloat(text.replace(/[^0-9\.]/g, '')) || 0;
+              currentSSDSize = Math.round(n);
+            }
+            
+            // Filter options larger than current storage
+            const filtered = data.options
+              .filter(opt => opt.size_number > currentSSDSize)
+              .map(opt => {
+                const optionKey = `ssd-${opt.id}`;
+                const customPrice = formData.customUpgradePricing?.[optionKey];
+                return {
+                  id: opt.id,
+                  label: opt.display_label || opt.size,
+                  capacity: opt.size,
+                  price: customPrice !== undefined ? customPrice : opt.price,
+                  defaultPrice: opt.price,
+                  from: formData.hdd,
+                  optionKey: optionKey
+                };
+              })
+              .sort((a, b) => parseInt(a.capacity) - parseInt(b.capacity));
+            
+            setAvailableSSDOptions(filtered);
+            console.log('Loaded SSD options from database:', filtered);
+          }
+        } catch (error) {
+          console.error('Failed to fetch SSD options:', error);
+          setAvailableSSDOptions([]);
+        }
+      } else {
+        setAvailableSSDOptions([]);
+      }
+    };
+    
+    fetchSSDOptions();
+  }, [formData.hdd, formData.category, formData.customUpgradePricing]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -216,17 +356,63 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         productData.ram_form_factor = formData.ramFormFactor || null;
         productData.ram_condition = formData.ramCondition || null;
         productData.ram_warranty = formData.ramWarranty || null;
+        productData.show_ram_customizer = formData.showRamCustomizer !== false; // Save customizer visibility
+        productData.ram_speed_prices = formData.ramSpeedPrices || null; // Save custom speed prices
       }
 
       // Only add upgrade options if category is 'laptop'
       if (formData.category === 'laptop') {
         productData.upgrade_options = formData.upgradeOptions;
         productData.custom_upgrades = formData.customUpgrades || [];
+        
+        // These fields might not exist in old database schemas
+        // Only add them if they have values to avoid errors
+        try {
+          productData.show_laptop_customizer = formData.showLaptopCustomizer !== false;
+          productData.show_ram_options = formData.showRAMOptions !== false;
+          productData.show_ssd_options = formData.showSSDOptions !== false;
+          
+          // Only save custom_upgrade_pricing if it has values
+          if (formData.customUpgradePricing && Object.keys(formData.customUpgradePricing).length > 0) {
+            productData.custom_upgrade_pricing = formData.customUpgradePricing;
+          }
+        } catch (err) {
+          console.warn('Some fields not available in database schema:', err);
+        }
+      }
+
+      // Add workstation flag if checked
+      if (formData.workstation) {
+        productData.is_workstation = true;
       }
 
       await onSave(productData);
     } catch (error) {
       console.error('Error saving product:', error);
+      
+      // Check if it's a schema/column error
+      const errorMsg = error.message || '';
+      const missingColumns = [];
+      
+      if (errorMsg.includes('show_ram_options')) missingColumns.push('show_ram_options');
+      if (errorMsg.includes('show_ssd_options')) missingColumns.push('show_ssd_options');
+      if (errorMsg.includes('show_laptop_customizer')) missingColumns.push('show_laptop_customizer');
+      if (errorMsg.includes('custom_upgrade_pricing')) missingColumns.push('custom_upgrade_pricing');
+      if (errorMsg.includes('is_workstation')) missingColumns.push('is_workstation');
+      
+      if (missingColumns.length > 0) {
+        alert(
+          '⚠️ DATABASE MIGRATION REQUIRED!\n\n' +
+          'Missing columns: ' + missingColumns.join(', ') + '\n\n' +
+          'QUICK FIX:\n' +
+          '1. Go to Supabase Dashboard → SQL Editor\n' +
+          '2. Run the SQL from: complete-products-migration.sql\n' +
+          '3. Or visit: http://localhost:3002/api/migrate-custom-pricing\n\n' +
+          'Then try saving again.'
+        );
+      } else {
+        alert('Error saving product: ' + errorMsg);
+      }
     } finally {
       setLoading(false);
     }
@@ -251,6 +437,26 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         }
       }
     }));
+  };
+
+  // Update custom price for specific upgrade option
+  const handleCustomPriceChange = (optionKey, newPrice) => {
+    setFormData(prev => {
+      const updatedPricing = { ...prev.customUpgradePricing };
+      
+      if (newPrice === '' || newPrice === null || newPrice === undefined) {
+        // Remove custom price (use default)
+        delete updatedPricing[optionKey];
+      } else {
+        // Set custom price
+        updatedPricing[optionKey] = parseFloat(newPrice) || 0;
+      }
+      
+      return {
+        ...prev,
+        customUpgradePricing: updatedPricing
+      };
+    });
   };
 
   const addCustomUpgrade = () => {
@@ -907,6 +1113,115 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 </select>
               </div>
             </div>
+
+            {/* Show RAM Customizer Toggle */}
+            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="showRamCustomizer"
+                  checked={formData.showRamCustomizer}
+                  onChange={handleChange}
+                  className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="ml-3">
+                  <span className="text-sm font-semibold text-gray-900">Show RAM Customizer on Product Page</span>
+                  <p className="text-xs text-gray-600 mt-1">
+                    Enable this to show the RAM customizer (with brand selection and speed options) on the product detail page. 
+                    Brands will be displayed as &quot;MIX BRAND&quot; for display purposes only.
+                  </p>
+                </span>
+              </label>
+            </div>
+
+            {/* RAM Speed Customizer Prices */}
+            {formData.showRamCustomizer && (
+              <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg">
+                <h4 className="text-sm font-semibold text-gray-900 mb-3">RAM Speed Upgrade Prices</h4>
+                <p className="text-xs text-gray-600 mb-4">
+                  Set custom prices for different RAM speeds. Base price is for 2133 MHz (standard speed).
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* 2400 MHz */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      2400 MHz (Faster)
+                    </label>
+                    <div className="flex items-center">
+                      <span className="text-sm text-gray-600 mr-2">+Rs:</span>
+                      <input
+                        type="number"
+                        value={formData.ramSpeedPrices['2400'] || 0}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          ramSpeedPrices: {
+                            ...prev.ramSpeedPrices,
+                            '2400': parseInt(e.target.value) || 0
+                          }
+                        }))}
+                        min="0"
+                        className="flex-1 text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 2666 MHz */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      2666 MHz (Enhanced)
+                    </label>
+                    <div className="flex items-center">
+                      <span className="text-sm text-gray-600 mr-2">+Rs:</span>
+                      <input
+                        type="number"
+                        value={formData.ramSpeedPrices['2666'] || 0}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          ramSpeedPrices: {
+                            ...prev.ramSpeedPrices,
+                            '2666': parseInt(e.target.value) || 0
+                          }
+                        }))}
+                        min="0"
+                        className="flex-1 text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0"
+                      />
+                    </div>
+                  </div>
+
+                  {/* 3200 MHz */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      3200 MHz (Maximum)
+                    </label>
+                    <div className="flex items-center">
+                      <span className="text-sm text-gray-600 mr-2">+Rs:</span>
+                      <input
+                        type="number"
+                        value={formData.ramSpeedPrices['3200'] || 0}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          ramSpeedPrices: {
+                            ...prev.ramSpeedPrices,
+                            '3200': parseInt(e.target.value) || 0
+                          }
+                        }))}
+                        min="0"
+                        className="flex-1 text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="0"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 text-xs text-gray-600 bg-white p-3 rounded border border-gray-200">
+                  <strong>Note:</strong> These prices will be added to the base price when customer selects higher speed options. 
+                  Base speed (2133 MHz) has no additional cost.
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -1168,31 +1483,124 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* Dynamic RAM Upgrade Options */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-gray-800">Memory (RAM) Upgrade Options</h4>
-                  {!formData.generation && (
-                    <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
-                      Set processor generation above
-                    </span>
+                  <div className="flex items-center gap-3">
+                    <h4 className="font-semibold text-gray-800">Memory (RAM) Upgrade Options</h4>
+                    {!formData.generation && (
+                      <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                        Set processor generation above
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Checkbox to show/hide RAM options */}
+                  {availableRAMOptions.length > 0 && (
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.showRAMOptions !== false}
+                        onChange={(e) => setFormData(prev => ({ ...prev, showRAMOptions: e.target.checked }))}
+                        className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500"
+                      />
+                      <span className="text-sm font-medium text-gray-700">
+                        Display RAM Options to Customers
+                      </span>
+                    </label>
                   )}
                 </div>
 
                 {formData.generation && availableRAMOptions.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {availableRAMOptions.map((ramOption, index) => (
-                      <div key={index} className="border-2 border-teal-200 bg-teal-50 rounded-lg p-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <p className="font-medium text-gray-900">{ramOption.label}</p>
-                            <p className="text-2xl font-bold text-teal-600">Rs {ramOption.price.toLocaleString()}</p>
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {availableRAMOptions.map((ramOption, index) => {
+                        const hasCustomPrice = formData.customUpgradePricing?.[ramOption.optionKey] !== undefined;
+                        const customPrice = formData.customUpgradePricing?.[ramOption.optionKey];
+                        
+                        return (
+                          <div key={index} className={`border-2 rounded-lg p-4 ${
+                            hasCustomPrice 
+                              ? 'border-amber-300 bg-amber-50' 
+                              : 'border-teal-200 bg-teal-50'
+                          }`}>
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="flex-1">
+                                <p className="font-medium text-gray-900">{ramOption.label}</p>
+                                <div className="mt-2 space-y-2">
+                                  {/* Default Price Display */}
+                                  <div className="text-xs text-gray-600">
+                                    Default: Rs {ramOption.defaultPrice.toLocaleString()}
+                                  </div>
+                                  
+                                  {/* Custom Price Input */}
+                                  <div className="flex items-center gap-2">
+                                    <label className="text-xs font-medium text-gray-700 whitespace-nowrap">
+                                      Custom Price:
+                                    </label>
+                                    <input
+                                      type="number"
+                                      min="0"
+                                      step="100"
+                                      placeholder={ramOption.defaultPrice}
+                                      value={customPrice !== undefined ? customPrice : ''}
+                                      onChange={(e) => handleCustomPriceChange(ramOption.optionKey, e.target.value)}
+                                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                                    />
+                                  </div>
+                                  
+                                  {/* Display Current Price */}
+                                  <div className={`text-lg font-bold ${
+                                    hasCustomPrice ? 'text-amber-600' : 'text-teal-600'
+                                  }`}>
+                                    Rs {ramOption.price.toLocaleString()}
+                                    {hasCustomPrice && (
+                                      <span className="text-xs font-normal ml-1">(Custom)</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                              <svg className={`w-5 h-5 ${hasCustomPrice ? 'text-amber-600' : 'text-teal-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                            
+                            {hasCustomPrice && (
+                              <button
+                                type="button"
+                                onClick={() => handleCustomPriceChange(ramOption.optionKey, '')}
+                                className="mt-2 text-xs text-amber-700 hover:text-amber-900 underline"
+                              >
+                                Reset to default
+                              </button>
+                            )}
                           </div>
-                          <svg className="w-5 h-5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                        <p className="text-xs text-gray-600">Auto-calculated based on {formData.generation}</p>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Status indicator */}
+                    <div className={`mt-3 p-3 rounded-lg text-sm ${
+                      formData.showRAMOptions !== false 
+                        ? 'bg-green-50 text-green-800 border border-green-200' 
+                        : 'bg-gray-50 text-gray-600 border border-gray-200'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        {formData.showRAMOptions !== false ? (
+                          <>
+                            <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <span className="font-medium">Visible:</span> RAM upgrade options will be shown to customers on product page
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clipRule="evenodd" />
+                            </svg>
+                            <span className="font-medium">Hidden:</span> RAM upgrade options will NOT be shown to customers
+                          </>
+                        )}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  </>
                 ) : formData.generation ? (
                   <div className="text-center py-6 text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
                     <p>No RAM upgrade options available for {formData.generation}</p>
@@ -1207,32 +1615,126 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* Dynamic SSD Upgrade Options */}
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-semibold text-gray-800">SSD Storage Upgrade Options</h4>
-                  {!formData.hdd && (
-                    <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
-                      Set current storage above
-                    </span>
+                  <div className="flex items-center gap-3">
+                    <h4 className="font-semibold text-gray-800">SSD Storage Upgrade Options</h4>
+                    {!formData.hdd && (
+                      <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+                        Set current storage above
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Checkbox to show/hide SSD options */}
+                  {availableSSDOptions.length > 0 && (
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.showSSDOptions !== false}
+                        onChange={(e) => setFormData(prev => ({ ...prev, showSSDOptions: e.target.checked }))}
+                        className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                      />
+                      <span className="text-sm font-medium text-gray-700">
+                        Display SSD Options to Customers
+                      </span>
+                    </label>
                   )}
                 </div>
 
                 {formData.hdd && availableSSDOptions.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {availableSSDOptions.map((ssdOption, index) => (
-                      <div key={index} className="border-2 border-purple-200 bg-purple-50 rounded-lg p-4">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <p className="font-medium text-gray-900">{ssdOption.label}</p>
-                            <p className="text-xs text-gray-600 mb-1">From {ssdOption.from} → {ssdOption.capacity}</p>
-                            <p className="text-2xl font-bold text-purple-600">Rs {ssdOption.price.toLocaleString()}</p>
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {availableSSDOptions.map((ssdOption, index) => {
+                        const hasCustomPrice = formData.customUpgradePricing?.[ssdOption.optionKey] !== undefined;
+                        const customPrice = formData.customUpgradePricing?.[ssdOption.optionKey];
+                        
+                        return (
+                          <div key={index} className={`border-2 rounded-lg p-4 ${
+                            hasCustomPrice 
+                              ? 'border-amber-300 bg-amber-50' 
+                              : 'border-purple-200 bg-purple-50'
+                          }`}>
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="flex-1">
+                                <p className="font-medium text-gray-900">{ssdOption.label}</p>
+                                <p className="text-xs text-gray-600 mb-2">From {ssdOption.from} → {ssdOption.capacity}</p>
+                                
+                                <div className="mt-2 space-y-2">
+                                  {/* Default Price Display */}
+                                  <div className="text-xs text-gray-600">
+                                    Default: Rs {ssdOption.defaultPrice.toLocaleString()}
+                                  </div>
+                                  
+                                  {/* Custom Price Input */}
+                                  <div className="flex items-center gap-2">
+                                    <label className="text-xs font-medium text-gray-700 whitespace-nowrap">
+                                      Custom Price:
+                                    </label>
+                                    <input
+                                      type="number"
+                                      min="0"
+                                      step="100"
+                                      placeholder={ssdOption.defaultPrice}
+                                      value={customPrice !== undefined ? customPrice : ''}
+                                      onChange={(e) => handleCustomPriceChange(ssdOption.optionKey, e.target.value)}
+                                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                                    />
+                                  </div>
+                                  
+                                  {/* Display Current Price */}
+                                  <div className={`text-lg font-bold ${
+                                    hasCustomPrice ? 'text-amber-600' : 'text-purple-600'
+                                  }`}>
+                                    Rs {ssdOption.price.toLocaleString()}
+                                    {hasCustomPrice && (
+                                      <span className="text-xs font-normal ml-1">(Custom)</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                              <svg className={`w-5 h-5 ${hasCustomPrice ? 'text-amber-600' : 'text-purple-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                            
+                            {hasCustomPrice && (
+                              <button
+                                type="button"
+                                onClick={() => handleCustomPriceChange(ssdOption.optionKey, '')}
+                                className="mt-2 text-xs text-amber-700 hover:text-amber-900 underline"
+                              >
+                                Reset to default
+                              </button>
+                            )}
                           </div>
-                          <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                        <p className="text-xs text-gray-600">Auto-calculated upgrade path</p>
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Status indicator */}
+                    <div className={`mt-3 p-3 rounded-lg text-sm ${
+                      formData.showSSDOptions !== false 
+                        ? 'bg-green-50 text-green-800 border border-green-200' 
+                        : 'bg-gray-50 text-gray-600 border border-gray-200'
+                    }`}>
+                      <div className="flex items-center gap-2">
+                        {formData.showSSDOptions !== false ? (
+                          <>
+                            <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <span className="font-medium">Visible:</span> SSD upgrade options will be shown to customers on product page
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clipRule="evenodd" />
+                            </svg>
+                            <span className="font-medium">Hidden:</span> SSD upgrade options will NOT be shown to customers
+                          </>
+                        )}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  </>
                 ) : formData.hdd ? (
                   <div className="text-center py-6 text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
                     <p>No SSD upgrade paths available from {formData.hdd}</p>
@@ -1384,6 +1886,26 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   </p>
                 </div>
               )}
+            </div>
+
+            {/* Show Laptop Customizer Toggle */}
+            <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-teal-50 border border-green-200 rounded-lg">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="showLaptopCustomizer"
+                  checked={formData.showLaptopCustomizer}
+                  onChange={handleChange}
+                  className="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                />
+                <span className="ml-3">
+                  <span className="text-sm font-semibold text-gray-900">Show Laptop Customizer on Product Page</span>
+                  <p className="text-xs text-gray-600 mt-1">
+                    Enable this to show the laptop customizer (RAM & SSD upgrade options) on the product detail page. 
+                    Customers will be able to select RAM and SSD upgrades with pricing.
+                  </p>
+                </span>
+              </label>
             </div>
           </div>
         )}
