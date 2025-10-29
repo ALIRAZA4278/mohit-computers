@@ -135,27 +135,51 @@ export const blogPosts = [
 export const testimonials = [
   {
     id: 1,
-    name: "Ahmed Hassan",
-    role: "Software Developer",
-    content: "Great quality laptops at amazing prices. The HP EliteBook I bought is working perfectly for my development work.",
+    name: "Taha Farooqui",
+    role: "Local Guide · 99 reviews",
+    content: "Had the experience of buying two laptops back in 2020 (during COVID, they made home delivery) and in 2021. Their products are in really good condition, plus if any defect comes up even after the checking warranty period, they make sure to help.",
     rating: 5,
     image: "/images/testimonial-1.jpg"
   },
   {
     id: 2,
-    name: "Fatima Khan",
-    role: "Student",
-    content: "Excellent customer service and fast delivery. The Chromebook is perfect for my college work.",
+    name: "Ahsan Ali",
+    role: "Customer",
+    content: "I recently had the pleasure of purchasing a laptop from Mohit Computers, and I must say, I am thoroughly impressed with both the product and the service I received. From start to finish, the experience was seamless and exceeded my expectations.",
     rating: 5,
     image: "/images/testimonial-2.jpg"
   },
   {
     id: 3,
-    name: "Muhammad Ali",
-    role: "Business Owner",
-    content: "Bought 10 laptops for my office. All are in excellent condition and the bulk discount was great!",
+    name: "Uzair Memon",
+    role: "Customer",
+    content: "I've bought over seven laptops, and each time, the experience has been superb. Their service and approach are top-notch. highly recommend them. 10/10",
     rating: 5,
     image: "/images/testimonial-3.jpg"
+  },
+  {
+    id: 4,
+    name: "Azfar Ulislam",
+    role: "Customer · 3 reviews",
+    content: "100 % recommendation i already bought 4 laptops from here. The owner is a very nice person; he deals with every client very calmly and then suggests the best laptop according to the client's budget and requirements.",
+    rating: 5,
+    image: "/images/testimonial-4.jpg"
+  },
+  {
+    id: 5,
+    name: "Hasssnain Khaaan",
+    role: "Customer · 2 reviews",
+    content: "I got my laptop from a store called Mohit Computers. They had a great selection, and the staff was super helpful in guiding me through the different options. Best rates and great service.",
+    rating: 5,
+    image: "/images/testimonial-5.jpg"
+  },
+  {
+    id: 6,
+    name: "Rajiv Kumar Chandwani",
+    role: "Customer · 4 reviews",
+    content: "Bought my laptop from them. They have the best prices with very quality and reliable products. They have exceptional customer support.",
+    rating: 5,
+    image: "/images/testimonial-6.jpg"
   }
 ];
 

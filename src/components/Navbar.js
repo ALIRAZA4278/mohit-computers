@@ -45,14 +45,14 @@ const Navbar = () => {
   }, [pathname]);
 
   // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce(async (query) => {
-      if (query.length < 2) {
-        setSuggestions([]);
-        setShowSuggestions(false);
-        return;
-      }
+  const debouncedSearch = useCallback((query) => {
+    if (query.length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
 
+    const timeoutId = setTimeout(async () => {
       setIsSearchLoading(true);
       try {
         const response = await fetch(`/api/search/suggestions?q=${encodeURIComponent(query)}`);
@@ -66,22 +66,10 @@ const Navbar = () => {
       } finally {
         setIsSearchLoading(false);
       }
-    }, 300),
-    []
-  );
+    }, 300);
 
-  // Debounce utility function
-  function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  }
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   // Handle search input change
   const handleSearchInputChange = (e) => {

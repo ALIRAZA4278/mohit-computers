@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState, useCallback } from 'react';
 
 const WishlistContext = createContext();
 
@@ -48,49 +48,8 @@ export const WishlistProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
 
-  // Check if user is logged in
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    if (token && user) {
-      setIsLoggedIn(true);
-      const userData = JSON.parse(user);
-      setUserId(userData.id);
-      // Load wishlist from database
-      loadWishlistFromDatabase(token);
-    } else {
-      // Load wishlist from localStorage for non-logged-in users
-      const savedWishlist = localStorage.getItem('wishlist');
-      if (savedWishlist) {
-        dispatch({ type: 'LOAD_WISHLIST', payload: JSON.parse(savedWishlist) });
-      }
-    }
-  }, []);
-
-  // Load wishlist from database
-  const loadWishlistFromDatabase = async (token) => {
-    try {
-      const response = await fetch('/api/user/wishlist', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        // data.wishlist contains product IDs, fetch full product details
-        const productIds = data.wishlist || [];
-        if (productIds.length > 0) {
-          await fetchProductDetails(productIds);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load wishlist from database:', error);
-    }
-  };
-
   // Fetch full product details from product IDs
-  const fetchProductDetails = async (productIds) => {
+  const fetchProductDetails = useCallback(async (productIds) => {
     try {
       console.log('Fetching product details for IDs:', productIds);
       const response = await fetch('/api/products');
@@ -115,7 +74,48 @@ export const WishlistProvider = ({ children }) => {
     } catch (error) {
       console.error('Failed to fetch product details:', error);
     }
-  };
+  }, []);
+
+  // Load wishlist from database
+  const loadWishlistFromDatabase = useCallback(async (token) => {
+    try {
+      const response = await fetch('/api/user/wishlist', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // data.wishlist contains product IDs, fetch full product details
+        const productIds = data.wishlist || [];
+        if (productIds.length > 0) {
+          await fetchProductDetails(productIds);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load wishlist from database:', error);
+    }
+  }, [fetchProductDetails]);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+    if (token && user) {
+      setIsLoggedIn(true);
+      const userData = JSON.parse(user);
+      setUserId(userData.id);
+      // Load wishlist from database
+      loadWishlistFromDatabase(token);
+    } else {
+      // Load wishlist from localStorage for non-logged-in users
+      const savedWishlist = localStorage.getItem('wishlist');
+      if (savedWishlist) {
+        dispatch({ type: 'LOAD_WISHLIST', payload: JSON.parse(savedWishlist) });
+      }
+    }
+  }, [loadWishlistFromDatabase]);
 
   // Save wishlist to localStorage for non-logged-in users
   useEffect(() => {

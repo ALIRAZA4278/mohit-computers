@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle, Package, Truck, Phone, Mail, MapPin, ArrowRight, Download } from 'lucide-react';
@@ -13,16 +13,7 @@ function OrderConfirmationContent() {
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (!orderId) {
-      router.push('/');
-      return;
-    }
-
-    fetchOrderDetails();
-  }, [orderId, router]);
-
-  const fetchOrderDetails = async () => {
+  const fetchOrderDetails = useCallback(async () => {
     try {
       const response = await fetch(`/api/orders/track?order_id=${orderId}`);
       const data = await response.json();
@@ -40,7 +31,16 @@ function OrderConfirmationContent() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [orderId, router]);
+
+  useEffect(() => {
+    if (!orderId) {
+      router.push('/');
+      return;
+    }
+
+    fetchOrderDetails();
+  }, [orderId, router, fetchOrderDetails]);
 
   if (isLoading) {
     return (

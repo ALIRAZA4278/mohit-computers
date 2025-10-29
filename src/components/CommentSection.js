@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { MessageCircle, Send, User, Calendar, Reply, Shield, Heart } from 'lucide-react';
 import Link from 'next/link';
@@ -18,19 +18,7 @@ export default function CommentSection({ blogId }) {
   // Auth context
   const { user, isAuthenticated } = useAuth();
 
-  // Check authentication on mount
-  useEffect(() => {
-    checkAuthentication();
-  }, [user, isAuthenticated]);
-
-  // Fetch comments on mount
-  useEffect(() => {
-    if (blogId) {
-      fetchComments();
-    }
-  }, [blogId]);
-
-  const checkAuthentication = () => {
+  const checkAuthentication = useCallback(() => {
     try {
       // Check AuthContext first
       if (isAuthenticated && user) {
@@ -41,7 +29,7 @@ export default function CommentSection({ blogId }) {
       // Check localStorage as fallback
       const storedUser = localStorage.getItem('user');
       const authToken = localStorage.getItem('token');
-      
+
       if (storedUser && authToken) {
         const userData = JSON.parse(storedUser);
         setUserAuth(userData);
@@ -52,15 +40,15 @@ export default function CommentSection({ blogId }) {
       console.error('Auth check error:', error);
       setUserAuth(null);
     }
-  };
+  }, [user, isAuthenticated]);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       const response = await fetch(`/api/comments?blog_id=${encodeURIComponent(blogId)}`);
       const data = await response.json();
-      
+
       if (response.ok) {
         setComments(data.comments || []);
       } else {
@@ -73,7 +61,19 @@ export default function CommentSection({ blogId }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [blogId]);
+
+  // Check authentication on mount
+  useEffect(() => {
+    checkAuthentication();
+  }, [checkAuthentication]);
+
+  // Fetch comments on mount
+  useEffect(() => {
+    if (blogId) {
+      fetchComments();
+    }
+  }, [blogId, fetchComments]);
 
   const handleSubmitComment = async (e) => {
     e.preventDefault();

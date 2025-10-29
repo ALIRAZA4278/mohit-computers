@@ -465,7 +465,7 @@ export default function ReviewSection({ productId }) {
               </div>
             </div>
             <p className="text-sm text-gray-700 leading-relaxed">
-              I've bought over seven laptops, and each time, the experience has been superb. Their service and approach are top-notch. highly recommend them. 10/10
+              I&apos;ve bought over seven laptops, and each time, the experience has been superb. Their service and approach are top-notch. highly recommend them. 10/10
             </p>
             <p className="text-xs text-gray-500 mt-2">1 year ago</p>
           </div>
@@ -489,7 +489,7 @@ export default function ReviewSection({ productId }) {
               </div>
             </div>
             <p className="text-sm text-gray-700 leading-relaxed">
-              100 % recommendation i already bought 4 laptops from here. The owner is a very nice person; he deals with every client very calmly and then suggests the best laptop according to the client's budget and requirements.
+              100 % recommendation i already bought 4 laptops from here. The owner is a very nice person; he deals with every client very calmly and then suggests the best laptop according to the client&apos;s budget and requirements.
             </p>
             <p className="text-xs text-gray-500 mt-2">1 year ago</p>
           </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Users, Search, Trash2, Eye, Mail, Phone, MapPin, Calendar, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 
 export default function UsersManagement() {
@@ -14,11 +14,7 @@ export default function UsersManagement() {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, [currentPage, searchTerm]);
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const adminEmail = 'admin@mohitcomputers.com';
@@ -51,7 +47,11 @@ export default function UsersManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, searchTerm]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleDeleteUser = async (userId) => {
     try {

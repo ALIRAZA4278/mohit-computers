@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Package, Search, CheckCircle, Clock, Truck, MapPin, Phone, Mail } from 'lucide-react';
@@ -12,13 +12,7 @@ function TrackOrderContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    if (searchParams.get('order_id')) {
-      handleTrack();
-    }
-  }, []);
-
-  const handleTrack = async (e) => {
+  const handleTrack = useCallback(async (e) => {
     if (e) e.preventDefault();
 
     if (!orderId.trim()) {
@@ -45,7 +39,13 @@ function TrackOrderContent() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [orderId]);
+
+  useEffect(() => {
+    if (searchParams.get('order_id')) {
+      handleTrack();
+    }
+  }, [handleTrack, searchParams]);
 
   const getStatusInfo = (status) => {
     const statusMap = {

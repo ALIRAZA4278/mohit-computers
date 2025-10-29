@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   Star, 
   Check, 
@@ -33,11 +33,7 @@ export default function ReviewManagement() {
 
   const itemsPerPage = 10;
 
-  useEffect(() => {
-    fetchReviews();
-  }, [filter, searchTerm, currentPage]);
-
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
@@ -64,7 +60,11 @@ export default function ReviewManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter, searchTerm, currentPage]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
 
   const handleApprove = async (reviewId, currentStatus) => {
     try {
