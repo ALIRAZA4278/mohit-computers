@@ -45,14 +45,14 @@ const Navbar = () => {
   }, [pathname]);
 
   // Debounced search function
-  const debouncedSearch = useCallback((query) => {
-    if (query.length < 2) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
+  const debouncedSearch = useCallback(
+    debounce(async (query) => {
+      if (query.length < 2) {
+        setSuggestions([]);
+        setShowSuggestions(false);
+        return;
+      }
 
-    const timeoutId = setTimeout(async () => {
       setIsSearchLoading(true);
       try {
         const response = await fetch(`/api/search/suggestions?q=${encodeURIComponent(query)}`);
@@ -66,10 +66,22 @@ const Navbar = () => {
       } finally {
         setIsSearchLoading(false);
       }
-    }, 300);
+    }, 300),
+    []
+  );
 
-    return () => clearTimeout(timeoutId);
-  }, []);
+  // Debounce utility function
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
 
   // Handle search input change
   const handleSearchInputChange = (e) => {
@@ -444,6 +456,10 @@ const Navbar = () => {
 
                       <Link href="/products?category=chromebook" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">Chrome Book</div>
+                      </Link>
+
+                      <Link href="/products?category=rugged-laptop" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                        <div className="font-medium text-gray-800">Rugged Book / Tough Laptops</div>
                       </Link>
 
                       <Link href="/products?category=accessories" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { X, Filter } from 'lucide-react';
 import { filterOptions } from '../lib/data';
 
-const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category }) => {
+const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dynamicGraphicsOptions = [] }) => {
   const [localFilters, setLocalFilters] = useState(filters);
   const [customPriceMin, setCustomPriceMin] = useState('');
   const [customPriceMax, setCustomPriceMax] = useState('');
@@ -319,7 +319,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category }) 
               {/* Graphics Card Filter */}
               <FilterSection
                 title="Graphics Card"
-                options={filterOptions.graphics}
+                options={dynamicGraphicsOptions.length > 0 ? dynamicGraphicsOptions : filterOptions.graphics}
                 category="graphics"
               />
 

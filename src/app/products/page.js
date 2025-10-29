@@ -465,54 +465,72 @@ function ProductsContent() {
       }
     }
 
-    // Apply graphics filter (database field: graphics)
+    // Apply graphics filter (database fields: integrated_graphics, discrete_graphics, graphics)
     if (filters.graphics && filters.graphics.length > 0) {
       const beforeFilter = filtered.length;
-      
+
       filtered = filtered.filter(product => {
+        // Check all graphics fields
         const productGraphics = (product.graphics || '').toLowerCase();
-        
+        const productIntegratedGraphics = (product.integrated_graphics || '').toLowerCase();
+        const productDiscreteGraphics = (product.discrete_graphics || '').toLowerCase();
+
         return filters.graphics.some(filterGraphics => {
           const filterGfx = filterGraphics.toLowerCase();
-          
-          // Try exact match first
-          if (productGraphics === filterGfx) {
-            return true;
-          }
-          
-          // Try contains match
-          if (productGraphics.includes(filterGfx) || filterGfx.includes(productGraphics)) {
-            return true;
-          }
-          
-          // Special handling for graphics variations
-          if (filterGfx.includes('intel') && productGraphics.includes('intel')) {
-            if (filterGfx.includes('uhd') && productGraphics.includes('uhd')) return true;
-            if (filterGfx.includes('hd') && productGraphics.includes('hd')) return true;
-            if (filterGfx.includes('iris') && productGraphics.includes('iris')) return true;
-          }
-          
-          if (filterGfx.includes('nvidia') && productGraphics.includes('nvidia')) {
-            if (filterGfx.includes('gtx') && productGraphics.includes('gtx')) return true;
-            if (filterGfx.includes('rtx') && productGraphics.includes('rtx')) return true;
-            if (filterGfx.includes('quadro') && productGraphics.includes('quadro')) return true;
-          }
-          
-          if (filterGfx.includes('amd') && productGraphics.includes('amd')) {
-            if (filterGfx.includes('radeon') && productGraphics.includes('radeon')) return true;
-          }
-          
-          return false;
+
+          // Check each graphics field
+          const checkGraphics = (gfxField) => {
+            if (!gfxField) return false;
+
+            // Try exact match first
+            if (gfxField === filterGfx) {
+              return true;
+            }
+
+            // Try contains match
+            if (gfxField.includes(filterGfx) || filterGfx.includes(gfxField)) {
+              return true;
+            }
+
+            // Special handling for graphics variations
+            if (filterGfx.includes('intel') && gfxField.includes('intel')) {
+              if (filterGfx.includes('uhd') && gfxField.includes('uhd')) return true;
+              if (filterGfx.includes('hd') && gfxField.includes('hd') && !gfxField.includes('uhd')) return true;
+              if (filterGfx.includes('iris') && gfxField.includes('iris')) return true;
+            }
+
+            if (filterGfx.includes('nvidia') && gfxField.includes('nvidia')) {
+              if (filterGfx.includes('gtx') && gfxField.includes('gtx')) return true;
+              if (filterGfx.includes('rtx') && gfxField.includes('rtx')) return true;
+              if (filterGfx.includes('quadro') && gfxField.includes('quadro')) return true;
+              if (filterGfx.includes('mx') && gfxField.includes('mx')) return true;
+            }
+
+            if (filterGfx.includes('amd') && gfxField.includes('amd')) {
+              if (filterGfx.includes('radeon') && gfxField.includes('radeon')) return true;
+            }
+
+            return false;
+          };
+
+          // Return true if ANY graphics field matches
+          return checkGraphics(productGraphics) ||
+                 checkGraphics(productIntegratedGraphics) ||
+                 checkGraphics(productDiscreteGraphics);
         });
       });
-      
+
       console.log(`✅ Graphics filter (${filters.graphics}): ${beforeFilter} → ${filtered.length} products`);
-      
+
       // Debug if no products matched
       if (filtered.length === 0 && beforeFilter > 0) {
         console.log('❌ NO GRAPHICS CARDS MATCHED!');
         console.log('Sample graphics from products:',
-          products.slice(0, 10).map(p => `"${p.graphics}"`).filter(g => g !== '""')
+          products.slice(0, 10).map(p => ({
+            graphics: p.graphics,
+            integrated: p.integrated_graphics,
+            discrete: p.discrete_graphics
+          })).filter(g => g.graphics || g.integrated || g.discrete)
         );
         console.log('Looking for:', filters.graphics.map(g => `"${g}"`));
       }
@@ -715,6 +733,8 @@ function ProductsContent() {
           product.display_size,
           product.generation,
           product.graphics,
+          product.integrated_graphics,
+          product.discrete_graphics,
           product.description
         ]
           .filter(Boolean)
@@ -755,6 +775,37 @@ function ProductsContent() {
     setIsFilterOpen(!isFilterOpen);
   };
 
+  // Extract unique graphics options from products (only discrete/dedicated graphics)
+  const getUniqueGraphicsOptions = () => {
+    const graphicsSet = new Set();
+
+    products.forEach(product => {
+      // Only add discrete/dedicated graphics
+      if (product.discrete_graphics) {
+        graphicsSet.add(product.discrete_graphics.trim());
+      }
+    });
+
+    // Convert Set to Array and sort alphabetically
+    return Array.from(graphicsSet).sort((a, b) => {
+      // Sort with NVIDIA first, then AMD, then others
+      const getPrefix = (str) => {
+        if (str.toLowerCase().includes('nvidia')) return '1';
+        if (str.toLowerCase().includes('amd')) return '2';
+        return '3';
+      };
+
+      const prefixA = getPrefix(a);
+      const prefixB = getPrefix(b);
+
+      if (prefixA !== prefixB) {
+        return prefixA.localeCompare(prefixB);
+      }
+
+      return a.localeCompare(b);
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Products Banner */}
@@ -776,6 +827,7 @@ function ProductsContent() {
             isOpen={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}
             category={currentCategory}
+            dynamicGraphicsOptions={getUniqueGraphicsOptions()}
           />
 
           {/* Main Content */}

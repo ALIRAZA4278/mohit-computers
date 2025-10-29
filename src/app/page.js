@@ -344,7 +344,20 @@ export default function Home() {
       {/* Workstation Products Slider */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          
+          {/* Section Header with View All Button */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Workstation Collection</h2>
+              <p className="text-gray-600 mt-2">High-performance workstations for professionals</p>
+            </div>
+            <Link 
+              href="/workstation"
+              className="bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+            >
+              View All
+              <ChevronRight className="w-5 h-5" />
+            </Link>
+          </div>
 
           {/* Workstation Slider - Same as other sliders */}
           {!loading && !error && workstationProducts.length > 0 && (
@@ -385,20 +398,6 @@ export default function Home() {
               )}
             </div>
           )}
-          {/* Section Header with View All Button */}
-          <div className="flex items-center justify-between mt-8">
-            <div>
-              
-            </div>
-            <Link 
-              href="/workstation"
-              className="bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2"
-            >
-              View All
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-          </div>
-          
         </div>
       </section>
 
