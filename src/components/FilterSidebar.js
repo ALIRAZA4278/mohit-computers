@@ -343,6 +343,13 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                 options={filterOptions.operatingSystem}
                 category="operatingSystem"
               />
+
+              {/* Special Features Filter */}
+              <FilterSection
+                title="Special Features"
+                options={filterOptions.specialFeatures}
+                category="specialFeatures"
+              />
             </>
           )}
 

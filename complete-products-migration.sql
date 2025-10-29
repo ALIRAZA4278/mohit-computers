@@ -32,15 +32,22 @@ ADD COLUMN IF NOT EXISTS custom_upgrade_pricing JSONB DEFAULT '{}'::jsonb;
 COMMENT ON COLUMN products.custom_upgrade_pricing IS 'Stores custom pricing overrides for upgrade options. Format: {"ram-123": 3500, "ssd-456": 8000}';
 
 -- 6. Add is_workstation column (for workstation products)
-ALTER TABLE products 
+ALTER TABLE products
 ADD COLUMN IF NOT EXISTS is_workstation BOOLEAN DEFAULT false;
 
 COMMENT ON COLUMN products.is_workstation IS 'Marks product as a workstation for filtering';
+
+-- 7. Add is_rugged_tough column (for rugged/tough laptops)
+ALTER TABLE products
+ADD COLUMN IF NOT EXISTS is_rugged_tough BOOLEAN DEFAULT false;
+
+COMMENT ON COLUMN products.is_rugged_tough IS 'Marks product as a rugged/tough laptop for filtering';
 
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_products_show_ram_options ON products(show_ram_options);
 CREATE INDEX IF NOT EXISTS idx_products_show_ssd_options ON products(show_ssd_options);
 CREATE INDEX IF NOT EXISTS idx_products_is_workstation ON products(is_workstation);
+CREATE INDEX IF NOT EXISTS idx_products_is_rugged_tough ON products(is_rugged_tough);
 CREATE INDEX IF NOT EXISTS idx_products_custom_upgrade_pricing ON products USING gin(custom_upgrade_pricing);
 
 -- Display success message

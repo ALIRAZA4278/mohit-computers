@@ -20,6 +20,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     active: true,
     featured: false,
     workstation: false,
+    ruggedTough: false,
 
     // Clearance fields
     clearance: false,
@@ -106,6 +107,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         active: product.is_active !== false,
         featured: product.is_featured || false,
         workstation: product.is_workstation || false,
+        ruggedTough: product.is_rugged_tough || false,
 
         // Clearance fields
         clearance: product.is_clearance || false,
@@ -320,6 +322,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         is_active: formData.active,
         is_featured: formData.featured,
         is_workstation: formData.workstation,
+        is_rugged_tough: formData.ruggedTough,
         is_clearance: formData.clearance,
         clearance_reason: formData.clearance ? formData.clearanceReason : null,
         clearance_date: formData.clearance && !product?.is_clearance ? new Date().toISOString() : (product?.clearance_date || null),
@@ -399,6 +402,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
       if (errorMsg.includes('show_laptop_customizer')) missingColumns.push('show_laptop_customizer');
       if (errorMsg.includes('custom_upgrade_pricing')) missingColumns.push('custom_upgrade_pricing');
       if (errorMsg.includes('is_workstation')) missingColumns.push('is_workstation');
+      if (errorMsg.includes('is_rugged_tough')) missingColumns.push('is_rugged_tough');
       
       if (missingColumns.length > 0) {
         alert(
@@ -763,6 +767,16 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 className="rounded text-black border-gray-300  focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-700">Workstation Product</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="ruggedTough"
+                checked={formData.ruggedTough}
+                onChange={handleChange}
+                className="rounded text-black border-gray-300  focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-700">Rugged / Tough Laptop</span>
             </label>
             <label className="flex items-center">
               <input

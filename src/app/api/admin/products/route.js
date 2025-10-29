@@ -56,9 +56,16 @@ export async function POST(request) {
       featured_image: productData.featured_image || null,
       is_featured: productData.is_featured || false,
       is_active: productData.is_active !== false,
+      is_workstation: productData.is_workstation || false,
+      is_rugged_tough: productData.is_rugged_tough || false,
+      is_clearance: productData.is_clearance || false,
+      clearance_reason: productData.clearance_reason || null,
+      clearance_date: productData.clearance_date || null,
+      is_discounted: productData.is_discounted || false,
+      discount_percentage: productData.discount_percentage || null,
       condition: productData.condition || 'Good',
       warranty: productData.warranty || null,
-      
+
       // Laptop specific fields
       processor: productData.processor || null,
       generation: productData.generation || null,

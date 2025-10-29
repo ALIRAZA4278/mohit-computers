@@ -78,10 +78,26 @@ function ProductsContent() {
         'ram': 'ram',
         'ssd': 'ssd'
       };
-      const mappedCategory = categoryMap[category] || category;
-      newFilters.category = [mappedCategory];
-      setCurrentCategory(mappedCategory);
-      console.log('✅ Category filter set:', newFilters.category);
+
+      // Handle special categories that are actually features
+      if (category === 'rugged-laptop') {
+        // Rugged laptops are laptops with is_rugged_tough flag
+        newFilters.category = ['laptop'];
+        newFilters.specialFeatures = ['Rugged / Tough'];
+        setCurrentCategory('laptop');
+        console.log('✅ Rugged Laptop filter set - Category: laptop, Special Features: Rugged / Tough');
+      } else if (category === 'workstation') {
+        // Workstation laptops are laptops with is_workstation flag
+        newFilters.category = ['laptop'];
+        newFilters.specialFeatures = ['Workstation'];
+        setCurrentCategory('laptop');
+        console.log('✅ Workstation filter set - Category: laptop, Special Features: Workstation');
+      } else {
+        const mappedCategory = categoryMap[category] || category;
+        newFilters.category = [mappedCategory];
+        setCurrentCategory(mappedCategory);
+        console.log('✅ Category filter set:', newFilters.category);
+      }
     } else {
       setCurrentCategory(null);
     }
@@ -715,6 +731,21 @@ function ProductsContent() {
     // Apply featured filter (database field: is_featured)
     if (filters.featured) {
       filtered = filtered.filter(product => product.is_featured);
+    }
+
+    // Apply special features filter
+    if (filters.specialFeatures && filters.specialFeatures.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        return filters.specialFeatures.some(feature => {
+          if (feature === 'Workstation') return product.is_workstation === true;
+          if (feature === 'Rugged / Tough') return product.is_rugged_tough === true;
+          if (feature === 'Featured') return product.is_featured === true;
+          if (feature === 'Clearance') return product.is_clearance === true;
+          return false;
+        });
+      });
+      console.log(`✅ Special Features filter (${filters.specialFeatures}): ${beforeFilter} → ${filtered.length} products`);
     }
 
     // Apply search query - match individual words
