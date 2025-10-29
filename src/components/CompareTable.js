@@ -205,7 +205,7 @@ const CompareTable = ({ products }) => {
                     <span className="font-semibold text-gray-800 text-sm">Processor</span>
                   </div>
                   <div className="text-right text-sm text-gray-800 max-w-32 truncate font-medium">
-                    {product.processor || 'Not specified'}
+                    {product.processor || product.specifications?.processor || 'Not specified'}
                   </div>
                 </div>
 
@@ -417,8 +417,10 @@ const CompareTable = ({ products }) => {
                   <div className="font-medium text-gray-800">
                     {product.processor || product.specifications?.processor || 'Not specified'}
                   </div>
-                  {product.generation && (
-                    <div className="text-sm text-blue-600 mt-1">{product.generation}</div>
+                  {(product.generation || product.specifications?.generation) && (
+                    <div className="text-sm text-blue-600 mt-1">
+                      {product.generation || product.specifications?.generation}
+                    </div>
                   )}
                 </td>
               ))}
@@ -473,7 +475,7 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.display || product.specifications?.display || 'Not specified'}
+                    {product.display || product.specifications?.display || product.specifications?.screen || 'Not specified'}
                   </div>
                 </td>
               ))}
@@ -489,7 +491,7 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.specifications?.graphics || 'Integrated Graphics'}
+                    {product.graphics || product.specifications?.graphics || 'Integrated Graphics'}
                   </div>
                 </td>
               ))}
@@ -505,7 +507,7 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.specifications?.os || 'Windows 11'}
+                    {product.operating_system || product.specifications?.os || product.specifications?.operating_system || 'Windows 11'}
                   </div>
                 </td>
               ))}
@@ -521,7 +523,7 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.specifications?.battery || 'Up to 6 hours'}
+                    {product.battery || product.specifications?.battery || product.specifications?.battery_life || 'Up to 6 hours'}
                   </div>
                 </td>
               ))}
@@ -537,7 +539,7 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.specifications?.weight || 'Not specified'}
+                    {product.weight ? `${product.weight} kg` : (product.specifications?.weight || 'Not specified')}
                   </div>
                 </td>
               ))}
@@ -580,7 +582,7 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.warranty || '3 months'}
+                    {product.warranty || product.specifications?.warranty || (product.warranty_period ? `${product.warranty_period} months` : '15 days checking warranty')}
                   </div>
                 </td>
               ))}

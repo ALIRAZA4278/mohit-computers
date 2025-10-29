@@ -66,6 +66,16 @@ export default function ProductDetail() {
     }
   }, [params.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Initialize laptopCustomization totalPrice when product loads
+  useEffect(() => {
+    if (product?.price && laptopCustomization.totalPrice === 0 && laptopCustomization.additionalCost === 0) {
+      setLaptopCustomization(prev => ({
+        ...prev,
+        totalPrice: product.price
+      }));
+    }
+  }, [product?.price]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Calculate available RAM options based on processor generation
   useEffect(() => {
     if (product?.generation && product?.category_id === 'laptop') {
@@ -186,6 +196,9 @@ export default function ProductDetail() {
   }
 
   const handleAddToCart = () => {
+    console.log('handleAddToCart called - Adding product without customization');
+    console.log('Product price:', product.price);
+
     // Check stock availability - with fallback for existing products
     // Set defaults based on category and product name
     const category = product.category_id || product.category;
@@ -259,16 +272,36 @@ export default function ProductDetail() {
   };
 
   const handleAddToCartWithCustomization = () => {
+    // Check if there are actual customizations
+    const hasActualCustomizations = laptopCustomization.additionalCost > 0;
+
+    if (!hasActualCustomizations) {
+      // No customizations, use regular add to cart
+      handleAddToCart();
+      return;
+    }
+
+    // Ensure all prices are numbers
+    const basePrice = parseFloat(product.price) || 0;
+    const totalPrice = parseFloat(laptopCustomization.totalPrice) || basePrice;
+    const customCost = parseFloat(laptopCustomization.additionalCost) || 0;
+
     const productWithCustomization = {
       ...product,
       customizations: laptopCustomization.customizations,
-      originalPrice: product.price,
-      finalPrice: laptopCustomization.totalPrice || product.price,
-      customizationCost: laptopCustomization.additionalCost || 0,
+      originalPrice: basePrice,
+      finalPrice: totalPrice,
+      customizationCost: customCost,
       hasCustomizations: true,
       displayName: product.name
     };
-    
+
+    console.log('Adding customized product to cart:', productWithCustomization);
+    console.log('Base price:', basePrice);
+    console.log('Final price:', totalPrice);
+    console.log('Customization cost:', customCost);
+    console.log('laptopCustomization object:', laptopCustomization);
+
     // Add to cart with customization
     addToCart(productWithCustomization);
     setQuantity(1);

@@ -21,6 +21,12 @@ export default function Cart() {
     updateQuantity(productId, newQuantity);
   };
 
+  const handleRemoveFromCart = (item) => {
+    // Use cartId for customized products, otherwise use regular id
+    const idToRemove = item.cartId || item.id;
+    removeFromCart(idToRemove);
+  };
+
   const handleWishlist = (product) => {
     if (isInWishlist(product.id)) {
       removeFromWishlist(product.id);
@@ -129,8 +135,16 @@ export default function Cart() {
               </div>
 
               <div className="divide-y divide-gray-200">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="p-4 sm:p-6">
+                {cartItems.map((item) => {
+                  // Debug: Log item details
+                  console.log('Cart item:', item.name);
+                  console.log('  - Has customizations:', item.hasCustomizations);
+                  console.log('  - Final price:', item.finalPrice);
+                  console.log('  - Base price:', item.price);
+                  console.log('  - Customization cost:', item.customizationCost);
+
+                  return (
+                  <div key={item.cartId || item.id} className="p-4 sm:p-6">
                     {/* Mobile Layout */}
                     <div className="block sm:hidden">
                       <div className="flex items-start space-x-3">
@@ -160,7 +174,7 @@ export default function Cart() {
                             
                             {/* Remove Button */}
                             <button
-                              onClick={() => removeFromCart(item.id)}
+                              onClick={() => handleRemoveFromCart(item)}
                               className="p-1.5 rounded-lg bg-gray-100 text-red-600 hover:bg-red-100 hover:text-red-700 transition-colors ml-2"
                               title="Remove from Cart"
                             >
@@ -216,18 +230,18 @@ export default function Cart() {
                             {/* Quantity Controls */}
                             <div className="flex items-center space-x-2 bg-gray-50 rounded-lg p-1">
                               <button
-                                onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                                onClick={() => handleQuantityChange(item.cartId || item.id, item.quantity - 1)}
                                 className="p-1.5 hover:bg-gray-200 rounded transition-colors"
                               >
                                 <Minus className="w-3 h-3" />
                               </button>
-                              
+
                               <span className="text-sm font-medium w-8 text-center">
                                 {item.quantity}
                               </span>
-                              
+
                               <button
-                                onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                                onClick={() => handleQuantityChange(item.cartId || item.id, item.quantity + 1)}
                                 className="p-1.5 hover:bg-gray-200 rounded transition-colors"
                               >
                                 <Plus className="w-3 h-3" />
@@ -322,18 +336,18 @@ export default function Cart() {
                       {/* Quantity Controls */}
                       <div className="flex items-center space-x-3">
                         <button
-                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                          onClick={() => handleQuantityChange(item.cartId || item.id, item.quantity - 1)}
                           className="p-1 hover:bg-gray-100 rounded"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        
+
                         <span className="text-lg font-medium w-8 text-center">
                           {item.quantity}
                         </span>
-                        
+
                         <button
-                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                          onClick={() => handleQuantityChange(item.cartId || item.id, item.quantity + 1)}
                           className="p-1 hover:bg-gray-100 rounded"
                         >
                           <Plus className="w-4 h-4" />
@@ -387,7 +401,7 @@ export default function Cart() {
 
                         {/* Remove Button */}
                         <button
-                          onClick={() => removeFromCart(item.id)}
+                          onClick={() => handleRemoveFromCart(item)}
                           className="p-2 rounded-lg bg-gray-100 text-red-600 hover:bg-red-100 hover:text-red-700 transition-colors"
                           title="Remove from Cart"
                         >
@@ -396,7 +410,8 @@ export default function Cart() {
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

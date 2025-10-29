@@ -7,33 +7,53 @@ const CartContext = createContext();
 const cartReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_TO_CART':
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      if (existingItem) {
-        return {
-          ...state,
-          items: state.items.map(item =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          )
-        };
+      // For customized products, create a unique cart ID to treat each customization as separate item
+      const cartId = action.payload.hasCustomizations
+        ? `${action.payload.id}-custom-${Date.now()}-${Math.random()}`
+        : action.payload.id;
+
+      // Only merge if it's the same product without customizations
+      if (!action.payload.hasCustomizations && !action.payload.hasRAMCustomization) {
+        const existingItem = state.items.find(item =>
+          item.id === action.payload.id &&
+          !item.hasCustomizations &&
+          !item.hasRAMCustomization
+        );
+        if (existingItem) {
+          return {
+            ...state,
+            items: state.items.map(item =>
+              item.id === action.payload.id && !item.hasCustomizations && !item.hasRAMCustomization
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            )
+          };
+        }
       }
+
+      // Add as new item with unique cartId for customized products
       return {
         ...state,
-        items: [...state.items, { ...action.payload, quantity: 1 }]
+        items: [...state.items, {
+          ...action.payload,
+          cartId, // Unique identifier for cart operations
+          quantity: 1
+        }]
       };
 
     case 'REMOVE_FROM_CART':
       return {
         ...state,
-        items: state.items.filter(item => item.id !== action.payload)
+        items: state.items.filter(item =>
+          (item.cartId || item.id) !== action.payload
+        )
       };
 
     case 'UPDATE_QUANTITY':
       return {
         ...state,
         items: state.items.map(item =>
-          item.id === action.payload.id
+          (item.cartId || item.id) === action.payload.id
             ? { ...item, quantity: action.payload.quantity }
             : item
         )
@@ -82,29 +102,36 @@ export const CartProvider = ({ children }) => {
     const category = product.category_id || product.category;
     const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
     const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
-    const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
+    const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat =>
       categoryLower.includes(cat) || productNameLower.includes(cat)
     );
-    
+
     const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
     const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
     const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
     const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
-    
+
     if (!isAvailableForPurchase) {
       alert('Sorry, this product is currently out of stock and cannot be added to cart.');
       return false;
     }
-    
-    // Check if adding this item would exceed stock
-    const existingItem = state.items.find(item => item.id === product.id);
-    const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
-    
-    if (currentQuantityInCart >= stockQuantity) {
-      alert(`Sorry, you already have the maximum available quantity (${stockQuantity}) of this item in your cart.`);
-      return false;
+
+    // For customized products, skip stock check as each customization is unique
+    if (!product.hasCustomizations && !product.hasRAMCustomization) {
+      // Check if adding this item would exceed stock (only for non-customized products)
+      const existingItems = state.items.filter(item =>
+        item.id === product.id &&
+        !item.hasCustomizations &&
+        !item.hasRAMCustomization
+      );
+      const currentQuantityInCart = existingItems.reduce((sum, item) => sum + item.quantity, 0);
+
+      if (currentQuantityInCart >= stockQuantity) {
+        alert(`Sorry, you already have the maximum available quantity (${stockQuantity}) of this item in your cart.`);
+        return false;
+      }
     }
-    
+
     dispatch({ type: 'ADD_TO_CART', payload: product });
     return true;
   };

@@ -53,8 +53,14 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
       }
     }
     
-    console.log('Filtering RAM options:', { currentRAM, generation: genNumber, totalOptions: upgradeOptions.ram.length });
-    
+    console.log('Filtering RAM options:', {
+      currentRAM,
+      generation: genNumber,
+      totalOptions: upgradeOptions.ram.length,
+      hasCustomPricing: !!product?.custom_upgrade_pricing,
+      customPricingData: product?.custom_upgrade_pricing
+    });
+
     return upgradeOptions.ram
       .filter(opt => {
         // Filter by generation
@@ -73,16 +79,35 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
         // Only show larger sizes than current RAM
         return opt.size_number > currentRAM;
       })
-      .map(opt => ({
-        id: `ram-${opt.id}`,
-        size: opt.size,
-        sizeNumber: opt.size_number,
-        description: opt.description || opt.display_label,
-        price: opt.price,
-        label: opt.display_label
-      }))
+      .map(opt => {
+        // Generate option key matching ProductEditor format: ram-{id}
+        const optionKey = `ram-${opt.id}`;
+
+        // Check for custom pricing for this specific product
+        const customPrice = product?.custom_upgrade_pricing?.[optionKey];
+        const finalPrice = customPrice !== undefined ? customPrice : opt.price;
+
+        console.log('RAM option pricing:', {
+          optionKey,
+          defaultPrice: opt.price,
+          customPrice,
+          finalPrice,
+          hasCustomPrice: customPrice !== undefined
+        });
+
+        return {
+          id: `ram-${opt.id}`,
+          size: opt.size,
+          sizeNumber: opt.size_number,
+          description: opt.description || opt.display_label,
+          price: finalPrice,
+          defaultPrice: opt.price,
+          isCustomPrice: customPrice !== undefined,
+          label: opt.display_label
+        };
+      })
       .sort((a, b) => a.sizeNumber - b.sizeNumber); // Sort by size
-  }, [upgradeOptions.ram, product?.ram, product?.generation]);
+  }, [upgradeOptions.ram, product?.ram, product?.generation, product?.custom_upgrade_pricing]);
 
   // SSD upgrade options (replaces existing drive) - show only larger capacities than current storage
   const ssdUpgrades = useMemo(() => {
@@ -102,16 +127,35 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
     
     return upgradeOptions.ssd
       .filter(opt => opt.size_number > currentSSDSize)
-      .map(opt => ({
-        id: `ssd-${opt.id}`,
-        size: opt.size,
-        sizeNumber: opt.size_number,
-        description: opt.description || opt.display_label,
-        price: opt.price,
-        label: opt.display_label
-      }))
+      .map(opt => {
+        // Generate option key matching ProductEditor format: ssd-{id}
+        const optionKey = `ssd-${opt.id}`;
+
+        // Check for custom pricing for this specific product
+        const customPrice = product?.custom_upgrade_pricing?.[optionKey];
+        const finalPrice = customPrice !== undefined ? customPrice : opt.price;
+
+        console.log('SSD option pricing:', {
+          optionKey,
+          defaultPrice: opt.price,
+          customPrice,
+          finalPrice,
+          hasCustomPrice: customPrice !== undefined
+        });
+
+        return {
+          id: `ssd-${opt.id}`,
+          size: opt.size,
+          sizeNumber: opt.size_number,
+          description: opt.description || opt.display_label,
+          price: finalPrice,
+          defaultPrice: opt.price,
+          isCustomPrice: customPrice !== undefined,
+          label: opt.display_label
+        };
+      })
       .sort((a, b) => a.sizeNumber - b.sizeNumber); // Sort by size
-  }, [upgradeOptions.ssd, product?.hdd]);
+  }, [upgradeOptions.ssd, product?.hdd, product?.custom_upgrade_pricing]);
 
   // Calculate total price when customizations change
   useEffect(() => {
@@ -120,23 +164,24 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
       ram: product?.ram || '8GB',
       storage: product?.hdd || '256GB SSD'
     };
-    
+
     if (customizations.ramUpgrade) {
       // Replace existing RAM: add upgrade price to cost
-      additionalCost += customizations.ramUpgrade.price || 0;
+      additionalCost += parseFloat(customizations.ramUpgrade.price) || 0;
       // Update RAM specification - replace with new RAM size
       updatedSpecs.ram = `${customizations.ramUpgrade.size}`;
     }
-    
+
     if (customizations.ssdUpgrade) {
-      additionalCost += customizations.ssdUpgrade.price;
+      additionalCost += parseFloat(customizations.ssdUpgrade.price) || 0;
       // Update storage specification
       updatedSpecs.storage = `${customizations.ssdUpgrade.size} NVMe SSD`;
     }
-    
-    const newTotalPrice = (product?.price || 0) + additionalCost;
+
+    const basePrice = parseFloat(product?.price) || 0;
+    const newTotalPrice = basePrice + additionalCost;
     setTotalPrice(newTotalPrice);
-    
+
     // Notify parent component of changes including updated specs
     if (onCustomizationChange) {
       const dataToSend = {
@@ -145,7 +190,8 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
         totalPrice: newTotalPrice,
         updatedSpecs // Add this to communicate spec changes
       };
-      console.log('Sending customization data:', dataToSend);
+      console.log('Sending customization data to parent:', dataToSend);
+      console.log('Base price:', basePrice, 'Additional cost:', additionalCost, 'Total:', newTotalPrice);
       onCustomizationChange(dataToSend);
     }
   }, [customizations, product?.price, product?.ram, product?.hdd, onCustomizationChange]);
