@@ -53,6 +53,32 @@ export default function BulkImport({ onImportComplete }) {
     }
   };
 
+  const exportProducts = async () => {
+    try {
+      const response = await fetch('/api/admin/products/export');
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Export failed');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `products_export_${new Date().toISOString().split('T')[0]}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      alert('Products exported successfully! Edit the file and upload to update.');
+    } catch (error) {
+      console.error('Error exporting products:', error);
+      alert('Error exporting products: ' + error.message);
+    }
+  };
+
   const handleUpload = async () => {
     if (!file) {
       alert('Please select a file first');
@@ -101,16 +127,25 @@ export default function BulkImport({ onImportComplete }) {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Bulk Import Products</h3>
-          <p className="text-gray-600">Upload CSV or Excel file to import multiple products at once</p>
+          <h3 className="text-lg font-semibold text-gray-900">Bulk Import/Update Products</h3>
+          <p className="text-gray-600">Upload CSV or Excel file to import new products or update existing ones</p>
         </div>
-        <button
-          onClick={downloadTemplate}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-        >
-          <Download className="w-4 h-4" />
-          Download Template
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={downloadTemplate}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            New Template
+          </button>
+          <button
+            onClick={exportProducts}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            Export Products
+          </button>
+        </div>
       </div>
 
       {/* File Upload Area */}
@@ -222,8 +257,15 @@ export default function BulkImport({ onImportComplete }) {
               {result.success ? (
                 <div className="mt-2 space-y-1">
                   <p className="text-sm text-green-700">
-                    Successfully imported {result.imported} out of {result.total} products
+                    Successfully processed {result.created + result.updated} out of {result.total} products
                   </p>
+                  {(result.created > 0 || result.updated > 0) && (
+                    <div className="text-sm text-green-600 mt-1">
+                      {result.created > 0 && <span>✓ Created: {result.created}</span>}
+                      {result.created > 0 && result.updated > 0 && <span className="mx-2">•</span>}
+                      {result.updated > 0 && <span>✓ Updated: {result.updated}</span>}
+                    </div>
+                  )}
                   {result.errors && result.errors.length > 0 && (
                     <div className="mt-3">
                       <p className="text-sm font-medium text-orange-800 flex items-center gap-1">
@@ -259,12 +301,14 @@ export default function BulkImport({ onImportComplete }) {
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <h4 className="font-medium text-gray-900 mb-2">Instructions:</h4>
         <ul className="text-sm text-gray-600 space-y-1">
-          <li>• Download the CSV template to see the required format</li>
-          <li>• Required fields: <strong>name, price</strong></li>
-          <li>• Optional fields: category, brand, description, specifications, etc.</li>
-          <li>• For laptops, include model, processor, RAM, storage details</li>
-          <li>• <strong>Image Links:</strong> Add up to 5 product image URLs in &quot;Image URL 1&quot; through &quot;Image URL 5&quot; columns</li>
-          <li>• Use &quot;true&quot;/&quot;false&quot; for boolean fields (featured, in_stock, charger_included)</li>
+          <li>• <strong>New Products:</strong> Click &quot;New Template&quot; and fill in product details</li>
+          <li>• <strong>Update Products:</strong> Click &quot;Export Products&quot; to download existing products, edit them, and re-upload</li>
+          <li>• Required fields: <strong>Model, Selling Price</strong></li>
+          <li>• <strong>Product ID column:</strong> Keep this column for updates (don&apos;t change it!)</li>
+          <li>• <strong>No Product ID:</strong> New product will be created</li>
+          <li>• <strong>With Product ID:</strong> Existing product will be updated (no duplicate)</li>
+          <li>• <strong>Image Links:</strong> Add up to 5 product image URLs</li>
+          <li>• Use &quot;true&quot;/&quot;false&quot; for boolean fields</li>
           <li>• Supported file types: CSV (.csv), Excel (.xlsx, .xls)</li>
         </ul>
       </div>

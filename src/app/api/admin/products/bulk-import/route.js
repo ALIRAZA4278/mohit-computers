@@ -54,6 +54,9 @@ function parseCSV(csvContent) {
       product[header] = values[index] || '';
     });
 
+    // Check if this is an update (has Product ID)
+    const productId = product['Product ID'] || product['product_id'] || product.id || null;
+
     // Convert to our database format - supporting all fields
     const model = product.Model || product.model || '';
     const processor = product.Processor || product.processor || '';
@@ -72,6 +75,9 @@ function parseCSV(csvContent) {
 
     // Build product object with only essential fields first
     const dbProduct = {
+      // Add product ID if present (for updates)
+      ...(productId && { id: productId }),
+
       // Core required fields (these definitely exist in database)
       name: model,
       category_id: product.Category || 'laptop',
@@ -178,6 +184,9 @@ async function parseExcel(file) {
   };
 
   return jsonData.map(row => {
+    // Check if this is an update (has Product ID)
+    const productId = row['Product ID'] || row['product_id'] || row.id || null;
+
     const model = row.Model || row.model || '';
     const processor = row.Processor || row.processor || '';
     const brandFromExcel = row.Brand || row.brand || '';
@@ -185,6 +194,9 @@ async function parseExcel(file) {
 
     // Build product object with only essential fields first
     const dbProduct = {
+      // Add product ID if present (for updates)
+      ...(productId && { id: productId }),
+
       // Core required fields (these definitely exist in database)
       name: model,
       category_id: row.Category || 'laptop',
@@ -329,39 +341,68 @@ export async function POST(request) {
       );
     }
 
-    // Insert products in batches
+    // Insert or Update products in batches
     const batchSize = 10;
-    const results = [];
-    const errors = [];
+    const results = {
+      created: [],
+      updated: [],
+      failed: []
+    };
 
-    console.log(`[BULK IMPORT] Starting to import ${validProducts.length} products...`);
+    console.log(`[BULK IMPORT] Starting to process ${validProducts.length} products...`);
 
     for (let i = 0; i < validProducts.length; i += batchSize) {
       const batch = validProducts.slice(i, i + batchSize);
 
       for (const product of batch) {
         try {
-          console.log(`[BULK IMPORT] Attempting to insert product: ${product.name}`);
-          console.log(`[BULK IMPORT] Product data:`, JSON.stringify(product, null, 2));
+          const productId = product.id;
+          const productName = product.name;
 
-          const { data, error } = await productsAPI.create(product);
+          // Check if this is an update (has Product ID) or new insert
+          if (productId) {
+            console.log(`[BULK IMPORT] Attempting to UPDATE product: ${productName} (ID: ${productId})`);
 
-          if (error) {
-            console.error(`[BULK IMPORT] Database error for ${product.name}:`, error);
-            errors.push({
-              product: product.name,
-              error: error.message || JSON.stringify(error),
-              code: error.code,
-              details: error.details
-            });
+            // Remove id from product data for update
+            const { id, ...updateData } = product;
+
+            const { data, error } = await productsAPI.update(productId, updateData);
+
+            if (error) {
+              console.error(`[BULK IMPORT] Update error for ${productName}:`, error);
+              results.failed.push({
+                product: productName,
+                action: 'update',
+                error: error.message || JSON.stringify(error),
+                code: error.code
+              });
+            } else {
+              console.log(`[BULK IMPORT] Successfully UPDATED: ${productName}`);
+              results.updated.push(data);
+            }
           } else {
-            console.log(`[BULK IMPORT] Successfully inserted: ${product.name} with ID: ${data.id}`);
-            results.push(data);
+            console.log(`[BULK IMPORT] Attempting to CREATE product: ${productName}`);
+
+            const { data, error } = await productsAPI.create(product);
+
+            if (error) {
+              console.error(`[BULK IMPORT] Create error for ${productName}:`, error);
+              results.failed.push({
+                product: productName,
+                action: 'create',
+                error: error.message || JSON.stringify(error),
+                code: error.code
+              });
+            } else {
+              console.log(`[BULK IMPORT] Successfully CREATED: ${productName} with ID: ${data.id}`);
+              results.created.push(data);
+            }
           }
         } catch (error) {
           console.error(`[BULK IMPORT] Exception for ${product.name}:`, error);
-          errors.push({
+          results.failed.push({
             product: product.name,
+            action: 'unknown',
             error: error.message,
             stack: error.stack?.substring(0, 200)
           });
@@ -369,19 +410,26 @@ export async function POST(request) {
       }
     }
 
-    console.log(`[BULK IMPORT] Import complete. Success: ${results.length}, Errors: ${errors.length}`);
-    if (errors.length > 0) {
-      console.error(`[BULK IMPORT] Error details:`, errors);
+    const totalSuccess = results.created.length + results.updated.length;
+    const totalFailed = results.failed.length;
+
+    console.log(`[BULK IMPORT] Processing complete.`);
+    console.log(`[BULK IMPORT] Created: ${results.created.length}, Updated: ${results.updated.length}, Failed: ${totalFailed}`);
+
+    if (totalFailed > 0) {
+      console.error(`[BULK IMPORT] Failed items:`, results.failed);
     }
 
     return NextResponse.json({
-      success: results.length > 0,
-      message: results.length > 0
-        ? `Successfully imported ${results.length} products`
-        : 'No products were imported',
-      imported: results.length,
+      success: totalSuccess > 0,
+      message: totalSuccess > 0
+        ? `Successfully processed ${totalSuccess} products (${results.created.length} created, ${results.updated.length} updated)`
+        : 'No products were processed',
+      created: results.created.length,
+      updated: results.updated.length,
+      failed: totalFailed,
       total: validProducts.length,
-      errors: errors.length > 0 ? errors : null
+      errors: totalFailed > 0 ? results.failed : null
     });
 
   } catch (error) {
