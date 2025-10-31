@@ -112,8 +112,37 @@ export default function ClearancePage() {
       return true;
     });
 
-    // Sorting
+    // Helper function to check if product is in stock
+    const isInStock = (product) => {
+      // Check if product is active
+      if (product.is_active === false) return false;
+
+      // Check the in_stock boolean field
+      if (product.in_stock !== undefined && product.in_stock !== null) {
+        if (product.in_stock === false || product.in_stock === 'false') return false;
+      }
+
+      // Check stock_quantity field
+      if (product.stock_quantity !== undefined && product.stock_quantity !== null) {
+        const stockQty = typeof product.stock_quantity === 'string'
+          ? parseInt(product.stock_quantity, 10)
+          : product.stock_quantity;
+        if (stockQty <= 0) return false;
+      }
+
+      return true;
+    };
+
+    // Sorting with stock status priority
     const sorted = filtered.sort((a, b) => {
+      // First, prioritize in-stock products
+      const aInStock = isInStock(a);
+      const bInStock = isInStock(b);
+
+      if (aInStock && !bInStock) return -1;
+      if (!aInStock && bInStock) return 1;
+
+      // If both have same stock status, apply regular sorting
       if (sortBy === 'priceAsc') return (a.price ?? 0) - (b.price ?? 0);
       if (sortBy === 'priceDesc') return (b.price ?? 0) - (a.price ?? 0);
       if (sortBy === 'newest') return new Date(b.created_at || b.createdAt || 0) - new Date(a.created_at || a.createdAt || 0);

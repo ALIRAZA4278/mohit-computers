@@ -243,8 +243,37 @@ function WorkstationContent() {
       });
     }
 
-    // Apply sorting
+    // Helper function to check if product is in stock
+    const isInStock = (product) => {
+      // Check if product is active
+      if (product.is_active === false) return false;
+
+      // Check the in_stock boolean field
+      if (product.in_stock !== undefined && product.in_stock !== null) {
+        if (product.in_stock === false || product.in_stock === 'false') return false;
+      }
+
+      // Check stock_quantity field
+      if (product.stock_quantity !== undefined && product.stock_quantity !== null) {
+        const stockQty = typeof product.stock_quantity === 'string'
+          ? parseInt(product.stock_quantity, 10)
+          : product.stock_quantity;
+        if (stockQty <= 0) return false;
+      }
+
+      return true;
+    };
+
+    // Apply sorting with stock status priority
     filtered.sort((a, b) => {
+      // First, prioritize in-stock products
+      const aInStock = isInStock(a);
+      const bInStock = isInStock(b);
+
+      if (aInStock && !bInStock) return -1;
+      if (!aInStock && bInStock) return 1;
+
+      // If both have same stock status, apply regular sorting
       switch (sortBy) {
         case 'price-low':
           return a.price - b.price;
