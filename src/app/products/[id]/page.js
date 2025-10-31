@@ -379,6 +379,7 @@ export default function ProductDetail() {
                     className="object-contain w-full h-full cursor-zoom-in transition-transform group-hover:scale-105"
                     onClick={() => setShowImageModal(true)}
                     onError={() => handleImageError(selectedImage)}
+                    unoptimized
                     priority
                   />
                 </div>
@@ -417,6 +418,7 @@ export default function ProductDetail() {
                         fill
                         className="object-cover"
                         onError={() => handleImageError(index)}
+                        unoptimized
                       />
                     </button>
                   ))}
@@ -1377,6 +1379,7 @@ export default function ProductDetail() {
               height={1200}
               className="object-contain max-h-full max-w-full"
               onError={() => handleImageError(selectedImage)}
+              unoptimized
             />
           </div>
           {productImages.length > 1 && (

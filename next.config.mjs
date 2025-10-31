@@ -2,7 +2,7 @@
 const nextConfig = {
   images: {
     // Allow all external domains (less secure but more flexible)
-    unoptimized: false,
+    unoptimized: true, // Disable image optimization for deployment compatibility
     remotePatterns: [
       {
         protocol: 'https',
