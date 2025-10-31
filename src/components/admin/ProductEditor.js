@@ -21,6 +21,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     featured: false,
     workstation: false,
     ruggedTough: false,
+    seoOnly: false, // SEO-only products (visible only via direct URL)
 
     // Clearance fields
     clearance: false,
@@ -108,6 +109,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         featured: product.is_featured || false,
         workstation: product.is_workstation || false,
         ruggedTough: product.is_rugged_tough || false,
+        seoOnly: product.seo_only || false,
 
         // Clearance fields
         clearance: product.is_clearance || false,
@@ -323,6 +325,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         is_featured: formData.featured,
         is_workstation: formData.workstation,
         is_rugged_tough: formData.ruggedTough,
+        seo_only: formData.seoOnly,
         is_clearance: formData.clearance,
         clearance_reason: formData.clearance ? formData.clearanceReason : null,
         clearance_date: formData.clearance && !product?.is_clearance ? new Date().toISOString() : (product?.clearance_date || null),
@@ -798,7 +801,27 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               />
               <span className="ml-2 text-sm text-gray-700">Discounted Product</span>
             </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="seoOnly"
+                checked={formData.seoOnly}
+                onChange={handleChange}
+                className="rounded text-black border-gray-300  focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-700">SEO Only (Hidden from Catalog)</span>
+            </label>
           </div>
+
+          {/* SEO Only Info */}
+          {formData.seoOnly && (
+            <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <p className="text-sm text-blue-800">
+                <strong>SEO Only Mode:</strong> This product will be hidden from all catalog listings (homepage, category pages, search)
+                but will still be accessible via direct URL and visible to search engines like Google.
+              </p>
+            </div>
+          )}
           
           {/* Clearance Reason */}
           {formData.clearance && (

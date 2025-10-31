@@ -50,11 +50,14 @@ export default function ClearancePage() {
   };
 
   const applyFiltersAndSort = () => {
-    // Products that qualify for clearance page: 
-    // 1. Has is_clearance flag OR 
+    // Filter out SEO-only products first (they should only be visible via direct URL, not in catalog)
+    const visibleProducts = products.filter((p) => !p.seo_only);
+
+    // Products that qualify for clearance page:
+    // 1. Has is_clearance flag OR
     // 2. Has is_discounted flag OR
     // 3. Has a discount >=15% (for backward compatibility)
-    const clearanceCandidates = products.filter((p) => {
+    const clearanceCandidates = visibleProducts.filter((p) => {
       // Check explicit clearance flag first
       if (p.is_clearance) return true;
       

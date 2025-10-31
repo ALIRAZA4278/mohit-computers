@@ -77,6 +77,9 @@ function WorkstationContent() {
 
     let filtered = [...products];
 
+    // Filter out SEO-only products (they should only be visible via direct URL, not in catalog)
+    filtered = filtered.filter(product => !product.seo_only);
+
     // Apply brand filter
     if (filters.brands && filters.brands.length > 0) {
       filtered = filtered.filter(product => {

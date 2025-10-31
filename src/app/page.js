@@ -83,12 +83,15 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  const featuredProducts = products.filter(product => product.is_featured);
-  const newArrivalProducts = products.slice(0, 8); // Latest 8 products - all categories
-  const workstationProducts = products.filter(product => 
+  // Filter out SEO-only products (they should only be visible via direct URL, not in catalog)
+  const catalogProducts = products.filter(product => !product.seo_only);
+
+  const featuredProducts = catalogProducts.filter(product => product.is_featured);
+  const newArrivalProducts = catalogProducts.slice(0, 8); // Latest 8 products - all categories
+  const workstationProducts = catalogProducts.filter(product =>
     product.is_workstation === true || product.category_id === 'workstation'
   );
-  const accessoryProducts = products.filter(product => product.category_id === 'accessories');
+  const accessoryProducts = catalogProducts.filter(product => product.category_id === 'accessories');
 
   // Calculate max index for each carousel
   const getMaxIndex = (productCount) => {

@@ -139,6 +139,9 @@ function ProductsContent() {
 
     let filtered = [...products];
 
+    // Filter out SEO-only products (they should only be visible via direct URL, not in catalog)
+    filtered = filtered.filter(product => !product.seo_only);
+
     // Apply category filter
     if (filters.category && filters.category.length > 0) {
       const beforeFilter = filtered.length;

@@ -133,6 +133,11 @@ function parseCSV(csvContent) {
     if (product['Is Discounted']) dbProduct.is_discounted = parseBool(product['Is Discounted']);
     if (product['Discount Percentage']) dbProduct.discount_percentage = parseFloat(product['Discount Percentage']);
 
+    // SEO Only field - enabled after schema refresh
+    if (product['SEO Only'] !== undefined) {
+      dbProduct.seo_only = parseBool(product['SEO Only']);
+    }
+
     // Customization control fields
     if (product['Show Laptop Customizer'] !== undefined) dbProduct.show_laptop_customizer = parseBool(product['Show Laptop Customizer']);
     if (product['Show RAM Options'] !== undefined) dbProduct.show_ram_options = parseBool(product['Show RAM Options']);
@@ -251,6 +256,11 @@ async function parseExcel(file) {
     if (row['Clearance Reason']) dbProduct.clearance_reason = row['Clearance Reason'];
     if (row['Is Discounted']) dbProduct.is_discounted = parseBool(row['Is Discounted']);
     if (row['Discount Percentage']) dbProduct.discount_percentage = parseFloat(row['Discount Percentage']);
+
+    // SEO Only field - enabled after schema refresh
+    if (row['SEO Only'] !== undefined) {
+      dbProduct.seo_only = parseBool(row['SEO Only']);
+    }
 
     // Customization control fields
     if (row['Show Laptop Customizer'] !== undefined) dbProduct.show_laptop_customizer = parseBool(row['Show Laptop Customizer']);
