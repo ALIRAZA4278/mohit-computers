@@ -187,9 +187,13 @@ export default function LaptopUpgradeOptionsManager() {
                 {activeTab === 'ram' && (
                   <td className="px-4 py-4 text-sm">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      option.applicable_to === 'ddr3' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
+                      option.applicable_to === 'ddr3' || option.applicable_to === 'ddr3_6th'
+                        ? 'bg-blue-100 text-blue-700'
+                        : option.applicable_to === 'ddr5'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-purple-100 text-purple-700'
                     }`}>
-                      {option.applicable_to?.toUpperCase()}
+                      {option.applicable_to?.toUpperCase().replace('_', ' ')}
                     </span>
                   </td>
                 )}
@@ -353,7 +357,10 @@ function OptionEditModal({ option, optionType, onSave, onCancel, saving }) {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="ddr3">DDR3 (3rd-5th Gen)</option>
+                  <option value="ddr3_6th">DDR3 (6th Gen)</option>
                   <option value="ddr4">DDR4 (6th-11th Gen)</option>
+                  <option value="ddr4_12th">DDR4 (12th Gen)</option>
+                  <option value="ddr5">DDR5 (12th-15th Gen)</option>
                 </select>
               </div>
 

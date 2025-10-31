@@ -10,6 +10,10 @@ const DEFAULT_PRICES = {
   ram_ddr4_8gb: 6000,
   ram_ddr4_16gb: 11500,
   ram_ddr4_32gb: 25000,
+  ram_ddr5_8gb: 8000,
+  ram_ddr5_16gb: 15000,
+  ram_ddr5_32gb: 30000,
+  ram_ddr5_64gb: 60000,
   ssd_128_to_256: 3000,
   ssd_128_to_512: 8000,
   ssd_128_to_1tb: 18500,
@@ -53,7 +57,8 @@ export const getRAMOptionsByGeneration = async (generation) => {
   const pricing = await fetchUpgradePricing();
 
   const ddr3Generations = ['3rd Gen', '4th Gen', '5th Gen'];
-  const ddr4Generations = ['6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen'];
+  const ddr4Generations = ['6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen'];
+  const ddr5Generations = ['12th Gen', '13th Gen', '14th Gen', '15th Gen'];
 
   // Check if generation matches DDR3 (3rd-5th Gen)
   if (ddr3Generations.includes(generation)) {
@@ -63,13 +68,23 @@ export const getRAMOptionsByGeneration = async (generation) => {
     ];
   }
 
-  // Check if generation matches DDR4 (6th-11th Gen)
+  // Check if generation matches DDR4 (6th-12th Gen)
   if (ddr4Generations.includes(generation)) {
     return [
       { capacity: '4GB', price: pricing.ram_ddr4_4gb, label: '4GB DDR4' },
       { capacity: '8GB', price: pricing.ram_ddr4_8gb, label: '8GB DDR4' },
       { capacity: '16GB', price: pricing.ram_ddr4_16gb, label: '16GB DDR4' },
       { capacity: '32GB', price: pricing.ram_ddr4_32gb, label: '32GB DDR4' }
+    ];
+  }
+
+  // Check if generation matches DDR5 (12th-15th Gen)
+  if (ddr5Generations.includes(generation)) {
+    return [
+      { capacity: '8GB', price: pricing.ram_ddr5_8gb || 8000, label: '8GB DDR5' },
+      { capacity: '16GB', price: pricing.ram_ddr5_16gb || 15000, label: '16GB DDR5' },
+      { capacity: '32GB', price: pricing.ram_ddr5_32gb || 30000, label: '32GB DDR5' },
+      { capacity: '64GB', price: pricing.ram_ddr5_64gb || 60000, label: '64GB DDR5' }
     ];
   }
 
@@ -81,10 +96,15 @@ export const getRAMTypeByGeneration = (generation) => {
   if (!generation) return 'DDR4';
 
   const ddr3Generations = ['3rd Gen', '4th Gen', '5th Gen'];
-  const ddr4Generations = ['6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen'];
+  const ddr4Generations = ['6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen'];
+  const ddr5Generations = ['12th Gen', '13th Gen', '14th Gen', '15th Gen'];
 
   if (ddr3Generations.includes(generation)) {
     return 'DDR3/DDR3L';
+  }
+
+  if (ddr5Generations.includes(generation)) {
+    return 'DDR5';
   }
 
   if (ddr4Generations.includes(generation)) {

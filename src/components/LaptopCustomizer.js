@@ -66,16 +66,27 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
         // Filter by generation
         if (opt.min_generation && genNumber && genNumber < opt.min_generation) return false;
         if (opt.max_generation && genNumber && genNumber > opt.max_generation) return false;
-        
-        // Filter by applicable type (ddr3/ddr4)
-        if (genNumber && genNumber >= 3 && genNumber <= 5) {
-          // 3rd-5th gen uses DDR3
-          if (opt.applicable_to !== 'ddr3') return false;
-        } else if (genNumber && genNumber >= 6) {
-          // 6th gen and above uses DDR4
-          if (opt.applicable_to !== 'ddr4' && opt.applicable_to !== 'all') return false;
+
+        // Filter by applicable RAM type based on generation
+        if (genNumber) {
+          if (genNumber >= 3 && genNumber <= 5) {
+            // 3rd-5th gen uses DDR3
+            if (opt.applicable_to !== 'ddr3') return false;
+          } else if (genNumber === 6) {
+            // 6th gen can use DDR3 or DDR4
+            if (!['ddr3_6th', 'ddr4', 'all'].includes(opt.applicable_to)) return false;
+          } else if (genNumber >= 7 && genNumber <= 11) {
+            // 7th-11th gen uses DDR4
+            if (!['ddr4', 'all'].includes(opt.applicable_to)) return false;
+          } else if (genNumber === 12) {
+            // 12th gen can use DDR4 or DDR5
+            if (!['ddr4_12th', 'ddr4', 'ddr5', 'all'].includes(opt.applicable_to)) return false;
+          } else if (genNumber >= 13 && genNumber <= 15) {
+            // 13th-15th gen uses DDR5
+            if (!['ddr5', 'all'].includes(opt.applicable_to)) return false;
+          }
         }
-        
+
         // Only show larger sizes than current RAM
         return opt.size_number > currentRAM;
       })
