@@ -117,48 +117,41 @@ const ProductCard = ({ product, showCompare = true }) => {
   return (
     <div className="group h-full">
       <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-teal-200 h-full flex flex-col">
-        {/* Badges Container - Removed category badges */}
-        <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-          {/* Out of Stock Badge */}
-          {!isAvailableForPurchase && (
-            <div className="bg-gradient-to-r from-red-600 to-red-700 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-red-400/20 backdrop-blur-sm">
-              OUT OF STOCK
-            </div>
-          )}
-          
+        {/* Badges Container - Super Cute Minimal */}
+        <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
           {/* Low Stock Badge */}
           {isAvailableForPurchase && stockQuantity <= 5 && stockQuantity > 0 && (
-            <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-orange-400/20 backdrop-blur-sm">
-              LIMITED STOCK
+            <div className="bg-amber-400 text-amber-900 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-amber-300/50">
+              LIMITED
             </div>
           )}
-          
+
           {/* NEW Badge */}
           {isAvailableForPurchase && isNew && !product.is_clearance && !product.is_discounted && (
-            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-green-400/20 backdrop-blur-sm">
+            <div className="bg-teal-400 text-teal-900 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-teal-300/50">
               NEW
             </div>
           )}
 
           {/* Clearance Badge */}
           {isAvailableForPurchase && product.is_clearance && (
-            <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-orange-400/20 backdrop-blur-sm">
+            <div className="bg-rose-400 text-rose-900 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-rose-300/50">
               CLEARANCE
             </div>
           )}
 
           {/* Discounted Badge */}
           {isAvailableForPurchase && product.is_discounted && !product.is_clearance && (
-            <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-purple-400/20 backdrop-blur-sm">
-              SPECIAL OFFER
+            <div className="bg-violet-400 text-violet-900 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-violet-300/50">
+              SPECIAL
             </div>
           )}
         </div>
 
         {/* Discount Badge */}
         {isAvailableForPurchase && discountPercentage > 0 && (
-          <div className="absolute top-3 right-3 z-10">
-            <div className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2.5 py-1 rounded-lg text-xs font-semibold shadow-lg border border-red-400/20 backdrop-blur-sm">
+          <div className="absolute top-2 right-2 z-10">
+            <div className="bg-red-500 text-white px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-red-400/50">
               {discountPercentage}% OFF
             </div>
           </div>

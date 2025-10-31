@@ -68,8 +68,21 @@ export default function ClearancePage() {
     const filtered = clearanceCandidates.filter((p) => {
       // In stock filter
       if (filters.inStock) {
-        const inStock = p.in_stock ?? p.inStock ?? (p.stock_quantity ? p.stock_quantity > 0 : true);
-        if (!inStock) return false;
+        // Check if product is active
+        if (p.is_active === false) return false;
+
+        // Check the in_stock boolean field first
+        if (p.in_stock !== undefined && p.in_stock !== null) {
+          if (p.in_stock === false || p.in_stock === 'false') return false;
+        }
+
+        // Also check stock_quantity field
+        if (p.stock_quantity !== undefined && p.stock_quantity !== null) {
+          const stockQty = typeof p.stock_quantity === 'string'
+            ? parseInt(p.stock_quantity, 10)
+            : p.stock_quantity;
+          if (stockQty <= 0) return false;
+        }
       }
 
       // Featured

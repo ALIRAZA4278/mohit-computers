@@ -195,7 +195,25 @@ function WorkstationContent() {
 
     // Apply in stock filter
     if (filters.inStock) {
-      filtered = filtered.filter(product => product.is_active);
+      filtered = filtered.filter(product => {
+        // Check if product is active
+        if (product.is_active === false) return false;
+
+        // Check the in_stock boolean field first
+        if (product.in_stock !== undefined && product.in_stock !== null) {
+          if (product.in_stock === false || product.in_stock === 'false') return false;
+        }
+
+        // Also check stock_quantity field
+        if (product.stock_quantity !== undefined && product.stock_quantity !== null) {
+          const stockQty = typeof product.stock_quantity === 'string'
+            ? parseInt(product.stock_quantity, 10)
+            : product.stock_quantity;
+          if (stockQty <= 0) return false;
+        }
+
+        return true;
+      });
     }
 
     // Apply featured filter

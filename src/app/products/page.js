@@ -723,9 +723,42 @@ function ProductsContent() {
       );
     }
 
-    // Apply in stock filter (database field: is_active)
+    // Apply in stock filter (database fields: in_stock, is_active and stock_quantity)
     if (filters.inStock) {
-      filtered = filtered.filter(product => product.is_active);
+      const beforeFilter = filtered.length;
+
+      filtered = filtered.filter(product => {
+        // Check if product is active (already filtered by API, but double check)
+        if (product.is_active === false) {
+          return false;
+        }
+
+        // Check the in_stock boolean field first (if it exists)
+        if (product.in_stock !== undefined && product.in_stock !== null) {
+          // If in_stock is explicitly false, filter out
+          if (product.in_stock === false || product.in_stock === 'false') {
+            return false;
+          }
+        }
+
+        // Also check stock_quantity field
+        if (product.stock_quantity !== undefined && product.stock_quantity !== null) {
+          // Convert to number in case it's a string
+          const stockQty = typeof product.stock_quantity === 'string'
+            ? parseInt(product.stock_quantity, 10)
+            : product.stock_quantity;
+
+          // If it's 0 or negative, it's out of stock
+          if (stockQty <= 0) {
+            return false;
+          }
+        }
+
+        // If we reach here, product is in stock
+        return true;
+      });
+
+      console.log(`✅ In Stock filter: ${beforeFilter} → ${filtered.length} products`);
     }
 
     // Apply featured filter (database field: is_featured)

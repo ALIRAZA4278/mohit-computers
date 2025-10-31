@@ -156,42 +156,50 @@ export default function ProductDetail() {
   }
 
   // Parse product images safely
-  let productImages = ['/placeholder-laptop.png'];
-  
+  let productImages = [];
+
   try {
-    console.log('Product images data:', product.images);
-    console.log('Product featured_image:', product.featured_image);
-    
-    if (product.images) {
-      const parsedImages = typeof product.images === 'string' 
-        ? JSON.parse(product.images) 
-        : product.images;
-      
-      console.log('Parsed images:', parsedImages);
-      
-      // Filter out null/undefined/empty values and ensure we have valid image paths
-      const validImages = Array.isArray(parsedImages)
-        ? parsedImages.filter(img => img && typeof img === 'string' && img.trim() !== '')
-        : [];
-      
-      console.log('Valid images after filtering:', validImages);
-      
-      if (validImages.length > 0) {
-        productImages = validImages;
-      } else if (product.featured_image && product.featured_image.trim() !== '') {
-        productImages = [product.featured_image];
-      }
-    } else if (product.featured_image && product.featured_image.trim() !== '') {
-      productImages = [product.featured_image];
+    // Priority 1: Check featured_image first (most reliable)
+    if (product.featured_image && typeof product.featured_image === 'string' && product.featured_image.trim() !== '') {
+      productImages.push(product.featured_image.trim());
     }
-    
-    console.log('Final productImages:', productImages);
+
+    // Priority 2: Check images array
+    if (product.images) {
+      const parsedImages = typeof product.images === 'string'
+        ? JSON.parse(product.images)
+        : product.images;
+
+      // Filter out null/undefined/empty values and ensure we have valid image paths
+      if (Array.isArray(parsedImages)) {
+        const validImages = parsedImages
+          .filter(img => img && typeof img === 'string' && img.trim() !== '')
+          .map(img => img.trim());
+
+        // Add images that aren't already in productImages
+        validImages.forEach(img => {
+          if (!productImages.includes(img)) {
+            productImages.push(img);
+          }
+        });
+      }
+    }
+
+    // If no images found, use placeholder
+    if (productImages.length === 0) {
+      productImages = ['/placeholder-laptop.png'];
+      console.warn('No product images found, using placeholder for:', product.name);
+    } else {
+      console.log('✅ Found', productImages.length, 'image(s) for:', product.name);
+    }
   } catch (error) {
     console.error('Error parsing product images:', error);
     console.error('Product data:', product);
     // Fallback to featured_image or placeholder
     if (product.featured_image && product.featured_image.trim() !== '') {
       productImages = [product.featured_image];
+    } else {
+      productImages = ['/placeholder-laptop.png'];
     }
   }
 

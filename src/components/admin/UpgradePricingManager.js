@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Save, RefreshCw, DollarSign } from 'lucide-react';
 
 export default function UpgradePricingManager() {
-  const [pricing, setPricing] = useState(null);
+  const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -16,9 +16,11 @@ export default function UpgradePricingManager() {
   const fetchPricing = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/upgrade-pricing');
+      const response = await fetch('/api/laptop-upgrade-options');
       const data = await response.json();
-      setPricing(data);
+      if (data.success) {
+        setOptions(data.options || []);
+      }
     } catch (error) {
       console.error('Error fetching pricing:', error);
       setMessage({ type: 'error', text: 'Failed to load pricing data' });
@@ -32,19 +34,27 @@ export default function UpgradePricingManager() {
       setSaving(true);
       setMessage({ type: '', text: '' });
 
-      const response = await fetch('/api/upgrade-pricing', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(pricing)
-      });
+      // Update each option's price
+      const updatePromises = options.map(option =>
+        fetch('/api/laptop-upgrade-options', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: option.id,
+            price: option.price
+          })
+        })
+      );
 
-      const data = await response.json();
+      const responses = await Promise.all(updatePromises);
+      const allSuccessful = responses.every(r => r.ok);
 
-      if (response.ok) {
-        setMessage({ type: 'success', text: 'Pricing updated successfully!' });
+      if (allSuccessful) {
+        setMessage({ type: 'success', text: 'Pricing updated successfully! Changes are now live in the laptop customizer.' });
         setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+        fetchPricing(); // Refresh data
       } else {
-        setMessage({ type: 'error', text: data.error || 'Failed to update pricing' });
+        setMessage({ type: 'error', text: 'Failed to update some pricing options' });
       }
     } catch (error) {
       console.error('Error saving pricing:', error);
@@ -54,12 +64,18 @@ export default function UpgradePricingManager() {
     }
   };
 
-  const handleChange = (field, value) => {
-    setPricing(prev => ({
-      ...prev,
-      [field]: parseInt(value) || 0
-    }));
+  const handleChange = (id, value) => {
+    setOptions(prev => prev.map(option =>
+      option.id === id
+        ? { ...option, price: parseInt(value) || 0 }
+        : option
+    ));
   };
+
+  // Organize options by type
+  const ramDDR3 = options.filter(opt => opt.option_type === 'ram' && opt.applicable_to === 'ddr3');
+  const ramDDR4 = options.filter(opt => opt.option_type === 'ram' && opt.applicable_to === 'ddr4');
+  const ssdOptions = options.filter(opt => opt.option_type === 'ssd');
 
   if (loading) {
     return (
@@ -78,8 +94,8 @@ export default function UpgradePricingManager() {
             <DollarSign className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Upgrade Pricing Configuration</h2>
-            <p className="text-sm text-gray-600">Manage global RAM and SSD upgrade prices</p>
+            <h2 className="text-2xl font-bold text-gray-900">Laptop Upgrade Pricing</h2>
+            <p className="text-sm text-gray-600">Update prices for all laptop customization options. Changes apply immediately to the website.</p>
           </div>
         </div>
         <button
@@ -110,38 +126,28 @@ export default function UpgradePricingManager() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              4GB DDR3/DDR3L RAM
-            </label>
-            <div className="flex items-center">
-              <span className="text-gray-600 mr-2">Rs:</span>
-              <input
-                type="number"
-                value={pricing?.ram_ddr3_4gb || 0}
-                onChange={(e) => handleChange('ram_ddr3_4gb', e.target.value)}
-                min="0"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+          {ramDDR3.map((option) => (
+            <div key={option.id}>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {option.display_label}
+                {option.description && <span className="text-xs text-gray-500 block">{option.description}</span>}
+              </label>
+              <div className="flex items-center">
+                <span className="text-gray-600 mr-2">Rs:</span>
+                <input
+                  type="number"
+                  value={option.price || 0}
+                  onChange={(e) => handleChange(option.id, e.target.value)}
+                  min="0"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
             </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              8GB DDR3/DDR3L RAM
-            </label>
-            <div className="flex items-center">
-              <span className="text-gray-600 mr-2">Rs:</span>
-              <input
-                type="number"
-                value={pricing?.ram_ddr3_8gb || 0}
-                onChange={(e) => handleChange('ram_ddr3_8gb', e.target.value)}
-                min="0"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-          </div>
+          ))}
         </div>
+        {ramDDR3.length === 0 && (
+          <p className="text-center py-4 text-gray-500">No DDR3 RAM options available. Add them in Laptop Options section.</p>
+        )}
       </div>
 
       {/* RAM Pricing - DDR4 (6th to 11th Generation) */}
@@ -154,133 +160,28 @@ export default function UpgradePricingManager() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              4GB DDR4 RAM
-            </label>
-            <div className="flex items-center">
-              <span className="text-gray-600 mr-2">Rs:</span>
-              <input
-                type="number"
-                value={pricing?.ram_ddr4_4gb || 0}
-                onChange={(e) => handleChange('ram_ddr4_4gb', e.target.value)}
-                min="0"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
+          {ramDDR4.map((option) => (
+            <div key={option.id}>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {option.display_label}
+                {option.description && <span className="text-xs text-gray-500 block">{option.description}</span>}
+              </label>
+              <div className="flex items-center">
+                <span className="text-gray-600 mr-2">Rs:</span>
+                <input
+                  type="number"
+                  value={option.price || 0}
+                  onChange={(e) => handleChange(option.id, e.target.value)}
+                  min="0"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
             </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              8GB DDR4 RAM
-            </label>
-            <div className="flex items-center">
-              <span className="text-gray-600 mr-2">Rs:</span>
-              <input
-                type="number"
-                value={pricing?.ram_ddr4_8gb || 0}
-                onChange={(e) => handleChange('ram_ddr4_8gb', e.target.value)}
-                min="0"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              16GB DDR4 RAM
-            </label>
-            <div className="flex items-center">
-              <span className="text-gray-600 mr-2">Rs:</span>
-              <input
-                type="number"
-                value={pricing?.ram_ddr4_16gb || 0}
-                onChange={(e) => handleChange('ram_ddr4_16gb', e.target.value)}
-                min="0"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              32GB DDR4 RAM
-            </label>
-            <div className="flex items-center">
-              <span className="text-gray-600 mr-2">Rs:</span>
-              <input
-                type="number"
-                value={pricing?.ram_ddr4_32gb || 0}
-                onChange={(e) => handleChange('ram_ddr4_32gb', e.target.value)}
-                min="0"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-            </div>
-          </div>
+          ))}
         </div>
-      </div>
-
-      {/* RAM Speed Pricing */}
-      <div className="mb-8">
-        <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-lg border border-orange-200 mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            RAM Speed Upgrade Prices (MHz)
-          </h3>
-          <p className="text-sm text-gray-600">Additional cost for higher frequency RAM (above 2133 MHz base)</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              2400 MHz
-              <span className="text-xs text-gray-500 block">Faster performance</span>
-            </label>
-            <div className="flex items-center">
-              <span className="text-gray-600 mr-2">+Rs:</span>
-              <input
-                type="number"
-                value={pricing?.ram_speed_2400 || 0}
-                onChange={(e) => handleChange('ram_speed_2400', e.target.value)}
-                min="0"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              2666 MHz
-              <span className="text-xs text-gray-500 block">Enhanced speed</span>
-            </label>
-            <div className="flex items-center">
-              <span className="text-gray-600 mr-2">+Rs:</span>
-              <input
-                type="number"
-                value={pricing?.ram_speed_2666 || 0}
-                onChange={(e) => handleChange('ram_speed_2666', e.target.value)}
-                min="0"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              3200 MHz
-              <span className="text-xs text-gray-500 block">Maximum performance</span>
-            </label>
-            <div className="flex items-center">
-              <span className="text-gray-600 mr-2">+Rs:</span>
-              <input
-                type="number"
-                value={pricing?.ram_speed_3200 || 0}
-                onChange={(e) => handleChange('ram_speed_3200', e.target.value)}
-                min="0"
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-        </div>
+        {ramDDR4.length === 0 && (
+          <p className="text-center py-4 text-gray-500">No DDR4 RAM options available. Add them in Laptop Options section.</p>
+        )}
       </div>
 
       {/* SSD Pricing */}
@@ -289,135 +190,43 @@ export default function UpgradePricingManager() {
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             SSD Upgrade Prices
           </h3>
-          <p className="text-sm text-gray-600">Storage upgrade pricing tiers</p>
+          <p className="text-sm text-gray-600">Storage upgrade pricing</p>
         </div>
 
-        <div className="space-y-6">
-          {/* From 128GB */}
-          <div>
-            <h4 className="font-semibold text-gray-800 mb-3">From 128GB SSD</h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  128GB → 256GB
-                </label>
-                <div className="flex items-center">
-                  <span className="text-gray-600 mr-2">Rs:</span>
-                  <input
-                    type="number"
-                    value={pricing?.ssd_128_to_256 || 0}
-                    onChange={(e) => handleChange('ssd_128_to_256', e.target.value)}
-                    min="0"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  128GB → 512GB
-                </label>
-                <div className="flex items-center">
-                  <span className="text-gray-600 mr-2">Rs:</span>
-                  <input
-                    type="number"
-                    value={pricing?.ssd_128_to_512 || 0}
-                    onChange={(e) => handleChange('ssd_128_to_512', e.target.value)}
-                    min="0"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  128GB → 1TB
-                </label>
-                <div className="flex items-center">
-                  <span className="text-gray-600 mr-2">Rs:</span>
-                  <input
-                    type="number"
-                    value={pricing?.ssd_128_to_1tb || 0}
-                    onChange={(e) => handleChange('ssd_128_to_1tb', e.target.value)}
-                    min="0"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {ssdOptions.map((option) => (
+            <div key={option.id}>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {option.display_label}
+                {option.description && <span className="text-xs text-gray-500 block">{option.description}</span>}
+              </label>
+              <div className="flex items-center">
+                <span className="text-gray-600 mr-2">Rs:</span>
+                <input
+                  type="number"
+                  value={option.price || 0}
+                  onChange={(e) => handleChange(option.id, e.target.value)}
+                  min="0"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
               </div>
             </div>
-          </div>
-
-          {/* From 256GB */}
-          <div>
-            <h4 className="font-semibold text-gray-800 mb-3">From 256GB SSD</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  256GB → 512GB
-                </label>
-                <div className="flex items-center">
-                  <span className="text-gray-600 mr-2">Rs:</span>
-                  <input
-                    type="number"
-                    value={pricing?.ssd_256_to_512 || 0}
-                    onChange={(e) => handleChange('ssd_256_to_512', e.target.value)}
-                    min="0"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  256GB → 1TB
-                </label>
-                <div className="flex items-center">
-                  <span className="text-gray-600 mr-2">Rs:</span>
-                  <input
-                    type="number"
-                    value={pricing?.ssd_256_to_1tb || 0}
-                    onChange={(e) => handleChange('ssd_256_to_1tb', e.target.value)}
-                    min="0"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* From 512GB */}
-          <div>
-            <h4 className="font-semibold text-gray-800 mb-3">From 512GB SSD</h4>
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  512GB → 1TB
-                </label>
-                <div className="flex items-center">
-                  <span className="text-gray-600 mr-2">Rs:</span>
-                  <input
-                    type="number"
-                    value={pricing?.ssd_512_to_1tb || 0}
-                    onChange={(e) => handleChange('ssd_512_to_1tb', e.target.value)}
-                    min="0"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
+        {ssdOptions.length === 0 && (
+          <p className="text-center py-4 text-gray-500">No SSD options available. Add them in Laptop Options section.</p>
+        )}
       </div>
 
-      {/* Last Updated Info */}
-      {pricing?.updated_at && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-600">
-          <p>
-            <strong>Last Updated:</strong> {new Date(pricing.updated_at).toLocaleString()}
-            {pricing.updated_by && ` by ${pricing.updated_by}`}
-          </p>
-        </div>
-      )}
+      {/* Info Box */}
+      <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <h4 className="font-semibold text-blue-900 mb-2">How it works:</h4>
+        <ul className="text-sm text-blue-800 space-y-1">
+          <li>• Update prices here to change what customers see in the laptop customizer</li>
+          <li>• To add/remove upgrade options, use the "Laptop Options" section in the admin panel</li>
+          <li>• Changes are applied immediately across all laptop products</li>
+        </ul>
+      </div>
     </div>
   );
 }

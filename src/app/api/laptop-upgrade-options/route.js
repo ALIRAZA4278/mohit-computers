@@ -59,19 +59,12 @@ export async function POST(request) {
   try {
     const supabase = createClient();
 
-    // Check if user is admin
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const body = await request.json();
 
     const { data, error } = await supabase
       .from('laptop_upgrade_options')
       .insert({
         ...body,
-        updated_by: session.user.email,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
@@ -80,10 +73,10 @@ export async function POST(request) {
 
     if (error) throw error;
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       option: data,
-      message: 'Upgrade option created successfully' 
+      message: 'Upgrade option created successfully'
     });
   } catch (error) {
     console.error('Error creating upgrade option:', error);
@@ -99,12 +92,6 @@ export async function PUT(request) {
   try {
     const supabase = createClient();
 
-    // Check if user is admin
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const body = await request.json();
     const { id, ...updateData } = body;
 
@@ -119,8 +106,7 @@ export async function PUT(request) {
       .from('laptop_upgrade_options')
       .update({
         ...updateData,
-        updated_at: new Date().toISOString(),
-        updated_by: session.user.email
+        updated_at: new Date().toISOString()
       })
       .eq('id', id)
       .select()
@@ -128,10 +114,10 @@ export async function PUT(request) {
 
     if (error) throw error;
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       option: data,
-      message: 'Upgrade option updated successfully' 
+      message: 'Upgrade option updated successfully'
     });
   } catch (error) {
     console.error('Error updating upgrade option:', error);
@@ -146,12 +132,6 @@ export async function PUT(request) {
 export async function DELETE(request) {
   try {
     const supabase = createClient();
-
-    // Check if user is admin
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
@@ -170,9 +150,9 @@ export async function DELETE(request) {
 
     if (error) throw error;
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
-      message: 'Upgrade option deleted successfully' 
+      message: 'Upgrade option deleted successfully'
     });
   } catch (error) {
     console.error('Error deleting upgrade option:', error);

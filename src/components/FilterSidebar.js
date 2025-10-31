@@ -139,10 +139,32 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
 
         {/* Filter Content */}
         <div className="p-4">
+          {/* In Stock Only - Moved to top */}
+          <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={localFilters.inStock || false}
+                onChange={(e) => {
+                  const newFilters = { ...localFilters };
+                  if (e.target.checked) {
+                    newFilters.inStock = true;
+                  } else {
+                    delete newFilters.inStock;
+                  }
+                  setLocalFilters(newFilters);
+                  onFiltersChange(newFilters);
+                }}
+                className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4"
+              />
+              <span className="text-sm font-semibold text-gray-800">In Stock Only</span>
+            </label>
+          </div>
+
           {/* Price Range */}
           <div className="mb-6">
             <h4 className="font-semibold text-gray-800 mb-3">Price Range</h4>
-            
+
             {/* Custom Price Range Inputs */}
             <div className="mb-4 p-2 sm:p-3 bg-gray-50 rounded-lg">
               <p className="text-xs text-gray-600 mb-2">Custom Range:</p>
@@ -352,28 +374,6 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
               />
             </>
           )}
-
-          {/* In Stock Only */}
-          <div className="mb-6">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={localFilters.inStock || false}
-                onChange={(e) => {
-                  const newFilters = { ...localFilters };
-                  if (e.target.checked) {
-                    newFilters.inStock = true;
-                  } else {
-                    delete newFilters.inStock;
-                  }
-                  setLocalFilters(newFilters);
-                  onFiltersChange(newFilters);
-                }}
-                className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-sm text-gray-700">In Stock Only</span>
-            </label>
-          </div>
 
           {/* Featured Products Only */}
           <div className="mb-6">

@@ -29,9 +29,7 @@ export default function AdminSidebar({ activeSection, setActiveSection, onLogout
     { id: 'comments', label: 'Comments', icon: MessageCircle },
     { id: 'reviews', label: 'Reviews', icon: Star },
     { id: 'subscribers', label: 'Subscribers', icon: Mail },
-    { id: 'pricing', label: 'Upgrade Pricing', icon: DollarSign },
     { id: 'laptop-options', label: 'Laptop Options', icon: Cpu },
-    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (
