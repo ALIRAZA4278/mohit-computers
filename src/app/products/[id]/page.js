@@ -48,6 +48,25 @@ export default function ProductDetail() {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { addToCompare, isInCompare } = useCompare();
 
+  // Helper function to check product availability
+  const checkProductAvailability = (product) => {
+    if (!product) return { isAvailable: false, stockQuantity: 0, inStock: false };
+
+    const stockQuantity = product.stock_quantity !== undefined && product.stock_quantity !== null
+      ? product.stock_quantity
+      : 999;
+
+    const inStock = product.in_stock !== undefined && product.in_stock !== null
+      ? product.in_stock
+      : (product.inStock !== undefined && product.inStock !== null ? product.inStock : true);
+
+    const isActive = product.is_active !== undefined ? product.is_active : true;
+
+    const isAvailable = isActive && inStock === true && stockQuantity > 0;
+
+    return { isAvailable, stockQuantity, inStock, isActive };
+  };
+
   // Define handlers with useCallback to prevent infinite loops
   const handleCustomizationChange = useCallback((customizationData) => {
     console.log('Customization data received:', customizationData);
@@ -207,21 +226,10 @@ export default function ProductDetail() {
     console.log('handleAddToCart called - Adding product without customization');
     console.log('Product price:', product.price);
 
-    // Check stock availability - with fallback for existing products
-    // Set defaults based on category and product name
-    const category = product.category_id || product.category;
-    const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
-    const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
-    const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat =>
-      categoryLower.includes(cat) || productNameLower.includes(cat)
-    );
+    // Check stock availability using helper function
+    const { isAvailable, stockQuantity } = checkProductAvailability(product);
 
-    const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
-    const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
-    const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
-    const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
-
-    if (!isAvailableForPurchase) {
+    if (!isAvailable) {
       alert('Sorry, this product is currently out of stock.');
       return;
     }
@@ -447,7 +455,9 @@ export default function ProductDetail() {
                   </div>
                   <span className="text-xs sm:text-sm text-gray-600 font-medium">(5.0 Rating)</span>
                   <span className="text-xs sm:text-sm text-gray-400">•</span>
-                  <span className="text-xs sm:text-sm text-[#6dc1c9] font-medium">In Stock</span>
+                  <span className={`text-xs sm:text-sm font-medium ${checkProductAvailability(product).isAvailable ? 'text-[#6dc1c9]' : 'text-red-500'}`}>
+                    {checkProductAvailability(product).isAvailable ? 'In Stock' : 'Out of Stock'}
+                  </span>
                 </div>
               </div>
 
@@ -794,51 +804,6 @@ export default function ProductDetail() {
                 </div>
               )}
 
-              {/* Stock Availability */}
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {(() => {
-                      const category = product.category_id || product.category;
-                      const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
-                      const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
-                      const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
-                        categoryLower.includes(cat) || productNameLower.includes(cat)
-                      );
-                      
-                      const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
-                      const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
-                      const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
-                      const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
-                      
-                      if (!isAvailableForPurchase) {
-                        return (
-                          <>
-                            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                            <span className="text-red-700 font-semibold">Out of Stock</span>
-                          </>
-                        );
-                      } else if (stockQuantity <= 5) {
-                        return (
-                          <>
-                            <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                            <span className="text-orange-700 font-semibold">Limited Stock</span>
-                          </>
-                        );
-                      } else {
-                        return (
-                          <>
-                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                            <span className="text-green-700 font-semibold">In Stock</span>
-                          </>
-                        );
-                      }
-                    })()}
-                  </div>
-                 
-                </div>
-              </div>
-
               {/* Quantity & Actions */}
               <div className="space-y-4">
                 {/* Quantity Selector */}
@@ -872,19 +837,9 @@ export default function ProductDetail() {
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   {(() => {
-                    const category = product.category_id || product.category;
-                    const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
-                    const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
-                    const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat => 
-                      categoryLower.includes(cat) || productNameLower.includes(cat)
-                    );
-                    
-                    const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
-                    const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
-                    const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
-                    const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
-                    
-                    if (!isAvailableForPurchase) {
+                    const { isAvailable } = checkProductAvailability(product);
+
+                    if (!isAvailable) {
                       return (
                         <button
                           disabled
@@ -1295,21 +1250,7 @@ export default function ProductDetail() {
                     <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
                       <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Availability</div>
                       <div className="px-4 py-3 text-gray-700 text-sm">
-                        {(() => {
-                          const category = product.category_id || product.category;
-                          const categoryLower = typeof category === 'string' ? category.toLowerCase() : '';
-                          const productNameLower = typeof product.name === 'string' ? product.name.toLowerCase() : '';
-                          const isAccessoryCategory = ['accessories', 'ram', 'ssd', 'chromebook', 'accessory'].some(cat =>
-                            categoryLower.includes(cat) || productNameLower.includes(cat)
-                          );
-
-                          const stockQuantity = product.stock_quantity !== undefined ? product.stock_quantity : (isAccessoryCategory ? 0 : 999);
-                          const inStock = product.in_stock !== undefined ? product.in_stock : (product.inStock !== undefined ? product.inStock : !isAccessoryCategory);
-                          const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
-                          const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
-
-                          return isAvailableForPurchase ? 'In Stock' : 'Out of Stock';
-                        })()}
+                        {checkProductAvailability(product).isAvailable ? 'In Stock' : 'Out of Stock'}
                       </div>
                     </div>
                     {product.is_featured !== undefined && (
