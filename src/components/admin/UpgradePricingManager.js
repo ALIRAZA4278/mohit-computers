@@ -223,7 +223,7 @@ export default function UpgradePricingManager() {
         <h4 className="font-semibold text-blue-900 mb-2">How it works:</h4>
         <ul className="text-sm text-blue-800 space-y-1">
           <li>• Update prices here to change what customers see in the laptop customizer</li>
-          <li>• To add/remove upgrade options, use the "Laptop Options" section in the admin panel</li>
+          <li>• To add/remove upgrade options, use the &quot;Laptop Options&quot; section in the admin panel</li>
           <li>• Changes are applied immediately across all laptop products</li>
         </ul>
       </div>

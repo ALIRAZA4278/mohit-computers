@@ -249,7 +249,7 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
       </div>
 
       {/* RAM Modules */}
-      {product?.show_ram_options !== false && (
+      {product?.show_ram_options !== false && !loading && ramModules.length > 0 && (
       <div className="mb-8">
         <div className="flex items-center mb-4">
           <Cpu className="w-5 h-5 text-teal-600 mr-2" />
@@ -261,19 +261,8 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
             </div>
           </div>
         </div>
-        
-        {loading ? (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-4 border-teal-500 border-t-transparent mx-auto"></div>
-            <p className="text-sm text-gray-500 mt-2">Loading upgrade options...</p>
-          </div>
-        ) : ramModules.length === 0 ? (
-          <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-600">No RAM upgrade options available for this laptop.</p>
-            <p className="text-sm text-gray-500 mt-1">Current RAM: {product?.ram || '8GB'}</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {ramModules.map((ram) => (
             <div
               key={ram.id}
@@ -305,7 +294,6 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
             </div>
           ))}
         </div>
-        )}
       </div>
       )}
 

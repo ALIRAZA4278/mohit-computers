@@ -318,7 +318,7 @@ export default function Settings() {
           </li>
           <li className="flex items-start gap-2">
             <span className="font-bold mt-0.5">•</span>
-            <span><strong>Add/Remove Options:</strong> To add or remove upgrade options, use the "Laptop Options" section in the admin panel.</span>
+            <span><strong>Add/Remove Options:</strong> To add or remove upgrade options, use the &quot;Laptop Options&quot; section in the admin panel.</span>
           </li>
         </ul>
       </div>

@@ -45,8 +45,8 @@ const Navbar = () => {
   }, [pathname]);
 
   // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce(async (query) => {
+  const debouncedSearch = useCallback((query) => {
+    const performSearch = debounce(async () => {
       if (query.length < 2) {
         setSuggestions([]);
         setShowSuggestions(false);
@@ -66,9 +66,10 @@ const Navbar = () => {
       } finally {
         setIsSearchLoading(false);
       }
-    }, 300),
-    []
-  );
+    }, 300);
+
+    performSearch();
+  }, []);
 
   // Debounce utility function
   function debounce(func, wait) {

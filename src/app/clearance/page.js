@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { Filter, Grid, List, SortAsc, Loader } from 'lucide-react';
 import Banner from '../../components/Banner';
 import ProductCard from '../../components/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar';
@@ -12,7 +13,8 @@ export default function ClearancePage() {
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState('discount'); // discount, priceAsc, priceDesc, newest
-  const [itemsToShow, setItemsToShow] = useState(24);
+  const [viewMode, setViewMode] = useState('grid');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -125,81 +127,131 @@ export default function ClearancePage() {
   };
 
   const filteredProducts = applyFiltersAndSort();
-  const visibleProducts = filteredProducts.slice(0, itemsToShow);
+
+  const toggleFilter = () => {
+    setIsFilterOpen(!isFilterOpen);
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gray-50">
+      {/* Clearance Banner */}
       <Banner
         desktopImage="/banners/hero banner 1.jpg"
         mobileImage="/banners/hero mobile banner 1.jpg"
         alt="Clearance & Discounted Products - Mohit Computers"
-        priority
+        height="300px"
+        priority={true}
       />
 
-      <div className="mt-8 grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex">
+          {/* Filter Sidebar */}
           <FilterSidebar
             filters={filters}
-            onFiltersChange={(f) => { setFilters(f); setItemsToShow(24); }}
-            isOpen={false}
-            onClose={() => {}}
+            onFiltersChange={setFilters}
+            isOpen={isFilterOpen}
+            onClose={() => setIsFilterOpen(false)}
             category={null}
           />
-        </div>
 
-        {/* Product Grid */}
-        <div className="lg:col-span-3">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold">Clearance & Discounted Products</h1>
-              <p className="text-sm text-gray-600">Best deals, clearance items, and discounted products — limited stock and special offers.</p>
+          {/* Main Content */}
+          <div className="flex-1 lg:ml-8">
+            {/* Toolbar */}
+            <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+              <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={toggleFilter}
+                    className="lg:hidden flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    <Filter className="w-4 h-4 mr-2" />
+                    Filters
+                  </button>
+
+                  <div className="text-gray-600">
+                    <h1 className="text-xl font-bold text-gray-900">Clearance & Discounts</h1>
+                    <p className="text-sm">Showing {filteredProducts.length} of {products.length} products</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  {/* Sort Dropdown */}
+                  <div className="flex items-center space-x-2">
+                    <SortAsc className="w-4 h-4 text-gray-500" />
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="border text-black border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="discount">Best Discount</option>
+                      <option value="priceAsc">Price: Low to High</option>
+                      <option value="priceDesc">Price: High to Low</option>
+                      <option value="newest">Newest First</option>
+                    </select>
+                  </div>
+
+                  {/* View Mode Toggle */}
+                  <div className="border border-gray-300 rounded-lg p-1 flex">
+                    <button
+                      onClick={() => setViewMode('grid')}
+                      className={`p-2 rounded ${
+                        viewMode === 'grid'
+                          ? 'bg-blue-600 text-white'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Grid className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setViewMode('list')}
+                      className={`p-2 rounded ${
+                        viewMode === 'list'
+                          ? 'bg-blue-600 text-white'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`}
+                    >
+                      <List className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-3">
-              <div className="text-sm text-gray-600">Sort by:</div>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="border border-gray-300 rounded px-2 py-1 text-sm"
-              >
-                <option value="discount">Best Discount</option>
-                <option value="priceAsc">Price: Low to High</option>
-                <option value="priceDesc">Price: High to Low</option>
-                <option value="newest">Newest</option>
-              </select>
-            </div>
+            {/* Loading State */}
+            {loading ? (
+              <div className="flex justify-center items-center py-12">
+                <Loader className="w-8 h-8 animate-spin text-blue-600" />
+                <span className="ml-2 text-gray-600">Loading products...</span>
+              </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Products</h3>
+                <p className="text-gray-500">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Retry
+                </button>
+              </div>
+            ) : !filteredProducts || filteredProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
+                <p className="text-gray-500">No clearance or discounted products available at this time.</p>
+              </div>
+            ) : (
+              <div className={`
+                ${viewMode === 'grid'
+                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
+                  : 'space-y-6'
+                }
+              `}>
+                {filteredProducts.map((p) => (
+                  <ProductCard key={p.id} product={p} showCompare={true} />
+                ))}
+              </div>
+            )}
           </div>
-
-          {loading && (
-            <div className="py-12 text-center text-gray-500">Loading products...</div>
-          )}
-
-          {!loading && error && (
-            <div className="py-12 text-center text-red-500">{error}</div>
-          )}
-
-          {!loading && !error && visibleProducts.length === 0 && (
-            <div className="py-12 text-center text-gray-500">No clearance or discounted products found.</div>
-          )}
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
-            {visibleProducts.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-
-          {/* Load more */}
-          {visibleProducts.length < filteredProducts.length && (
-            <div className="mt-6 text-center">
-              <button
-                onClick={() => setItemsToShow((s) => s + 24)}
-                className="px-4 py-2 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-700 transition-colors"
-              >
-                Load more
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </div>
