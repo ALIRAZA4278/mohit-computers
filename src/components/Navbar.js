@@ -459,6 +459,10 @@ const Navbar = () => {
                         <div className="font-medium text-gray-800">Chrome Book</div>
                       </Link>
 
+                      <Link href="/workstation" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
+                        <div className="font-medium text-gray-800">Workstations</div>
+                      </Link>
+
                       <Link href="/products?category=rugged-laptop" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">Rugged Book / Tough Laptops</div>
                       </Link>
@@ -473,13 +477,6 @@ const Navbar = () => {
 
                       <Link href="/products?category=ssd" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
                         <div className="font-medium text-gray-800">SSD</div>
-                      </Link>
-
-                      <div className="border-t border-gray-100"></div>
-
-                      <Link href="/workstation" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                        <div className="font-medium text-gray-800">Workstations</div>
-                        <div className="text-xs text-gray-500 mt-0.5">Professional workstations</div>
                       </Link>
                     </div>
                   </div>
@@ -604,10 +601,10 @@ const Navbar = () => {
                   <Link href="/products?category=used-laptop&brand=Lenovo" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Lenovo</Link>
                 </div>
                 <Link href="/products?category=chromebook" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Chrome Book</Link>
+                <Link href="/workstation" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9] font-semibold">Workstations</Link>
                 <Link href="/products?category=accessories" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Accessories</Link>
                 <Link href="/products?category=ram" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">RAM</Link>
                 <Link href="/products?category=ssd" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">SSD</Link>
-                <Link href="/workstation" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9] font-semibold">Workstations</Link>
               </div>
             </div>
             <Link href="/blog" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Blog</Link>
