@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MaybeShell from '../components/MaybeShell';
+import WhatsAppButton from '../components/WhatsAppButton';
 import { AuthProvider } from '../context/AuthContext';
 import { CartProvider } from '../context/CartContext';
 import { WishlistProvider } from '../context/WishlistContext';
@@ -35,6 +36,7 @@ export default function RootLayout({ children }) {
                 <MaybeShell>
                   {children}
                 </MaybeShell>
+                <WhatsAppButton />
               </CompareProvider>
             </WishlistProvider>
           </CartProvider>
