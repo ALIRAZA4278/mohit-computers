@@ -276,5 +276,52 @@ export const filterOptions = {
     { label: 'Under PKR 3,000', min: 0, max: 3000 },
     { label: 'PKR 3,000 - 5,000', min: 3000, max: 5000 },
     { label: 'Above PKR 5,000', min: 5000, max: Infinity }
+  ],
+  // Chromebook-specific filters
+  chromebookBrands: [
+    'Dell', 'HP', 'Lenovo', 'Acer', 'Asus', 'Samsung'
+  ],
+  chromebookProcessors: [
+    'Intel Celeron N3350',
+    'Intel Celeron N4000',
+    'Intel Celeron N4020',
+    'Intel Celeron N4120',
+    'Intel Pentium N5030',
+    'Intel Pentium N6000',
+    'Intel Core i3 (8th Gen)',
+    'Intel Core i3 (10th Gen)',
+    'Intel Core i5 (8th Gen)',
+    'Intel Core i5 (10th Gen)',
+    'Intel Core i7'
+  ],
+  chromebookRam: [
+    '2GB', '4GB', '8GB', '16GB'
+  ],
+  chromebookStorageType: [
+    'eMMC', 'SSD'
+  ],
+  chromebookStorageCapacity: [
+    '16GB', '32GB', '64GB', '128GB', '256GB', '512GB'
+  ],
+  chromebookDisplaySize: [
+    '11.6"', '12.5"', '13.3"', '14"', '15.6"'
+  ],
+  chromebookDisplayType: [
+    'HD', 'Full HD (FHD)'
+  ],
+  chromebookTouchscreen: [
+    'Non-Touch', 'Touchscreen', 'Touchscreen x360'
+  ],
+  chromebookOS: [
+    'Windows', 'Chrome OS'
+  ],
+  chromebookAUE: [
+    '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033', '2034'
+  ],
+  chromebookPriceRanges: [
+    { label: 'Under Rs:30,000', min: 0, max: 30000 },
+    { label: 'Rs:30,000 - Rs:50,000', min: 30000, max: 50000 },
+    { label: 'Rs:50,000 - Rs:70,000', min: 50000, max: 70000 },
+    { label: 'Above Rs:70,000', min: 70000, max: Infinity }
   ]
 };

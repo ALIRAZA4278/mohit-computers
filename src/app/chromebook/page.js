@@ -7,7 +7,7 @@ import ProductCard from '../../components/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar';
 import Banner from '../../components/Banner';
 
-function WorkstationContent() {
+function ChromebookContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -18,15 +18,12 @@ function WorkstationContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [dynamicLaptopOptions, setDynamicLaptopOptions] = useState({});
+  const [dynamicFilterOptions, setDynamicFilterOptions] = useState({});
 
   // Generate dynamic filter options from available products
   const generateDynamicFilters = (productsList) => {
-    // Filter workstation products and exclude SEO-only
-    const availableProducts = productsList.filter(p =>
-      !p.seo_only &&
-      (p.is_workstation === true || p.category_id === 'workstation')
-    );
+    // Filter out SEO-only products
+    const availableProducts = productsList.filter(p => !p.seo_only);
 
     const extractUniqueValues = (field, processor) => {
       const values = availableProducts
@@ -40,42 +37,71 @@ function WorkstationContent() {
       brands: extractUniqueValues('brand'),
       processors: extractUniqueValues('processor'),
       ram: extractUniqueValues('ram'),
-      storage: extractUniqueValues('hdd').concat(extractUniqueValues('storage')),
-      display: extractUniqueValues('display_size').concat(extractUniqueValues('display')),
-      generation: extractUniqueValues('generation'),
-      graphics: extractUniqueValues('discrete_graphics').concat(extractUniqueValues('integrated_graphics')).concat(extractUniqueValues('graphics')),
-      touchType: extractUniqueValues('touch_type'),
-      resolution: extractUniqueValues('resolution'),
-      operatingSystem: extractUniqueValues('os')
+      storageType: extractUniqueValues('storage', (storage) => {
+        const storageStr = (storage || '').toLowerCase();
+        const types = [];
+        if (storageStr.includes('emmc')) types.push('eMMC');
+        if (storageStr.includes('ssd')) types.push('SSD');
+        return types;
+      }),
+      storageCapacity: extractUniqueValues('storage', (storage) => {
+        const storageStr = storage || '';
+        const capacities = [];
+        if (storageStr.includes('16GB') || storageStr.includes('16 GB')) capacities.push('16GB');
+        if (storageStr.includes('32GB') || storageStr.includes('32 GB')) capacities.push('32GB');
+        if (storageStr.includes('64GB') || storageStr.includes('64 GB')) capacities.push('64GB');
+        if (storageStr.includes('128GB') || storageStr.includes('128 GB')) capacities.push('128GB');
+        if (storageStr.includes('256GB') || storageStr.includes('256 GB')) capacities.push('256GB');
+        if (storageStr.includes('512GB') || storageStr.includes('512 GB')) capacities.push('512GB');
+        return capacities;
+      }),
+      displaySize: extractUniqueValues('display_size').concat(extractUniqueValues('display')),
+      displayType: extractUniqueValues('resolution', (resolution) => {
+        const resStr = (resolution || '').toLowerCase();
+        const types = [];
+        if (resStr.includes('1366x768') || resStr.includes('hd') && !resStr.includes('full hd') && !resStr.includes('fhd')) types.push('HD');
+        if (resStr.includes('1920x1080') || resStr.includes('full hd') || resStr.includes('fhd')) types.push('Full HD (FHD)');
+        return types;
+      }),
+      touchscreen: extractUniqueValues('touch_type', (touchType) => {
+        const touchStr = (touchType || '').toLowerCase();
+        const types = [];
+        if (touchStr.includes('non-touch') || touchStr.includes('non touch')) types.push('Non-Touch');
+        if (touchStr.includes('touch') && !touchStr.includes('x360') && !touchStr.includes('non')) types.push('Touchscreen');
+        if (touchStr.includes('x360')) types.push('Touchscreen x360');
+        return types;
+      }),
+      operatingSystem: extractUniqueValues('os'),
+      aueYear: extractUniqueValues('aue_year').concat(extractUniqueValues('auto_update_expiration'))
     };
   };
 
-  // Fetch workstation products from database
+  // Fetch chromebook products from database
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
         const response = await fetch('/api/products');
         const data = await response.json();
-        
+
         if (data.success) {
-          // Filter only workstation products
-          const workstationProducts = (data.data || []).filter(
-            product => product.is_workstation === true || product.category_id === 'workstation'
+          // Filter only chromebook products
+          const chromebookProducts = (data.data || []).filter(
+            product => product.category_id === 'chromebook' || product.category === 'chromebook'
           );
-          setProducts(workstationProducts);
+          setProducts(chromebookProducts);
 
           // Generate dynamic filter options from available products
-          const dynamicOptions = generateDynamicFilters(workstationProducts);
-          setDynamicLaptopOptions(dynamicOptions);
+          const dynamicOptions = generateDynamicFilters(chromebookProducts);
+          setDynamicFilterOptions(dynamicOptions);
 
-          console.log('Workstation products loaded:', workstationProducts.length);
+          console.log('Chromebook products loaded:', chromebookProducts.length);
           console.log('Dynamic filter options:', dynamicOptions);
         } else {
           setError(data.error || 'Failed to load products');
         }
       } catch (err) {
-        console.error('Error fetching workstation products:', err);
+        console.error('Error fetching chromebook products:', err);
         setError('Failed to load products');
       } finally {
         setLoading(false);
@@ -149,67 +175,70 @@ function WorkstationContent() {
       });
     }
 
-    // Apply storage filter
-    if (filters.storage && filters.storage.length > 0) {
+    // Apply storage type filter (Chromebook-specific)
+    if (filters.storageType && filters.storageType.length > 0) {
       filtered = filtered.filter(product => {
-        const productStorage = product.hdd || '';
-        return filters.storage.some(filterStorage => {
-          return productStorage === filterStorage || productStorage.includes(filterStorage);
+        const productStorage = (product.storage || product.hdd || '').toLowerCase();
+        return filters.storageType.some(filterType => {
+          const filterTypeLower = filterType.toLowerCase();
+          return productStorage.includes(filterTypeLower);
         });
       });
     }
 
-    // Apply display filter
-    if (filters.display && filters.display.length > 0) {
+    // Apply storage capacity filter (Chromebook-specific)
+    if (filters.storageCapacity && filters.storageCapacity.length > 0) {
       filtered = filtered.filter(product => {
-        const productDisplaySize = product.display_size || '';
-        return filters.display.some(filterDisplay => {
-          return productDisplaySize === filterDisplay || productDisplaySize.includes(filterDisplay);
+        const productStorage = product.storage || product.hdd || '';
+        return filters.storageCapacity.some(filterCapacity => {
+          return productStorage.includes(filterCapacity);
         });
       });
     }
 
-    // Apply generation filter
-    if (filters.generation && filters.generation.length > 0) {
+    // Apply display size filter
+    if (filters.displaySize && filters.displaySize.length > 0) {
       filtered = filtered.filter(product => {
-        const productGeneration = product.generation || '';
-        return filters.generation.some(filterGeneration => {
-          return productGeneration === filterGeneration || 
-                 productGeneration.includes(filterGeneration) || 
-                 filterGeneration.includes(productGeneration);
+        const productDisplaySize = product.display_size || product.display || '';
+        return filters.displaySize.some(filterDisplay => {
+          return productDisplaySize.includes(filterDisplay);
         });
       });
     }
 
-    // Apply resolution filter
-    if (filters.resolution && filters.resolution.length > 0) {
+    // Apply display type filter (HD, FHD)
+    if (filters.displayType && filters.displayType.length > 0) {
       filtered = filtered.filter(product => {
         const productResolution = (product.resolution || '').toLowerCase();
-        return filters.resolution.some(filterResolution => {
-          const filterRes = filterResolution.toLowerCase();
-          return productResolution === filterRes || productResolution.includes(filterRes);
+        return filters.displayType.some(filterType => {
+          const filterTypeLower = filterType.toLowerCase();
+          if (filterTypeLower === 'hd') {
+            return productResolution.includes('1366x768') || productResolution.includes('hd');
+          }
+          if (filterTypeLower === 'full hd (fhd)') {
+            return productResolution.includes('1920x1080') || productResolution.includes('full hd') || productResolution.includes('fhd');
+          }
+          return productResolution.includes(filterTypeLower);
         });
       });
     }
 
-    // Apply graphics filter
-    if (filters.graphics && filters.graphics.length > 0) {
-      filtered = filtered.filter(product => {
-        const productGraphics = (product.graphics || '').toLowerCase();
-        return filters.graphics.some(filterGraphics => {
-          const filterGfx = filterGraphics.toLowerCase();
-          return productGraphics === filterGfx || productGraphics.includes(filterGfx);
-        });
-      });
-    }
-
-    // Apply touch type filter
-    if (filters.touchType && filters.touchType.length > 0) {
+    // Apply touchscreen filter
+    if (filters.touchscreen && filters.touchscreen.length > 0) {
       filtered = filtered.filter(product => {
         const productTouchType = (product.touch_type || '').toLowerCase();
-        return filters.touchType.some(filterTouchType => {
-          const filterTouch = filterTouchType.toLowerCase();
-          return productTouchType === filterTouch || productTouchType.includes(filterTouch);
+        return filters.touchscreen.some(filterTouch => {
+          const filterTouchLower = filterTouch.toLowerCase();
+          if (filterTouchLower === 'non-touch') {
+            return productTouchType.includes('non-touch') || productTouchType.includes('non touch');
+          }
+          if (filterTouchLower === 'touchscreen') {
+            return productTouchType.includes('touch') && !productTouchType.includes('x360');
+          }
+          if (filterTouchLower === 'touchscreen x360') {
+            return productTouchType.includes('x360');
+          }
+          return productTouchType.includes(filterTouchLower);
         });
       });
     }
@@ -221,6 +250,16 @@ function WorkstationContent() {
         return filters.operatingSystem.some(filterOS => {
           const filterOSLower = filterOS.toLowerCase();
           return productOS === filterOSLower || productOS.includes(filterOSLower);
+        });
+      });
+    }
+
+    // Apply AUE year filter (Chromebook-specific)
+    if (filters.aueYear && filters.aueYear.length > 0) {
+      filtered = filtered.filter(product => {
+        const productAUE = (product.aue_year || product.auto_update_expiration || '').toString();
+        return filters.aueYear.some(filterYear => {
+          return productAUE.includes(filterYear);
         });
       });
     }
@@ -271,9 +310,12 @@ function WorkstationContent() {
           product.processor,
           product.ram,
           product.hdd,
+          product.storage,
           product.display_size,
-          product.generation,
-          product.graphics,
+          product.display,
+          product.resolution,
+          product.touch_type,
+          product.os,
           product.description
         ]
           .filter(Boolean)
@@ -343,11 +385,11 @@ function WorkstationContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Workstation Banner */}
+      {/* Chromebook Banner */}
       <Banner
-        desktopImage="/banners/Work station banner.jpg"
-        mobileImage="/banners/Work station banner.jpg"
-        alt="Workstation Collection"
+        desktopImage="/banners/chromebook-banner.jpg"
+        mobileImage="/banners/chromebook-banner.jpg"
+        alt="Chromebook Collection"
         height="300px"
         priority={true}
       />
@@ -355,9 +397,9 @@ function WorkstationContent() {
       <div className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">Professional Workstations</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-3">Chromebooks</h1>
           <p className="text-lg text-gray-600">
-            High-performance workstations designed for demanding professional workflows
+            Fast, secure, and affordable Chromebooks for students, professionals, and everyday computing
           </p>
         </div>
 
@@ -368,8 +410,8 @@ function WorkstationContent() {
             onFiltersChange={handleFiltersChange}
             isOpen={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}
-            category="laptop"
-            dynamicLaptopOptions={dynamicLaptopOptions}
+            category="chromebook"
+            dynamicChromebookOptions={dynamicFilterOptions}
           />
 
           {/* Main Content */}
@@ -385,9 +427,9 @@ function WorkstationContent() {
                     <Filter className="w-4 h-4 mr-2" />
                     Filters
                   </button>
-                  
+
                   <div className="text-gray-600">
-                    Showing {filteredProducts.length} of {products.length} workstations
+                    Showing {filteredProducts.length} of {products.length} chromebooks
                   </div>
                 </div>
 
@@ -413,8 +455,8 @@ function WorkstationContent() {
                     <button
                       onClick={() => setViewMode('grid')}
                       className={`p-2 rounded ${
-                        viewMode === 'grid' 
-                          ? 'bg-blue-600 text-white' 
+                        viewMode === 'grid'
+                          ? 'bg-blue-600 text-white'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
@@ -423,8 +465,8 @@ function WorkstationContent() {
                     <button
                       onClick={() => setViewMode('list')}
                       className={`p-2 rounded ${
-                        viewMode === 'list' 
-                          ? 'bg-blue-600 text-white' 
+                        viewMode === 'list'
+                          ? 'bg-blue-600 text-white'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
@@ -439,14 +481,14 @@ function WorkstationContent() {
             {loading ? (
               <div className="flex justify-center items-center py-12">
                 <Loader className="w-8 h-8 animate-spin text-blue-600" />
-                <span className="ml-2 text-gray-600">Loading workstations...</span>
+                <span className="ml-2 text-gray-600">Loading chromebooks...</span>
               </div>
             ) : error ? (
               <div className="text-center py-12">
-                <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Workstations</h3>
+                <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Chromebooks</h3>
                 <p className="text-gray-500">{error}</p>
-                <button 
-                  onClick={() => window.location.reload()} 
+                <button
+                  onClick={() => window.location.reload()}
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                 >
                   Retry
@@ -454,21 +496,21 @@ function WorkstationContent() {
               </div>
             ) : !filteredProducts || filteredProducts.length === 0 ? (
               <div className="text-center py-12">
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">No workstations found</h3>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No chromebooks found</h3>
                 <p className="text-gray-500">
-                  {products.length === 0 ? 'No workstations available' : 'Try adjusting your filters or search criteria'}
+                  {products.length === 0 ? 'No chromebooks available' : 'Try adjusting your filters or search criteria'}
                 </p>
               </div>
             ) : (
               <div className={`
-                ${viewMode === 'grid' 
-                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8' 
+                ${viewMode === 'grid'
+                  ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
                   : 'space-y-6'
                 }
               `}>
                 {filteredProducts.map((product) => (
-                  <ProductCard 
-                    key={product.id} 
+                  <ProductCard
+                    key={product.id}
                     product={product}
                     showCompare={true}
                   />
@@ -482,17 +524,17 @@ function WorkstationContent() {
   );
 }
 
-export default function WorkstationPage() {
+export default function ChromebookPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#6dc1c9] border-t-transparent mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading workstations...</p>
+          <p className="text-gray-600 font-medium">Loading chromebooks...</p>
         </div>
       </div>
     }>
-      <WorkstationContent />
+      <ChromebookContent />
     </Suspense>
   );
 }

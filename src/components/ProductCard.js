@@ -114,9 +114,14 @@ const ProductCard = ({ product, showCompare = true }) => {
 
   const categoryBadge = getCategoryBadge();
 
+  // Check if this is an accessory product for compact layout
+  const isAccessory = ['accessories', 'ram', 'ssd', 'keyboard', 'mouse', 'ups', 'power', 'accessory'].some(cat =>
+    categoryLower.includes(cat)
+  );
+
   return (
     <div className="group h-full">
-      <div className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-teal-200 h-full flex flex-col">
+      <div className={`relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-teal-200 h-full flex flex-col ${isAccessory ? 'max-w-sm mx-auto' : ''}`}>
         {/* Badges Container - Super Cute Minimal */}
         <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
           {/* Low Stock Badge */}
@@ -158,7 +163,7 @@ const ProductCard = ({ product, showCompare = true }) => {
         )}
         
         {/* Product Image */}
-        <div className="relative h-32 sm:h-36 bg-gradient-to-br from-gray-50 to-gray-100 p-3 sm:p-4">
+        <div className={`relative bg-gradient-to-br from-gray-50 to-gray-100 ${isAccessory ? 'h-28 sm:h-32 p-2.5 sm:p-3' : 'h-32 sm:h-36 p-3 sm:p-4'}`}>
           <Image
             src={product.featured_image || product.image || "/next.svg"}
             alt={product.name}
@@ -172,62 +177,71 @@ const ProductCard = ({ product, showCompare = true }) => {
         </div>
         
         {/* Product Info */}
-        <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
+        <div className={`flex-1 flex flex-col justify-between ${isAccessory ? 'p-2.5 sm:p-3.5' : 'p-3 sm:p-4'}`}>
           <div className="flex-1">
             <Link href={`/products/${product.id}`}>
-              <h3 className="font-bold text-sm sm:text-base text-gray-900 mb-2 line-clamp-2 group-hover:text-[#6dc1c9] transition-colors cursor-pointer min-h-[2.5rem] sm:min-h-[3rem]">
+              <h3 className={`font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#6dc1c9] transition-colors cursor-pointer ${isAccessory ? 'text-sm min-h-[2.5rem]' : 'text-sm sm:text-base min-h-[2.5rem] sm:min-h-[3rem]'}`}>
                 {product.name}
               </h3>
             </Link>
 
-          {/* Brand */}
-          {product.brand && (
+          {/* Brand - Hide for accessories to save space */}
+          {!isAccessory && product.brand && (
             <p className="text-xs text-gray-500 mb-1 sm:mb-2 font-medium">
               Brand: {product.brand}
             </p>
           )}
 
-          {/* Specifications */}
-          <div className="text-xs text-gray-600 mb-2 sm:mb-3 space-y-1 min-h-[2rem] sm:min-h-[3rem]">
-            {product.processor && (
-              <div className="flex items-center">
-                <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                <span className="truncate">{product.processor}</span>
-              </div>
-            )}
-            {product.generation && (
-              <div className="flex items-center">
-                <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                <span className="truncate">{product.generation}</span>
-              </div>
-            )}
-            {product.ram && (
-              <div className="flex items-center">
-                <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                <span className="truncate">{product.ram} RAM, {product.hdd || product.storage}</span>
-              </div>
-            )}
-            {(product.display_size || product.screensize || product.display) && (
-              <div className="flex items-center">
-                <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                <span className="truncate">{product.display_size || product.screensize || product.display}</span>
-              </div>
-            )}
-          </div>
-          
+          {/* Specifications - Only show for laptops, hide for accessories */}
+          {!isAccessory && (
+            <div className="text-xs text-gray-600 mb-2 sm:mb-3 space-y-1 min-h-[2rem] sm:min-h-[3rem]">
+              {product.processor && (
+                <div className="flex items-center">
+                  <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
+                  <span className="truncate">{product.processor}</span>
+                </div>
+              )}
+              {product.generation && (
+                <div className="flex items-center">
+                  <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
+                  <span className="truncate">{product.generation}</span>
+                </div>
+              )}
+              {product.ram && (
+                <div className="flex items-center">
+                  <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
+                  <span className="truncate">{product.ram} RAM, {product.hdd || product.storage}</span>
+                </div>
+              )}
+              {(product.display_size || product.screensize || product.display) && (
+                <div className="flex items-center">
+                  <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
+                  <span className="truncate">{product.display_size || product.screensize || product.display}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Brand for accessories - compact version */}
+          {isAccessory && product.brand && (
+            <p className="text-xs text-gray-500 mb-1.5 font-medium">
+              Brand: {product.brand}
+            </p>
+          )}
+
           {/* Price */}
-          <div className="flex items-center justify-between mb-2 sm:mb-3">
+          <div className={`flex items-center justify-between ${isAccessory ? 'mb-2' : 'mb-2 sm:mb-3'}`}>
             <div>
-              <span className="text-base sm:text-lg font-bold text-gray-900">
+              <span className={`font-bold text-gray-900 ${isAccessory ? 'text-base' : 'text-base sm:text-lg'}`}>
                 Rs:{product.price?.toLocaleString() || '0'}
               </span>
               {originalPrice && (
-                <span className="text-xs text-gray-500 line-through ml-1 block">
+                <span className={`text-gray-500 line-through ml-1 block ${isAccessory ? 'text-[10px]' : 'text-xs'}`}>
                   Rs:{originalPrice.toLocaleString()}
                 </span>
               )}
             </div>
-            {originalPrice && (
+            {originalPrice && !isAccessory && (
               <div className="bg-green-100 text-green-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs font-medium">
                 Save Rs:{(originalPrice - product.price).toLocaleString()}
               </div>
@@ -235,10 +249,10 @@ const ProductCard = ({ product, showCompare = true }) => {
           </div>
 
           {/* Stock Status */}
-          <div className="mb-2">
-            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-              isAvailableForPurchase 
-                ? 'bg-green-100 text-green-800' 
+          <div className={isAccessory ? 'mb-1.5' : 'mb-2'}>
+            <span className={`inline-flex items-center px-2 py-1 rounded-full font-medium ${isAccessory ? 'text-xs' : 'text-xs'} ${
+              isAvailableForPurchase
+                ? 'bg-green-100 text-green-800'
                 : 'bg-red-100 text-red-800'
             }`}>
               <span className={`w-1 h-1 rounded-full mr-1 ${
@@ -249,26 +263,26 @@ const ProductCard = ({ product, showCompare = true }) => {
           </div>
           
           {/* Action Buttons */}
-          <div className="space-y-2">
+          <div className={isAccessory ? 'space-y-1' : 'space-y-2'}>
             <Link
               href={`/products/${product.id}`}
-              className="w-full bg-[#6dc1c9] text-white py-2 px-2 sm:px-3 rounded-lg text-center font-medium hover:bg-teal-700 transition-colors duration-200 block text-xs sm:text-sm"
+              className={`w-full bg-[#6dc1c9] text-white rounded-lg text-center font-medium hover:bg-teal-700 transition-colors duration-200 block ${isAccessory ? 'py-2 px-2 text-xs' : 'py-2 px-2 sm:px-3 text-xs sm:text-sm'}`}
             >
               View Details
             </Link>
 
-            <div className="flex gap-1 sm:gap-2">
+            <div className={`flex ${isAccessory ? 'gap-1' : 'gap-1 sm:gap-2'}`}>
               <button
                 onClick={handleAddToCart}
                 disabled={!isAvailableForPurchase}
-                className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-colors ${
+                className={`flex-1 rounded-lg font-medium transition-colors ${isAccessory ? 'py-1.5 px-2 text-xs' : 'py-1.5 px-2 text-xs'} ${
                   isAvailableForPurchase
                     ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                 }`}
                 title={!isAvailableForPurchase ? 'Out of stock' : 'Add to cart'}
               >
-                <ShoppingCart className="w-3 h-3 inline mr-1" />
+                <ShoppingCart className={`inline ${isAccessory ? 'w-3 h-3 mr-1' : 'w-3 h-3 mr-1'}`} />
                 {isAvailableForPurchase ? 'Cart' : 'Out of Stock'}
               </button>
               
@@ -276,28 +290,28 @@ const ProductCard = ({ product, showCompare = true }) => {
               {showCompare && isLaptopCategory(category) && (
                 <button
                   onClick={handleCompare}
-                  className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  className={`rounded-lg font-medium transition-colors ${isAccessory ? 'px-1.5 py-1' : 'px-2 py-1.5 text-xs'} ${
                     isInCompare(product.id)
                       ? 'bg-teal-100 text-teal-700 border border-teal-200'
                       : 'bg-gray-100 text-gray-700 hover:bg-teal-100 hover:text-teal-700'
                   }`}
                   title={isInCompare(product.id) ? 'Remove from comparison' : 'Add to comparison'}
                 >
-                  <GitCompareArrows className="w-3 h-3" />
+                  <GitCompareArrows className={isAccessory ? 'w-2.5 h-2.5' : 'w-3 h-3'} />
                 </button>
               )}
-              
+
               {/* Wishlist Button */}
               <button
                 onClick={handleWishlist}
-                className={`px-2 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                className={`rounded-lg font-medium transition-colors ${isAccessory ? 'px-1.5 py-1' : 'px-2 py-1.5 text-xs'} ${
                   isInWishlist(product.id)
                     ? 'bg-red-100 text-red-700 border border-red-200'
                     : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-700'
                 }`}
                 title={isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
               >
-                <Heart className={`w-3 h-3 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                <Heart className={`${isAccessory ? 'w-2.5 h-2.5' : 'w-3 h-3'} ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
               </button>
             </div>
           </div>

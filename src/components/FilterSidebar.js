@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { X, Filter } from 'lucide-react';
 import { filterOptions } from '../lib/data';
 
-const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dynamicGraphicsOptions = [] }) => {
+const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dynamicGraphicsOptions = [], dynamicChromebookOptions = {}, dynamicLaptopOptions = {}, dynamicRamOptions = {} }) => {
   const [localFilters, setLocalFilters] = useState(filters);
   const [customPriceMin, setCustomPriceMin] = useState('');
   const [customPriceMax, setCustomPriceMax] = useState('');
@@ -225,7 +225,9 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
             <div className="space-y-3 sm:space-y-2">
               <p className="text-xs text-gray-600 mb-2">Quick Select:</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
-                {(category === 'ram' ? filterOptions.ramPriceRanges : filterOptions.priceRanges).map((range) => (
+                {(category === 'ram' ? filterOptions.ramPriceRanges :
+                  category === 'chromebook' ? filterOptions.chromebookPriceRanges :
+                  filterOptions.priceRanges).map((range) => (
                   <label key={range.label} className="flex items-center p-2 sm:p-1 hover:bg-gray-50 rounded cursor-pointer">
                     <input
                       type="radio"
@@ -241,137 +243,256 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
             </div>
           </div>
 
-          {/* Category-specific filters for RAM */}
+          {/* Category-specific filters */}
           {category === 'ram' ? (
             <>
               {/* Brand Filter - RAM specific brands */}
-              <FilterSection
-                title="Brand"
-                options={filterOptions.ramBrands}
-                category="brands"
-              />
+              {dynamicRamOptions.ramBrands && dynamicRamOptions.ramBrands.length > 0 && (
+                <FilterSection
+                  title="Brand"
+                  options={dynamicRamOptions.ramBrands}
+                  category="brands"
+                />
+              )}
 
               {/* RAM Type Filter */}
-              <FilterSection
-                title="Type"
-                options={filterOptions.ramType}
-                category="ramType"
-              />
+              {dynamicRamOptions.ramType && dynamicRamOptions.ramType.length > 0 && (
+                <FilterSection
+                  title="Type"
+                  options={dynamicRamOptions.ramType}
+                  category="ramType"
+                />
+              )}
 
               {/* RAM Form Factor Filter */}
-              <FilterSection
-                title="Form Factor"
-                options={filterOptions.ramFormFactor}
-                category="ramFormFactor"
-              />
+              {dynamicRamOptions.ramFormFactor && dynamicRamOptions.ramFormFactor.length > 0 && (
+                <FilterSection
+                  title="Form Factor"
+                  options={dynamicRamOptions.ramFormFactor}
+                  category="ramFormFactor"
+                />
+              )}
 
               {/* RAM Capacity Filter */}
-              <FilterSection
-                title="Capacity"
-                options={filterOptions.ramCapacity}
-                category="ramCapacity"
-              />
+              {dynamicRamOptions.ramCapacity && dynamicRamOptions.ramCapacity.length > 0 && (
+                <FilterSection
+                  title="Capacity"
+                  options={dynamicRamOptions.ramCapacity}
+                  category="ramCapacity"
+                />
+              )}
 
               {/* RAM Speed Filter */}
-              <FilterSection
-                title="Speed (Frequency)"
-                options={filterOptions.ramSpeed}
-                category="ramSpeed"
-              />
+              {dynamicRamOptions.ramSpeed && dynamicRamOptions.ramSpeed.length > 0 && (
+                <FilterSection
+                  title="Speed (Frequency)"
+                  options={dynamicRamOptions.ramSpeed}
+                  category="ramSpeed"
+                />
+              )}
 
               {/* RAM Condition Filter */}
-              <FilterSection
-                title="Condition"
-                options={filterOptions.ramCondition}
-                category="ramCondition"
-              />
+              {dynamicRamOptions.ramCondition && dynamicRamOptions.ramCondition.length > 0 && (
+                <FilterSection
+                  title="Condition"
+                  options={dynamicRamOptions.ramCondition}
+                  category="ramCondition"
+                />
+              )}
 
               {/* RAM Warranty Filter */}
-              <FilterSection
-                title="Warranty"
-                options={filterOptions.ramWarranty}
-                category="ramWarranty"
-              />
+              {dynamicRamOptions.ramWarranty && dynamicRamOptions.ramWarranty.length > 0 && (
+                <FilterSection
+                  title="Warranty"
+                  options={dynamicRamOptions.ramWarranty}
+                  category="ramWarranty"
+                />
+              )}
+            </>
+          ) : category === 'chromebook' ? (
+            <>
+              {/* Brand Filter - Chromebook specific brands */}
+              {dynamicChromebookOptions.brands && dynamicChromebookOptions.brands.length > 0 && (
+                <FilterSection
+                  title="Brand"
+                  options={dynamicChromebookOptions.brands}
+                  category="brands"
+                />
+              )}
+
+              {/* Processor Filter - Chromebook specific */}
+              {dynamicChromebookOptions.processors && dynamicChromebookOptions.processors.length > 0 && (
+                <FilterSection
+                  title="Processor Model"
+                  options={dynamicChromebookOptions.processors}
+                  category="processors"
+                />
+              )}
+
+              {/* RAM Filter - Chromebook specific */}
+              {dynamicChromebookOptions.ram && dynamicChromebookOptions.ram.length > 0 && (
+                <FilterSection
+                  title="RAM"
+                  options={dynamicChromebookOptions.ram}
+                  category="ram"
+                />
+              )}
+
+              {/* Storage Type Filter */}
+              {dynamicChromebookOptions.storageType && dynamicChromebookOptions.storageType.length > 0 && (
+                <FilterSection
+                  title="Storage Type"
+                  options={dynamicChromebookOptions.storageType}
+                  category="storageType"
+                />
+              )}
+
+              {/* Storage Capacity Filter */}
+              {dynamicChromebookOptions.storageCapacity && dynamicChromebookOptions.storageCapacity.length > 0 && (
+                <FilterSection
+                  title="Storage Capacity"
+                  options={dynamicChromebookOptions.storageCapacity}
+                  category="storageCapacity"
+                />
+              )}
+
+              {/* Display Size Filter */}
+              {dynamicChromebookOptions.displaySize && dynamicChromebookOptions.displaySize.length > 0 && (
+                <FilterSection
+                  title="Display Size"
+                  options={dynamicChromebookOptions.displaySize}
+                  category="displaySize"
+                />
+              )}
+
+              {/* Display Type Filter */}
+              {dynamicChromebookOptions.displayType && dynamicChromebookOptions.displayType.length > 0 && (
+                <FilterSection
+                  title="Display Type"
+                  options={dynamicChromebookOptions.displayType}
+                  category="displayType"
+                />
+              )}
+
+              {/* Touchscreen Filter */}
+              {dynamicChromebookOptions.touchscreen && dynamicChromebookOptions.touchscreen.length > 0 && (
+                <FilterSection
+                  title="Touchscreen"
+                  options={dynamicChromebookOptions.touchscreen}
+                  category="touchscreen"
+                />
+              )}
+
+              {/* Operating System Filter */}
+              {dynamicChromebookOptions.operatingSystem && dynamicChromebookOptions.operatingSystem.length > 0 && (
+                <FilterSection
+                  title="OS"
+                  options={dynamicChromebookOptions.operatingSystem}
+                  category="operatingSystem"
+                />
+              )}
+
+              {/* Auto Update Expiration Year Filter */}
+              {dynamicChromebookOptions.aueYear && dynamicChromebookOptions.aueYear.length > 0 && (
+                <FilterSection
+                  title="Auto Update (AUE) Year"
+                  options={dynamicChromebookOptions.aueYear}
+                  category="aueYear"
+                />
+              )}
             </>
           ) : (
             <>
               {/* Default filters for laptops and other categories */}
               {/* Brand Filter */}
-              <FilterSection
-                title="Brand"
-                options={filterOptions.brands}
-                category="brands"
-              />
+              {dynamicLaptopOptions.brands && dynamicLaptopOptions.brands.length > 0 && (
+                <FilterSection
+                  title="Brand"
+                  options={dynamicLaptopOptions.brands}
+                  category="brands"
+                />
+              )}
 
               {/* Generation Filter */}
-              <FilterSection
-                title="Generation"
-                options={filterOptions.generation}
-                category="generation"
-              />
+              {dynamicLaptopOptions.generation && dynamicLaptopOptions.generation.length > 0 && (
+                <FilterSection
+                  title="Generation"
+                  options={dynamicLaptopOptions.generation}
+                  category="generation"
+                />
+              )}
 
               {/* Processor Filter */}
-              <FilterSection
-                title="Processor"
-                options={filterOptions.processors}
-                category="processors"
-              />
+              {dynamicLaptopOptions.processors && dynamicLaptopOptions.processors.length > 0 && (
+                <FilterSection
+                  title="Processor"
+                  options={dynamicLaptopOptions.processors}
+                  category="processors"
+                />
+              )}
 
               {/* RAM Filter */}
-              <FilterSection
-                title="RAM"
-                options={filterOptions.ram}
-                category="ram"
-              />
+              {dynamicLaptopOptions.ram && dynamicLaptopOptions.ram.length > 0 && (
+                <FilterSection
+                  title="RAM"
+                  options={dynamicLaptopOptions.ram}
+                  category="ram"
+                />
+              )}
 
               {/* Storage Filter */}
-              <FilterSection
-                title="Storage"
-                options={filterOptions.storage}
-                category="storage"
-              />
+              {dynamicLaptopOptions.storage && dynamicLaptopOptions.storage.length > 0 && (
+                <FilterSection
+                  title="Storage"
+                  options={dynamicLaptopOptions.storage}
+                  category="storage"
+                />
+              )}
 
               {/* Display Size Filter */}
-              <FilterSection
-                title="Display Size"
-                options={filterOptions.display}
-                category="display"
-              />
+              {dynamicLaptopOptions.display && dynamicLaptopOptions.display.length > 0 && (
+                <FilterSection
+                  title="Display Size"
+                  options={dynamicLaptopOptions.display}
+                  category="display"
+                />
+              )}
 
               {/* Graphics Card Filter */}
-              <FilterSection
-                title="Graphics Card"
-                options={dynamicGraphicsOptions.length > 0 ? dynamicGraphicsOptions : filterOptions.graphics}
-                category="graphics"
-              />
+              {dynamicLaptopOptions.graphics && dynamicLaptopOptions.graphics.length > 0 && (
+                <FilterSection
+                  title="Graphics Card"
+                  options={dynamicLaptopOptions.graphics}
+                  category="graphics"
+                />
+              )}
 
               {/* Touch Type Filter */}
-              <FilterSection
-                title="Touch Type"
-                options={filterOptions.touchType}
-                category="touchType"
-              />
+              {dynamicLaptopOptions.touchType && dynamicLaptopOptions.touchType.length > 0 && (
+                <FilterSection
+                  title="Touch Type"
+                  options={dynamicLaptopOptions.touchType}
+                  category="touchType"
+                />
+              )}
 
               {/* Resolution Filter */}
-              <FilterSection
-                title="Resolution"
-                options={filterOptions.resolution}
-                category="resolution"
-              />
+              {dynamicLaptopOptions.resolution && dynamicLaptopOptions.resolution.length > 0 && (
+                <FilterSection
+                  title="Resolution"
+                  options={dynamicLaptopOptions.resolution}
+                  category="resolution"
+                />
+              )}
 
               {/* Operating System Filter */}
-              <FilterSection
-                title="Operating System"
-                options={filterOptions.operatingSystem}
-                category="operatingSystem"
-              />
-
-              {/* Special Features Filter */}
-              <FilterSection
-                title="Special Features"
-                options={filterOptions.specialFeatures}
-                category="specialFeatures"
-              />
+              {dynamicLaptopOptions.operatingSystem && dynamicLaptopOptions.operatingSystem.length > 0 && (
+                <FilterSection
+                  title="Operating System"
+                  options={dynamicLaptopOptions.operatingSystem}
+                  category="operatingSystem"
+                />
+              )}
             </>
           )}
 

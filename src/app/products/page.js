@@ -19,7 +19,68 @@ function ProductsContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentCategory, setCurrentCategory] = useState(null);
+  const [dynamicLaptopOptions, setDynamicLaptopOptions] = useState({});
+  const [dynamicRamOptions, setDynamicRamOptions] = useState({});
 
+  // Generate dynamic filter options from available products
+  const generateDynamicFilters = (productsList, category) => {
+    // Filter products based on category and exclude SEO-only
+    let availableProducts = productsList.filter(p => !p.seo_only);
+
+    if (category === 'laptop') {
+      availableProducts = availableProducts.filter(p =>
+        (p.category_id === 'laptop' || p.category === 'laptop') &&
+        !p.is_workstation // Exclude workstations from regular laptop filters
+      );
+    } else if (category === 'ram') {
+      availableProducts = availableProducts.filter(p =>
+        p.category_id === 'ram' || p.category === 'ram'
+      );
+    }
+
+    const extractUniqueValues = (field, processor) => {
+      const values = availableProducts
+        .map(p => processor ? processor(p[field]) : p[field])
+        .filter(Boolean)
+        .flat();
+      return [...new Set(values)].sort();
+    };
+
+    if (category === 'laptop') {
+      return {
+        brands: extractUniqueValues('brand'),
+        processors: extractUniqueValues('processor'),
+        ram: extractUniqueValues('ram'),
+        storage: extractUniqueValues('hdd').concat(extractUniqueValues('storage')),
+        display: extractUniqueValues('display_size').concat(extractUniqueValues('display')),
+        generation: extractUniqueValues('generation'),
+        graphics: extractUniqueValues('discrete_graphics').concat(extractUniqueValues('integrated_graphics')).concat(extractUniqueValues('graphics')),
+        touchType: extractUniqueValues('touch_type'),
+        resolution: extractUniqueValues('resolution'),
+        operatingSystem: extractUniqueValues('os')
+      };
+    } else if (category === 'ram') {
+      return {
+        ramBrands: extractUniqueValues('brand'),
+        ramType: extractUniqueValues('ram_type', (ramType) => {
+          const typeStr = (ramType || '').toUpperCase();
+          const types = [];
+          if (typeStr.includes('DDR5')) types.push('DDR5');
+          else if (typeStr.includes('DDR4')) types.push('DDR4');
+          else if (typeStr.includes('DDR3L')) types.push('DDR3L');
+          else if (typeStr.includes('DDR3')) types.push('DDR3');
+          return types;
+        }),
+        ramFormFactor: extractUniqueValues('form_factor'),
+        ramCapacity: extractUniqueValues('ram_capacity').concat(extractUniqueValues('capacity')),
+        ramSpeed: extractUniqueValues('ram_speed').concat(extractUniqueValues('speed')),
+        ramCondition: extractUniqueValues('condition'),
+        ramWarranty: extractUniqueValues('warranty')
+      };
+    }
+
+    return {};
+  };
 
   // Fetch products from database
   useEffect(() => {
@@ -33,6 +94,12 @@ function ProductsContent() {
           const products = data.data || [];
           setProducts(products);
 
+          // Generate dynamic filter options for all categories
+          const laptopOptions = generateDynamicFilters(products, 'laptop');
+          const ramOptions = generateDynamicFilters(products, 'ram');
+          setDynamicLaptopOptions(laptopOptions);
+          setDynamicRamOptions(ramOptions);
+
           // DEBUG: Show actual product data
           if (products.length > 0) {
             console.log('=== PRODUCTS LOADED ===');
@@ -40,6 +107,8 @@ function ProductsContent() {
             console.log('First product:', products[0]);
             console.log('All brands:', [...new Set(products.map(p => p.brand).filter(Boolean))].sort());
             console.log('All categories:', [...new Set(products.map(p => p.category || p.category_id).filter(Boolean))].sort());
+            console.log('Dynamic Laptop Options:', laptopOptions);
+            console.log('Dynamic RAM Options:', ramOptions);
           }
         } else {
           setError(data.error || 'Failed to load products');
@@ -924,6 +993,8 @@ function ProductsContent() {
             onClose={() => setIsFilterOpen(false)}
             category={currentCategory}
             dynamicGraphicsOptions={getUniqueGraphicsOptions()}
+            dynamicLaptopOptions={dynamicLaptopOptions}
+            dynamicRamOptions={dynamicRamOptions}
           />
 
           {/* Main Content */}
