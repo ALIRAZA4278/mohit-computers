@@ -9,6 +9,13 @@ export const categories = [
     brands: ['Dell', 'HP', 'Lenovo', 'Acer', 'ASUS', 'Apple', 'MSI', 'Toshiba', 'Sony', 'Samsung']
   },
   {
+    id: 'chromebook',
+    name: 'Chromebook',
+    image: '/images/chromebook.jpg',
+    description: 'Fast and secure Chromebooks',
+    brands: ['Dell', 'HP', 'Lenovo', 'Acer', 'Asus', 'Samsung']
+  },
+  {
     id: 'accessories',
     name: 'Accessories',
     image: '/images/accessories.jpg',
