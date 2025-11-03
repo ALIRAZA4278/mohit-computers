@@ -25,12 +25,48 @@ function ChromebookContent() {
     // Filter out SEO-only products
     const availableProducts = productsList.filter(p => !p.seo_only);
 
+    // Filter out empty/invalid values
+    const isValidValue = (value) => {
+      if (!value) return false;
+      const str = String(value).trim().toLowerCase();
+      // Filter out common empty/placeholder values
+      return str !== '-' && str !== '--' && str !== '—' && str !== 'n/a' && str !== 'na' && str !== 'null' && str !== 'undefined' && str.length > 0;
+    };
+
     const extractUniqueValues = (field, processor) => {
       const values = availableProducts
         .map(p => processor ? processor(p[field]) : p[field])
         .filter(Boolean)
-        .flat();
+        .flat()
+        .filter(isValidValue) // Filter out invalid values
+        .map(v => String(v).trim()); // Normalize: trim whitespace and convert to string
       return [...new Set(values)].sort();
+    };
+
+    // Generate dynamic price ranges based on actual product prices
+    const generatePriceRanges = () => {
+      const prices = availableProducts.map(p => p.price).filter(p => p > 0).sort((a, b) => a - b);
+      if (prices.length === 0) return [];
+
+      const minPrice = Math.floor(prices[0] / 10000) * 10000; // Round down to nearest 10k
+      const maxPrice = Math.ceil(prices[prices.length - 1] / 10000) * 10000; // Round up to nearest 10k
+
+      const ranges = [];
+      const step = 20000; // 20k steps for chromebooks
+
+      for (let i = minPrice; i < maxPrice; i += step) {
+        const rangeMax = i + step;
+        const label = `Rs:${i.toLocaleString()} - Rs:${rangeMax.toLocaleString()}`;
+        ranges.push({ label, min: i, max: rangeMax });
+      }
+
+      // Add "Above" range
+      if (maxPrice > minPrice) {
+        const aboveLabel = `Above Rs:${maxPrice.toLocaleString()}`;
+        ranges.push({ label: aboveLabel, min: maxPrice, max: Infinity });
+      }
+
+      return ranges;
     };
 
     return {
@@ -55,7 +91,10 @@ function ChromebookContent() {
         if (storageStr.includes('512GB') || storageStr.includes('512 GB')) capacities.push('512GB');
         return capacities;
       }),
-      displaySize: extractUniqueValues('display_size').concat(extractUniqueValues('display')),
+      displaySize: [...new Set([
+        ...extractUniqueValues('display_size'),
+        ...extractUniqueValues('display')
+      ])].sort(),
       displayType: extractUniqueValues('resolution', (resolution) => {
         const resStr = (resolution || '').toLowerCase();
         const types = [];
@@ -72,7 +111,11 @@ function ChromebookContent() {
         return types;
       }),
       operatingSystem: extractUniqueValues('os'),
-      aueYear: extractUniqueValues('aue_year').concat(extractUniqueValues('auto_update_expiration'))
+      aueYear: [...new Set([
+        ...extractUniqueValues('aue_year'),
+        ...extractUniqueValues('auto_update_expiration')
+      ])].sort(),
+      chromebookPriceRanges: generatePriceRanges()
     };
   };
 

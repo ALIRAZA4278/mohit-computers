@@ -28,25 +28,92 @@ function WorkstationContent() {
       (p.is_workstation === true || p.category_id === 'workstation')
     );
 
+    // Filter out empty/invalid values
+    const isValidValue = (value) => {
+      if (!value) return false;
+      const str = String(value).trim().toLowerCase();
+      // Filter out common empty/placeholder values
+      return str !== '-' && str !== '--' && str !== '—' && str !== 'n/a' && str !== 'na' && str !== 'null' && str !== 'undefined' && str.length > 0;
+    };
+
     const extractUniqueValues = (field, processor) => {
       const values = availableProducts
         .map(p => processor ? processor(p[field]) : p[field])
         .filter(Boolean)
-        .flat();
+        .flat()
+        .filter(isValidValue) // Filter out invalid values
+        .map(v => String(v).trim()); // Normalize: trim whitespace and convert to string
       return [...new Set(values)].sort();
     };
+
+    // Sort generations in proper numerical order (4th Gen, 5th Gen, etc.)
+    const sortGenerations = (generations) => {
+      return generations.sort((a, b) => {
+        const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+        const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+        return numA - numB;
+      });
+    };
+
+    // Generate dynamic price ranges based on actual product prices
+    const generatePriceRanges = () => {
+      const prices = availableProducts.map(p => p.price).filter(p => p > 0).sort((a, b) => a - b);
+      if (prices.length === 0) return [];
+
+      const minPrice = Math.floor(prices[0] / 10000) * 10000; // Round down to nearest 10k
+      const maxPrice = Math.ceil(prices[prices.length - 1] / 10000) * 10000; // Round up to nearest 10k
+
+      const ranges = [];
+      const step = 20000; // 20k steps for workstations
+
+      for (let i = minPrice; i < maxPrice; i += step) {
+        const rangeMax = i + step;
+        const label = `Rs:${i.toLocaleString()} - Rs:${rangeMax.toLocaleString()}`;
+        ranges.push({ label, min: i, max: rangeMax });
+      }
+
+      // Add "Above" range
+      if (maxPrice > minPrice) {
+        const aboveLabel = `Above Rs:${maxPrice.toLocaleString()}`;
+        ranges.push({ label: aboveLabel, min: maxPrice, max: Infinity });
+      }
+
+      return ranges;
+    };
+
+    const generations = extractUniqueValues('generation');
+
+    // Combine and deduplicate storage values
+    const storages = [...new Set([
+      ...extractUniqueValues('hdd'),
+      ...extractUniqueValues('storage')
+    ])].sort();
+
+    // Combine and deduplicate display values
+    const displays = [...new Set([
+      ...extractUniqueValues('display_size'),
+      ...extractUniqueValues('display')
+    ])].sort();
+
+    // Combine and deduplicate graphics values
+    const graphics = [...new Set([
+      ...extractUniqueValues('discrete_graphics'),
+      ...extractUniqueValues('integrated_graphics'),
+      ...extractUniqueValues('graphics')
+    ])].sort();
 
     return {
       brands: extractUniqueValues('brand'),
       processors: extractUniqueValues('processor'),
       ram: extractUniqueValues('ram'),
-      storage: extractUniqueValues('hdd').concat(extractUniqueValues('storage')),
-      display: extractUniqueValues('display_size').concat(extractUniqueValues('display')),
-      generation: extractUniqueValues('generation'),
-      graphics: extractUniqueValues('discrete_graphics').concat(extractUniqueValues('integrated_graphics')).concat(extractUniqueValues('graphics')),
+      storage: storages,
+      display: displays,
+      generation: sortGenerations(generations), // Sort generations numerically
+      graphics: graphics,
       touchType: extractUniqueValues('touch_type'),
       resolution: extractUniqueValues('resolution'),
-      operatingSystem: extractUniqueValues('os')
+      operatingSystem: extractUniqueValues('os'),
+      priceRanges: generatePriceRanges()
     };
   };
 

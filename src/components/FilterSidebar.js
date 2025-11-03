@@ -225,20 +225,28 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
             <div className="space-y-3 sm:space-y-2">
               <p className="text-xs text-gray-600 mb-2">Quick Select:</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
-                {(category === 'ram' ? filterOptions.ramPriceRanges :
-                  category === 'chromebook' ? filterOptions.chromebookPriceRanges :
-                  filterOptions.priceRanges).map((range) => (
-                  <label key={range.label} className="flex items-center p-2 sm:p-1 hover:bg-gray-50 rounded cursor-pointer">
-                    <input
-                      type="radio"
-                      name="priceRange"
-                      checked={localFilters.priceRange?.label === range.label}
-                      onChange={() => handlePriceRangeChange(range)}
-                      className="mr-2 text-blue-600 focus:ring-blue-500 flex-shrink-0"
-                    />
-                    <span className="text-sm text-gray-700 leading-tight">{range.label}</span>
-                  </label>
-                ))}
+                {(() => {
+                  let ranges = [];
+                  if (category === 'ram' && dynamicRamOptions.ramPriceRanges && dynamicRamOptions.ramPriceRanges.length > 0) {
+                    ranges = dynamicRamOptions.ramPriceRanges;
+                  } else if (category === 'chromebook' && dynamicChromebookOptions.chromebookPriceRanges && dynamicChromebookOptions.chromebookPriceRanges.length > 0) {
+                    ranges = dynamicChromebookOptions.chromebookPriceRanges;
+                  } else if (dynamicLaptopOptions.priceRanges && dynamicLaptopOptions.priceRanges.length > 0) {
+                    ranges = dynamicLaptopOptions.priceRanges;
+                  }
+                  return ranges.map((range) => (
+                    <label key={range.label} className="flex items-center p-2 sm:p-1 hover:bg-gray-50 rounded cursor-pointer">
+                      <input
+                        type="radio"
+                        name="priceRange"
+                        checked={localFilters.priceRange?.label === range.label}
+                        onChange={() => handlePriceRangeChange(range)}
+                        className="mr-2 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+                      />
+                      <span className="text-sm text-gray-700 leading-tight">{range.label}</span>
+                    </label>
+                  ));
+                })()}
               </div>
             </div>
           </div>
