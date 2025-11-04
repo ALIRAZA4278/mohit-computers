@@ -20,8 +20,34 @@ function ChromebookContent() {
   const [error, setError] = useState(null);
   const [dynamicFilterOptions, setDynamicFilterOptions] = useState({});
 
-  // Generate dynamic filter options from available products
+  // Generate dynamic + fallback filter options for Chromebooks
   const generateDynamicFilters = (productsList) => {
+    // HARDCODED FALLBACK - Used if no products or empty values
+    const hardcodedFallbacks = {
+      brands: ['Dell', 'HP', 'Lenovo', 'Acer', 'Asus', 'Samsung'],
+      processors: [
+        'Intel Celeron N3350',
+        'Intel Celeron N4000',
+        'Intel Celeron N4020',
+        'Intel Celeron N4120',
+        'Intel Pentium N5030',
+        'Intel Pentium N6000',
+        'Intel Core i3 (8th Gen)',
+        'Intel Core i3 (10th Gen)',
+        'Intel Core i5 (8th Gen)',
+        'Intel Core i5 (10th Gen)',
+        'Intel Core i7'
+      ],
+      ram: ['2GB', '4GB', '8GB', '16GB'],
+      storageType: ['eMMC', 'SSD'],
+      storageCapacity: ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB'],
+      displaySize: ['11.6"', '12.5"', '13.3"', '14"', '15.6"'],
+      displayType: ['HD', 'Full HD (FHD)'],
+      touchscreen: ['Non-Touch', 'Touchscreen', 'Touchscreen x360'],
+      operatingSystem: ['Windows', 'Chrome OS'],
+      aueYear: ['2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033', '2034']
+    };
+
     // Filter out SEO-only products
     const availableProducts = productsList.filter(p => !p.seo_only);
 
@@ -29,7 +55,6 @@ function ChromebookContent() {
     const isValidValue = (value) => {
       if (!value) return false;
       const str = String(value).trim().toLowerCase();
-      // Filter out common empty/placeholder values
       return str !== '-' && str !== '--' && str !== '—' && str !== 'n/a' && str !== 'na' && str !== 'null' && str !== 'undefined' && str.length > 0;
     };
 
@@ -38,83 +63,177 @@ function ChromebookContent() {
         .map(p => processor ? processor(p[field]) : p[field])
         .filter(Boolean)
         .flat()
-        .filter(isValidValue) // Filter out invalid values
-        .map(v => String(v).trim()); // Normalize: trim whitespace and convert to string
+        .filter(isValidValue)
+        .map(v => String(v).trim());
       return [...new Set(values)].sort();
     };
+
+    // Enhanced processor categorization for Chromebooks
+    const categorizeProcessor = (processor) => {
+      const procStr = (processor || '').toLowerCase();
+      const categories = [];
+
+      // Intel Celeron variants
+      if (procStr.includes('celeron')) {
+        if (procStr.includes('n3350')) categories.push('Intel Celeron N3350');
+        else if (procStr.includes('n3060')) categories.push('Intel Celeron N3060');
+        else if (procStr.includes('n3160')) categories.push('Intel Celeron N3160');
+        else if (procStr.includes('n4000')) categories.push('Intel Celeron N4000');
+        else if (procStr.includes('n4020')) categories.push('Intel Celeron N4020');
+        else if (procStr.includes('n4120')) categories.push('Intel Celeron N4120');
+        else if (procStr.includes('n4500')) categories.push('Intel Celeron N4500');
+        else if (procStr.includes('3965y')) categories.push('Intel Celeron 3965Y');
+        else categories.push('Intel Celeron');
+      }
+
+      // Intel Pentium variants
+      if (procStr.includes('pentium')) {
+        if (procStr.includes('n5030')) categories.push('Intel Pentium N5030');
+        else if (procStr.includes('n6000')) categories.push('Intel Pentium N6000');
+        else categories.push('Intel Pentium');
+      }
+
+      // Intel Core i3
+      if (procStr.includes('core i3') || procStr.includes('i3-')) {
+        if (procStr.includes('8th gen') || procStr.includes('8130') || procStr.includes('8145')) {
+          categories.push('Intel Core i3 (8th Gen)');
+        } else if (procStr.includes('10th gen') || procStr.includes('10110') || procStr.includes('1005')) {
+          categories.push('Intel Core i3 (10th Gen)');
+        } else {
+          categories.push('Intel Core i3');
+        }
+      }
+
+      // Intel Core i5
+      if (procStr.includes('core i5') || procStr.includes('i5-')) {
+        if (procStr.includes('8th gen') || procStr.includes('8250') || procStr.includes('8265') || procStr.includes('8365')) {
+          categories.push('Intel Core i5 (8th Gen)');
+        } else if (procStr.includes('10th gen') || procStr.includes('10210') || procStr.includes('1035')) {
+          categories.push('Intel Core i5 (10th Gen)');
+        } else {
+          categories.push('Intel Core i5');
+        }
+      }
+
+      // Intel Core i7
+      if (procStr.includes('core i7') || procStr.includes('i7-')) {
+        categories.push('Intel Core i7');
+      }
+
+      // Intel Core m3
+      if (procStr.includes('core m3') || procStr.includes('m3-')) {
+        categories.push('Intel Core m3');
+      }
+
+      // MediaTek
+      if (procStr.includes('mediatek')) {
+        if (procStr.includes('mt8173')) categories.push('MediaTek MT8173C');
+        else if (procStr.includes('mt8183')) categories.push('MediaTek MT8183');
+        else if (procStr.includes('helio p60')) categories.push('MediaTek Helio P60T');
+        else categories.push('MediaTek');
+      }
+
+      return categories.length > 0 ? categories : [processor];
+    };
+
+    // Extract dynamic values from products
+    const dynamicBrands = extractUniqueValues('brand');
+    const dynamicProcessors = extractUniqueValues('processor', categorizeProcessor);
+    const dynamicRam = extractUniqueValues('ram');
+
+    const dynamicStorageType = extractUniqueValues('storage', (storage) => {
+      const storageStr = (storage || '').toLowerCase();
+      const types = [];
+      if (storageStr.includes('emmc')) types.push('eMMC');
+      if (storageStr.includes('ssd')) types.push('SSD');
+      return types;
+    });
+
+    const dynamicStorageCapacity = extractUniqueValues('storage', (storage) => {
+      const storageStr = storage || '';
+      const capacities = [];
+      if (storageStr.includes('16GB') || storageStr.includes('16 GB')) capacities.push('16GB');
+      if (storageStr.includes('32GB') || storageStr.includes('32 GB')) capacities.push('32GB');
+      if (storageStr.includes('64GB') || storageStr.includes('64 GB')) capacities.push('64GB');
+      if (storageStr.includes('128GB') || storageStr.includes('128 GB')) capacities.push('128GB');
+      if (storageStr.includes('256GB') || storageStr.includes('256 GB')) capacities.push('256GB');
+      if (storageStr.includes('512GB') || storageStr.includes('512 GB')) capacities.push('512GB');
+      return capacities;
+    });
+
+    const dynamicDisplaySize = [...new Set([
+      ...extractUniqueValues('display_size'),
+      ...extractUniqueValues('display')
+    ])].sort();
+
+    const dynamicDisplayType = extractUniqueValues('resolution', (resolution) => {
+      const resStr = (resolution || '').toLowerCase();
+      const types = [];
+      if (resStr.includes('1366x768') || (resStr.includes('hd') && !resStr.includes('full hd') && !resStr.includes('fhd'))) types.push('HD');
+      if (resStr.includes('1920x1080') || resStr.includes('full hd') || resStr.includes('fhd')) types.push('Full HD (FHD)');
+      return types;
+    });
+
+    const dynamicTouchscreen = extractUniqueValues('touch_type', (touchType) => {
+      const touchStr = (touchType || '').toLowerCase();
+      const types = [];
+      if (touchStr.includes('non-touch') || touchStr.includes('non touch')) types.push('Non-Touch');
+      if (touchStr.includes('touch') && !touchStr.includes('x360') && !touchStr.includes('non')) types.push('Touchscreen');
+      if (touchStr.includes('x360')) types.push('Touchscreen x360');
+      return types;
+    });
+
+    const dynamicOS = extractUniqueValues('os');
+
+    const dynamicAUE = [...new Set([
+      ...extractUniqueValues('aue_year'),
+      ...extractUniqueValues('auto_update_expiration')
+    ])].sort();
 
     // Generate dynamic price ranges based on actual product prices
     const generatePriceRanges = () => {
       const prices = availableProducts.map(p => p.price).filter(p => p > 0).sort((a, b) => a - b);
-      if (prices.length === 0) return [];
+      if (prices.length === 0) {
+        return [
+          { label: 'Rs 10,000 - Rs 20,000', min: 10000, max: 20000 },
+          { label: 'Rs 20,000 - Rs 30,000', min: 20000, max: 30000 },
+          { label: 'Rs 30,000 - Rs 40,000', min: 30000, max: 40000 },
+          { label: 'Rs 40,000 - Rs 50,000', min: 40000, max: 50000 },
+          { label: 'Above Rs 50,000', min: 50000, max: Infinity }
+        ];
+      }
 
-      const minPrice = Math.floor(prices[0] / 10000) * 10000; // Round down to nearest 10k
-      const maxPrice = Math.ceil(prices[prices.length - 1] / 10000) * 10000; // Round up to nearest 10k
-
+      const minPrice = Math.floor(prices[0] / 10000) * 10000;
+      const maxPrice = Math.ceil(prices[prices.length - 1] / 10000) * 10000;
       const ranges = [];
-      const step = 20000; // 20k steps for chromebooks
+      const step = 20000;
 
       for (let i = minPrice; i < maxPrice; i += step) {
         const rangeMax = i + step;
-        const label = `Rs:${i.toLocaleString()} - Rs:${rangeMax.toLocaleString()}`;
+        const label = `Rs ${i.toLocaleString()} - Rs ${rangeMax.toLocaleString()}`;
         ranges.push({ label, min: i, max: rangeMax });
       }
 
-      // Add "Above" range
       if (maxPrice > minPrice) {
-        const aboveLabel = `Above Rs:${maxPrice.toLocaleString()}`;
+        const aboveLabel = `Above Rs ${maxPrice.toLocaleString()}`;
         ranges.push({ label: aboveLabel, min: maxPrice, max: Infinity });
       }
 
       return ranges;
     };
 
+    // Use dynamic values if available, otherwise fallback to hardcoded
     return {
-      brands: extractUniqueValues('brand'),
-      processors: extractUniqueValues('processor'),
-      ram: extractUniqueValues('ram'),
-      storageType: extractUniqueValues('storage', (storage) => {
-        const storageStr = (storage || '').toLowerCase();
-        const types = [];
-        if (storageStr.includes('emmc')) types.push('eMMC');
-        if (storageStr.includes('ssd')) types.push('SSD');
-        return types;
-      }),
-      storageCapacity: extractUniqueValues('storage', (storage) => {
-        const storageStr = storage || '';
-        const capacities = [];
-        if (storageStr.includes('16GB') || storageStr.includes('16 GB')) capacities.push('16GB');
-        if (storageStr.includes('32GB') || storageStr.includes('32 GB')) capacities.push('32GB');
-        if (storageStr.includes('64GB') || storageStr.includes('64 GB')) capacities.push('64GB');
-        if (storageStr.includes('128GB') || storageStr.includes('128 GB')) capacities.push('128GB');
-        if (storageStr.includes('256GB') || storageStr.includes('256 GB')) capacities.push('256GB');
-        if (storageStr.includes('512GB') || storageStr.includes('512 GB')) capacities.push('512GB');
-        return capacities;
-      }),
-      displaySize: [...new Set([
-        ...extractUniqueValues('display_size'),
-        ...extractUniqueValues('display')
-      ])].sort(),
-      displayType: extractUniqueValues('resolution', (resolution) => {
-        const resStr = (resolution || '').toLowerCase();
-        const types = [];
-        if (resStr.includes('1366x768') || resStr.includes('hd') && !resStr.includes('full hd') && !resStr.includes('fhd')) types.push('HD');
-        if (resStr.includes('1920x1080') || resStr.includes('full hd') || resStr.includes('fhd')) types.push('Full HD (FHD)');
-        return types;
-      }),
-      touchscreen: extractUniqueValues('touch_type', (touchType) => {
-        const touchStr = (touchType || '').toLowerCase();
-        const types = [];
-        if (touchStr.includes('non-touch') || touchStr.includes('non touch')) types.push('Non-Touch');
-        if (touchStr.includes('touch') && !touchStr.includes('x360') && !touchStr.includes('non')) types.push('Touchscreen');
-        if (touchStr.includes('x360')) types.push('Touchscreen x360');
-        return types;
-      }),
-      operatingSystem: extractUniqueValues('os'),
-      aueYear: [...new Set([
-        ...extractUniqueValues('aue_year'),
-        ...extractUniqueValues('auto_update_expiration')
-      ])].sort(),
+      brands: dynamicBrands.length > 0 ? dynamicBrands : hardcodedFallbacks.brands,
+      processors: dynamicProcessors.length > 0 ? dynamicProcessors : hardcodedFallbacks.processors,
+      ram: dynamicRam.length > 0 ? dynamicRam : hardcodedFallbacks.ram,
+      storageType: dynamicStorageType.length > 0 ? dynamicStorageType : hardcodedFallbacks.storageType,
+      storageCapacity: dynamicStorageCapacity.length > 0 ? dynamicStorageCapacity : hardcodedFallbacks.storageCapacity,
+      displaySize: dynamicDisplaySize.length > 0 ? dynamicDisplaySize : hardcodedFallbacks.displaySize,
+      displayType: dynamicDisplayType.length > 0 ? dynamicDisplayType : hardcodedFallbacks.displayType,
+      touchscreen: dynamicTouchscreen.length > 0 ? dynamicTouchscreen : hardcodedFallbacks.touchscreen,
+      operatingSystem: dynamicOS.length > 0 ? dynamicOS : hardcodedFallbacks.operatingSystem,
+      aueYear: dynamicAUE.length > 0 ? dynamicAUE : hardcodedFallbacks.aueYear,
       chromebookPriceRanges: generatePriceRanges()
     };
   };
@@ -139,7 +258,11 @@ function ChromebookContent() {
           setDynamicFilterOptions(dynamicOptions);
 
           console.log('Chromebook products loaded:', chromebookProducts.length);
+          console.log('Sample chromebook product:', chromebookProducts[0]);
           console.log('Dynamic filter options:', dynamicOptions);
+          console.log('Brands found:', dynamicOptions.brands);
+          console.log('Processors found:', dynamicOptions.processors);
+          console.log('RAM found:', dynamicOptions.ram);
         } else {
           setError(data.error || 'Failed to load products');
         }
@@ -203,6 +326,63 @@ function ChromebookContent() {
         const productProcessor = (product.processor || '').toLowerCase();
         return filters.processors.some(filterProcessor => {
           const filterProc = filterProcessor.toLowerCase();
+
+          // Match specific processor models
+          if (filterProc.includes('celeron n3350')) {
+            return productProcessor.includes('n3350');
+          }
+          if (filterProc.includes('celeron n4000')) {
+            return productProcessor.includes('n4000');
+          }
+          if (filterProc.includes('celeron n4020')) {
+            return productProcessor.includes('n4020');
+          }
+          if (filterProc.includes('celeron n4120')) {
+            return productProcessor.includes('n4120');
+          }
+          if (filterProc.includes('celeron')) {
+            return productProcessor.includes('celeron');
+          }
+
+          if (filterProc.includes('pentium n5030')) {
+            return productProcessor.includes('n5030');
+          }
+          if (filterProc.includes('pentium n6000')) {
+            return productProcessor.includes('n6000');
+          }
+          if (filterProc.includes('pentium')) {
+            return productProcessor.includes('pentium');
+          }
+
+          if (filterProc.includes('core i3') && filterProc.includes('8th')) {
+            return (productProcessor.includes('i3') || productProcessor.includes('core i3')) &&
+                   (productProcessor.includes('8th') || productProcessor.includes('8130') || productProcessor.includes('8145'));
+          }
+          if (filterProc.includes('core i3') && filterProc.includes('10th')) {
+            return (productProcessor.includes('i3') || productProcessor.includes('core i3')) &&
+                   (productProcessor.includes('10th') || productProcessor.includes('10110') || productProcessor.includes('1005'));
+          }
+          if (filterProc.includes('core i3')) {
+            return productProcessor.includes('i3') || productProcessor.includes('core i3');
+          }
+
+          if (filterProc.includes('core i5') && filterProc.includes('8th')) {
+            return (productProcessor.includes('i5') || productProcessor.includes('core i5')) &&
+                   (productProcessor.includes('8th') || productProcessor.includes('8250') || productProcessor.includes('8265'));
+          }
+          if (filterProc.includes('core i5') && filterProc.includes('10th')) {
+            return (productProcessor.includes('i5') || productProcessor.includes('core i5')) &&
+                   (productProcessor.includes('10th') || productProcessor.includes('10210') || productProcessor.includes('1035'));
+          }
+          if (filterProc.includes('core i5')) {
+            return productProcessor.includes('i5') || productProcessor.includes('core i5');
+          }
+
+          if (filterProc.includes('core i7')) {
+            return productProcessor.includes('i7') || productProcessor.includes('core i7');
+          }
+
+          // Fallback to general matching
           return productProcessor === filterProc || productProcessor.includes(filterProc);
         });
       });
@@ -211,9 +391,12 @@ function ChromebookContent() {
     // Apply RAM filter
     if (filters.ram && filters.ram.length > 0) {
       filtered = filtered.filter(product => {
-        const productRam = product.ram || '';
+        const productRam = (product.ram || '').toLowerCase();
         return filters.ram.some(filterRam => {
-          return productRam === filterRam || productRam.includes(filterRam);
+          const filterLower = filterRam.toLowerCase();
+          // Match with or without space (4GB or 4 GB)
+          const filterWithSpace = filterRam.replace('GB', ' GB');
+          return productRam.includes(filterLower) || productRam.includes(filterWithSpace.toLowerCase());
         });
       });
     }
@@ -232,9 +415,12 @@ function ChromebookContent() {
     // Apply storage capacity filter (Chromebook-specific)
     if (filters.storageCapacity && filters.storageCapacity.length > 0) {
       filtered = filtered.filter(product => {
-        const productStorage = product.storage || product.hdd || '';
+        const productStorage = (product.storage || product.hdd || '').toLowerCase();
         return filters.storageCapacity.some(filterCapacity => {
-          return productStorage.includes(filterCapacity);
+          const filterLower = filterCapacity.toLowerCase();
+          // Match with or without space (64GB or 64 GB)
+          const filterWithSpace = filterCapacity.replace('GB', ' GB');
+          return productStorage.includes(filterLower) || productStorage.includes(filterWithSpace.toLowerCase());
         });
       });
     }
@@ -244,7 +430,9 @@ function ChromebookContent() {
       filtered = filtered.filter(product => {
         const productDisplaySize = product.display_size || product.display || '';
         return filters.displaySize.some(filterDisplay => {
-          return productDisplaySize.includes(filterDisplay);
+          // Remove quotes from filter for matching (11.6" -> 11.6)
+          const cleanFilter = filterDisplay.replace(/"/g, '');
+          return productDisplaySize.includes(filterDisplay) || productDisplaySize.includes(cleanFilter);
         });
       });
     }
