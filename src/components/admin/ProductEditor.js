@@ -51,9 +51,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     battery: '',
     chargerIncluded: false,
     showLaptopCustomizer: true, // Show laptop customizer by default
+    showChromebookCustomizer: true, // Show chromebook customizer by default
     showRAMOptions: true, // Show RAM upgrade options by default
     showSSDOptions: true, // Show SSD upgrade options by default
-    
+
     // Custom pricing for this specific product's upgrade options
     customUpgradePricing: {}, // e.g., { 'ram-4GB-ddr4': 3500, 'ssd-512GB': 8000 }
 
@@ -379,18 +380,24 @@ export default function ProductEditor({ product, onSave, onCancel }) {
       if (formData.category === 'chromebook') {
         productData.storage = formData.chromebookStorage || null; // Combined storage (e.g., "64GB eMMC")
         productData.aue_year = formData.chromebookAUEYear || null; // Auto Update Expiration Year
+
+        // Chromebook customizer visibility
+        try {
+          productData.show_chromebook_customizer = formData.showChromebookCustomizer !== false;
+        } catch (err) {
+          console.warn('show_chromebook_customizer field not available in database schema:', err);
+        }
       }
 
       // Only add upgrade options if category is 'laptop'
       if (formData.category === 'laptop') {
         productData.upgrade_options = formData.upgradeOptions;
         productData.custom_upgrades = formData.customUpgrades || [];
-        
+
         // These fields might not exist in old database schemas
         // Only add them if they have values to avoid errors
         try {
           productData.show_laptop_customizer = formData.showLaptopCustomizer !== false;
-          productData.show_chromebook_customizer = formData.showChromebookCustomizer !== false;
           productData.show_ram_options = formData.showRAMOptions !== false;
           productData.show_ssd_options = formData.showSSDOptions !== false;
 
