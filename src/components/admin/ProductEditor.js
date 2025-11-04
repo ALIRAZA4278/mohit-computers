@@ -73,6 +73,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
       '3200': 0
     },
 
+    // Chromebook specific fields
+    chromebookStorage: '', // Combined storage (e.g., "64GB eMMC" or "128GB SSD")
+    chromebookAUEYear: '', // Auto Update Expiration Year
+
     // Upgrade Options
     upgradeOptions: {
       ssd256: { enabled: false, price: '' },
@@ -139,9 +143,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         battery: product.battery || '',
         chargerIncluded: product.charger_included || false,
         showLaptopCustomizer: product.show_laptop_customizer !== false, // Default to true
+        showChromebookCustomizer: product.show_chromebook_customizer !== false, // Default to true
         showRAMOptions: product.show_ram_options !== false, // Default to true
         showSSDOptions: product.show_ssd_options !== false, // Default to true
-        
+
         // Custom pricing for this specific product
         customUpgradePricing: product.custom_upgrade_pricing || {},
 
@@ -160,6 +165,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
           '2666': 0,
           '3200': 0
         },
+
+        // Chromebook specific fields
+        chromebookStorage: product.storage || '',
+        chromebookAUEYear: product.aue_year || product.auto_update_expiration || '',
 
         // Upgrade Options
         upgradeOptions: product.upgrade_options || {
@@ -366,6 +375,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         productData.ram_speed_prices = formData.ramSpeedPrices || null; // Save custom speed prices
       }
 
+      // Only add Chromebook specific fields if category is 'chromebook'
+      if (formData.category === 'chromebook') {
+        productData.storage = formData.chromebookStorage || null; // Combined storage (e.g., "64GB eMMC")
+        productData.aue_year = formData.chromebookAUEYear || null; // Auto Update Expiration Year
+      }
+
       // Only add upgrade options if category is 'laptop'
       if (formData.category === 'laptop') {
         productData.upgrade_options = formData.upgradeOptions;
@@ -375,9 +390,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         // Only add them if they have values to avoid errors
         try {
           productData.show_laptop_customizer = formData.showLaptopCustomizer !== false;
+          productData.show_chromebook_customizer = formData.showChromebookCustomizer !== false;
           productData.show_ram_options = formData.showRAMOptions !== false;
           productData.show_ssd_options = formData.showSSDOptions !== false;
-          
+
           // Only save custom_upgrade_pricing if it has values
           if (formData.customUpgradePricing && Object.keys(formData.customUpgradePricing).length > 0) {
             productData.custom_upgrade_pricing = formData.customUpgradePricing;
@@ -403,6 +419,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
       if (errorMsg.includes('show_ram_options')) missingColumns.push('show_ram_options');
       if (errorMsg.includes('show_ssd_options')) missingColumns.push('show_ssd_options');
       if (errorMsg.includes('show_laptop_customizer')) missingColumns.push('show_laptop_customizer');
+      if (errorMsg.includes('show_chromebook_customizer')) missingColumns.push('show_chromebook_customizer');
       if (errorMsg.includes('custom_upgrade_pricing')) missingColumns.push('custom_upgrade_pricing');
       if (errorMsg.includes('is_workstation')) missingColumns.push('is_workstation');
       if (errorMsg.includes('is_rugged_tough')) missingColumns.push('is_rugged_tough');
@@ -1262,6 +1279,173 @@ export default function ProductEditor({ product, onSave, onCancel }) {
           </div>
         )}
 
+        {/* Chromebook Specific Fields */}
+        {formData.category === 'chromebook' && (
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Chromebook Specifications</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Processor */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Processor *
+                </label>
+                <select
+                  name="processor"
+                  value={formData.processor}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Processor</option>
+                  {filterOptions.chromebookProcessors && filterOptions.chromebookProcessors.map(proc => (
+                    <option key={proc} value={proc}>
+                      {proc}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* RAM */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  RAM *
+                </label>
+                <select
+                  name="ram"
+                  value={formData.ram}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select RAM</option>
+                  {filterOptions.chromebookRam && filterOptions.chromebookRam.map(ramSize => (
+                    <option key={ramSize} value={ramSize}>
+                      {ramSize}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Storage (Combined: Type + Capacity) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Storage * (e.g., &quot;64GB eMMC&quot; or &quot;128GB SSD&quot;)
+                </label>
+                <input
+                  type="text"
+                  name="chromebookStorage"
+                  value={formData.chromebookStorage}
+                  onChange={handleChange}
+                  placeholder="e.g., 64GB eMMC, 128GB SSD"
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Display Size */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Display Size *
+                </label>
+                <select
+                  name="displaySize"
+                  value={formData.displaySize}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Display Size</option>
+                  {filterOptions.chromebookDisplaySize && filterOptions.chromebookDisplaySize.map(size => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Resolution / Display Type */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Resolution
+                </label>
+                <select
+                  name="resolution"
+                  value={formData.resolution}
+                  onChange={handleChange}
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Resolution</option>
+                  <option value="HD (1366x768)">HD (1366x768)</option>
+                  <option value="Full HD (1920x1080)">Full HD (1920x1080)</option>
+                </select>
+              </div>
+
+              {/* Touchscreen */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Touchscreen *
+                </label>
+                <select
+                  name="touchType"
+                  value={formData.touchType}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Touchscreen Type</option>
+                  {filterOptions.chromebookTouchscreen && filterOptions.chromebookTouchscreen.map(type => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Operating System */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Operating System *
+                </label>
+                <select
+                  name="operatingFeatures"
+                  value={formData.operatingFeatures}
+                  onChange={handleChange}
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select OS</option>
+                  {filterOptions.chromebookOS && filterOptions.chromebookOS.map(os => (
+                    <option key={os} value={os}>
+                      {os}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Auto Update Expiration (AUE) Year */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Auto Update (AUE) Year
+                </label>
+                <select
+                  name="chromebookAUEYear"
+                  value={formData.chromebookAUEYear}
+                  onChange={handleChange}
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select AUE Year</option>
+                  {filterOptions.chromebookAUE && filterOptions.chromebookAUE.map(year => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Laptop Specific Fields */}
         {formData.category === 'laptop' && (
           <div className="bg-white rounded-lg shadow-md p-6">
@@ -1938,8 +2122,35 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 <span className="ml-3">
                   <span className="text-sm font-semibold text-gray-900">Show Laptop Customizer on Product Page</span>
                   <p className="text-xs text-gray-600 mt-1">
-                    Enable this to show the laptop customizer (RAM & SSD upgrade options) on the product detail page. 
+                    Enable this to show the laptop customizer (RAM & SSD upgrade options) on the product detail page.
                     Customers will be able to select RAM and SSD upgrades with pricing.
+                  </p>
+                </span>
+              </label>
+            </div>
+          </div>
+        )}
+
+        {/* Chromebook Customizer Options */}
+        {formData.category === 'chromebook' && (
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Chromebook Customizer Settings</h3>
+
+            {/* Show Chromebook Customizer Toggle */}
+            <div className="p-4 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="showChromebookCustomizer"
+                  checked={formData.showChromebookCustomizer}
+                  onChange={handleChange}
+                  className="w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                />
+                <span className="ml-3">
+                  <span className="text-sm font-semibold text-gray-900">Show Chromebook Customizer on Product Page</span>
+                  <p className="text-xs text-gray-600 mt-1">
+                    Enable this to show the chromebook customizer (RAM & Storage upgrade options) on the product detail page.
+                    Customers will be able to select RAM and storage upgrades with pricing.
                   </p>
                 </span>
               </label>

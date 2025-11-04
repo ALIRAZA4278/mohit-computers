@@ -11,6 +11,7 @@ import { useCompare } from '../../../context/CompareContext';
 import ProductCard from '../../../components/ProductCard';
 import ReviewSection from '../../../components/ReviewSection';
 import LaptopCustomizer from '../../../components/LaptopCustomizer';
+import ChromebookCustomizer from '../../../components/ChromebookCustomizer';
 import RAMCustomizer from '../../../components/RAMCustomizer';
 import { getRAMOptionsByGeneration, getSSDUpgradeOptions, getRAMTypeByGeneration, getAllSSDOptions } from '../../../lib/upgradeOptions';
 
@@ -42,6 +43,12 @@ export default function ProductDetail() {
     totalPrice: 0,
     additionalCost: 0,
     specs: null
+  });
+  const [chromebookCustomization, setChromebookCustomization] = useState({
+    customizations: { ramUpgrade: null, ssdUpgrade: null },
+    additionalCost: 0,
+    totalPrice: 0,
+    updatedSpecs: null
   });
 
   const { addToCart } = useCart();
@@ -79,6 +86,12 @@ export default function ProductDetail() {
     setRamCustomization(customizationData);
   }, []);
 
+  const handleChromebookCustomizationChange = useCallback((customizationData) => {
+    console.log('Chromebook Customization data received:', customizationData);
+    console.log('Updated specs:', customizationData.updatedSpecs);
+    setChromebookCustomization(customizationData);
+  }, []);
+
   useEffect(() => {
     if (params.id) {
       fetchProduct();
@@ -94,6 +107,16 @@ export default function ProductDetail() {
       }));
     }
   }, [product?.price]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Initialize chromebookCustomization totalPrice when product loads
+  useEffect(() => {
+    if (product?.price && product?.category_id === 'chromebook' && chromebookCustomization.totalPrice === 0 && chromebookCustomization.additionalCost === 0) {
+      setChromebookCustomization(prev => ({
+        ...prev,
+        totalPrice: product.price
+      }));
+    }
+  }, [product?.price, product?.category_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Calculate available RAM options based on processor generation
   useEffect(() => {
@@ -317,6 +340,42 @@ export default function ProductDetail() {
     console.log('Final price:', totalPrice);
     console.log('Customization cost:', customCost);
     console.log('laptopCustomization object:', laptopCustomization);
+
+    // Add to cart with customization
+    addToCart(productWithCustomization);
+    setQuantity(1);
+  };
+
+  const handleAddToCartWithChromebookCustomization = () => {
+    // Check if there are actual customizations
+    const hasActualCustomizations = chromebookCustomization.additionalCost > 0;
+
+    if (!hasActualCustomizations) {
+      // No customizations, use regular add to cart
+      handleAddToCart();
+      return;
+    }
+
+    // Ensure all prices are numbers
+    const basePrice = parseFloat(product.price) || 0;
+    const totalPrice = parseFloat(chromebookCustomization.totalPrice) || basePrice;
+    const customCost = parseFloat(chromebookCustomization.additionalCost) || 0;
+
+    const productWithCustomization = {
+      ...product,
+      customizations: chromebookCustomization.customizations,
+      originalPrice: basePrice,
+      finalPrice: totalPrice,
+      customizationCost: customCost,
+      hasCustomizations: true,
+      displayName: product.name
+    };
+
+    console.log('Adding customized Chromebook to cart:', productWithCustomization);
+    console.log('Base price:', basePrice);
+    console.log('Final price:', totalPrice);
+    console.log('Customization cost:', customCost);
+    console.log('chromebookCustomization object:', chromebookCustomization);
 
     // Add to cart with customization
     addToCart(productWithCustomization);
@@ -561,6 +620,83 @@ export default function ProductDetail() {
                     </div>
                   </div>
                 )
+              ) : product.category_id === 'chromebook' ? (
+                // Chromebook-specific Key Specifications
+                (product.processor || product.ram || product.storage || product.display_size || product.os || product.aue_year) && (
+                  <div className="bg-gray-50 rounded-xl p-5 space-y-3">
+                    <h3 className="font-semibold text-gray-900 mb-3">Key Specifications</h3>
+                    <div className="grid grid-cols-1 gap-3">
+                      {product.processor && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Processor: </span>
+                            <span className="text-sm text-gray-700">{product.processor}</span>
+                          </div>
+                        </div>
+                      )}
+                      {product.ram && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">RAM: </span>
+                            <span className="text-sm text-gray-700">
+                              {chromebookCustomization.updatedSpecs?.ram || product.ram}
+                            </span>
+                            {chromebookCustomization.customizations.ramUpgrade && (
+                              <span className="ml-2 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
+                                Upgraded
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      {product.storage && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Storage: </span>
+                            <span className="text-sm text-gray-700">
+                              {chromebookCustomization.updatedSpecs?.storage || product.storage}
+                            </span>
+                            {chromebookCustomization.customizations.ssdUpgrade && (
+                              <span className="ml-2 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
+                                Upgraded
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      {product.display_size && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Display Size: </span>
+                            <span className="text-sm text-gray-700">{product.display_size}</span>
+                          </div>
+                        </div>
+                      )}
+                      {product.os && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Operating System: </span>
+                            <span className="text-sm text-gray-700">{product.os}</span>
+                          </div>
+                        </div>
+                      )}
+                      {product.aue_year && (
+                        <div className="flex items-start gap-3">
+                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Auto Update Until: </span>
+                            <span className="text-sm text-gray-700">{product.aue_year}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
               ) : (
                 // Laptop-specific Key Specifications
                 (product.processor || product.ram || product.hdd || product.generation || product.display_size || product.screensize) && (
@@ -637,6 +773,16 @@ export default function ProductDetail() {
                   <LaptopCustomizer
                     product={product}
                     onCustomizationChange={handleCustomizationChange}
+                  />
+                </div>
+              )}
+
+              {/* Chromebook Customizer - For Chromebook products (if enabled in admin) */}
+              {product.category_id === 'chromebook' && product.show_chromebook_customizer !== false && (
+                <div className="mt-6">
+                  <ChromebookCustomizer
+                    product={product}
+                    onCustomizationChange={handleChromebookCustomizationChange}
                   />
                 </div>
               )}
@@ -855,13 +1001,21 @@ export default function ProductDetail() {
                     
                     return (
                       <button
-                        onClick={product.category_id === 'laptop' ? handleAddToCartWithCustomization : handleAddToCart}
+                        onClick={
+                          product.category_id === 'laptop'
+                            ? handleAddToCartWithCustomization
+                            : product.category_id === 'chromebook'
+                            ? handleAddToCartWithChromebookCustomization
+                            : handleAddToCart
+                        }
                         className="flex-1 bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                       >
                         <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
                         <span className="hidden sm:inline">
-                          {product.category_id === 'laptop' && (laptopCustomization.additionalCost > 0) 
-                            ? `Add to Cart (Rs:${laptopCustomization.totalPrice?.toLocaleString()})` 
+                          {product.category_id === 'laptop' && (laptopCustomization.additionalCost > 0)
+                            ? `Add to Cart (Rs:${laptopCustomization.totalPrice?.toLocaleString()})`
+                            : product.category_id === 'chromebook' && (chromebookCustomization.additionalCost > 0)
+                            ? `Add to Cart (Rs:${chromebookCustomization.totalPrice?.toLocaleString()})`
                             : 'Add to Cart'
                           }
                         </span>
