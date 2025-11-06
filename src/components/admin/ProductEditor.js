@@ -1292,46 +1292,50 @@ export default function ProductEditor({ product, onSave, onCancel }) {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Chromebook Specifications</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Processor */}
+              {/* Processor - Combo Input (Type or Select) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Processor *
                 </label>
-                <select
+                <input
+                  type="text"
                   name="processor"
+                  list="processor-options"
                   value={formData.processor}
                   onChange={handleChange}
+                  placeholder="Type or select processor..."
                   required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Processor</option>
+                />
+                <datalist id="processor-options">
                   {filterOptions.chromebookProcessors && filterOptions.chromebookProcessors.map(proc => (
-                    <option key={proc} value={proc}>
-                      {proc}
-                    </option>
+                    <option key={proc} value={proc} />
                   ))}
-                </select>
+                </datalist>
+                <p className="text-xs text-gray-500 mt-1">💡 Type to search or click arrow to see all options</p>
               </div>
 
-              {/* RAM */}
+              {/* RAM - Combo Input (Type or Select) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   RAM *
                 </label>
-                <select
+                <input
+                  type="text"
                   name="ram"
+                  list="ram-options"
                   value={formData.ram}
                   onChange={handleChange}
+                  placeholder="Type or select RAM..."
                   required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select RAM</option>
+                />
+                <datalist id="ram-options">
                   {filterOptions.chromebookRam && filterOptions.chromebookRam.map(ramSize => (
-                    <option key={ramSize} value={ramSize}>
-                      {ramSize}
-                    </option>
+                    <option key={ramSize} value={ramSize} />
                   ))}
-                </select>
+                </datalist>
+                <p className="text-xs text-gray-500 mt-1">💡 Type to search or click arrow to see all options</p>
               </div>
 
               {/* Storage (Combined: Type + Capacity) */}
@@ -1350,25 +1354,27 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 />
               </div>
 
-              {/* Display Size */}
+              {/* Display Size - Combo Input (Type or Select) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Display Size *
                 </label>
-                <select
+                <input
+                  type="text"
                   name="displaySize"
+                  list="displaysize-options"
                   value={formData.displaySize}
                   onChange={handleChange}
+                  placeholder="Type or select display size..."
                   required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Display Size</option>
+                />
+                <datalist id="displaysize-options">
                   {filterOptions.chromebookDisplaySize && filterOptions.chromebookDisplaySize.map(size => (
-                    <option key={size} value={size}>
-                      {size}
-                    </option>
+                    <option key={size} value={size} />
                   ))}
-                </select>
+                </datalist>
+                <p className="text-xs text-gray-500 mt-1">💡 Type to search or click arrow to see all options</p>
               </div>
 
               {/* Resolution / Display Type */}

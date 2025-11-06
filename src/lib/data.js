@@ -284,22 +284,153 @@ export const filterOptions = {
     { label: 'PKR 3,000 - 5,000', min: 3000, max: 5000 },
     { label: 'Above PKR 5,000', min: 5000, max: Infinity }
   ],
-  // Chromebook-specific filters
+  // ========================================
+  // CHROMEBOOK-SPECIFIC FILTERS
+  // ========================================
+  // HOW TO ADD NEW PROCESSORS:
+  // 1. Find the appropriate section below (Intel Celeron, Pentium, Core i3/i5/i7, AMD, or MediaTek)
+  // 2. Add the new processor model in the correct section
+  // 3. Follow the naming format: 'Intel Celeron N4500' or 'Intel Core i5-8265U'
+  // 4. Save the file - the new option will automatically appear in the admin panel dropdown!
+  // ========================================
+
   chromebookBrands: [
     'Dell', 'HP', 'Lenovo', 'Acer', 'Asus', 'Samsung'
   ],
   chromebookProcessors: [
+    // Intel Celeron (N-Series) - Entry Level
+    'Intel Celeron N2840',
+    'Intel Celeron N3050',
+    'Intel Celeron N3060',
+    'Intel Celeron N3150',
+    'Intel Celeron N3160',
     'Intel Celeron N3350',
+    'Intel Celeron N3450',
     'Intel Celeron N4000',
     'Intel Celeron N4020',
+    'Intel Celeron N4100',
     'Intel Celeron N4120',
+    'Intel Celeron N4500',
+    'Intel Celeron N5100',
+
+    // Intel Celeron (Other Series)
+    'Intel Celeron 3867U',
+    'Intel Celeron 3965U',
+    'Intel Celeron 3965Y',
+    'Intel Celeron 4205U',
+    'Intel Celeron 5205U',
+
+    // Intel Pentium (N-Series) - Mid Range
+    'Intel Pentium N4200',
+    'Intel Pentium N5000',
     'Intel Pentium N5030',
     'Intel Pentium N6000',
+    'Intel Pentium Silver N5000',
+    'Intel Pentium Silver N5030',
+    'Intel Pentium Silver N6000',
+
+    // Intel Pentium (Gold Series)
+    'Intel Pentium Gold 4415U',
+    'Intel Pentium Gold 4417U',
+    'Intel Pentium Gold 6405U',
+
+    // Intel Core m3 - Ultra Low Power
+    'Intel Core m3-6Y30',
+    'Intel Core m3-7Y30',
+    'Intel Core m3-8100Y',
+
+    // Intel Core i3 - 7th Gen
+    'Intel Core i3-7100U',
+    'Intel Core i3-7130U',
+
+    // Intel Core i3 - 8th Gen
+    'Intel Core i3-8100Y',
+    'Intel Core i3-8130U',
+    'Intel Core i3-8145U',
     'Intel Core i3 (8th Gen)',
+
+    // Intel Core i3 - 10th Gen
+    'Intel Core i3-10110U',
+    'Intel Core i3-1005G1',
     'Intel Core i3 (10th Gen)',
+
+    // Intel Core i3 - 11th Gen
+    'Intel Core i3-1115G4',
+    'Intel Core i3 (11th Gen)',
+
+    // Intel Core i5 - 7th Gen
+    'Intel Core i5-7200U',
+    'Intel Core i5-7300U',
+
+    // Intel Core i5 - 8th Gen
+    'Intel Core i5-8200Y',
+    'Intel Core i5-8250U',
+    'Intel Core i5-8265U',
+    'Intel Core i5-8350U',
+    'Intel Core i5-8365U',
     'Intel Core i5 (8th Gen)',
+
+    // Intel Core i5 - 10th Gen
+    'Intel Core i5-10210U',
+    'Intel Core i5-1035G1',
+    'Intel Core i5-1035G4',
+    'Intel Core i5-1035G7',
     'Intel Core i5 (10th Gen)',
-    'Intel Core i7'
+
+    // Intel Core i5 - 11th Gen
+    'Intel Core i5-1135G7',
+    'Intel Core i5-1145G7',
+    'Intel Core i5 (11th Gen)',
+
+    // Intel Core i7 - 8th Gen
+    'Intel Core i7-8500Y',
+    'Intel Core i7-8550U',
+    'Intel Core i7-8565U',
+    'Intel Core i7-8650U',
+    'Intel Core i7 (8th Gen)',
+
+    // Intel Core i7 - 10th Gen
+    'Intel Core i7-10510U',
+    'Intel Core i7-10610U',
+    'Intel Core i7-1065G7',
+    'Intel Core i7 (10th Gen)',
+
+    // Intel Core i7 - 11th Gen
+    'Intel Core i7-1165G7',
+    'Intel Core i7-1185G7',
+    'Intel Core i7 (11th Gen)',
+
+    // AMD - Emerging Chromebook Processors
+    'AMD A4-9120C',
+    'AMD A6-9220C',
+    'AMD Ryzen 3 3250C',
+    'AMD Ryzen 5 3500C',
+    'AMD Ryzen 7 3700C',
+
+    // MediaTek - ARM-based Chromebooks
+    'MediaTek MT8173C',
+    'MediaTek MT8183',
+    'MediaTek MT8192',
+    'MediaTek Kompanio 500',
+    'MediaTek Kompanio 520',
+    'MediaTek Kompanio 828',
+    'MediaTek Helio P60T',
+
+    // Qualcomm Snapdragon - ARM-based
+    'Qualcomm Snapdragon 7c',
+    'Qualcomm Snapdragon 7c Gen 2',
+    'Qualcomm Snapdragon 8c',
+
+    // Generic options (for flexibility)
+    'Intel Celeron',
+    'Intel Pentium',
+    'Intel Core i3',
+    'Intel Core i5',
+    'Intel Core i7',
+    'AMD Processor',
+    'MediaTek Processor',
+    'ARM Processor',
+    'Other'
   ],
   chromebookRam: [
     '2GB', '4GB', '8GB', '16GB'
