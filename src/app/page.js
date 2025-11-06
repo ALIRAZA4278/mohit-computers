@@ -162,69 +162,109 @@ export default function Home() {
       </section>
 
       {/* Brand Logos Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-b from-white to-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-10 md:mb-14">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4">
-              Trusted Brands
+      <section className="relative py-20 md:py-28 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-[#6dc1c9]/5"></div>
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#6dc1c9]/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          {/* Section Header */}
+          <div className="text-center mb-16 md:mb-20">
+            <div className="inline-block mb-4">
+              <span className="px-4 py-2 bg-[#6dc1c9]/10 text-[#6dc1c9] rounded-full text-sm font-semibold">
+                Our Partners
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6">
+              Trusted <span className="text-[#6dc1c9]">Brands</span>
             </h2>
-            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto px-4">
-              We partner with leading technology brands to bring you quality refurbished laptops and accessories
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              We partner with world&apos;s leading technology brands to deliver quality refurbished laptops and accessories
             </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
-            <Link href="/products?brand=hp" className="group relative flex flex-col justify-center items-center p-6 md:p-8 bg-white border-2 border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#6dc1c9]/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#6dc1c9]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative text-center">
-                <div className="mb-3 transform group-hover:scale-110 transition-transform duration-300">
-                  <Image src="/images/brands/hp-logo.svg" alt="HP" width={70} height={52} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto" />
+
+          {/* Brand Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+            {/* HP */}
+            <Link href="/products?brand=hp" className="group relative">
+              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
+                {/* Glow Effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
+
+                <div className="relative">
+                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
+                    <Image src="/images/brands/hp-logo.svg" alt="HP" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
+                  </div>
+                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">HP</p>
                 </div>
-                <p className="text-sm md:text-base font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">HP</p>
               </div>
             </Link>
-            <Link href="/products?brand=dell" className="group relative flex flex-col justify-center items-center p-6 md:p-8 bg-white border-2 border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#6dc1c9]/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#6dc1c9]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative text-center">
-                <div className="mb-3 transform group-hover:scale-110 transition-transform duration-300">
-                  <Image src="/images/brands/dell-logo.svg" alt="Dell" width={70} height={52} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto" />
+
+            {/* Dell */}
+            <Link href="/products?brand=dell" className="group relative">
+              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
+                <div className="relative">
+                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
+                    <Image src="/images/brands/dell-logo.svg" alt="Dell" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
+                  </div>
+                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Dell</p>
                 </div>
-                <p className="text-sm md:text-base font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Dell</p>
               </div>
             </Link>
-            <Link href="/products?brand=acer" className="group relative flex flex-col justify-center items-center p-6 md:p-8 bg-white border-2 border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#6dc1c9]/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#6dc1c9]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative text-center">
-                <div className="mb-3 transform group-hover:scale-110 transition-transform duration-300">
-                  <Image src="/images/brands/acer-logo.svg" alt="Acer" width={70} height={52} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto" />
+
+            {/* Acer */}
+            <Link href="/products?brand=acer" className="group relative">
+              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
+                <div className="relative">
+                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
+                    <Image src="/images/brands/acer-logo.svg" alt="Acer" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
+                  </div>
+                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Acer</p>
                 </div>
-                <p className="text-sm md:text-base font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Acer</p>
               </div>
             </Link>
-            <Link href="/products?brand=lenovo" className="group relative flex flex-col justify-center items-center p-6 md:p-8 bg-white border-2 border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#6dc1c9]/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#6dc1c9]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative text-center">
-                <div className="mb-3 transform group-hover:scale-110 transition-transform duration-300">
-                  <Image src="/images/brands/lenovo-logo.svg" alt="Lenovo" width={70} height={52} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto" />
+
+            {/* Lenovo */}
+            <Link href="/products?brand=lenovo" className="group relative">
+              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
+                <div className="relative">
+                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
+                    <Image src="/images/brands/lenovo-logo.svg" alt="Lenovo" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
+                  </div>
+                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Lenovo</p>
                 </div>
-                <p className="text-sm md:text-base font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Lenovo</p>
               </div>
             </Link>
-            <Link href="/products?category=chromebook" className="group relative flex flex-col justify-center items-center p-6 md:p-8 bg-white border-2 border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#6dc1c9]/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#6dc1c9]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative text-center">
-                <div className="mb-3 transform group-hover:scale-110 transition-transform duration-300">
-                  <Image src="/images/brands/chromebook-logo.svg" alt="Chromebook" width={70} height={52} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto" />
+
+            {/* Chromebook */}
+            <Link href="/products?category=chromebook" className="group relative">
+              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
+                <div className="relative">
+                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
+                    <Image src="/images/brands/chromebook-logo.svg" alt="Chromebook" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
+                  </div>
+                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Chromebook</p>
                 </div>
-                <p className="text-sm md:text-base font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Chromebook</p>
               </div>
             </Link>
-            <Link href="/products?category=accessories" className="group relative flex flex-col justify-center items-center p-6 md:p-8 bg-white border-2 border-gray-100 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#6dc1c9]/30 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#6dc1c9]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative text-center">
-                <div className="mb-3 transform group-hover:scale-110 transition-transform duration-300">
-                  <Image src="/images/brands/accessories-logo.svg" alt="Accessories" width={70} height={52} className="grayscale group-hover:grayscale-0 transition-all duration-300 mx-auto" />
+
+            {/* Accessories */}
+            <Link href="/products?category=accessories" className="group relative">
+              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
+                <div className="relative">
+                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
+                    <Image src="/images/brands/accessories-logo.svg" alt="Accessories" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
+                  </div>
+                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Accessories</p>
                 </div>
-                <p className="text-sm md:text-base font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors">Accessories</p>
               </div>
             </Link>
           </div>

@@ -11,47 +11,41 @@ export default function Banner({
   priority = false
 }) {
   return (
-    <div className={`relative w-full leading-[0] ${className}`}>
-      {/* Desktop container - only show above 1000px */}
-      <div className="hidden lg:block w-full leading-[0]">
+    <div className={`relative w-full ${className}`}>
+      {/* Desktop container - only show above 1280px (when navbar menu is hidden) */}
+      <div className="hidden xl:block relative w-full aspect-[1920/420]">
         <Image
           src={desktopImage}
           alt={alt}
-          width={1920}
-          height={420}
-          className="w-full h-auto block"
+          fill
+          className="object-cover"
           priority={priority}
           sizes="100vw"
           quality={90}
-          style={{ display: 'block', verticalAlign: 'bottom' }}
         />
       </div>
 
-      {/* Mobile/Tablet container - show below 1000px */}
-      <div className="block lg:hidden w-full leading-[0]">
+      {/* Mobile/Tablet container - show below 1280px (when navbar menu button appears) */}
+      <div className="block xl:hidden relative w-full aspect-square">
         {mobileImage ? (
           <Image
             src={mobileImage}
             alt={alt}
-            width={768}
-            height={420}
-            className="w-full h-auto block"
+            fill
+            className="object-cover"
             priority={priority}
             sizes="100vw"
             quality={90}
-            style={{ display: 'block', verticalAlign: 'bottom' }}
           />
         ) : (
           <Image
             src={desktopImage}
             alt={alt}
-            width={768}
-            height={420}
-            className="w-full h-auto block"
+            fill
+            className="object-cover"
             priority={priority}
             sizes="100vw"
             quality={90}
-            style={{ display: 'block', verticalAlign: 'bottom' }}
           />
         )}
       </div>
