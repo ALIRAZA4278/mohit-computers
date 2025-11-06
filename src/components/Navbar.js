@@ -501,6 +501,11 @@ const Navbar = () => {
                     Clearance
                   </Link>
                 </li>
+                <li>
+                  <Link href="/discounted" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
+                    Discounted
+                  </Link>
+                </li>
               </ul>
             </nav>
           </div>
@@ -611,7 +616,8 @@ const Navbar = () => {
             <Link href="/corporate" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Corporate</Link>
             <Link href="/contact" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Contact</Link>
             <Link href="/clearance" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Clearance</Link>
-            
+            <Link href="/discounted" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Discounted</Link>
+
             {/* Mobile Action Buttons */}
             <div className="pt-3 border-t border-gray-200 mt-3">
               <div className="grid grid-cols-3 gap-3 mb-3">

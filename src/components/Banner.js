@@ -11,49 +11,49 @@ export default function Banner({
   priority = false
 }) {
   return (
-    <div className={`relative w-full ${className}`}>
-      {/* Responsive height container with different heights for mobile/desktop */}
-      <div className="relative w-full">
-        {/* Desktop container - only show above 1000px */}
-        <div className="hidden lg:block relative w-full">
+    <div className={`relative w-full leading-[0] ${className}`}>
+      {/* Desktop container - only show above 1000px */}
+      <div className="hidden lg:block w-full leading-[0]">
+        <Image
+          src={desktopImage}
+          alt={alt}
+          width={1920}
+          height={420}
+          className="w-full h-auto block"
+          priority={priority}
+          sizes="100vw"
+          quality={90}
+          style={{ display: 'block', verticalAlign: 'bottom' }}
+        />
+      </div>
+
+      {/* Mobile/Tablet container - show below 1000px */}
+      <div className="block lg:hidden w-full leading-[0]">
+        {mobileImage ? (
           <Image
-            src={desktopImage}
+            src={mobileImage}
             alt={alt}
-            width={1820}
-            height={800}
-            className="w-full h-auto"
+            width={768}
+            height={420}
+            className="w-full h-auto block"
             priority={priority}
             sizes="100vw"
             quality={90}
+            style={{ display: 'block', verticalAlign: 'bottom' }}
           />
-        </div>
-
-        {/* Mobile/Tablet container - show below 1000px */}
-        <div className="block lg:hidden relative w-full">
-          {mobileImage ? (
-            <Image
-              src={mobileImage}
-              alt={alt}
-              width={768}
-              height={500}
-              className="w-full h-auto"
-              priority={priority}
-              sizes="100vw"
-              quality={90}
-            />
-          ) : (
-            <Image
-              src={desktopImage}
-              alt={alt}
-              width={768}
-              height={500}
-              className="w-full h-auto"
-              priority={priority}
-              sizes="100vw"
-              quality={90}
-            />
-          )}
-        </div>
+        ) : (
+          <Image
+            src={desktopImage}
+            alt={alt}
+            width={768}
+            height={420}
+            className="w-full h-auto block"
+            priority={priority}
+            sizes="100vw"
+            quality={90}
+            style={{ display: 'block', verticalAlign: 'bottom' }}
+          />
+        )}
       </div>
     </div>
   );
