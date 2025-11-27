@@ -136,20 +136,33 @@ function ProductsContent() {
         priceRanges: generatePriceRanges()
       };
     } else if (category === 'ram') {
-      // Combine and deduplicate capacity values
+      // Combine and deduplicate capacity values from all possible fields
       const capacities = [...new Set([
         ...extractUniqueValues('ram_capacity'),
-        ...extractUniqueValues('capacity')
+        ...extractUniqueValues('capacity'),
+        ...extractUniqueValues('ram')
       ])].sort();
 
-      // Combine and deduplicate speed values
+      // Combine and deduplicate speed values from all possible fields
       const speeds = [...new Set([
         ...extractUniqueValues('ram_speed'),
         ...extractUniqueValues('speed')
       ])].sort();
 
+      // Combine and deduplicate form factor values
+      const formFactors = [...new Set([
+        ...extractUniqueValues('ram_form_factor'),
+        ...extractUniqueValues('form_factor')
+      ])].sort();
+
+      // Combine brands from multiple fields
+      const brands = [...new Set([
+        ...extractUniqueValues('brand'),
+        ...extractUniqueValues('make')
+      ])].sort();
+
       return {
-        ramBrands: extractUniqueValues('brand'),
+        ramBrands: brands,
         ramType: extractUniqueValues('ram_type', (ramType) => {
           const typeStr = (ramType || '').toUpperCase();
           const types = [];
@@ -159,7 +172,7 @@ function ProductsContent() {
           else if (typeStr.includes('DDR3')) types.push('DDR3');
           return types;
         }),
-        ramFormFactor: extractUniqueValues('form_factor'),
+        ramFormFactor: formFactors,
         ramCapacity: capacities,
         ramSpeed: speeds,
         ramCondition: extractUniqueValues('condition'),
@@ -1352,7 +1365,7 @@ function ProductsContent() {
       {/* Products Banner */}
       <Banner
         desktopImage="/banners/product banner.jpg"
-        mobileImage="/banners/product banner.jpg"
+        mobileImage="/banners/mob product c.jpg"
         alt="Our Products"
         height="300px"
         priority={true}

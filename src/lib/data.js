@@ -3,9 +3,9 @@
 export const categories = [
   {
     id: 'laptop',
-    name: 'Laptop',
+    name: 'Used Laptop',
     image: '/images/laptop.jpg',
-    description: 'High-quality laptops',
+    description: 'High-quality used laptops',
     brands: ['Dell', 'HP', 'Lenovo', 'Acer', 'ASUS', 'Apple', 'MSI', 'Toshiba', 'Sony', 'Samsung']
   },
   {

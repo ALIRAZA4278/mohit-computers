@@ -14,9 +14,10 @@ const CompareTable = ({ products }) => {
   const compareItems = products || [];
 
   // Filter only laptop products for comparison
-  const laptopItems = compareItems.filter(item =>
-    item.category === 'laptop' || item.category_id === 'laptop'
-  );
+  const laptopItems = compareItems.filter(item => {
+    const category = (item.category || item.category_id || '').toLowerCase();
+    return category.includes('laptop') || category.includes('workstation') || category === 'used-laptop';
+  });
 
   if (laptopItems.length === 0) {
     return (
@@ -53,16 +54,18 @@ const CompareTable = ({ products }) => {
       if (field === 'price') return item.price;
       if (field === 'ram') return parseInt(item.ram?.match(/\d+/)?.[0] || '0');
       if (field === 'storage') {
-        const storage = item.storage || item.specifications?.storage || '';
-        const ssdMatch = storage.match(/(\d+)GB.*SSD/i);
-        const hddMatch = storage.match(/(\d+)GB.*HDD/i);
+        const storage = item.storage || item.hdd || item.specifications?.storage || '';
+        const ssdMatch = storage.match(/(\d+)\s*GB.*SSD/i) || storage.match(/(\d+)\s*GB\s*SSD/i);
+        const hddMatch = storage.match(/(\d+)\s*GB.*HDD/i) || storage.match(/(\d+)\s*GB/i);
+        const tbMatch = storage.match(/(\d+)\s*TB/i);
+        if (tbMatch) return parseInt(tbMatch[1]) * 1000 + (storage.toLowerCase().includes('ssd') ? 1000 : 0);
         if (ssdMatch) return parseInt(ssdMatch[1]) + 1000; // SSD bonus
         if (hddMatch) return parseInt(hddMatch[1]);
         return 0;
       }
       return 0;
     });
-    
+
     if (field === 'price') return Math.min(...values);
     return Math.max(...values);
   };
@@ -72,11 +75,13 @@ const CompareTable = ({ products }) => {
     if (field === 'price') return item.price === bestValue;
     if (field === 'ram') return parseInt(item.ram?.match(/\d+/)?.[0] || '0') === bestValue;
     if (field === 'storage') {
-      const storage = item.storage || item.specifications?.storage || '';
-      const ssdMatch = storage.match(/(\d+)GB.*SSD/i);
-      const hddMatch = storage.match(/(\d+)GB.*HDD/i);
+      const storage = item.storage || item.hdd || item.specifications?.storage || '';
+      const ssdMatch = storage.match(/(\d+)\s*GB.*SSD/i) || storage.match(/(\d+)\s*GB\s*SSD/i);
+      const hddMatch = storage.match(/(\d+)\s*GB.*HDD/i) || storage.match(/(\d+)\s*GB/i);
+      const tbMatch = storage.match(/(\d+)\s*TB/i);
       let itemValue = 0;
-      if (ssdMatch) itemValue = parseInt(ssdMatch[1]) + 1000;
+      if (tbMatch) itemValue = parseInt(tbMatch[1]) * 1000 + (storage.toLowerCase().includes('ssd') ? 1000 : 0);
+      else if (ssdMatch) itemValue = parseInt(ssdMatch[1]) + 1000;
       else if (hddMatch) itemValue = parseInt(hddMatch[1]);
       return itemValue === bestValue;
     }
@@ -450,19 +455,21 @@ const CompareTable = ({ products }) => {
                   💾 <span className="ml-2">Storage</span>
                 </div>
               </td>
-              {laptopItems.map((product) => (
+              {laptopItems.map((product) => {
+                const storageValue = product.storage || product.hdd || product.specifications?.storage || 'Not specified';
+                return (
                 <td key={product.id} className={`p-6 border-r border-gray-200 last:border-r-0 ${isHighlight(product, 'storage') ? 'bg-green-50 border-green-200' : ''}`}>
                   <div className={`font-bold text-lg ${isHighlight(product, 'storage') ? 'text-green-600' : 'text-gray-800'}`}>
-                    {product.storage || product.specifications?.storage || 'Not specified'}
+                    {storageValue}
                     {isHighlight(product, 'storage') && <span className="ml-2 text-sm">🏆 Best Storage</span>}
                   </div>
-                  {(product.storage?.includes('SSD') || product.specifications?.storage?.includes('SSD')) && (
+                  {storageValue?.includes('SSD') && (
                     <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded mt-2 inline-block">
                       ⚡ SSD - Faster Performance
                     </div>
                   )}
                 </td>
-              ))}
+              )})}
             </tr>
 
             {/* Display Row */}
@@ -475,7 +482,7 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.display || product.specifications?.display || product.specifications?.screen || 'Not specified'}
+                    {product.display || product.display_size || product.screensize || product.specifications?.display || product.specifications?.screen || 'Not specified'}
                   </div>
                 </td>
               ))}

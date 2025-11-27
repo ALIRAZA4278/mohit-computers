@@ -17,61 +17,55 @@ export default function About() {
         priority={true}
       />
 
-      {/* Welcome Content */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="mb-8">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
-                <div className="w-16 h-1 bg-[#6dc1c9] rounded-full mb-6"></div>
-              </div>
-              <div className="bg-white rounded-2xl shadow-lg p-8 md:p-10">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">About Us</h3>
-                <p className="text-gray-600 text-lg leading-relaxed mb-4">
-                  Welcome to Mohit Computers, where trust comes first and customer satisfaction is at the heart of everything we do.
-                </p>
-                <p className="text-gray-600 text-lg leading-relaxed mb-4">
-                  With over 19 years of experience in the laptop industry, Mohit Computers has grown from a small retail store into a trusted name in imported used laptops and accessories, not just across Pakistan, but globally as well. What sets us apart isn&rsquo;t just the products we offer, it&rsquo;s the relationships we build. For us, it&rsquo;s never just about selling a laptop; it&rsquo;s about understanding your needs and helping you find the right fit, with honesty, clarity, and care.
-                </p>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  We proudly serve a diverse customer base, including individual buyers (B2C), resellers (B2B), wholesalers, and large-scale corporate clients across various industries. Our operations include direct imports of high-quality laptops and accessories from global markets, ensuring that every item you purchase is authentic, reliable, and competitively priced.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <Image
-                src="/images/hero/about-hero.svg"
-                alt="MOHIT COMPUTERS Office"
-                width={500}
-                height={400}
-                className="w-full h-auto rounded-lg"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Our Journey */}
-      <section className="py-20 bg-gray-50">
+      {/* About Us */}
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Our Journey</h2>
-              <div className="flex justify-center mt-6">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">About Us</h2>
+              <div className="flex justify-center">
                 <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
               </div>
             </div>
 
             <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
               <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                The idea behind Mohit Computers was born at a time when technology was still new in Pakistan. Back then, there were few resources, limited access, and little awareness, but we saw the future.
+                Welcome to Mohit Computers — a name built on trust, quality, and customer-first values.
               </p>
               <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                We started with a simple mission: to introduce and expand access to technology in the local market. From our very first retail store, we worked hard to build trust, educate our customers, and meet their evolving needs. Over time, our journey led us into wholesale, then corporate supply, and eventually into direct importing, enabling us to offer even better value and a wider range of products nationwide.
+                With nearly two decades of expertise in the laptop industry, Mohit Computers has evolved from a small retail outlet into a reputable global provider of imported, top-grade used laptops and accessories. Our journey is defined not only by the products we offer but by the long-lasting relationships we build with our customers. For us, it&rsquo;s never just a transaction, it&rsquo;s about understanding your requirements and guiding you toward the perfect solution with transparency, integrity, and genuine care.
+              </p>
+              <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                We proudly serve a wide and diverse clientele, including individual customers (B2C), resellers (B2B), wholesalers, and corporate organizations across multiple sectors. By directly importing premium laptops and accessories from trusted international markets, we ensure that every product you receive is authentic, reliable, and competitively priced.
               </p>
               <p className="text-gray-600 text-lg leading-relaxed">
-                It hasn&rsquo;t been an easy road, but every step has been guided by our vision to become a bridge between people and technology. Today, that same passion continues to drive us forward with integrity and purpose.
+                At Mohit Computers, we are committed to delivering value, performance, and trust - every step of the way.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Journey */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Our Journey</h2>
+              <div className="flex justify-center">
+                <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+              <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                Mohit Computers began at a time when technology was still emerging in Pakistan. Resources were scarce, access was limited, and awareness was minimal — but we recognized the potential and embraced the future before it arrived.
+              </p>
+              <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                Our mission was simple: to make technology accessible to everyone. From the very first retail store, we focused on building trust, guiding customers, and responding to their changing needs. As demand grew, our journey expanded from retail to wholesale, then to corporate supply, and eventually to direct importing. Each phase strengthened our ability to deliver greater value, better quality, and a broader range of products across the country.
+              </p>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                The journey has not been without challenges, but our vision has remained constant: to serve as a dependable link between people and technology. Today, that same commitment continues to guide us, strengthened by integrity, passion, and purpose.
               </p>
             </div>
           </div>
@@ -109,19 +103,19 @@ export default function About() {
 
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12">
               <p className="text-white leading-relaxed text-lg text-center">
-                We are more motivated than ever to meet the evolving tech needs of our region. As we grow, our mission remains clear: to help shape a stronger, tech-savvy future for Pakistan by making authentic technology accessible, affordable, and trusted for everyone.
+                We are driven by a renewed commitment to meet the evolving technological needs of our region. As we continue to grow, our mission remains unwavering — to contribute to a stronger, more tech-empowered Pakistan by ensuring that authentic, reliable, and affordable technology is accessible to all.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Mohit Computers */}
+      {/* Our Competitive Edge */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Why Choose Mohit Computers?</h2>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Our Competitive Edge</h2>
               <div className="flex justify-center mt-6">
                 <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
               </div>
@@ -131,40 +125,55 @@ export default function About() {
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-[#6dc1c9] flex-shrink-0 mt-1" />
-                  <p className="text-gray-700 text-lg">Established in 2005, with over 19 years of proven industry experience</p>
+                  <p className="text-gray-700 text-lg">Established in 2005, backed by over 19 years of trusted industry experience</p>
                 </div>
 
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-[#6dc1c9] flex-shrink-0 mt-1" />
-                  <p className="text-gray-700 text-lg">Direct importer of original laptops and accessories</p>
+                  <p className="text-gray-700 text-lg">Direct importer of authentic, top-quality laptops and accessories</p>
                 </div>
 
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-[#6dc1c9] flex-shrink-0 mt-1" />
-                  <p className="text-gray-700 text-lg">Serving B2C, B2B, and corporate clients</p>
+                  <p className="text-gray-700 text-lg">Serving a diverse clientele including B2C, B2B, and corporate sectors</p>
                 </div>
 
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-[#6dc1c9] flex-shrink-0 mt-1" />
-                  <p className="text-gray-700 text-lg">Trusted presence in Pakistan, UAE, and Canada</p>
+                  <p className="text-gray-700 text-lg">Recognized and trusted across Pakistan, the UAE, and Canada</p>
                 </div>
 
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-[#6dc1c9] flex-shrink-0 mt-1" />
-                  <p className="text-gray-700 text-lg">Personalized service, after-sales support, and nationwide delivery</p>
+                  <p className="text-gray-700 text-lg">Offering personalized customer service, reliable after-sales support, and nationwide delivery</p>
                 </div>
 
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="w-6 h-6 text-[#6dc1c9] flex-shrink-0 mt-1" />
-                  <p className="text-gray-700 text-lg">Committed to putting customer needs and satisfaction first</p>
+                  <p className="text-gray-700 text-lg">Driven by a commitment to customer satisfaction, transparency, and long-term value</p>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <div className="mt-10 pt-8 border-t border-gray-200">
-                <p className="text-gray-800 font-semibold text-xl text-center">
-                  At Mohit Computers, we don&rsquo;t just sell laptops, we help people and businesses move forward through trusted technology.
-                </p>
-              </div>
+      {/* Corporate Section */}
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4">Corporate Tech Solutions</h2>
+            <p className="text-[#6dc1c9] text-xl font-medium mb-8">by Mohit Computers</p>
+            <p className="text-gray-300 text-lg leading-relaxed">
+              We specialize in meeting the complex demands of corporate technology procurement, providing customized, reliable, and efficient solutions that align with your organizational needs.
+            </p>
+            <div className="mt-8">
+              <Link
+                href="/corporate"
+                className="bg-[#6dc1c9] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors duration-300 inline-flex items-center justify-center"
+              >
+                Learn More
+              </Link>
             </div>
           </div>
         </div>

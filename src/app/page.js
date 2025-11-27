@@ -15,6 +15,8 @@ export default function Home() {
   const [newArrivalIndex, setNewArrivalIndex] = useState(0);
   const [workstationIndex, setWorkstationIndex] = useState(0);
   const [accessoryIndex, setAccessoryIndex] = useState(0);
+  const [reviewIndex, setReviewIndex] = useState(0);
+  const [reviewsPerView, setReviewsPerView] = useState(3);
 
   // State for products from database
   const [products, setProducts] = useState([]);
@@ -44,12 +46,16 @@ export default function Home() {
     const handleResize = () => {
       if (window.innerWidth < 640) {
         setItemsPerView(1); // Mobile
+        setReviewsPerView(1);
       } else if (window.innerWidth < 768) {
         setItemsPerView(2); // Small tablets
+        setReviewsPerView(2);
       } else if (window.innerWidth < 1024) {
         setItemsPerView(3); // Tablets
+        setReviewsPerView(2);
       } else {
         setItemsPerView(4); // Desktop
+        setReviewsPerView(3);
       }
     };
 
@@ -104,23 +110,24 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className="bg-[#f3f4f6]">
       {/* Landing Page - Hero Section with Carousel */}
       <section className="relative">
         <div className="relative">
           {/* Hero Banners Carousel */}
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden w-full">
             <div
-              className="flex transition-transform duration-700 ease-in-out"
+              className="flex transition-transform duration-700 ease-in-out w-full"
               style={{ transform: `translateX(-${heroIndex * 100}%)` }}
             >
               {heroBanners.map((banner, index) => (
-                <div key={index} className="min-w-full flex-shrink-0">
+                <div key={index} className="w-full flex-shrink-0" style={{ minWidth: '100%' }}>
                   <Banner
                     desktopImage={banner.desktop}
                     mobileImage={banner.mobile}
                     alt={`Hero Banner ${index + 1}`}
                     priority={index === 0}
+                    isHero={true}
                   />
                 </div>
               ))}
@@ -161,135 +168,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Brand Logos Section */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-[#6dc1c9]/5"></div>
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#6dc1c9]/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          {/* Section Header */}
-          <div className="text-center mb-16 md:mb-20">
-            <div className="inline-block mb-4">
-              <span className="px-4 py-2 bg-[#6dc1c9]/10 text-[#6dc1c9] rounded-full text-sm font-semibold">
-                Our Partners
-              </span>
-            </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6">
-              Trusted <span className="text-[#6dc1c9]">Brands</span>
-            </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              We partner with world&apos;s leading technology brands to deliver quality refurbished laptops and accessories
-            </p>
-          </div>
-
-          {/* Brand Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
-            {/* HP */}
-            <Link href="/products?brand=hp" className="group relative">
-              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
-                {/* Glow Effect */}
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
-
-                <div className="relative">
-                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
-                    <Image src="/images/brands/hp-logo.svg" alt="HP" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
-                  </div>
-                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">HP</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Dell */}
-            <Link href="/products?brand=dell" className="group relative">
-              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
-                <div className="relative">
-                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
-                    <Image src="/images/brands/dell-logo.svg" alt="Dell" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
-                  </div>
-                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Dell</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Acer */}
-            <Link href="/products?brand=acer" className="group relative">
-              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
-                <div className="relative">
-                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
-                    <Image src="/images/brands/acer-logo.svg" alt="Acer" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
-                  </div>
-                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Acer</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Lenovo */}
-            <Link href="/products?brand=lenovo" className="group relative">
-              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
-                <div className="relative">
-                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
-                    <Image src="/images/brands/lenovo-logo.svg" alt="Lenovo" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
-                  </div>
-                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Lenovo</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Chromebook */}
-            <Link href="/products?category=chromebook" className="group relative">
-              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
-                <div className="relative">
-                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
-                    <Image src="/images/brands/chromebook-logo.svg" alt="Chromebook" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
-                  </div>
-                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Chromebook</p>
-                </div>
-              </div>
-            </Link>
-
-            {/* Accessories */}
-            <Link href="/products?category=accessories" className="group relative">
-              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-3xl p-8 md:p-10 transition-all duration-500 hover:bg-white hover:border-[#6dc1c9]/50 hover:shadow-2xl hover:-translate-y-3">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-[#6dc1c9] to-blue-500 rounded-3xl opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"></div>
-                <div className="relative">
-                  <div className="flex justify-center mb-4 transform group-hover:scale-110 transition-transform duration-500">
-                    <Image src="/images/brands/accessories-logo.svg" alt="Accessories" width={80} height={60} className="grayscale group-hover:grayscale-0 transition-all duration-500 drop-shadow-lg" />
-                  </div>
-                  <p className="text-center text-base md:text-lg font-bold text-gray-700 group-hover:text-[#6dc1c9] transition-colors duration-300">Accessories</p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Feature Banner */}
-      <section className="relative overflow-hidden">
-        <Banner
-          desktopImage="/banners/feature c.jpg"
-          mobileImage="/banners/feature c.jpg"
-          alt="Featured Products"
-          height="300px"
-        />
+      <section className="pt-8 md:pt-12">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16">
+          <div className="bg-white rounded-2xl overflow-hidden transition-transform duration-300 hover:scale-[1.01]">
+            <Banner
+              desktopImage="/banners/feature c.jpg"
+              mobileImage="/banners/mob feature c.jpg"
+              alt="Featured Products"
+              height="250px"
+            />
+          </div>
+        </div>
       </section>
 
       {/* Featured Products Slider */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-10">
         <div className="container mx-auto px-4">
           {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#6dc1c9]"></div>
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6dc1c9]"></div>
             </div>
           ) : error ? (
-            <div className="text-center py-20">
+            <div className="text-center py-12">
               <p className="text-red-600 text-lg mb-4">Error loading products: {error}</p>
               <button
                 onClick={() => window.location.reload()}
@@ -299,7 +200,7 @@ export default function Home() {
               </button>
             </div>
           ) : featuredProducts.length === 0 ? (
-            <div className="text-center py-20">
+            <div className="text-center py-12">
               <p className="text-gray-600 text-lg">No featured products available at the moment.</p>
             </div>
           ) : (
@@ -344,17 +245,21 @@ export default function Home() {
       </section>
 
       {/* New Arrival Banner */}
-      <section className="relative overflow-hidden">
-        <Banner
-          desktopImage="/banners/Newarrival banner.jpg"
-          mobileImage="/banners/Newarrival banner.jpg"
-          alt="New Arrivals"
-          height="300px"
-        />
+      <section className="pt-8 md:pt-12">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16">
+          <div className="bg-white rounded-2xl overflow-hidden transition-transform duration-300 hover:scale-[1.01]">
+            <Banner
+              desktopImage="/banners/Newarrival banner.jpg"
+              mobileImage="/banners/mob Newarrival c.jpg"
+              alt="New Arrivals"
+              height="250px"
+            />
+          </div>
+        </div>
       </section>
 
       {/* New Arrival Products Slider */}
-      <section className="py-20 bg-white">
+      <section className="py-10">
         <div className="container mx-auto px-4">
           {!loading && !error && newArrivalProducts.length > 0 && (
             <div className="relative px-8 sm:px-4">
@@ -398,34 +303,23 @@ export default function Home() {
       </section>
 
       {/* Workstation Banner */}
-      <section className="relative overflow-hidden">
-        <Banner
-          desktopImage="/banners/Work station banner.jpg"
-          mobileImage="/banners/Work station banner.jpg"
-          alt="Workstation Collection"
-          height="300px"
-        />
+      <section className="pt-8 md:pt-12">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16">
+          <div className="bg-white rounded-2xl overflow-hidden transition-transform duration-300 hover:scale-[1.01]">
+            <Banner
+              desktopImage="/banners/Work station banner.jpg"
+              mobileImage="/banners/mob Work station c.jpg"
+              alt="Workstation Collection"
+              height="250px"
+            />
+          </div>
+        </div>
       </section>
 
       {/* Workstation Products Slider */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-10">
         <div className="container mx-auto px-4">
-          {/* Section Header with View All Button */}
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Workstation Collection</h2>
-              <p className="text-gray-600 mt-2">High-performance workstations for professionals</p>
-            </div>
-            <Link 
-              href="/workstation"
-              className="bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center gap-2"
-            >
-              View All
-              <ChevronRight className="w-5 h-5" />
-            </Link>
-          </div>
-
-          {/* Workstation Slider - Same as other sliders */}
+          {/* Workstation Slider with View All Card */}
           {!loading && !error && workstationProducts.length > 0 && (
             <div className="relative px-8 sm:px-4">
               <div className="overflow-hidden rounded-xl -mx-2 sm:-mx-3">
@@ -442,9 +336,24 @@ export default function Home() {
                       <ProductCard product={product} />
                     </div>
                   ))}
+                  {/* View All Card */}
+                  <div
+                    className="flex-none px-2 sm:px-3"
+                    style={{ width: `${100 / itemsPerView}%` }}
+                  >
+                    <Link href="/workstation" className="block h-full">
+                      <div className="bg-gradient-to-br from-[#6dc1c9] to-teal-700 rounded-xl p-6 h-full min-h-[400px] flex flex-col items-center justify-center text-white hover:from-teal-700 hover:to-teal-800 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
+                          <ArrowRight className="w-8 h-8" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">View All</h3>
+                        <p className="text-white/80 text-sm text-center">Workstations</p>
+                      </div>
+                    </Link>
+                  </div>
                 </div>
               </div>
-              {workstationProducts.length > itemsPerView && (
+              {(workstationProducts.length + 1) > itemsPerView && (
                 <>
                   <button
                     onClick={() => setWorkstationIndex(Math.max(0, workstationIndex - 1))}
@@ -454,9 +363,9 @@ export default function Home() {
                     <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
                   </button>
                   <button
-                    onClick={() => setWorkstationIndex(Math.min(getMaxIndex(workstationProducts.length), workstationIndex + 1))}
+                    onClick={() => setWorkstationIndex(Math.min(workstationProducts.length + 1 - itemsPerView, workstationIndex + 1))}
                     className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={workstationIndex >= getMaxIndex(workstationProducts.length)}
+                    disabled={workstationIndex >= workstationProducts.length + 1 - itemsPerView}
                   >
                     <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
                   </button>
@@ -468,20 +377,23 @@ export default function Home() {
       </section>
 
       {/* Accessories Banner */}
-      <section className="relative overflow-hidden">
-        <Banner
-          desktopImage="/banners/Accessories banner.jpg"
-          mobileImage="/banners/Accessories banner.jpg"
-          alt="Premium Accessories"
-          height="300px"
-        />
+      <section className="pt-8 md:pt-12">
+        <div className="container mx-auto px-4 md:px-8 lg:px-16">
+          <div className="bg-white rounded-2xl overflow-hidden transition-transform duration-300 hover:scale-[1.01]">
+            <Banner
+              desktopImage="/banners/Accessories banner.jpg"
+              mobileImage="/banners/mob Accessories c.jpg"
+              alt="Premium Accessories"
+              height="250px"
+            />
+          </div>
+        </div>
       </section>
 
       {/* Accessories Section */}
-      <section className="py-20 bg-white relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-50"></div>
+      <section className="py-10 relative">
         <div className="container mx-auto px-4 relative">
-          
+
           {/* Accessories Slider */}
           {!loading && !error && accessoryProducts.length > 0 && (
             <div className="relative px-8 sm:px-4">
@@ -499,9 +411,24 @@ export default function Home() {
                       <ProductCard product={product} />
                     </div>
                   ))}
+                  {/* View All Card */}
+                  <div
+                    className="flex-none px-2 sm:px-3"
+                    style={{ width: `${100 / itemsPerView}%` }}
+                  >
+                    <Link href="/products?category=accessories" className="block h-full">
+                      <div className="bg-gradient-to-br from-[#6dc1c9] to-teal-700 rounded-xl p-6 h-full min-h-[400px] flex flex-col items-center justify-center text-white hover:from-teal-700 hover:to-teal-800 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
+                          <ArrowRight className="w-8 h-8" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">View All</h3>
+                        <p className="text-white/80 text-sm text-center">Accessories</p>
+                      </div>
+                    </Link>
+                  </div>
                 </div>
               </div>
-              {accessoryProducts.length > itemsPerView && (
+              {(accessoryProducts.length + 1) > itemsPerView && (
                 <>
                   <button
                     onClick={() => setAccessoryIndex(Math.max(0, accessoryIndex - 1))}
@@ -511,9 +438,9 @@ export default function Home() {
                     <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
                   </button>
                   <button
-                    onClick={() => setAccessoryIndex(Math.min(getMaxIndex(accessoryProducts.length), accessoryIndex + 1))}
+                    onClick={() => setAccessoryIndex(Math.min(accessoryProducts.length + 1 - itemsPerView, accessoryIndex + 1))}
                     className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={accessoryIndex >= getMaxIndex(accessoryProducts.length)}
+                    disabled={accessoryIndex >= accessoryProducts.length + 1 - itemsPerView}
                   >
                     <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
                   </button>
@@ -521,69 +448,91 @@ export default function Home() {
               )}
             </div>
           )}
-
-          
-          {/* View All Button */}
-          <div className="text-center mt-12">
-            <Link 
-              href="/products?category=accessories"
-              className="inline-flex items-center px-8 py-3 bg-[#6dc1c9] text-white rounded-lg font-semibold hover:bg-teal-700 transition-colors duration-300 shadow-lg hover:shadow-xl"
-            >
-              View All Accessories
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* Reviews Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+      {/* Reviews Section - Slider */}
+      <section className="py-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">
               Customer Reviews
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Don&apos;t just take our word for it - see what our satisfied customers have to say about their experience with Mohit Computers
+            <p className="text-sm md:text-base text-gray-300 max-w-2xl mx-auto">
+              See what our satisfied customers have to say
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="bg-white/10 backdrop-blur-sm rounded-xl p-8 hover:bg-white/15 transition-all duration-300 border border-white/10">
-                <div className="flex items-center mb-6">
-                  <div className="flex text-yellow-400">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-current" />
-                    ))}
+          {/* Reviews Slider */}
+          <div className="relative px-8 sm:px-12">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${reviewIndex * (100 / reviewsPerView)}%)` }}
+              >
+                {testimonials.map((testimonial) => (
+                  <div
+                    key={testimonial.id}
+                    className="flex-none px-2"
+                    style={{ width: `${100 / reviewsPerView}%` }}
+                  >
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-5 hover:bg-white/15 transition-all duration-300 border border-white/10 h-full">
+                      <div className="flex items-center mb-3">
+                        <div className="flex text-yellow-400">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} className="w-4 h-4 fill-current" />
+                          ))}
+                        </div>
+                        <span className="ml-2 text-xs text-gray-300">5.0</span>
+                      </div>
+                      <p className="text-gray-200 mb-4 italic text-sm leading-relaxed line-clamp-3">
+                        &ldquo;{testimonial.content}&rdquo;
+                      </p>
+                      <div className="flex items-center">
+                        <div className="w-9 h-9 bg-gradient-to-r from-teal-400 to-[#6dc1c9] rounded-full mr-3 flex items-center justify-center text-white font-bold text-sm">
+                          {testimonial.name.charAt(0)}
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-white text-sm">{testimonial.name}</h4>
+                          <p className="text-gray-400 text-xs">{testimonial.role}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <span className="ml-2 text-sm text-gray-300">5.0</span>
-                </div>
-                <p className="text-gray-200 mb-6 italic text-lg leading-relaxed">
-                  &ldquo;{testimonial.content}&rdquo;
-                </p>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-teal-400 to-[#6dc1c9] rounded-full mr-4 flex items-center justify-center text-white font-bold text-lg">
-                    {testimonial.name.charAt(0)}
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-white text-lg">{testimonial.name}</h4>
-                    <p className="text-gray-400 text-sm">{testimonial.role}</p>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Slider Controls */}
+            {testimonials.length > reviewsPerView && (
+              <>
+                <button
+                  onClick={() => setReviewIndex(Math.max(0, reviewIndex - 1))}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={reviewIndex === 0}
+                >
+                  <ChevronLeft className="w-5 h-5 text-white" />
+                </button>
+                <button
+                  onClick={() => setReviewIndex(Math.min(testimonials.length - reviewsPerView, reviewIndex + 1))}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={reviewIndex >= testimonials.length - reviewsPerView}
+                >
+                  <ChevronRight className="w-5 h-5 text-white" />
+                </button>
+              </>
+            )}
           </div>
-          
-          <div className="text-center mt-12">
+
+          <div className="text-center mt-6">
             <a
               href="https://g.page/r/CXHJJmG3XcUzEBM/review"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-white/10 rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-105 cursor-pointer"
+              className="inline-flex items-center px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-all duration-300 hover:scale-105 cursor-pointer"
             >
-              <Image src="/images/brands/chromebook-logo.svg" alt="Google" width={24} height={24} className="mr-3" />
-              <span className="text-sm font-medium text-gray-300">
+              <Image src="/images/brands/chromebook-logo.svg" alt="Google" width={20} height={20} className="mr-2" />
+              <span className="text-xs font-medium text-gray-300">
                 4.9/5 rating based on 150+ Google reviews
               </span>
             </a>

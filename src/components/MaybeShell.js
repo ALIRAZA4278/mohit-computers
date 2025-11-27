@@ -4,7 +4,6 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import FloatingCompareWidget from './FloatingCompareWidget';
 
 export default function MaybeShell({ children }) {
   const pathname = usePathname() || '';
@@ -20,7 +19,6 @@ export default function MaybeShell({ children }) {
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
-      <FloatingCompareWidget />
     </div>
   );
 }

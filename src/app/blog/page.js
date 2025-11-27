@@ -64,124 +64,31 @@ export default async function Blog() {
       />
 
       {/* Blog Content Section */}
-      <section className="py-12 sm:py-16 lg:py-20">
+      <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div className="text-center lg:text-left">
-            <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
-              <span className="w-2 h-2 bg-teal-500 rounded-full mr-2"></span>
-                Tech Insights & Reviews
-            </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight text-gray-900">
-                Smart Tech <span className="text-[#6dc1c9]">Decisions</span> Start Here
-              </h1>
-              <p className="text-lg sm:text-xl mb-6 sm:mb-8 text-gray-600 leading-relaxed">
-                Expert guides, honest reviews, and practical tips to help you pick the right laptop, desktop, or accessory with confidence. Make informed decisions with our comprehensive tech insights.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-8">
-                <Link 
-                  href="#articles" 
-                  className="bg-[#6dc1c9] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-teal-700 transition-all duration-300 inline-flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                >
-                  Explore Articles
-                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
-                </Link>
-                <Link 
-                  href="/products" 
-                  className="border-2 border-[#6dc1c9] text-[#6dc1c9] px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold text-base sm:text-lg hover:bg-[#6dc1c9] hover:text-white transition-all duration-300 inline-flex items-center justify-center"
-                >
-                  Browse Products
-                </Link>
-              </div>
-              
-              {/* Stats */}
-              <div className="flex flex-wrap gap-6 justify-center lg:justify-start text-sm text-gray-600">
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-teal-500 rounded-full mr-2"></div>
-                  50+ Expert Reviews
-                </div>
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-                  Weekly Updates
-                </div>
-                <div className="flex items-center">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                  Trusted by 1000+ Readers
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                {/* Featured Article Preview Cards */}
-                <div className="space-y-4">
-                  {/* Article 1 */}
-                  <div className="bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl p-4 border border-teal-200">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-[#6dc1c9] rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-gray-900 font-semibold mb-1">Best Laptops Under 50K</h3>
-                        <p className="text-gray-600 text-sm">Complete buying guide with top picks...</p>
-                        <div className="flex items-center mt-2 text-xs text-[#6dc1c9]">
-                          <span>5 min read</span>
-                          <span className="mx-2">•</span>
-                          <span>Featured</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Article 2 */}
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-gray-900 font-semibold mb-1">SSD vs HDD Performance</h3>
-                        <p className="text-gray-600 text-sm">Speed comparison and recommendations...</p>
-                        <div className="flex items-center mt-2 text-xs text-blue-600">
-                          <span>8 min read</span>
-                          <span className="mx-2">•</span>
-                          <span>Technical</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Article 3 */}
-                  <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
-                    <div className="flex items-start space-x-4">
-                      <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                        </svg>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-gray-900 font-semibold mb-1">Budget Gaming Setup</h3>
-                        <p className="text-gray-600 text-sm">Build powerful gaming rig on budget...</p>
-                        <div className="flex items-center mt-2 text-xs text-green-600">
-                          <span>12 min read</span>
-                          <span className="mx-2">•</span>
-                          <span>Gaming</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Floating elements */}
-              <div className="absolute -top-4 -right-4 bg-teal-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                Latest
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-blue-500 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg">
-                Expert Tips
-              </div>
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Smart Tech Decisions Start Here</h2>
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">
+              Expert guides, honest reviews, and practical tips to help you pick the right laptop, desktop, or accessory with confidence.
+            </p>
+            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
+              At Mohit Computers, we believe in empowering our customers with knowledge. Our blog features in-depth reviews, buying guides, and technical comparisons.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="#articles"
+                className="bg-[#6dc1c9] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-teal-700 transition-all inline-flex items-center justify-center"
+              >
+                Explore Articles
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Link>
+              <Link
+                href="/products"
+                className="border-2 border-[#6dc1c9] text-[#6dc1c9] px-6 py-2.5 rounded-lg font-medium hover:bg-[#6dc1c9] hover:text-white transition-all inline-flex items-center justify-center"
+              >
+                Browse Products
+              </Link>
             </div>
           </div>
         </div>

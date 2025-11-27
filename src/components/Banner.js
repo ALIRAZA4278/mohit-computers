@@ -18,7 +18,7 @@ export default function Banner({
           src={desktopImage}
           alt={alt}
           fill
-          className="object-cover"
+          className="object-contain"
           priority={priority}
           sizes="100vw"
           quality={90}
@@ -32,7 +32,7 @@ export default function Banner({
             src={mobileImage}
             alt={alt}
             fill
-            className="object-cover"
+            className="object-contain"
             priority={priority}
             sizes="100vw"
             quality={90}
@@ -42,7 +42,7 @@ export default function Banner({
             src={desktopImage}
             alt={alt}
             fill
-            className="object-cover"
+            className="object-contain"
             priority={priority}
             sizes="100vw"
             quality={90}

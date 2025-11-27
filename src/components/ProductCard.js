@@ -121,34 +121,22 @@ const ProductCard = ({ product, showCompare = true }) => {
 
   return (
     <div className="group h-full">
-      <div className={`relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 hover:border-teal-200 h-full flex flex-col ${isAccessory ? 'max-w-sm mx-auto' : ''}`}>
-        {/* Badges Container - Super Cute Minimal */}
+      <div className="relative bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 h-full flex flex-col hover:-translate-y-1">
+        {/* Badges Container */}
         <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
-          {/* Low Stock Badge */}
           {isAvailableForPurchase && stockQuantity <= 5 && stockQuantity > 0 && (
-            <div className="bg-amber-400 text-amber-900 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-amber-300/50">
+            <div className="bg-amber-400 text-amber-900 px-2 py-0.5 rounded text-[10px] font-bold">
               LIMITED
             </div>
           )}
-
-          {/* NEW Badge */}
           {isAvailableForPurchase && isNew && !product.is_clearance && !product.is_discounted && (
-            <div className="bg-teal-400 text-teal-900 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-teal-300/50">
+            <div className="bg-teal-500 text-white px-2 py-0.5 rounded text-[10px] font-bold">
               NEW
             </div>
           )}
-
-          {/* Clearance Badge */}
           {isAvailableForPurchase && product.is_clearance && (
-            <div className="bg-rose-400 text-rose-900 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-rose-300/50">
+            <div className="bg-rose-500 text-white px-2 py-0.5 rounded text-[10px] font-bold">
               CLEARANCE
-            </div>
-          )}
-
-          {/* Discounted Badge */}
-          {isAvailableForPurchase && product.is_discounted && !product.is_clearance && (
-            <div className="bg-violet-400 text-violet-900 px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-violet-300/50">
-              SPECIAL
             </div>
           )}
         </div>
@@ -156,165 +144,145 @@ const ProductCard = ({ product, showCompare = true }) => {
         {/* Discount Badge */}
         {isAvailableForPurchase && discountPercentage > 0 && (
           <div className="absolute top-2 right-2 z-10">
-            <div className="bg-red-500 text-white px-2.5 py-1 rounded-full text-[9px] font-extrabold tracking-wide shadow-sm border border-red-400/50">
+            <div className="bg-red-500 text-white px-2 py-0.5 rounded text-[10px] font-bold">
               {discountPercentage}% OFF
             </div>
           </div>
         )}
-        
-        {/* Product Image */}
-        <div className={`relative bg-gradient-to-br from-gray-50 to-gray-100 ${isAccessory ? 'h-28 sm:h-32 p-2.5 sm:p-3' : 'h-32 sm:h-36 p-3 sm:p-4'}`}>
+
+        {/* Product Image - Fixed Height */}
+        <div className="relative bg-gray-50 h-[160px] p-4 flex items-center justify-center">
           <Image
             src={product.featured_image || product.image || "/next.svg"}
             alt={product.name}
             width={200}
-            height={120}
-            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
+            height={140}
+            className="max-h-[140px] w-auto object-contain group-hover:scale-105 transition-transform duration-300"
             onError={(e) => {
               e.target.src = "/next.svg";
             }}
           />
         </div>
-        
-        {/* Product Info */}
-        <div className={`flex-1 flex flex-col justify-between ${isAccessory ? 'p-2.5 sm:p-3.5' : 'p-3 sm:p-4'}`}>
-          <div className="flex-1">
-            <Link href={`/products/${product.id}`}>
-              <h3 className={`font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-[#6dc1c9] transition-colors cursor-pointer ${isAccessory ? 'text-sm min-h-[2.5rem]' : 'text-sm sm:text-base min-h-[2.5rem] sm:min-h-[3rem]'}`}>
-                {product.name}
-              </h3>
-            </Link>
 
-          {/* Brand - Hide for accessories to save space */}
-          {!isAccessory && product.brand && (
-            <p className="text-xs text-gray-500 mb-1 sm:mb-2 font-medium">
+        {/* Product Info - Fixed Structure */}
+        <div className="flex-1 flex flex-col p-4">
+          {/* Product Name - Fixed Height */}
+          <Link href={`/products/${product.id}`}>
+            <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2 h-[40px] group-hover:text-[#6dc1c9] transition-colors cursor-pointer">
+              {product.name}
+            </h3>
+          </Link>
+
+          {/* Brand */}
+          {product.brand && (
+            <p className="text-xs text-gray-500 mt-1">
               Brand: {product.brand}
             </p>
           )}
 
-          {/* Specifications - Only show for laptops, hide for accessories */}
-          {!isAccessory && (
-            <div className="text-xs text-gray-600 mb-2 sm:mb-3 space-y-1 min-h-[2rem] sm:min-h-[3rem]">
-              {product.processor && (
-                <div className="flex items-center">
-                  <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                  <span className="truncate">{product.processor}</span>
-                </div>
-              )}
-              {product.generation && (
-                <div className="flex items-center">
-                  <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                  <span className="truncate">{product.generation}</span>
-                </div>
-              )}
-              {product.ram && (
-                <div className="flex items-center">
-                  <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                  <span className="truncate">{product.ram} RAM, {product.hdd || product.storage}</span>
-                </div>
-              )}
-              {(product.display_size || product.screensize || product.display) && (
-                <div className="flex items-center">
-                  <span className="w-1 h-1 bg-teal-500 rounded-full mr-2"></span>
-                  <span className="truncate">{product.display_size || product.screensize || product.display}</span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Brand for accessories - compact version */}
-          {isAccessory && product.brand && (
-            <p className="text-xs text-gray-500 mb-1.5 font-medium">
-              Brand: {product.brand}
-            </p>
-          )}
-
-          {/* Price */}
-          <div className={`flex items-center justify-between ${isAccessory ? 'mb-2' : 'mb-2 sm:mb-3'}`}>
-            <div>
-              <span className={`font-bold text-gray-900 ${isAccessory ? 'text-base' : 'text-base sm:text-lg'}`}>
-                Rs:{product.price?.toLocaleString() || '0'}
-              </span>
-              {originalPrice && (
-                <span className={`text-gray-500 line-through ml-1 block ${isAccessory ? 'text-[10px]' : 'text-xs'}`}>
-                  Rs:{originalPrice.toLocaleString()}
-                </span>
-              )}
-            </div>
-            {originalPrice && !isAccessory && (
-              <div className="bg-green-100 text-green-800 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-xs font-medium">
-                Save Rs:{(originalPrice - product.price).toLocaleString()}
+          {/* Specifications - Fixed Height */}
+          <div className="text-xs text-gray-600 mt-2 space-y-0.5 h-[72px] overflow-hidden">
+            {product.processor && (
+              <div className="flex items-center">
+                <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
+                <span className="truncate">{product.processor}</span>
+              </div>
+            )}
+            {product.generation && (
+              <div className="flex items-center">
+                <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
+                <span className="truncate">{product.generation}</span>
+              </div>
+            )}
+            {product.ram && (
+              <div className="flex items-center">
+                <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
+                <span className="truncate">{product.ram}, {product.hdd || product.storage}</span>
+              </div>
+            )}
+            {(product.display_size || product.screensize || product.display) && (
+              <div className="flex items-center">
+                <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
+                <span className="truncate">{product.display_size || product.screensize || product.display}</span>
               </div>
             )}
           </div>
 
-          {/* Stock Status */}
-          <div className={isAccessory ? 'mb-1.5' : 'mb-2'}>
-            <span className={`inline-flex items-center px-2 py-1 rounded-full font-medium ${isAccessory ? 'text-xs' : 'text-xs'} ${
-              isAvailableForPurchase
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800'
-            }`}>
-              <span className={`w-1 h-1 rounded-full mr-1 ${
-                isAvailableForPurchase ? 'bg-green-500' : 'bg-red-500'
-              }`}></span>
-              {isAvailableForPurchase ? 'In Stock' : 'Out of Stock'}
-            </span>
-          </div>
-          
-          {/* Action Buttons */}
-          <div className={isAccessory ? 'space-y-1' : 'space-y-2'}>
-            <Link
-              href={`/products/${product.id}`}
-              className={`w-full bg-[#6dc1c9] text-white rounded-lg text-center font-medium hover:bg-teal-700 transition-colors duration-200 block ${isAccessory ? 'py-2 px-2 text-xs' : 'py-2 px-2 sm:px-3 text-xs sm:text-sm'}`}
-            >
-              View Details
-            </Link>
-
-            <div className={`flex ${isAccessory ? 'gap-1' : 'gap-1 sm:gap-2'}`}>
-              <button
-                onClick={handleAddToCart}
-                disabled={!isAvailableForPurchase}
-                className={`flex-1 rounded-lg font-medium transition-colors ${isAccessory ? 'py-1.5 px-2 text-xs' : 'py-1.5 px-2 text-xs'} ${
-                  isAvailableForPurchase
-                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                }`}
-                title={!isAvailableForPurchase ? 'Out of stock' : 'Add to cart'}
-              >
-                <ShoppingCart className={`inline ${isAccessory ? 'w-3 h-3 mr-1' : 'w-3 h-3 mr-1'}`} />
-                {isAvailableForPurchase ? 'Cart' : 'Out of Stock'}
-              </button>
-              
-              {/* Compare Button */}
-              {showCompare && isLaptopCategory(category) && (
-                <button
-                  onClick={handleCompare}
-                  className={`rounded-lg font-medium transition-colors ${isAccessory ? 'px-1.5 py-1' : 'px-2 py-1.5 text-xs'} ${
-                    isInCompare(product.id)
-                      ? 'bg-teal-100 text-teal-700 border border-teal-200'
-                      : 'bg-gray-100 text-gray-700 hover:bg-teal-100 hover:text-teal-700'
-                  }`}
-                  title={isInCompare(product.id) ? 'Remove from comparison' : 'Add to comparison'}
-                >
-                  <GitCompareArrows className={isAccessory ? 'w-2.5 h-2.5' : 'w-3 h-3'} />
-                </button>
+          {/* Price Section */}
+          <div className="mt-auto pt-3">
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg font-bold text-gray-900">
+                Rs:{product.price?.toLocaleString() || '0'}
+              </span>
+              {originalPrice && (
+                <span className="text-xs text-gray-400 line-through">
+                  Rs:{originalPrice.toLocaleString()}
+                </span>
               )}
-
-              {/* Wishlist Button */}
-              <button
-                onClick={handleWishlist}
-                className={`rounded-lg font-medium transition-colors ${isAccessory ? 'px-1.5 py-1' : 'px-2 py-1.5 text-xs'} ${
-                  isInWishlist(product.id)
-                    ? 'bg-red-100 text-red-700 border border-red-200'
-                    : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-700'
-                }`}
-                title={isInWishlist(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
-              >
-                <Heart className={`${isAccessory ? 'w-2.5 h-2.5' : 'w-3 h-3'} ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
-              </button>
             </div>
-          </div>
+
+            {/* Stock Status */}
+            <div className="mt-2">
+              <span className={`inline-flex items-center text-xs font-medium ${
+                isAvailableForPurchase ? 'text-green-600' : 'text-red-600'
+              }`}>
+                <span className={`w-1.5 h-1.5 rounded-full mr-1 ${
+                  isAvailableForPurchase ? 'bg-green-500' : 'bg-red-500'
+                }`}></span>
+                {isAvailableForPurchase ? 'In Stock' : 'Out of Stock'}
+              </span>
+            </div>
+
+            {/* Action Buttons - Fixed Layout */}
+            <div className="mt-3 space-y-2">
+              <Link
+                href={`/products/${product.id}`}
+                className="w-full bg-[#6dc1c9] text-white py-2 rounded-lg text-sm text-center font-medium hover:bg-teal-600 transition-colors block"
+              >
+                View Details
+              </Link>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={handleAddToCart}
+                  disabled={!isAvailableForPurchase}
+                  className={`flex-1 py-2 rounded-lg text-xs font-medium flex items-center justify-center gap-1 transition-colors ${
+                    isAvailableForPurchase
+                      ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  <ShoppingCart className="w-3.5 h-3.5" />
+                  {isAvailableForPurchase ? 'Cart' : 'Out of Stock'}
+                </button>
+
+                {showCompare && isLaptopCategory(category) && (
+                  <button
+                    onClick={handleCompare}
+                    className={`p-2 rounded-lg transition-colors ${
+                      isInCompare(product.id)
+                        ? 'bg-[#6dc1c9] text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                    title={isInCompare(product.id) ? 'Remove from comparison' : 'Compare'}
+                  >
+                    <GitCompareArrows className="w-4 h-4" />
+                  </button>
+                )}
+
+                <button
+                  onClick={handleWishlist}
+                  className={`p-2 rounded-lg transition-colors ${
+                    isInWishlist(product.id)
+                      ? 'bg-red-100 text-red-500'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                  title={isInWishlist(product.id) ? 'Remove from wishlist' : 'Wishlist'}
+                >
+                  <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

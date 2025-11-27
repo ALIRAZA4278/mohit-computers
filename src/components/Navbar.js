@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
-import { Search, ShoppingCart, Heart, GitCompareArrows, Menu, X, User, Phone, Mail, Clock, Tag } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, User, Clock, Tag, Heart, GitCompare } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCompare } from '../context/CompareContext';
@@ -12,13 +12,18 @@ import { useCompare } from '../context/CompareContext';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isDiscountedOpen, setIsDiscountedOpen] = useState(false);
+  const [isUsedLaptopsOpen, setIsUsedLaptopsOpen] = useState(false);
+  const [isSalesOpen, setIsSalesOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const [isScrolled, setIsScrolled] = useState(false);
   const searchRef = useRef(null);
   const searchInputRef = useRef(null);
   const mobileSearchRef = useRef(null);
@@ -26,6 +31,15 @@ const Navbar = () => {
   const suggestionsRef = useRef(null);
   const router = useRouter();
   const pathname = usePathname();
+
+  // Handle scroll for glassmorphism effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     // Check if user is logged in
@@ -42,6 +56,7 @@ const Navbar = () => {
     setIsProductsOpen(false);
     setIsMenuOpen(false);
     setShowSuggestions(false);
+    setIsSearchOpen(false);
   }, [pathname]);
 
   // Debounced search function
@@ -188,62 +203,91 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Top Header */}
-      <div className="bg-gray-900 text-white text-sm py-2 md:py-3">
+      {/* Main Navigation - Clean Minimal Design */}
+      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white ${
+        isScrolled ? 'shadow-md' : ''
+      }`}>
         <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
-            {/* Contact Info - Hidden on mobile, visible on tablets+ */}
-            <div className="hidden sm:flex items-center space-x-4 md:space-x-6 text-xs md:text-sm">
-              <span className="flex items-center text-gray-300">
-                <Phone className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
-                <span className="font-medium">Call: 0336 8900349</span>
-              </span>
-              <span className="flex items-center text-gray-300">
-                <Mail className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
-                <span className="font-medium">info@mohitcomputers.pk</span>
-              </span>
-            </div>
+          <div className="flex items-center justify-between py-3">
+            {/* Hamburger Menu Button */}
+            <button
+              className="p-1.5 text-gray-700 hover:text-[#6dc1c9] transition-colors"
+              onClick={toggleMenu}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
 
-            {/* Account Links - Responsive */}
-            <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 text-xs sm:text-sm">
-              <Link href="/account" className="flex items-center text-gray-300 hover:text-teal-400 transition-colors font-medium">
-                <User className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-0 sm:hidden" />
-                <span className="hidden sm:inline">My Account</span>
-                <span className="sm:hidden">Account</span>
-              </Link>
-              <span className="text-gray-600 hidden sm:inline">|</span>
-              <Link href="/login" className="text-gray-300 hover:text-teal-400 transition-colors font-medium">Log In</Link>
-              <span className="text-gray-600">|</span>
-              <Link href="/register" className="text-gray-300 hover:text-teal-400 transition-colors font-medium">
-                <span className="hidden sm:inline">Create Account</span>
-                <span className="sm:hidden">Register</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Navigation */}
-      <div className="bg-white shadow-lg border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between py-4">
-            {/* Logo */}
-            <Link href="/" className="flex items-center flex-shrink-0">
+            {/* Logo - Centered */}
+            <Link href="/" className="flex items-center absolute left-1/2 transform -translate-x-1/2">
               <Image
                 src="/logo.png"
                 alt="Mohit Computers"
                 width={480}
                 height={180}
-                  className="h-14 sm:h-16 lg:h-18 w-auto"
+                className="h-7 sm:h-10 md:h-12 lg:h-14 w-auto"
                 priority
               />
             </Link>
 
-            {/* Search Bar (visible on medium screens and up) */}
-            <div className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-8">
-              <div ref={searchRef} className="relative w-full">
+            {/* Right Icons - Search, Wishlist, Compare, User */}
+            <div className="flex items-center gap-1.5 sm:gap-3">
+              {/* Search Icon */}
+              <button
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className={`text-gray-700 hover:text-[#6dc1c9] transition-colors ${isSearchOpen ? 'text-[#6dc1c9]' : ''}`}
+                aria-label="Search"
+              >
+                <Search className="w-[18px] h-[18px] sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+              </button>
+
+              {/* Wishlist Icon */}
+              <Link
+                href="/wishlist"
+                className="text-gray-700 hover:text-[#6dc1c9] transition-colors relative"
+                aria-label="Wishlist"
+              >
+                <Heart className="w-[18px] h-[18px] sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+                {wishlistItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#6dc1c9] text-white text-[8px] rounded-full min-w-[12px] h-3 flex items-center justify-center font-bold">
+                    {wishlistItems.length}
+                  </span>
+                )}
+              </Link>
+
+              {/* Compare Icon */}
+              <Link
+                href="/compare"
+                className="text-gray-700 hover:text-[#6dc1c9] transition-colors relative"
+                aria-label="Compare"
+              >
+                <GitCompare className="w-[18px] h-[18px] sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+                {compareItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#6dc1c9] text-white text-[8px] rounded-full min-w-[12px] h-3 flex items-center justify-center font-bold">
+                    {compareItems.length}
+                  </span>
+                )}
+              </Link>
+
+              {/* User Icon */}
+              <Link
+                href={isLoggedIn ? "/account" : "/login"}
+                className="text-gray-700 hover:text-[#6dc1c9] transition-colors"
+                aria-label="Account"
+              >
+                <User className="w-[18px] h-[18px] sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Search Overlay - Glassmorphism */}
+        {isSearchOpen && (
+          <div className="absolute top-full left-0 right-0 bg-white/90 backdrop-blur-xl border-b border-gray-200/50 shadow-2xl animate-fadeInDown">
+            <div className="container mx-auto px-4 py-5">
+              <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
                 <form onSubmit={handleSearch} className="w-full">
-                  <div className="flex rounded-lg shadow-sm border border-gray-300 overflow-hidden">
+                  <div className="flex rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden bg-white">
                     <input
                       ref={searchInputRef}
                       type="text"
@@ -256,48 +300,49 @@ const Navbar = () => {
                           setShowSuggestions(true);
                         }
                       }}
-                      className="flex-1 px-3 md:px-4 py-2 md:py-3 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-inset text-sm md:text-base"
+                      autoFocus
+                      className="flex-1 px-5 py-4 text-gray-700 bg-transparent focus:outline-none text-base"
                     />
                     <button
                       type="submit"
-                      className="px-4 md:px-6 py-2 md:py-3 bg-[#6dc1c9] text-white hover:bg-teal-700 transition-colors font-medium"
+                      className="px-6 py-4 bg-gradient-to-r from-[#6dc1c9] to-teal-500 text-white hover:from-teal-600 hover:to-teal-700 transition-all font-medium"
                     >
-                      <Search className="w-4 h-4 md:w-5 md:h-5" />
+                      <Search className="w-5 h-5" />
                     </button>
                   </div>
                 </form>
 
                 {/* Search Suggestions Dropdown */}
                 {showSuggestions && suggestions.length > 0 && (
-                  <div 
+                  <div
                     ref={suggestionsRef}
-                    className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto"
+                    className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-xl border border-gray-200/50 rounded-2xl shadow-2xl z-50 max-h-80 overflow-y-auto animate-fadeInUp"
                   >
                     <div className="py-2">
                       {suggestions.map((suggestion, index) => (
                         <div
                           key={`${suggestion.type}-${suggestion.id || suggestion.name}`}
                           onClick={() => handleSuggestionClick(suggestion)}
-                          className={`px-4 py-3 cursor-pointer transition-colors flex items-center space-x-3 ${
+                          className={`px-4 py-3 cursor-pointer transition-all flex items-center space-x-3 ${
                             index === selectedSuggestionIndex
-                              ? 'bg-teal-50 border-l-4 border-teal-500'
+                              ? 'bg-gradient-to-r from-[#6dc1c9]/10 to-teal-500/10 border-l-4 border-[#6dc1c9]'
                               : 'hover:bg-gray-50'
                           }`}
                         >
                           <div className="flex-shrink-0">
                             {suggestion.type === 'product' && (
-                              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                <Search className="w-4 h-4 text-blue-600" />
+                              <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm">
+                                <Search className="w-5 h-5 text-blue-600" />
                               </div>
                             )}
                             {suggestion.type === 'category' && (
-                              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                                <Tag className="w-4 h-4 text-green-600" />
+                              <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-sm">
+                                <Tag className="w-5 h-5 text-green-600" />
                               </div>
                             )}
                             {suggestion.type === 'popular' && (
-                              <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                                <Clock className="w-4 h-4 text-orange-600" />
+                              <div className="w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl flex items-center justify-center shadow-sm">
+                                <Clock className="w-5 h-5 text-orange-600" />
                               </div>
                             )}
                           </div>
@@ -317,19 +362,19 @@ const Navbar = () => {
                             )}
                           </div>
                           <div className="flex-shrink-0">
-                            <div className="text-xs text-gray-400 uppercase font-medium">
+                            <div className="text-xs text-gray-400 uppercase font-medium bg-gray-100 px-2 py-1 rounded-full">
                               {suggestion.type}
                             </div>
                           </div>
                         </div>
                       ))}
                     </div>
-                    
+
                     {/* Loading indicator */}
                     {isSearchLoading && (
-                      <div className="px-4 py-3 text-center text-gray-500">
+                      <div className="px-4 py-4 text-center text-gray-500">
                         <div className="flex items-center justify-center space-x-2">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-teal-500"></div>
+                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-[#6dc1c9] border-t-transparent"></div>
                           <span className="text-sm">Searching...</span>
                         </div>
                       </div>
@@ -338,334 +383,207 @@ const Navbar = () => {
                 )}
               </div>
             </div>
-
-            {/* Cart Info & User Account - Hidden on mobile */}
-            <div className="hidden md:flex items-center space-x-1 sm:space-x-2">
-              {isLoggedIn ? (
-                <Link href="/account" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
-                  <User className="w-5 h-5 sm:w-6 sm:h-6" />
-                  <div className="hidden lg:block">
-                    <div className="text-sm font-medium">{user?.name?.split(' ')[0] || 'Account'}</div>
-                    <div className="text-xs text-gray-600">My Account</div>
-                  </div>
-                </Link>
-              ) : (
-                <Link href="/login" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
-                  <User className="w-5 h-5 sm:w-6 sm:h-6" />
-                  <div className="hidden lg:block">
-                    <div className="text-sm font-medium">Login</div>
-                    <div className="text-xs text-gray-600">Account</div>
-                  </div>
-                </Link>
-              )}
-              <Link href="/wishlist" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
-                <Heart className="w-5 h-5 sm:w-6 sm:h-6" />
-                {wishlistItems.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium">
-                    {wishlistItems.length}
-                  </span>
-                )}
-              </Link>
-              <Link href="/compare" className="relative p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
-                <GitCompareArrows className="w-5 h-5 sm:w-6 sm:h-6" />
-                {compareItems.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium">
-                    {compareItems.length}
-                  </span>
-                )}
-              </Link>
-              <Link href="/cart" className="flex items-center space-x-2 p-1.5 sm:p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors">
-                <div className="relative">
-                  <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6" />
-                  {getCartItemsCount() > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center font-medium">
-                      {getCartItemsCount()}
-                    </span>
-                  )}
-                </div>
-                <div className="hidden lg:block">
-                  <div className="text-sm font-medium text-black">Cart</div>
-                  <div className="text-xs text-gray-600">{formatCurrency(getCartTotal())}</div>
-                </div>
-              </Link>
-            </div>
-
-            {/* Mobile Menu Button (visible until large screens) */}
-            <button
-              className="md:hidden p-2 text-gray-700 hover:text-[#6dc1c9] transition-colors ml-2"
-              onClick={toggleMenu}
-            >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
           </div>
-
-          {/* Main Menu */}
-          <div className="border-t border-gray-200 hidden md:block">
-            <nav className="py-3">
-              <ul className="flex justify-center items-center space-x-4 lg:space-x-8 text-gray-700">
-                <li>
-                  <Link href="/" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
-                    About
-                  </Link>
-                </li>
-                <li className="relative group">
-                  <button 
-                    className="hover:text-[#6dc1c9] font-medium flex items-center py-2 px-3 rounded transition-colors"
-                    onClick={toggleProducts}
-                  >
-                    Products
-                    <svg className="w-4 h-4 ml-1 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  {/* Dropdown Menu */}
-                  <div className={`absolute top-full left-0 mt-2 w-80 bg-white text-gray-800 shadow-xl rounded-lg z-50 ${isProductsOpen ? 'block' : 'hidden'} group-hover:block`}>
-                    <div className="py-2">
-                      {/* Used Laptops with brand submenu */}
-                      <div className="relative group/submenu">
-                        <Link href="/products?category=used-laptop" onClick={handleCategoryClick} className="flex items-center justify-between px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                          <span className="font-medium text-gray-800">Used Laptops</span>
-                          <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </Link>
-                        {/* Brand Submenu */}
-                        <div className="absolute left-full top-0 mt-0 w-48 bg-white shadow-xl rounded-lg hidden group-hover/submenu:block border-l border-gray-200">
-                          <div className="py-2">
-                            <Link href="/products?category=used-laptop&brand=HP" onClick={handleCategoryClick} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
-                              HP
-                            </Link>
-                            <Link href="/products?category=used-laptop&brand=Dell" onClick={handleCategoryClick} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
-                              Dell
-                            </Link>
-                            <Link href="/products?category=used-laptop&brand=Acer" onClick={handleCategoryClick} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
-                              Acer
-                            </Link>
-                            <Link href="/products?category=used-laptop&brand=Lenovo" onClick={handleCategoryClick} className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 cursor-pointer">
-                              Lenovo
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="border-t border-gray-100"></div>
-
-                      <Link href="/products?category=chromebook" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                        <div className="font-medium text-gray-800">Chrome Book</div>
-                      </Link>
-
-                      <Link href="/workstation" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                        <div className="font-medium text-gray-800">Workstations</div>
-                      </Link>
-
-                      <Link href="/products?category=rugged-laptop" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                        <div className="font-medium text-gray-800">Rugged Book / Tough Laptops</div>
-                      </Link>
-
-                      <Link href="/products?category=accessories" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                        <div className="font-medium text-gray-800">Accessories</div>
-                      </Link>
-
-                      <Link href="/products?category=ram" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                        <div className="font-medium text-gray-800">RAM</div>
-                      </Link>
-
-                      <Link href="/products?category=ssd" onClick={handleCategoryClick} className="block px-4 py-3 hover:bg-gray-100 cursor-pointer">
-                        <div className="font-medium text-gray-800">SSD</div>
-                      </Link>
-                    </div>
-                  </div>
-                </li>
-                <li>
-                  <Link href="/blog" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/corporate" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
-                    Corporate
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/clearance" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
-                    Clearance
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/discounted" className="hover:text-[#6dc1c9] font-medium py-2 px-3 rounded transition-colors">
-                    Discounted
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-t shadow-lg">
-          <div className="px-4 py-4 space-y-3">
-            {/* Mobile Search */}
-            <div ref={mobileSearchRef} className="relative">
-              <form onSubmit={handleSearch} className="flex rounded-lg border border-gray-300 overflow-hidden">
-                <input
-                  ref={mobileSearchInputRef}
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={handleSearchInputChange}
-                  onKeyDown={handleKeyDown}
-                  onFocus={() => {
-                    if (suggestions.length > 0) {
-                      setShowSuggestions(true);
-                    }
-                  }}
-                  className="flex-1 px-3 py-2 text-gray-700 focus:outline-none"
+      {/* Spacer for fixed navbar */}
+      <div className="h-[44px] sm:h-[52px] md:h-[56px] lg:h-[60px]"></div>
+
+      {/* Slide-out Menu - Smooth Transition */}
+      {/* Backdrop with blur - always rendered, opacity transition */}
+      <div
+        className={`fixed inset-0 bg-black/30 backdrop-blur-sm z-[60] transition-all duration-300 ${
+          isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        }`}
+        onClick={closeMobileMenu}
+      ></div>
+
+      {/* Menu Panel - always rendered, transform transition */}
+      <div className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-[70] flex flex-col transition-transform duration-300 ease-out ${
+        isMenuOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+            {/* Menu Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-100">
+              <Link href="/" onClick={closeMobileMenu}>
+                <Image
+                  src="/logo.png"
+                  alt="Mohit Computers"
+                  width={200}
+                  height={75}
+                  className="h-8 w-auto"
                 />
-                <button type="submit" className="px-4 bg-[#6dc1c9] text-white hover:bg-teal-700 transition-colors">
-                  <Search className="w-4 h-4" />
-                </button>
-              </form>
-
-              {/* Mobile Search Suggestions */}
-              {showSuggestions && suggestions.length > 0 && (
-                <div 
-                  ref={suggestionsRef}
-                  className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto"
-                >
-                  <div className="py-2">
-                    {suggestions.map((suggestion, index) => (
-                      <div
-                        key={`${suggestion.type}-${suggestion.id || suggestion.name}`}
-                        onClick={() => handleSuggestionClick(suggestion)}
-                        className={`px-3 py-2 cursor-pointer transition-colors flex items-center space-x-2 ${
-                          index === selectedSuggestionIndex
-                            ? 'bg-teal-50 border-l-4 border-teal-500'
-                            : 'hover:bg-gray-50'
-                        }`}
-                      >
-                        <div className="flex-shrink-0">
-                          {suggestion.type === 'product' && (
-                            <Search className="w-4 h-4 text-blue-600" />
-                          )}
-                          {suggestion.type === 'category' && (
-                            <Tag className="w-4 h-4 text-green-600" />
-                          )}
-                          {suggestion.type === 'popular' && (
-                            <Clock className="w-4 h-4 text-orange-600" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium text-gray-900 truncate text-sm">
-                            {suggestion.name}
-                          </div>
-                          {suggestion.brand && (
-                            <div className="text-xs text-gray-500 truncate">
-                              {suggestion.brand} • {suggestion.category}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Mobile Loading indicator */}
-                  {isSearchLoading && (
-                    <div className="px-3 py-2 text-center text-gray-500">
-                      <div className="flex items-center justify-center space-x-2">
-                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-teal-500"></div>
-                        <span className="text-xs">Searching...</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
+              </Link>
+              <button
+                onClick={closeMobileMenu}
+                className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
 
-            <Link href="/" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Home</Link>
-            <Link href="/about" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">About</Link>
-            <div className="py-2">
-              <div className="font-semibold mb-2 text-gray-800">Products</div>
-              <div className="pl-4 space-y-1">
-                <Link href="/products?category=used-laptop" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Used Laptops</Link>
-                <div className="pl-4 space-y-1">
-                  <Link href="/products?category=used-laptop&brand=HP" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">HP</Link>
-                  <Link href="/products?category=used-laptop&brand=Dell" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Dell</Link>
-                  <Link href="/products?category=used-laptop&brand=Acer" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Acer</Link>
-                  <Link href="/products?category=used-laptop&brand=Lenovo" onClick={closeMobileMenu} className="block py-1 text-xs text-gray-500 hover:text-[#6dc1c9]">Lenovo</Link>
-                </div>
-                <Link href="/products?category=chromebook" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Chrome Book</Link>
-                <Link href="/workstation" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9] font-semibold">Workstations</Link>
-                <Link href="/products?category=accessories" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">Accessories</Link>
-                <Link href="/products?category=ram" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">RAM</Link>
-                <Link href="/products?category=ssd" onClick={closeMobileMenu} className="block py-1 text-sm text-gray-600 hover:text-[#6dc1c9]">SSD</Link>
-              </div>
-            </div>
-            <Link href="/blog" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Blog</Link>
-            <Link href="/corporate" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Corporate</Link>
-            <Link href="/contact" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Contact</Link>
-            <Link href="/clearance" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Clearance</Link>
-            <Link href="/discounted" onClick={closeMobileMenu} className="block py-2 text-gray-700 hover:text-[#6dc1c9] font-medium">Discounted</Link>
-
-            {/* Mobile Action Buttons */}
-            <div className="pt-3 border-t border-gray-200 mt-3">
-              <div className="grid grid-cols-3 gap-3 mb-3">
-                <Link href="/wishlist" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-[#6dc1c9] transition-colors">
-                  <div className="relative">
-                    <Heart className="w-5 h-5 mb-1 text-black" />
-                    {wishlistItems.length > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
-                        {wishlistItems.length}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs font-medium text-black">Wishlist</span>
-                </Link>
-                
-                <Link href="/compare" className="flex flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-[#6dc1c9] transition-colors">
-                  <div className="relative">
-                    <GitCompareArrows className="w-5 h-5 mb-1 text-black" />
-                    {compareItems.length > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
-                        {compareItems.length}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs font-medium text-black">Compare</span>
-                </Link>
-                
-                <Link href="/cart" className="flex text-black flex-col items-center justify-center py-3 bg-gray-50 rounded-lg hover:bg-teal-50 hover:text-[#6dc1c9] transition-colors">
-                  <div className="relative">
-                    <ShoppingCart className="w-5 h-5 mb-1 text-black" />
-                    {getCartItemsCount() > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-medium">
-                        {getCartItemsCount()}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-xs font-medium text-black">Cart</span>
-                </Link>
-              </div>
-              
-              <div className="text-center py-2 bg-teal-50 rounded-lg">
-                <span className="text-sm font-medium text-teal-700">
-                  Cart Total: {formatCurrency(getCartTotal())}
+            {/* Menu Content - Scrollable */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-1">
+              <Link href="/" onClick={closeMobileMenu} className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#6dc1c9]/10 hover:to-transparent hover:text-[#6dc1c9] font-medium rounded-xl transition-all">
+                <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                 </span>
+                <span>Home</span>
+              </Link>
+
+              <Link href="/about" onClick={closeMobileMenu} className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#6dc1c9]/10 hover:to-transparent hover:text-[#6dc1c9] font-medium rounded-xl transition-all">
+                <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                </span>
+                <span>About</span>
+              </Link>
+
+              {/* Products with expandable submenu */}
+              <div>
+                <button
+                  onClick={toggleProducts}
+                  className="flex items-center justify-between w-full py-3 px-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#6dc1c9]/10 hover:to-transparent font-medium rounded-xl transition-all"
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    </span>
+                    <span>Products</span>
+                  </div>
+                  <svg className={`w-4 h-4 transition-transform duration-200 ${isProductsOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {isProductsOpen && (
+                  <div className="ml-6 mt-2 space-y-1 border-l-2 border-[#6dc1c9]/30 pl-4 py-2 bg-gray-50/50 rounded-r-xl animate-fadeIn">
+                    {/* Used Laptops - Expandable */}
+                    <div>
+                      <button
+                        onClick={() => setIsUsedLaptopsOpen(!isUsedLaptopsOpen)}
+                        className="flex items-center justify-between w-full py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all"
+                      >
+                        <span>Used Laptops</span>
+                        <svg className={`w-3 h-3 transition-transform duration-200 ${isUsedLaptopsOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      {isUsedLaptopsOpen && (
+                        <div className="ml-3 space-y-1 border-l border-gray-200 pl-3 mt-1 animate-fadeIn">
+                          <Link href="/products?category=used-laptop" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">View All</Link>
+                          <Link href="/products?category=used-laptop&brand=HP" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">HP</Link>
+                          <Link href="/products?category=used-laptop&brand=Dell" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Dell</Link>
+                          <Link href="/products?category=used-laptop&brand=Acer" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Acer</Link>
+                          <Link href="/products?category=used-laptop&brand=Lenovo" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Lenovo</Link>
+                        </div>
+                      )}
+                    </div>
+                    <Link href="/products?category=chromebook" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">Chrome Book</Link>
+                    <Link href="/workstation" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">Workstations</Link>
+                    <Link href="/products?category=rugged-laptop" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">Rugged Book</Link>
+                    <Link href="/products?category=accessories" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">Accessories</Link>
+                    <Link href="/products?category=ram" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">RAM</Link>
+                    <Link href="/products?category=ssd" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">SSD</Link>
+                  </div>
+                )}
               </div>
+
+              {/* Discounted with expandable submenu */}
+              <div>
+                <button
+                  onClick={() => setIsDiscountedOpen(!isDiscountedOpen)}
+                  className="flex items-center justify-between w-full py-3 px-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#6dc1c9]/10 hover:to-transparent font-medium rounded-xl transition-all"
+                >
+                  <div className="flex items-center space-x-3">
+                    <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>
+                    </span>
+                    <span>Discounted</span>
+                  </div>
+                  <svg className={`w-4 h-4 transition-transform duration-200 ${isDiscountedOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {isDiscountedOpen && (
+                  <div className="ml-6 mt-2 space-y-1 border-l-2 border-gray-100 pl-4 py-2 bg-gray-50/50 rounded-r-xl animate-fadeIn">
+                    {/* Sales - Expandable */}
+                    <div>
+                      <button
+                        onClick={() => setIsSalesOpen(!isSalesOpen)}
+                        className="flex items-center justify-between w-full py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all font-medium"
+                      >
+                        <span>Sales</span>
+                        <svg className={`w-3 h-3 transition-transform duration-200 ${isSalesOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      {isSalesOpen && (
+                        <div className="ml-3 space-y-1 border-l border-gray-200 pl-3 mt-1 animate-fadeIn">
+                          <Link href="/sales" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">View All</Link>
+                          <Link href="/sales?category=laptop" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Used Laptops</Link>
+                          <Link href="/sales?category=chromebook" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Chromebook</Link>
+                          <Link href="/sales?category=ram" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">RAM</Link>
+                          <Link href="/sales?category=ssd" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">SSD</Link>
+                          <Link href="/sales?category=accessories" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Accessories</Link>
+                        </div>
+                      )}
+                    </div>
+                    <Link href="/clearance" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all font-medium">
+                      Clearance
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              <Link href="/corporate" onClick={closeMobileMenu} className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#6dc1c9]/10 hover:to-transparent hover:text-[#6dc1c9] font-medium rounded-xl transition-all">
+                <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                </span>
+                <span>Corporate</span>
+              </Link>
+
+              <Link href="/contact" onClick={closeMobileMenu} className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#6dc1c9]/10 hover:to-transparent hover:text-[#6dc1c9] font-medium rounded-xl transition-all">
+                <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                </span>
+                <span>Contact</span>
+              </Link>
+
+              <Link href="/blog" onClick={closeMobileMenu} className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:bg-gradient-to-r hover:from-[#6dc1c9]/10 hover:to-transparent hover:text-[#6dc1c9] font-medium rounded-xl transition-all">
+                <span className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
+                </span>
+                <span>Blog</span>
+              </Link>
+            </div>
+
+            {/* Account Section at bottom */}
+            <div className="p-4 border-t border-gray-100 bg-white">
+              <Link
+                href={isLoggedIn ? "/account" : "/login"}
+                onClick={closeMobileMenu}
+                className="flex items-center justify-center space-x-2 w-full py-3 px-4 bg-[#6dc1c9] text-white font-medium rounded-xl hover:bg-teal-600 transition-all"
+              >
+                <User className="w-5 h-5" />
+                <span>{isLoggedIn ? "My Account" : "Login / Create Account"}</span>
+              </Link>
             </div>
           </div>
-        </div>
+
+      {/* Floating Cart Button - Shows only when items in cart */}
+      {getCartItemsCount() > 0 && (
+        <Link
+          href="/cart"
+          className="fixed bottom-24 right-6 z-50 bg-[#6dc1c9] hover:bg-teal-700 text-white rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
+          aria-label="View Cart"
+        >
+          <span className="absolute inset-0 rounded-full bg-[#6dc1c9] animate-ping opacity-75"></span>
+          <div className="relative z-10">
+            <ShoppingCart className="w-6 h-6" />
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              {getCartItemsCount()}
+            </span>
+          </div>
+        </Link>
       )}
     </>
   );
