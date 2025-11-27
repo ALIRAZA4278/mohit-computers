@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Filter, Grid, List, SortAsc, Loader, Tag, X } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
@@ -16,7 +16,20 @@ const CATEGORIES = [
   { id: 'accessories', label: 'Accessories' },
 ];
 
-export default function SalesPage() {
+// Loading component
+function SalesLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex items-center justify-center">
+      <div className="text-center">
+        <Loader className="w-12 h-12 animate-spin text-[#6dc1c9] mx-auto mb-4" />
+        <p className="text-gray-600">Loading sales...</p>
+      </div>
+    </div>
+  );
+}
+
+// Main sales content component
+function SalesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -741,5 +754,14 @@ export default function SalesPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Export with Suspense wrapper for useSearchParams
+export default function SalesPage() {
+  return (
+    <Suspense fallback={<SalesLoading />}>
+      <SalesContent />
+    </Suspense>
   );
 }
