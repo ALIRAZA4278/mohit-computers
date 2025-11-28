@@ -242,7 +242,7 @@ export default function Home() {
             <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-gray-300 to-gray-300"></div>
             <div className="px-6 md:px-8">
               <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 uppercase tracking-wider text-center">
-                <span className="text-[#6dc1c9]">New</span> Arrivals
+                <span className="text-[#6dc1c9]">New</span> Arrival
               </h2>
             </div>
             <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-gray-300 to-gray-300"></div>
