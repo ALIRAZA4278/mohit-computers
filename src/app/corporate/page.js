@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Users, Shield, Truck, HeadphonesIcon, CheckCircle, ArrowRight } from 'lucide-react';
-import Banner from '../../components/Banner';
 
 export default function Corporate() {
   const [formData, setFormData] = useState({
@@ -68,16 +67,7 @@ export default function Corporate() {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Banner */}
-      <Banner
-        desktopImage="/banners/coprate c.jpg"
-        mobileImage="/banners/coporate mobile banner.jpg"
-        alt="Corporate Solutions"
-        height="400px"
-        priority={true}
-      />
-
+    <div className="min-h-screen bg-gray-50">
       {/* Corporate Content Section */}
       <section className="py-12 sm:py-20 bg-white">
         <div className="container mx-auto px-4">

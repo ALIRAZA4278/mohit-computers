@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import { Filter, Grid, List, SortAsc, Loader } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar';
-import Banner from '../../components/Banner';
 
 function ProductsContent() {
   const searchParams = useSearchParams();
@@ -22,6 +21,7 @@ function ProductsContent() {
   const [dynamicLaptopOptions, setDynamicLaptopOptions] = useState({});
   const [dynamicRamOptions, setDynamicRamOptions] = useState({});
   const [dynamicChromebookOptions, setDynamicChromebookOptions] = useState({});
+  const [dynamicSsdOptions, setDynamicSsdOptions] = useState({});
 
   // Generate dynamic filter options from available products
   const generateDynamicFilters = (productsList, category) => {
@@ -40,6 +40,10 @@ function ProductsContent() {
     } else if (category === 'chromebook') {
       availableProducts = availableProducts.filter(p =>
         p.category_id === 'chromebook' || p.category === 'chromebook'
+      );
+    } else if (category === 'ssd') {
+      availableProducts = availableProducts.filter(p =>
+        p.category_id === 'ssd' || p.category === 'ssd'
       );
     }
 
@@ -342,6 +346,60 @@ function ProductsContent() {
         aueYear: dynamicAUE.length > 0 ? dynamicAUE : hardcodedFallbacks.aueYear,
         chromebookPriceRanges: generatePriceRanges()
       };
+    } else if (category === 'ssd') {
+      // SSD-specific filters
+      // Combine brands from multiple fields
+      const brands = [...new Set([
+        ...extractUniqueValues('brand'),
+        ...extractUniqueValues('ssd_brand'),
+        ...extractUniqueValues('make')
+      ])].sort();
+
+      // Combine capacity values from all possible fields
+      const capacities = [...new Set([
+        ...extractUniqueValues('ssd_capacity'),
+        ...extractUniqueValues('capacity'),
+        ...extractUniqueValues('storage')
+      ])].sort((a, b) => {
+        // Sort by numeric value
+        const numA = parseInt(a.match(/\d+/)?.[0] || '0');
+        const numB = parseInt(b.match(/\d+/)?.[0] || '0');
+        return numA - numB;
+      });
+
+      // Combine form factor values
+      const formFactors = [...new Set([
+        ...extractUniqueValues('ssd_form_factor'),
+        ...extractUniqueValues('form_factor')
+      ])].sort();
+
+      // Combine interface values
+      const interfaces = [...new Set([
+        ...extractUniqueValues('ssd_interface'),
+        ...extractUniqueValues('interface')
+      ])].sort();
+
+      // Combine condition values
+      const conditions = [...new Set([
+        ...extractUniqueValues('ssd_condition'),
+        ...extractUniqueValues('condition')
+      ])].sort();
+
+      // Combine warranty values
+      const warranties = [...new Set([
+        ...extractUniqueValues('ssd_warranty'),
+        ...extractUniqueValues('warranty')
+      ])].sort();
+
+      return {
+        ssdBrands: brands,
+        ssdCapacity: capacities,
+        ssdFormFactor: formFactors,
+        ssdInterface: interfaces,
+        ssdCondition: conditions,
+        ssdWarranty: warranties,
+        ssdPriceRanges: generatePriceRanges()
+      };
     }
 
     return {};
@@ -363,9 +421,11 @@ function ProductsContent() {
           const laptopOptions = generateDynamicFilters(products, 'laptop');
           const ramOptions = generateDynamicFilters(products, 'ram');
           const chromebookOptions = generateDynamicFilters(products, 'chromebook');
+          const ssdOptions = generateDynamicFilters(products, 'ssd');
           setDynamicLaptopOptions(laptopOptions);
           setDynamicRamOptions(ramOptions);
           setDynamicChromebookOptions(chromebookOptions);
+          setDynamicSsdOptions(ssdOptions);
 
           // DEBUG: Show actual product data
           if (products.length > 0) {
@@ -377,6 +437,7 @@ function ProductsContent() {
             console.log('Dynamic Laptop Options:', laptopOptions);
             console.log('Dynamic RAM Options:', ramOptions);
             console.log('Dynamic Chromebook Options:', chromebookOptions);
+            console.log('Dynamic SSD Options:', ssdOptions);
           }
         } else {
           setError(data.error || 'Failed to load products');
@@ -1176,6 +1237,85 @@ function ProductsContent() {
       console.log(`✅ RAM Warranty filter (${filters.ramWarranty}): ${beforeFilter} → ${filtered.length} products`);
     }
 
+    // Apply SSD-specific filters
+    // SSD Brand filter
+    if (filters.ssdBrands && filters.ssdBrands.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productBrand = (product.brand || product.ssd_brand || '').toLowerCase();
+        return filters.ssdBrands.some(filterBrand =>
+          productBrand === filterBrand.toLowerCase() ||
+          productBrand.includes(filterBrand.toLowerCase())
+        );
+      });
+      console.log(`✅ SSD Brand filter (${filters.ssdBrands}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // SSD Capacity filter (120GB, 256GB, 512GB, 1TB, etc.)
+    if (filters.ssdCapacity && filters.ssdCapacity.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productCapacity = (product.ssd_capacity || product.capacity || product.storage || '').toLowerCase();
+        return filters.ssdCapacity.some(filterCapacity =>
+          productCapacity === filterCapacity.toLowerCase() ||
+          productCapacity.includes(filterCapacity.toLowerCase())
+        );
+      });
+      console.log(`✅ SSD Capacity filter (${filters.ssdCapacity}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // SSD Form Factor filter (2.5" SATA, M.2 SATA, M.2 NVMe, mSATA)
+    if (filters.ssdFormFactor && filters.ssdFormFactor.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productFormFactor = (product.ssd_form_factor || product.form_factor || '').toLowerCase();
+        return filters.ssdFormFactor.some(filterFormFactor =>
+          productFormFactor === filterFormFactor.toLowerCase() ||
+          productFormFactor.includes(filterFormFactor.toLowerCase())
+        );
+      });
+      console.log(`✅ SSD Form Factor filter (${filters.ssdFormFactor}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // SSD Interface filter (SATA III, NVMe PCIe 3.0/4.0/5.0)
+    if (filters.ssdInterface && filters.ssdInterface.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productInterface = (product.ssd_interface || product.interface || '').toLowerCase();
+        return filters.ssdInterface.some(filterInterface =>
+          productInterface === filterInterface.toLowerCase() ||
+          productInterface.includes(filterInterface.toLowerCase())
+        );
+      });
+      console.log(`✅ SSD Interface filter (${filters.ssdInterface}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // SSD Condition filter (Brand New, Used, Refurbished)
+    if (filters.ssdCondition && filters.ssdCondition.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productCondition = (product.ssd_condition || product.condition || '').toLowerCase();
+        return filters.ssdCondition.some(filterCondition =>
+          productCondition === filterCondition.toLowerCase() ||
+          productCondition.includes(filterCondition.toLowerCase())
+        );
+      });
+      console.log(`✅ SSD Condition filter (${filters.ssdCondition}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
+    // SSD Warranty filter (No Warranty, 7 Days, 15 Days, etc.)
+    if (filters.ssdWarranty && filters.ssdWarranty.length > 0) {
+      const beforeFilter = filtered.length;
+      filtered = filtered.filter(product => {
+        const productWarranty = (product.ssd_warranty || product.warranty || '').toLowerCase();
+        return filters.ssdWarranty.some(filterWarranty =>
+          productWarranty === filterWarranty.toLowerCase() ||
+          productWarranty.includes(filterWarranty.toLowerCase())
+        );
+      });
+      console.log(`✅ SSD Warranty filter (${filters.ssdWarranty}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
     // Apply price range filter
     if (filters.priceRange) {
       filtered = filtered.filter(product =>
@@ -1362,15 +1502,6 @@ function ProductsContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Products Banner */}
-      <Banner
-        desktopImage="/banners/product banner.jpg"
-        mobileImage="/banners/mob product c.jpg"
-        alt="Our Products"
-        height="300px"
-        priority={true}
-      />
-
       <div className="container mx-auto px-4 py-8">
 
         <div className="flex">
@@ -1385,6 +1516,7 @@ function ProductsContent() {
             dynamicLaptopOptions={dynamicLaptopOptions}
             dynamicRamOptions={dynamicRamOptions}
             dynamicChromebookOptions={dynamicChromebookOptions}
+            dynamicSsdOptions={dynamicSsdOptions}
           />
 
           {/* Main Content */}

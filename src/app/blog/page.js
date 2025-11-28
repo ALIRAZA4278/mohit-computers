@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import BlogCard from '../../components/BlogCard';
 import NewsletterSubscribe from '../../components/NewsletterSubscribe';
-import Banner from '../../components/Banner';
 
 async function getBlogs() {
   try {
@@ -54,41 +53,41 @@ export default async function Blog() {
   console.log('Blog page - received blogs:', blogs.length);
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Blog Hero Banner */}
-      <Banner
-        desktopImage="/banners/blog c.jpg"
-        mobileImage="/banners/blog mobile banner.jpg"
-        alt="Blog & Resources"
-        height="400px"
-        priority={true}
-      />
-
-      {/* Blog Content Section */}
-      <section className="py-12 bg-gray-50">
+      {/* Blog Header Section */}
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Smart Tech Decisions Start Here</h2>
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-4">
-              Expert guides, honest reviews, and practical tips to help you pick the right laptop, desktop, or accessory with confidence.
-            </p>
-            <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-6">
-              At Mohit Computers, we believe in empowering our customers with knowledge. Our blog features in-depth reviews, buying guides, and technical comparisons.
-            </p>
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Blog</h1>
+              <div className="flex justify-center">
+                <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
+              </div>
+            </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href="#articles"
-                className="bg-[#6dc1c9] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-teal-700 transition-all inline-flex items-center justify-center"
-              >
-                Explore Articles
-                <ArrowRight className="ml-2 w-4 h-4" />
-              </Link>
-              <Link
-                href="/products"
-                className="border-2 border-[#6dc1c9] text-[#6dc1c9] px-6 py-2.5 rounded-lg font-medium hover:bg-[#6dc1c9] hover:text-white transition-all inline-flex items-center justify-center"
-              >
-                Browse Products
-              </Link>
+            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+              <h2 className="text-xl md:text-2xl font-semibold text-[#6dc1c9] mb-4 text-center">Smart Tech Decisions Start Here</h2>
+              <p className="text-gray-600 text-lg leading-relaxed mb-4 text-center">
+                Expert guides, honest reviews, and practical tips to help you pick the right laptop, desktop, or accessory with confidence.
+              </p>
+              <p className="text-gray-600 text-lg leading-relaxed mb-6 text-center">
+                At Mohit Computers, we believe in empowering our customers with knowledge. Our blog features in-depth reviews, buying guides, and technical comparisons.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link
+                  href="#articles"
+                  className="bg-[#6dc1c9] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-teal-700 transition-all inline-flex items-center justify-center"
+                >
+                  Explore Articles
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
+                <Link
+                  href="/products"
+                  className="border-2 border-[#6dc1c9] text-[#6dc1c9] px-6 py-2.5 rounded-lg font-medium hover:bg-[#6dc1c9] hover:text-white transition-all inline-flex items-center justify-center"
+                >
+                  Browse Products
+                </Link>
+              </div>
             </div>
           </div>
         </div>

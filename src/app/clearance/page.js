@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { Filter, Grid, List, SortAsc, Loader } from 'lucide-react';
-import Banner from '../../components/Banner';
 import ProductCard from '../../components/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar';
 import { productsAPI } from '../../lib/supabase-db';
@@ -166,15 +165,6 @@ export default function ClearancePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Clearance Banner */}
-      <Banner
-        desktopImage="/banners/hero banner 1.jpg"
-        mobileImage="/banners/hero mobile banner 1.jpg"
-        alt="Clearance & Discounted Products - Mohit Computers"
-        height="300px"
-        priority={true}
-      />
-
       <div className="container mx-auto px-4 py-8">
         <div className="flex">
           {/* Filter Sidebar */}

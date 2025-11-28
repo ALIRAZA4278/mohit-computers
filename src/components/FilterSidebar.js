@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { X, Filter } from 'lucide-react';
 import { filterOptions } from '../lib/data';
 
-const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dynamicGraphicsOptions = [], dynamicChromebookOptions = {}, dynamicLaptopOptions = {}, dynamicRamOptions = {} }) => {
+const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dynamicGraphicsOptions = [], dynamicChromebookOptions = {}, dynamicLaptopOptions = {}, dynamicRamOptions = {}, dynamicSsdOptions = {} }) => {
   const [localFilters, setLocalFilters] = useState(filters);
   const [customPriceMin, setCustomPriceMin] = useState('');
   const [customPriceMax, setCustomPriceMax] = useState('');
@@ -231,6 +231,8 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                     ranges = dynamicRamOptions.ramPriceRanges;
                   } else if (category === 'chromebook' && dynamicChromebookOptions.chromebookPriceRanges && dynamicChromebookOptions.chromebookPriceRanges.length > 0) {
                     ranges = dynamicChromebookOptions.chromebookPriceRanges;
+                  } else if (category === 'ssd' && dynamicSsdOptions.ssdPriceRanges && dynamicSsdOptions.ssdPriceRanges.length > 0) {
+                    ranges = dynamicSsdOptions.ssdPriceRanges;
                   } else if (dynamicLaptopOptions.priceRanges && dynamicLaptopOptions.priceRanges.length > 0) {
                     ranges = dynamicLaptopOptions.priceRanges;
                   }
@@ -314,6 +316,62 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                   title="Warranty"
                   options={dynamicRamOptions.ramWarranty}
                   category="ramWarranty"
+                />
+              )}
+            </>
+          ) : category === 'ssd' ? (
+            <>
+              {/* Brand Filter - SSD specific brands */}
+              {dynamicSsdOptions.ssdBrands && dynamicSsdOptions.ssdBrands.length > 0 && (
+                <FilterSection
+                  title="Brand"
+                  options={dynamicSsdOptions.ssdBrands}
+                  category="ssdBrands"
+                />
+              )}
+
+              {/* SSD Capacity Filter */}
+              {dynamicSsdOptions.ssdCapacity && dynamicSsdOptions.ssdCapacity.length > 0 && (
+                <FilterSection
+                  title="Capacity"
+                  options={dynamicSsdOptions.ssdCapacity}
+                  category="ssdCapacity"
+                />
+              )}
+
+              {/* SSD Form Factor Filter */}
+              {dynamicSsdOptions.ssdFormFactor && dynamicSsdOptions.ssdFormFactor.length > 0 && (
+                <FilterSection
+                  title="Form Factor"
+                  options={dynamicSsdOptions.ssdFormFactor}
+                  category="ssdFormFactor"
+                />
+              )}
+
+              {/* SSD Interface Filter */}
+              {dynamicSsdOptions.ssdInterface && dynamicSsdOptions.ssdInterface.length > 0 && (
+                <FilterSection
+                  title="Interface"
+                  options={dynamicSsdOptions.ssdInterface}
+                  category="ssdInterface"
+                />
+              )}
+
+              {/* SSD Condition Filter */}
+              {dynamicSsdOptions.ssdCondition && dynamicSsdOptions.ssdCondition.length > 0 && (
+                <FilterSection
+                  title="Condition"
+                  options={dynamicSsdOptions.ssdCondition}
+                  category="ssdCondition"
+                />
+              )}
+
+              {/* SSD Warranty Filter */}
+              {dynamicSsdOptions.ssdWarranty && dynamicSsdOptions.ssdWarranty.length > 0 && (
+                <FilterSection
+                  title="Warranty"
+                  options={dynamicSsdOptions.ssdWarranty}
+                  category="ssdWarranty"
                 />
               )}
             </>

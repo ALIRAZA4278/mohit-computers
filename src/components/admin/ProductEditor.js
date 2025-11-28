@@ -74,6 +74,13 @@ export default function ProductEditor({ product, onSave, onCancel }) {
       '3200': 0
     },
 
+    // SSD specific fields
+    ssdCapacity: '',
+    ssdFormFactor: '',
+    ssdInterface: '',
+    ssdCondition: '',
+    ssdWarranty: '',
+
     // Chromebook specific fields
     chromebookStorage: '', // Combined storage (e.g., "64GB eMMC" or "128GB SSD")
     chromebookAUEYear: '', // Auto Update Expiration Year
@@ -166,6 +173,13 @@ export default function ProductEditor({ product, onSave, onCancel }) {
           '2666': 0,
           '3200': 0
         },
+
+        // SSD specific fields
+        ssdCapacity: product.ssd_capacity || '',
+        ssdFormFactor: product.ssd_form_factor || '',
+        ssdInterface: product.ssd_interface || '',
+        ssdCondition: product.ssd_condition || '',
+        ssdWarranty: product.ssd_warranty || '',
 
         // Chromebook specific fields
         chromebookStorage: product.storage || '',
@@ -374,6 +388,15 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         productData.ram_warranty = formData.ramWarranty || null;
         productData.show_ram_customizer = formData.showRamCustomizer !== false; // Save customizer visibility
         productData.ram_speed_prices = formData.ramSpeedPrices || null; // Save custom speed prices
+      }
+
+      // Only add SSD specific fields if category is 'ssd'
+      if (formData.category === 'ssd') {
+        productData.ssd_capacity = formData.ssdCapacity || null;
+        productData.ssd_form_factor = formData.ssdFormFactor || null;
+        productData.ssd_interface = formData.ssdInterface || null;
+        productData.ssd_condition = formData.ssdCondition || null;
+        productData.ssd_warranty = formData.ssdWarranty || null;
       }
 
       // Only add Chromebook specific fields if category is 'chromebook'
@@ -1283,6 +1306,176 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* SSD Specific Fields */}
+        {formData.category === 'ssd' && (
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">SSD Specifications</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* SSD Capacity */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Capacity *
+                </label>
+                <input
+                  type="text"
+                  name="ssdCapacity"
+                  list="ssd-capacity-options"
+                  value={formData.ssdCapacity}
+                  onChange={handleChange}
+                  placeholder="Type or select capacity..."
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <datalist id="ssd-capacity-options">
+                  <option value="120GB">120 GB</option>
+                  <option value="128GB">128 GB</option>
+                  <option value="240GB">240 GB</option>
+                  <option value="256GB">256 GB</option>
+                  <option value="480GB">480 GB</option>
+                  <option value="512GB">512 GB</option>
+                  <option value="960GB">960 GB</option>
+                  <option value="1TB">1 TB</option>
+                  <option value="2TB">2 TB</option>
+                  <option value="4TB">4 TB</option>
+                </datalist>
+                <p className="text-xs text-gray-500 mt-1">Type custom value or select from list</p>
+              </div>
+
+              {/* SSD Form Factor */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Form Factor *
+                </label>
+                <input
+                  type="text"
+                  name="ssdFormFactor"
+                  list="ssd-form-factor-options"
+                  value={formData.ssdFormFactor}
+                  onChange={handleChange}
+                  placeholder="Type or select form factor..."
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <datalist id="ssd-form-factor-options">
+                  <option value="2.5-SATA">2.5&quot; SATA</option>
+                  <option value="M.2-SATA">M.2 SATA</option>
+                  <option value="M.2-NVMe">M.2 NVMe</option>
+                  <option value="mSATA">mSATA</option>
+                </datalist>
+                <p className="text-xs text-gray-500 mt-1">Type custom value or select from list</p>
+              </div>
+
+              {/* SSD Interface */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Interface *
+                </label>
+                <input
+                  type="text"
+                  name="ssdInterface"
+                  list="ssd-interface-options"
+                  value={formData.ssdInterface}
+                  onChange={handleChange}
+                  placeholder="Type or select interface..."
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <datalist id="ssd-interface-options">
+                  <option value="SATA-III">SATA III</option>
+                  <option value="NVMe-PCIe-3.0">NVMe PCIe 3.0</option>
+                  <option value="NVMe-PCIe-4.0">NVMe PCIe 4.0</option>
+                  <option value="NVMe-PCIe-5.0">NVMe PCIe 5.0</option>
+                </datalist>
+                <p className="text-xs text-gray-500 mt-1">Type custom value or select from list</p>
+              </div>
+
+              {/* SSD Brand */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Brand
+                </label>
+                <input
+                  type="text"
+                  name="brand"
+                  list="ssd-brand-options"
+                  value={formData.brand}
+                  onChange={handleChange}
+                  placeholder="Type or select brand..."
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <datalist id="ssd-brand-options">
+                  <option value="Samsung" />
+                  <option value="WD" />
+                  <option value="SanDisk" />
+                  <option value="Kingston" />
+                  <option value="Crucial" />
+                  <option value="Intel" />
+                  <option value="Seagate" />
+                  <option value="SK Hynix" />
+                  <option value="Transcend" />
+                  <option value="ADATA" />
+                  <option value="Lexar" />
+                  <option value="PNY" />
+                </datalist>
+                <p className="text-xs text-gray-500 mt-1">Type custom brand or select from list</p>
+              </div>
+
+              {/* SSD Condition */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Condition *
+                </label>
+                <input
+                  type="text"
+                  name="ssdCondition"
+                  list="ssd-condition-options"
+                  value={formData.ssdCondition}
+                  onChange={handleChange}
+                  placeholder="Type or select condition..."
+                  required
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <datalist id="ssd-condition-options">
+                  <option value="Brand New" />
+                  <option value="Used" />
+                  <option value="Refurbished" />
+                </datalist>
+                <p className="text-xs text-gray-500 mt-1">Type custom value or select from list</p>
+              </div>
+
+              {/* SSD Warranty */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Warranty
+                </label>
+                <input
+                  type="text"
+                  name="ssdWarranty"
+                  list="ssd-warranty-options"
+                  value={formData.ssdWarranty}
+                  onChange={handleChange}
+                  placeholder="Type or select warranty..."
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <datalist id="ssd-warranty-options">
+                  <option value="No Warranty" />
+                  <option value="7 Days" />
+                  <option value="15 Days" />
+                  <option value="1 Month" />
+                  <option value="3 Months" />
+                  <option value="6 Months" />
+                  <option value="1 Year" />
+                  <option value="2 Years" />
+                  <option value="3 Years" />
+                  <option value="5 Years" />
+                </datalist>
+                <p className="text-xs text-gray-500 mt-1">Type custom value or select from list</p>
+              </div>
+            </div>
           </div>
         )}
 

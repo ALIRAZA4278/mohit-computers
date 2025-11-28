@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import { Filter, Grid, List, SortAsc, Loader } from 'lucide-react';
 import ProductCard from '../../components/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar';
-import Banner from '../../components/Banner';
 
 function ChromebookContent() {
   const searchParams = useSearchParams();
@@ -616,15 +615,6 @@ function ChromebookContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Chromebook Banner */}
-      <Banner
-        desktopImage="/banners/chromebook-banner.jpg"
-        mobileImage="/banners/chromebook-banner.jpg"
-        alt="Chromebook Collection"
-        height="300px"
-        priority={true}
-      />
-
       <div className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">

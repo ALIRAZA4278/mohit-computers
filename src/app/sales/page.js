@@ -176,6 +176,21 @@ function SalesContent() {
     const ramCondition = [...new Set(productsToAnalyze.map(p => p.condition).filter(isValidValue))].sort();
     const ramWarranty = [...new Set(productsToAnalyze.map(p => p.warranty).filter(isValidValue))].sort();
 
+    // SSD specific filters
+    const ssdCapacity = [...new Set(productsToAnalyze.map(p => p.ssd_capacity).filter(isValidValue))].sort((a, b) => {
+      const getGB = (val) => {
+        const str = String(val).toUpperCase();
+        if (str.includes('TB')) return parseFloat(str) * 1024;
+        return parseFloat(str) || 0;
+      };
+      return getGB(a) - getGB(b);
+    });
+
+    const ssdFormFactor = [...new Set(productsToAnalyze.map(p => p.ssd_form_factor).filter(isValidValue))].sort();
+    const ssdInterface = [...new Set(productsToAnalyze.map(p => p.ssd_interface).filter(isValidValue))].sort();
+    const ssdCondition = [...new Set(productsToAnalyze.map(p => p.ssd_condition || p.condition).filter(isValidValue))].sort();
+    const ssdWarranty = [...new Set(productsToAnalyze.map(p => p.ssd_warranty || p.warranty).filter(isValidValue))].sort();
+
     const prices = productsToAnalyze.map(p => p.price).filter(p => p > 0).sort((a, b) => a - b);
     let priceRanges = [];
     if (prices.length > 0) {
@@ -211,7 +226,13 @@ function SalesContent() {
       ramSpeed,
       ramFormFactor,
       ramCondition,
-      ramWarranty
+      ramWarranty,
+      // SSD specific
+      ssdCapacity,
+      ssdFormFactor,
+      ssdInterface,
+      ssdCondition,
+      ssdWarranty
     };
   }, [categoryFilteredProducts, selectedCategory]);
 
@@ -317,6 +338,46 @@ function SalesContent() {
       filtered = filtered.filter(p => {
         const warranty = (p.warranty || '').toString();
         return filters.ramWarranty.includes(warranty);
+      });
+    }
+
+    // SSD Capacity filter
+    if (filters.ssdCapacity && filters.ssdCapacity.length > 0) {
+      filtered = filtered.filter(p => {
+        const capacity = (p.ssd_capacity || '').toString();
+        return filters.ssdCapacity.includes(capacity);
+      });
+    }
+
+    // SSD Form Factor filter
+    if (filters.ssdFormFactor && filters.ssdFormFactor.length > 0) {
+      filtered = filtered.filter(p => {
+        const formFactor = (p.ssd_form_factor || '').toString();
+        return filters.ssdFormFactor.includes(formFactor);
+      });
+    }
+
+    // SSD Interface filter
+    if (filters.ssdInterface && filters.ssdInterface.length > 0) {
+      filtered = filtered.filter(p => {
+        const iface = (p.ssd_interface || '').toString();
+        return filters.ssdInterface.includes(iface);
+      });
+    }
+
+    // SSD Condition filter
+    if (filters.ssdCondition && filters.ssdCondition.length > 0) {
+      filtered = filtered.filter(p => {
+        const condition = (p.ssd_condition || p.condition || '').toString();
+        return filters.ssdCondition.includes(condition);
+      });
+    }
+
+    // SSD Warranty filter
+    if (filters.ssdWarranty && filters.ssdWarranty.length > 0) {
+      filtered = filtered.filter(p => {
+        const warranty = (p.ssd_warranty || p.warranty || '').toString();
+        return filters.ssdWarranty.includes(warranty);
       });
     }
 
@@ -578,7 +639,7 @@ function SalesContent() {
                 <FilterSection title="Brand" options={filterOptions.brands} category="brands" />
               )}
 
-              {/* RAM specific filters - only show when RAM category is selected */}
+              {/* Category-specific filters */}
               {selectedCategory === 'ram' ? (
                 <>
                   {filterOptions.ramType.length > 0 && (
@@ -603,6 +664,28 @@ function SalesContent() {
 
                   {filterOptions.ramWarranty.length > 0 && (
                     <FilterSection title="Warranty" options={filterOptions.ramWarranty} category="ramWarranty" />
+                  )}
+                </>
+              ) : selectedCategory === 'ssd' ? (
+                <>
+                  {filterOptions.ssdCapacity.length > 0 && (
+                    <FilterSection title="Capacity" options={filterOptions.ssdCapacity} category="ssdCapacity" />
+                  )}
+
+                  {filterOptions.ssdFormFactor.length > 0 && (
+                    <FilterSection title="Form Factor" options={filterOptions.ssdFormFactor} category="ssdFormFactor" />
+                  )}
+
+                  {filterOptions.ssdInterface.length > 0 && (
+                    <FilterSection title="Interface" options={filterOptions.ssdInterface} category="ssdInterface" />
+                  )}
+
+                  {filterOptions.ssdCondition.length > 0 && (
+                    <FilterSection title="Condition" options={filterOptions.ssdCondition} category="ssdCondition" />
+                  )}
+
+                  {filterOptions.ssdWarranty.length > 0 && (
+                    <FilterSection title="Warranty" options={filterOptions.ssdWarranty} category="ssdWarranty" />
                   )}
                 </>
               ) : (

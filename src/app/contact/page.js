@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
-import Banner from '../../components/Banner';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -58,17 +57,20 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Banner */}
-      <Banner
-        desktopImage="/banners/contact banner.jpg"
-        mobileImage="/banners/contact mobile banner.jpg"
-        alt="Contact Us"
-        height="400px"
-        priority={true}
-      />
+      {/* Page Header */}
+      <section className="py-12 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
+            <div className="flex justify-center">
+              <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Contact Information */}
-      <section className="py-8 sm:py-16">
+      <section className="py-8 sm:py-12">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Contact Form */}
@@ -96,7 +98,7 @@ export default function Contact() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6dc1c9] text-sm sm:text-base"
                     placeholder="Your Name"
                   />
                 </div>
@@ -109,7 +111,7 @@ export default function Contact() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6dc1c9] text-sm sm:text-base"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -122,7 +124,7 @@ export default function Contact() {
                     value={formData.subject}
                     onChange={handleChange}
                     required
-                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
+                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6dc1c9] text-sm sm:text-base"
                     placeholder="What is this regarding?"
                   />
                 </div>
@@ -135,7 +137,7 @@ export default function Contact() {
                     onChange={handleChange}
                     rows="4"
                     required
-                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base resize-none"
+                    className="w-full text-black px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6dc1c9] text-sm sm:text-base resize-none"
                     placeholder="Your message..."
                   ></textarea>
                 </div>
@@ -143,7 +145,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm sm:text-base"
+                  className="w-full bg-[#6dc1c9] text-white py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
                   {loading ? 'Sending...' : 'Send Message'}
                 </button>
@@ -152,7 +154,7 @@ export default function Contact() {
 
             {/* Contact Information */}
             <div className="mt-8 lg:mt-0">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Contact Us</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6"></h2>
               <p className="text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">
                 We&rsquo;re here to help! Whether you have a question, need support, or want to share feedback, feel free to reach out — our team is always ready to assist you.
               </p>

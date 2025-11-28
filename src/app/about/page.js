@@ -3,20 +3,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
 import FAQSection from '../../components/FAQSection';
-import Banner from '../../components/Banner';
 
 export default function About() {
   return (
-    <div className="min-h-screen">
-      {/* Hero Banner */}
-      <Banner
-        desktopImage="/banners/about banner.jpg"
-        mobileImage="/banners/about banner.jpg"
-        alt="About Mohit Computers"
-        height="400px"
-        priority={true}
-      />
-
+    <div className="min-h-screen bg-gray-50">
       {/* About Us */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
@@ -157,29 +147,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
-      {/* Corporate Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">Corporate Tech Solutions</h2>
-            <p className="text-[#6dc1c9] text-xl font-medium mb-8">by Mohit Computers</p>
-            <p className="text-gray-300 text-lg leading-relaxed">
-              We specialize in meeting the complex demands of corporate technology procurement, providing customized, reliable, and efficient solutions that align with your organizational needs.
-            </p>
-            <div className="mt-8">
-              <Link
-                href="/corporate"
-                className="bg-[#6dc1c9] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-700 transition-colors duration-300 inline-flex items-center justify-center"
-              >
-                Learn More
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
 
       {/* FAQ Section */}
       <section className="py-20 bg-gray-50">
