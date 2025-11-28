@@ -165,7 +165,22 @@ export default function ClearancePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+      {/* Page Header */}
+      <section className="py-12 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Clearance Sale</h1>
+            <div className="flex justify-center mb-4">
+              <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
+            </div>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Amazing deals on quality laptops and accessories. Limited stock available!
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div className="container mx-auto px-4 pb-8">
         <div className="flex">
           {/* Filter Sidebar */}
           <FilterSidebar
@@ -184,15 +199,14 @@ export default function ClearancePage() {
                 <div className="flex items-center space-x-4">
                   <button
                     onClick={toggleFilter}
-                    className="lg:hidden flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="lg:hidden flex items-center px-4 py-2 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-700 transition-colors"
                   >
                     <Filter className="w-4 h-4 mr-2" />
                     Filters
                   </button>
 
                   <div className="text-gray-600">
-                    <h1 className="text-xl font-bold text-gray-900">Clearance & Discounts</h1>
-                    <p className="text-sm">Showing {filteredProducts.length} of {products.length} products</p>
+                    Showing {filteredProducts.length} of {products.length} products
                   </div>
                 </div>
 
@@ -203,7 +217,7 @@ export default function ClearancePage() {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="border text-black border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border text-black border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#6dc1c9]"
                     >
                       <option value="discount">Best Discount</option>
                       <option value="priceAsc">Price: Low to High</option>
