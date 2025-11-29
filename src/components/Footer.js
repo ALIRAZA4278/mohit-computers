@@ -58,7 +58,8 @@ const Footer = () => {
 
             {/* Contact */}
             <div>
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Contact</h3>
+              <h3 className="text-lg font-bold text-[#6dc1c9] mb-2">Mohit Computers</h3>
+              <p className="text-xs text-gray-400 mb-4">Your Trusted Tech Partner</p>
               <div className="space-y-2 text-sm text-gray-400">
                 <p>Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi</p>
                 <p>
