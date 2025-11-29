@@ -109,9 +109,9 @@ const FAQSection = () => {
         {/* Section Title */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-800 mb-4">
-            FREQUENTLY <span className="text-teal-500">ASK QUESTION</span>
+            FREQUENTLY <span className="text-[#6dc1c9]">ASK QUESTION</span>
           </h2>
-          <div className="w-24 h-1 bg-teal-500 mx-auto mb-8"></div>
+          <div className="w-24 h-1 bg-[#6dc1c9] mx-auto mb-8"></div>
           <h3 className="text-2xl font-bold text-gray-800 mb-8">
             WHY CHOOSE MOHIT COMPUTERS?
           </h3>
@@ -129,7 +129,7 @@ const FAQSection = () => {
                 onClick={() => toggleFAQ(faq.id)}
                 className={`w-full px-6 py-4 text-left flex items-center justify-between transition-colors duration-200 ${
                   openFAQ === faq.id
-                    ? 'bg-teal-500 text-white'
+                    ? 'bg-[#6dc1c9] text-white'
                     : 'bg-white text-gray-800 hover:bg-gray-50'
                 }`}
               >
@@ -167,7 +167,7 @@ const FAQSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="tel:03368900349"
-                className="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-[#6dc1c9] transition-colors font-medium"
+                className="bg-[#6dc1c9] text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors font-medium"
               >
                 Call us: 0336 8900349
               </a>

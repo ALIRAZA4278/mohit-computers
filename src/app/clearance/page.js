@@ -232,7 +232,7 @@ export default function ClearancePage() {
                       onClick={() => setViewMode('grid')}
                       className={`p-2 rounded ${
                         viewMode === 'grid'
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-[#6dc1c9] text-white'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
@@ -242,7 +242,7 @@ export default function ClearancePage() {
                       onClick={() => setViewMode('list')}
                       className={`p-2 rounded ${
                         viewMode === 'list'
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-[#6dc1c9] text-white'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
@@ -256,7 +256,7 @@ export default function ClearancePage() {
             {/* Loading State */}
             {loading ? (
               <div className="flex justify-center items-center py-12">
-                <Loader className="w-8 h-8 animate-spin text-blue-600" />
+                <Loader className="w-8 h-8 animate-spin text-[#6dc1c9]" />
                 <span className="ml-2 text-gray-600">Loading products...</span>
               </div>
             ) : error ? (
@@ -265,7 +265,7 @@ export default function ClearancePage() {
                 <p className="text-gray-500">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="mt-4 px-4 py-2 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-600"
                 >
                   Retry
                 </button>

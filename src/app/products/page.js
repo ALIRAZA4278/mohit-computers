@@ -485,11 +485,11 @@ function ProductsContent() {
         setCurrentCategory('laptop');
         console.log('✅ Rugged Laptop filter set - Category: laptop, Special Features: Rugged / Tough');
       } else if (category === 'workstation') {
-        // Workstation laptops are laptops with is_workstation flag
+        // Workstation & Gaming laptops are laptops with is_workstation flag
         newFilters.category = ['laptop'];
-        newFilters.specialFeatures = ['Workstation'];
+        newFilters.specialFeatures = ['Workstation & Gaming'];
         setCurrentCategory('laptop');
-        console.log('✅ Workstation filter set - Category: laptop, Special Features: Workstation');
+        console.log('✅ Workstation & Gaming filter set - Category: laptop, Special Features: Workstation & Gaming');
       } else {
         const mappedCategory = categoryMap[category] || category;
         newFilters.category = [mappedCategory];
@@ -1372,7 +1372,7 @@ function ProductsContent() {
       const beforeFilter = filtered.length;
       filtered = filtered.filter(product => {
         return filters.specialFeatures.some(feature => {
-          if (feature === 'Workstation') return product.is_workstation === true;
+          if (feature === 'Workstation & Gaming') return product.is_workstation === true;
           if (feature === 'Rugged / Tough') return product.is_rugged_tough === true;
           if (feature === 'Featured') return product.is_featured === true;
           if (feature === 'Clearance') return product.is_clearance === true;

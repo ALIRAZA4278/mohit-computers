@@ -204,22 +204,27 @@ export default function ChromebookCustomizer({ product, onCustomizationChange })
   if (!product) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <div className="flex items-center mb-6">
-        <Zap className="w-6 h-6 text-emerald-600 mr-3" />
-        <h3 className="text-2xl font-bold text-gray-800">Customize Your Chromebook</h3>
+    <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#6dc1c9] to-teal-500 px-4 py-3">
+        <h3 className="text-white font-bold flex items-center gap-2">
+          <Zap className="w-5 h-5" />
+          Customize Your Chromebook
+        </h3>
       </div>
 
+      <div className="p-4 space-y-5">
+
       {/* Current Configuration */}
-      <div className="bg-gray-50 rounded-lg p-4 mb-6">
+      <div className="bg-gray-50 rounded-lg p-4">
         <h4 className="font-semibold text-gray-800 mb-3">Current Configuration</h4>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center">
-            <Cpu className="w-4 h-4 text-gray-500 mr-2" />
+            <Cpu className="w-4 h-4 text-[#6dc1c9] mr-2" />
             <span><strong>RAM:</strong> {getCurrentRam()}</span>
           </div>
           <div className="flex items-center">
-            <HardDrive className="w-4 h-4 text-gray-500 mr-2" />
+            <HardDrive className="w-4 h-4 text-[#6dc1c9] mr-2" />
             <span><strong>Storage:</strong> {getCurrentStorage()}</span>
           </div>
         </div>
@@ -227,153 +232,140 @@ export default function ChromebookCustomizer({ product, onCustomizationChange })
 
       {/* RAM Modules */}
       {product?.show_ram_options !== false && !loading && ramModules.length > 0 && (
-      <div className="mb-8">
-        <div className="flex items-center mb-4">
-          <Cpu className="w-5 h-5 text-emerald-600 mr-2" />
-          <h4 className="text-lg font-semibold text-gray-800">RAM Upgrade</h4>
-          <div className="group relative ml-2">
-            <Info className="w-4 h-4 text-gray-400" />
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
-              RAM upgrades replace your current RAM with a larger capacity. Only sizes larger than your current RAM are shown.
-            </div>
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 rounded-lg bg-[#6dc1c9]/10 flex items-center justify-center">
+            <Cpu className="w-4 h-4 text-[#6dc1c9]" />
           </div>
+          <span className="font-semibold text-gray-800">RAM Upgrade</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {ramModules.map((ram) => (
-            <div
+            <button
               key={ram.id}
               onClick={() => handleRamUpgrade(ram)}
-              className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+              className={`relative text-left p-3 rounded-xl transition-all ${
                 customizations.ramUpgrade?.id === ram.id
-                  ? 'border-emerald-500 bg-emerald-50'
-                  : 'border-gray-200 hover:border-emerald-300'
+                  ? 'bg-[#6dc1c9] text-white shadow-lg shadow-[#6dc1c9]/30'
+                  : 'bg-white border border-gray-200 hover:border-[#6dc1c9] hover:shadow-md'
               }`}
             >
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h5 className="font-semibold text-gray-800">{ram.size} RAM</h5>
-                  <p className="text-sm text-gray-600">{ram.description}</p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Upgrade from {product?.ram || '4GB'} to {ram.size}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-emerald-600">Rs:{ram.price.toLocaleString()}</p>
-                  <p className="text-sm text-gray-500">Upgrade Price</p>
-                </div>
+              <div className="flex justify-between items-center">
+                <span className="font-bold">{ram.size}</span>
+                <span className={`font-bold ${customizations.ramUpgrade?.id === ram.id ? 'text-white' : 'text-[#6dc1c9]'}`}>
+                  +Rs:{ram.price.toLocaleString()}
+                </span>
+              </div>
+              <div className={`text-xs mt-1 ${customizations.ramUpgrade?.id === ram.id ? 'text-teal-100' : 'text-gray-500'}`}>
+                {product?.ram || '4GB'} → {ram.size}
               </div>
               {customizations.ramUpgrade?.id === ram.id && (
-                <div className="mt-2 text-sm text-emerald-600 font-medium">
-                  ✓ Selected
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow">
+                  <svg className="w-3 h-3 text-[#6dc1c9]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
                 </div>
               )}
-            </div>
+            </button>
           ))}
         </div>
       </div>
       )}
 
       {/* SSD Upgrades */}
-      {product?.show_ssd_options !== false && (
-      <div className="mb-8">
-        <div className="flex items-center mb-4">
-          <HardDrive className="w-5 h-5 text-emerald-600 mr-2" />
-          <h4 className="text-lg font-semibold text-gray-800">Storage Upgrades</h4>
-          <div className="group relative ml-2">
-            <Info className="w-4 h-4 text-gray-400" />
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-2 bg-gray-800 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-10">
-              Storage upgrades replace the existing storage. Price difference will be applied.
-            </div>
+      {product?.show_ssd_options !== false && !loading && ssdUpgrades.length > 0 && (
+      <div>
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 rounded-lg bg-[#6dc1c9]/10 flex items-center justify-center">
+            <HardDrive className="w-4 h-4 text-[#6dc1c9]" />
           </div>
+          <span className="font-semibold text-gray-800">Storage Upgrade</span>
         </div>
 
-        {loading ? (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-4 border-emerald-500 border-t-transparent mx-auto"></div>
-            <p className="text-sm text-gray-500 mt-2">Loading upgrade options...</p>
-          </div>
-        ) : ssdUpgrades.length === 0 ? (
-          <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-600">No storage upgrade options available for this Chromebook.</p>
-            <p className="text-sm text-gray-500 mt-1">Current Storage: {product?.storage || '64GB eMMC'}</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {ssdUpgrades.map((ssd) => (
-            <div
+            <button
               key={ssd.id}
               onClick={() => handleSsdUpgrade(ssd)}
-              className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
+              className={`relative text-left p-3 rounded-xl transition-all ${
                 customizations.ssdUpgrade?.id === ssd.id
-                  ? 'border-emerald-500 bg-emerald-50'
-                  : 'border-gray-200 hover:border-emerald-300'
+                  ? 'bg-[#6dc1c9] text-white shadow-lg shadow-[#6dc1c9]/30'
+                  : 'bg-white border border-gray-200 hover:border-[#6dc1c9] hover:shadow-md'
               }`}
             >
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h5 className="font-semibold text-gray-800">{ssd.size} SSD</h5>
-                  <p className="text-sm text-gray-600">{ssd.description}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-emerald-600">Rs:{ssd.price.toLocaleString()}</p>
-                </div>
+              <div className="flex justify-between items-center">
+                <span className="font-bold">{ssd.size}</span>
+                <span className={`font-bold ${customizations.ssdUpgrade?.id === ssd.id ? 'text-white' : 'text-[#6dc1c9]'}`}>
+                  +Rs:{ssd.price.toLocaleString()}
+                </span>
+              </div>
+              <div className={`text-xs mt-1 ${customizations.ssdUpgrade?.id === ssd.id ? 'text-teal-100' : 'text-gray-500'}`}>
+                SSD Upgrade
               </div>
               {customizations.ssdUpgrade?.id === ssd.id && (
-                <div className="mt-2 text-sm text-emerald-600 font-medium">
-                  ✓ Selected
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow">
+                  <svg className="w-3 h-3 text-[#6dc1c9]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
                 </div>
               )}
-            </div>
+            </button>
           ))}
         </div>
-        )}
       </div>
       )}
 
       {/* Price Summary */}
-      <div className="border-t pt-6">
-        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-4">
-          <h4 className="text-lg font-semibold text-gray-800 mb-3">Price Summary</h4>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span>Base Price:</span>
-              <span>Rs:{(product?.price || 0).toLocaleString()}</span>
+      {(customizations.ramUpgrade || customizations.ssdUpgrade) && (
+        <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+          <h4 className="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
+            <div className="w-6 h-6 rounded-full bg-[#6dc1c9]/10 flex items-center justify-center">
+              <span className="text-[#6dc1c9] text-xs">₨</span>
+            </div>
+            Price Summary
+          </h4>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between text-gray-600">
+              <span>Base Price</span>
+              <span className="font-medium text-gray-800">Rs:{parseInt(product?.price || 0).toLocaleString()}</span>
             </div>
 
             {customizations.ramUpgrade && (
-              <div className="flex justify-between text-emerald-600">
-                <span>RAM Upgrade ({customizations.ramUpgrade.size}):</span>
-                <span>Rs:{customizations.ramUpgrade.price.toLocaleString()}</span>
+              <div className="flex justify-between">
+                <span className="text-[#6dc1c9]">+ RAM ({customizations.ramUpgrade.size})</span>
+                <span className="font-medium text-gray-800">Rs:{customizations.ramUpgrade.price.toLocaleString()}</span>
               </div>
             )}
 
             {customizations.ssdUpgrade && (
-              <div className="flex justify-between text-emerald-600">
-                <span>Storage Upgrade ({customizations.ssdUpgrade.size}):</span>
-                <span>Rs:{customizations.ssdUpgrade.price.toLocaleString()}</span>
+              <div className="flex justify-between">
+                <span className="text-[#6dc1c9]">+ SSD ({customizations.ssdUpgrade.size})</span>
+                <span className="font-medium text-gray-800">Rs:{customizations.ssdUpgrade.price.toLocaleString()}</span>
               </div>
             )}
 
-            <div className="border-t pt-2 flex justify-between text-lg font-bold">
-              <span>Total Price:</span>
-              <span className="text-emerald-600">Rs:{totalPrice.toLocaleString()}</span>
+            <div className="flex justify-between pt-3 border-t border-dashed border-gray-200">
+              <span className="font-bold text-gray-800">Total</span>
+              <span className="font-bold text-[#6dc1c9] text-lg">Rs:{totalPrice.toLocaleString()}</span>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Reset Button */}
-      {(customizations.ramUpgrade || customizations.ssdUpgrade) && (
-        <div className="mt-4 text-center">
           <button
             onClick={() => setCustomizations({ ramUpgrade: null, ssdUpgrade: null })}
-            className="text-sm text-gray-500 hover:text-gray-700 underline"
+            className="w-full text-center text-xs text-gray-400 hover:text-red-500 mt-3 transition-colors"
           >
-            Reset to default configuration
+            Reset configuration
           </button>
         </div>
       )}
+
+      {/* Loading State */}
+      {loading && (
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-3 border-[#6dc1c9] border-t-transparent"></div>
+        </div>
+      )}
+      </div>
     </div>
   );
 }

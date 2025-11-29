@@ -55,7 +55,7 @@ const BlogCard = ({ post, featured = false }) => {
         </div>
 
         {/* Blog Title */}
-        <h3 className={`font-bold text-black mb-3 group-hover:text-blue-600 transition-colors duration-200 ${featured ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
+        <h3 className={`font-bold text-black mb-3 group-hover:text-[#6dc1c9] transition-colors duration-200 ${featured ? 'text-2xl md:text-3xl' : 'text-xl'}`}>
           <Link href={`/blog/${post.slug || post.id || post._id}`} className="line-clamp-2">
             {post.title}
           </Link>
@@ -70,7 +70,7 @@ const BlogCard = ({ post, featured = false }) => {
         <div className="mb-4">
           <Link 
             href={`/blog/${post.slug || post.id || post._id}`}
-            className="text-blue-600 hover:text-blue-800 font-semibold text-sm uppercase tracking-wide flex items-center group"
+            className="text-[#6dc1c9] hover:text-teal-600 font-semibold text-sm uppercase tracking-wide flex items-center group"
           >
             READ MORE
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
@@ -81,7 +81,7 @@ const BlogCard = ({ post, featured = false }) => {
         <div className="flex items-center justify-between text-sm text-black pt-4 border-t border-gray-100">
           <div className="flex items-center space-x-4">
             <div className="flex items-center">
-              <Calendar className="w-4 h-4 mr-1 text-blue-600" />
+              <Calendar className="w-4 h-4 mr-1 text-[#6dc1c9]" />
               <span>{formatDate(post.created_at || post.createdAt)}</span>
             </div>
             {(post.author_name || post.author) && (

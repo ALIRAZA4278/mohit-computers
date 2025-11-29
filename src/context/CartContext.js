@@ -12,6 +12,9 @@ const cartReducer = (state, action) => {
         ? `${action.payload.id}-custom-${Date.now()}-${Math.random()}`
         : action.payload.id;
 
+      // Get quantity from payload or default to 1
+      const quantityToAdd = action.payload.quantity || 1;
+
       // Only merge if it's the same product without customizations
       if (!action.payload.hasCustomizations && !action.payload.hasRAMCustomization) {
         const existingItem = state.items.find(item =>
@@ -24,7 +27,7 @@ const cartReducer = (state, action) => {
             ...state,
             items: state.items.map(item =>
               item.id === action.payload.id && !item.hasCustomizations && !item.hasRAMCustomization
-                ? { ...item, quantity: item.quantity + 1 }
+                ? { ...item, quantity: item.quantity + quantityToAdd }
                 : item
             )
           };
@@ -37,7 +40,7 @@ const cartReducer = (state, action) => {
         items: [...state.items, {
           ...action.payload,
           cartId, // Unique identifier for cart operations
-          quantity: 1
+          quantity: quantityToAdd
         }]
       };
 

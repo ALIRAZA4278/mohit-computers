@@ -87,7 +87,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
               type="checkbox"
               checked={localFilters[category]?.includes(option) || false}
               onChange={(e) => handleFilterChange(category, option, e.target.checked)}
-              className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="mr-2 rounded border-gray-300 text-[#6dc1c9] focus:ring-[#6dc1c9]"
             />
             <span className="text-sm text-gray-700">{option}</span>
           </label>
@@ -118,13 +118,13 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center">
-            <Filter className="w-5 h-5 mr-2 text-blue-600" />
+            <Filter className="w-5 h-5 mr-2 text-[#6dc1c9]" />
             Filters
           </h3>
           <div className="flex items-center space-x-2">
             <button
               onClick={clearAllFilters}
-              className="text-sm text-blue-600 hover:text-blue-800"
+              className="text-sm text-[#6dc1c9] hover:text-teal-600"
             >
               Clear All
             </button>
@@ -140,7 +140,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
         {/* Filter Content */}
         <div className="p-4">
           {/* In Stock Only - Moved to top */}
-          <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="mb-6 p-3 bg-[#6dc1c9]/10 border border-[#6dc1c9]/20 rounded-lg">
             <label className="flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -155,7 +155,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                   setLocalFilters(newFilters);
                   onFiltersChange(newFilters);
                 }}
-                className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500 w-4 h-4"
+                className="mr-2 rounded border-gray-300 text-[#6dc1c9] focus:ring-[#6dc1c9] w-4 h-4"
               />
               <span className="text-sm font-semibold text-gray-800">In Stock Only</span>
             </label>
@@ -174,7 +174,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                   placeholder="Min"
                   min="0"
                   value={customPriceMin}
-                  className="w-full sm:w-16 px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full sm:w-16 px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#6dc1c9]"
                   onChange={(e) => {
                     const minValue = e.target.value;
                     handleCustomPriceChange(minValue, customPriceMax);
@@ -186,7 +186,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                   placeholder="Max"
                   min="0"
                   value={customPriceMax}
-                  className="w-full sm:w-16 px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full sm:w-16 px-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#6dc1c9]"
                   onChange={(e) => {
                     const maxValue = e.target.value;
                     handleCustomPriceChange(customPriceMin, maxValue);
@@ -200,7 +200,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
               )}
               {localFilters.priceRange && (
                 <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-1 sm:space-y-0">
-                  <div className="text-xs text-blue-600 font-medium break-all">
+                  <div className="text-xs text-[#6dc1c9] font-medium break-all">
                     Active: {localFilters.priceRange.label}
                   </div>
                   <button
@@ -243,7 +243,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                         name="priceRange"
                         checked={localFilters.priceRange?.label === range.label}
                         onChange={() => handlePriceRangeChange(range)}
-                        className="mr-2 text-blue-600 focus:ring-blue-500 flex-shrink-0"
+                        className="mr-2 text-[#6dc1c9] focus:ring-[#6dc1c9] flex-shrink-0"
                       />
                       <span className="text-sm text-gray-700 leading-tight">{range.label}</span>
                     </label>
@@ -578,7 +578,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                   setLocalFilters(newFilters);
                   onFiltersChange(newFilters);
                 }}
-                className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="mr-2 rounded border-gray-300 text-[#6dc1c9] focus:ring-[#6dc1c9]"
               />
               <span className="text-sm text-gray-700">Featured Products Only</span>
             </label>
@@ -588,7 +588,7 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
           <div className="lg:hidden">
             <button
               onClick={onClose}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              className="w-full bg-[#6dc1c9] text-white py-3 rounded-lg font-medium hover:bg-teal-600 transition-colors"
             >
               Apply Filters
             </button>

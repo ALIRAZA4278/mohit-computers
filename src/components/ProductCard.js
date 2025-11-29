@@ -80,7 +80,7 @@ const ProductCard = ({ product, showCompare = true }) => {
     
     // Check for workstation first (highest priority)
     if (categoryLower.includes('workstation') || product.is_workstation) {
-      return { text: 'Workstation', gradient: 'from-slate-600 to-slate-700' };
+      return { text: 'Workstation & Gaming', gradient: 'from-slate-600 to-slate-700' };
     }
     if (categoryLower.includes('laptop') || categoryLower === 'used-laptop') {
       return { text: 'Laptop', gradient: 'from-blue-500 to-blue-600' };

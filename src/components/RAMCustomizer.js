@@ -109,33 +109,34 @@ export default function RAMCustomizer({ product, onCustomizationChange }) {
   }, [selectedSpeed, basePrice, capacity, product?.ram_type, onCustomizationChange]);
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 shadow-lg border border-blue-200">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="bg-blue-600 p-2 rounded-lg">
-          <Cpu className="w-6 h-6 text-white" />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-gray-900">Customize Your RAM</h3>
-          <p className="text-sm text-gray-600">Select brand and speed for your {capacity} {product?.ram_type || 'DDR4'} RAM</p>
-        </div>
+    <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl border border-gray-200 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#6dc1c9] to-teal-500 px-4 py-3">
+        <h3 className="text-white font-bold flex items-center gap-2">
+          <Cpu className="w-5 h-5" />
+          Customize Your RAM
+        </h3>
+        <p className="text-sm text-teal-100">Select speed for your {capacity} {product?.ram_type || 'DDR4'} RAM</p>
       </div>
 
+      <div className="p-4 space-y-5">
+
       {/* Brand Display (Non-selectable) */}
-      <div className="mb-6">
+      <div>
         <label className="flex items-center gap-2 text-sm font-semibold text-gray-800 mb-3">
-          <Award className="w-4 h-4 text-blue-600" />
+          <Award className="w-4 h-4 text-[#6dc1c9]" />
           Available Brands (MIX BRAND)
         </label>
-        <div className="p-4 rounded-lg border-2 border-gray-300 bg-gray-50">
+        <div className="p-4 rounded-lg border border-gray-200 bg-white">
           <div className="text-center mb-2">
-            <div className="text-lg font-bold text-blue-600">MIX BRAND</div>
+            <div className="text-lg font-bold text-[#6dc1c9]">MIX BRAND</div>
             <div className="text-xs text-gray-600 mt-1">Any of the following brands may be provided based on availability</div>
           </div>
           <div className="flex flex-wrap justify-center gap-2 mt-3">
             {brands.map((brand) => (
               <span
                 key={brand}
-                className="px-3 py-1 bg-white border border-gray-300 rounded-full text-xs font-medium text-gray-700"
+                className="px-3 py-1 bg-gray-50 border border-gray-200 rounded-full text-xs font-medium text-gray-700"
               >
                 {brand}
               </span>
@@ -145,70 +146,81 @@ export default function RAMCustomizer({ product, onCustomizationChange }) {
       </div>
 
       {/* Speed Selection */}
-      <div className="mb-6">
+      <div>
         <label className="flex items-center gap-2 text-sm font-semibold text-gray-800 mb-3">
-          <Zap className="w-4 h-4 text-blue-600" />
+          <Zap className="w-4 h-4 text-[#6dc1c9]" />
           Select Speed (Frequency)
         </label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {speedOptions.map((speed) => (
             <button
               key={speed.id}
               onClick={() => setSelectedSpeed(speed)}
-              className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
+              className={`relative text-left p-3 rounded-xl transition-all ${
                 selectedSpeed.id === speed.id
-                  ? 'border-blue-600 bg-blue-100 shadow-md scale-105'
-                  : 'border-gray-300 bg-white hover:border-blue-400 hover:shadow'
+                  ? 'bg-[#6dc1c9] text-white shadow-lg shadow-[#6dc1c9]/30'
+                  : 'bg-white border border-gray-200 hover:border-[#6dc1c9] hover:shadow-md'
               }`}
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="font-semibold text-gray-900 flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-blue-600" />
+                  <div className={`font-semibold flex items-center gap-2 ${selectedSpeed.id === speed.id ? 'text-white' : 'text-gray-900'}`}>
+                    <Clock className={`w-4 h-4 ${selectedSpeed.id === speed.id ? 'text-white' : 'text-[#6dc1c9]'}`} />
                     {speed.name}
                   </div>
-                  <div className="text-xs text-gray-600 mt-1">{speed.description}</div>
+                  <div className={`text-xs mt-1 ${selectedSpeed.id === speed.id ? 'text-teal-100' : 'text-gray-500'}`}>{speed.description}</div>
                 </div>
                 {speed.priceModifier !== 0 && (
-                  <div className="text-sm font-semibold text-blue-600">
+                  <div className={`text-sm font-bold ${selectedSpeed.id === speed.id ? 'text-white' : 'text-[#6dc1c9]'}`}>
                     +Rs {speed.priceModifier}
                   </div>
                 )}
               </div>
+              {selectedSpeed.id === speed.id && (
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow">
+                  <svg className="w-3 h-3 text-[#6dc1c9]" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              )}
             </button>
           ))}
         </div>
       </div>
 
       {/* Price Summary */}
-      <div className="bg-white rounded-lg p-4 border-2 border-blue-300">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-600">Base Price (2133 MHz):</span>
-          <span className="text-sm font-medium text-gray-900">Rs {basePrice.toLocaleString()}</span>
-        </div>
-        {selectedSpeed.priceModifier !== 0 && (
-          <>
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600">Speed Upgrade ({selectedSpeed.name}):</span>
-              <span className="text-sm font-medium text-blue-600">
-                +Rs {selectedSpeed.priceModifier.toLocaleString()}
-              </span>
+      <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+        <h4 className="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
+          <div className="w-6 h-6 rounded-full bg-[#6dc1c9]/10 flex items-center justify-center">
+            <span className="text-[#6dc1c9] text-xs">₨</span>
+          </div>
+          Price Summary
+        </h4>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between text-gray-600">
+            <span>Base Price (2133 MHz)</span>
+            <span className="font-medium text-gray-800">Rs {basePrice.toLocaleString()}</span>
+          </div>
+          {selectedSpeed.priceModifier !== 0 && (
+            <div className="flex justify-between">
+              <span className="text-[#6dc1c9]">+ Speed ({selectedSpeed.name})</span>
+              <span className="font-medium text-gray-800">Rs {selectedSpeed.priceModifier.toLocaleString()}</span>
             </div>
-            <div className="border-t border-gray-300 my-2"></div>
-          </>
-        )}
-        <div className="flex items-center justify-between">
-          <span className="text-lg font-bold text-gray-900">Total Price:</span>
-          <span className="text-2xl font-bold text-blue-600">Rs {totalPrice.toLocaleString()}</span>
+          )}
+          <div className="flex justify-between pt-3 border-t border-dashed border-gray-200">
+            <span className="font-bold text-gray-800">Total</span>
+            <span className="font-bold text-[#6dc1c9] text-lg">Rs {totalPrice.toLocaleString()}</span>
+          </div>
         </div>
       </div>
 
       {/* Selected Configuration Summary */}
-      <div className="mt-4 p-3 bg-blue-100 rounded-lg border border-blue-300">
+      <div className="p-3 bg-[#6dc1c9]/10 rounded-lg border border-[#6dc1c9]/20">
         <div className="text-sm font-semibold text-gray-800 mb-1">Your Configuration:</div>
         <div className="text-sm text-gray-700">
           MIX BRAND {capacity} {product?.ram_type || 'DDR4'} {selectedSpeed.name} - {product?.ram_form_factor || 'Laptop (SO-DIMM)'}
         </div>
+      </div>
       </div>
     </div>
   );

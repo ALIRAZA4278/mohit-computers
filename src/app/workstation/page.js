@@ -413,12 +413,12 @@ function WorkstationContent() {
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Professional Workstations</h1>
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Workstation & Gaming Laptops</h1>
             <div className="flex justify-center mb-4">
               <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
             </div>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              High-performance workstations designed for demanding professional workflows
+              High-performance laptops for gaming, content creation & demanding professional workflows
             </p>
           </div>
         </div>
@@ -451,7 +451,7 @@ function WorkstationContent() {
                   </button>
 
                   <div className="text-gray-600">
-                    Showing {filteredProducts.length} of {products.length} workstations
+                    Showing {filteredProducts.length} of {products.length} products
                   </div>
                 </div>
 
@@ -477,8 +477,8 @@ function WorkstationContent() {
                     <button
                       onClick={() => setViewMode('grid')}
                       className={`p-2 rounded ${
-                        viewMode === 'grid' 
-                          ? 'bg-blue-600 text-white' 
+                        viewMode === 'grid'
+                          ? 'bg-[#6dc1c9] text-white'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
@@ -487,8 +487,8 @@ function WorkstationContent() {
                     <button
                       onClick={() => setViewMode('list')}
                       className={`p-2 rounded ${
-                        viewMode === 'list' 
-                          ? 'bg-blue-600 text-white' 
+                        viewMode === 'list'
+                          ? 'bg-[#6dc1c9] text-white'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
@@ -502,25 +502,25 @@ function WorkstationContent() {
             {/* Loading State */}
             {loading ? (
               <div className="flex justify-center items-center py-12">
-                <Loader className="w-8 h-8 animate-spin text-blue-600" />
-                <span className="ml-2 text-gray-600">Loading workstations...</span>
+                <Loader className="w-8 h-8 animate-spin text-[#6dc1c9]" />
+                <span className="ml-2 text-gray-600">Loading products...</span>
               </div>
             ) : error ? (
               <div className="text-center py-12">
-                <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Workstations</h3>
+                <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Products</h3>
                 <p className="text-gray-500">{error}</p>
                 <button 
                   onClick={() => window.location.reload()} 
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="mt-4 px-4 py-2 bg-[#6dc1c9] text-white rounded-lg hover:bg-teal-600"
                 >
                   Retry
                 </button>
               </div>
             ) : !filteredProducts || filteredProducts.length === 0 ? (
               <div className="text-center py-12">
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">No workstations found</h3>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
                 <p className="text-gray-500">
-                  {products.length === 0 ? 'No workstations available' : 'Try adjusting your filters or search criteria'}
+                  {products.length === 0 ? 'No products available' : 'Try adjusting your filters or search criteria'}
                 </p>
               </div>
             ) : (
@@ -552,7 +552,7 @@ export default function WorkstationPage() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-[#6dc1c9] border-t-transparent mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading workstations...</p>
+          <p className="text-gray-600 font-medium">Loading products...</p>
         </div>
       </div>
     }>

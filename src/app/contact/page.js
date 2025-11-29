@@ -75,7 +75,7 @@ export default function Contact() {
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Contact Form */}
             <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Send us a Message</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Get in Touch</h2>
 
               {successMessage && (
                 <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg">
@@ -162,14 +162,14 @@ export default function Contact() {
               <div className="space-y-4 sm:space-y-6">
                 {/* Address */}
                 <div className="flex items-start">
-                  <div className="bg-blue-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
-                    <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+                  <div className="bg-[#6dc1c9]/10 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
+                    <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-[#6dc1c9]" />
                   </div>
                   <div>
                     <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">📍 Store Location</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
                       Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi<br />
-                      <span className="text-xs sm:text-sm text-gray-500">(Just opposite the lift, near Skin Hospital / Chamra Hospital)</span>
+                      <span className="text-xs sm:text-sm text-gray-500">(Just opposite the lift, near Skin / Chamra Hospital)</span>
                     </p>
                   </div>
                 </div>
@@ -182,12 +182,12 @@ export default function Contact() {
                   <div>
                     <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">☎️ Phone / WhatsApp Support</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      Mobile / WhatsApp: <a href="tel:03368900349" className="text-blue-600 hover:underline">0336-8900349</a><br />
-                      PTCL Landline: <a href="tel:02132700706" className="text-blue-600 hover:underline">021-3270070-6</a>
+                      Mobile / WhatsApp: <a href="tel:03368900349" className="text-[#6dc1c9] hover:underline">0336-8900349</a><br />
+                      Landline: <a href="tel:02132700706" className="text-[#6dc1c9] hover:underline">021-3270070-6</a>
                     </p>
                     <p className="text-xs sm:text-sm text-gray-500 mt-2">
                       Available during business hours:<br />
-                      Monday to Thursday & Saturday: 12:00 PM – 9:00 PM<br />
+                      Monday to Thursday & Saturday: 12:30 PM – 9:00 PM<br />
                       Friday: 2:00 PM – 9:00 PM<br />
                       Sunday: Closed
                     </p>
@@ -200,14 +200,12 @@ export default function Contact() {
                     <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">📧 Email Support</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">📧 Email Us</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
-                      General Inquiries, Complaints & Feedback:<br />
-                      <a href="mailto:supports@mohitcomputers.pk" className="text-blue-600 hover:underline">supports@mohitcomputers.pk</a>
+                      General Support: <a href="mailto:supports@mohitcomputers.pk" className="text-[#6dc1c9] hover:underline">supports@mohitcomputers.pk</a>
                     </p>
-                    <p className="text-gray-600 text-sm sm:text-base mt-2">
-                      Corporate & Business Inquiries:<br />
-                      <a href="mailto:corporate@mohitcomputers.pk" className="text-blue-600 hover:underline">corporate@mohitcomputers.pk</a>
+                    <p className="text-gray-600 text-sm sm:text-base mt-1">
+                      Corporate/Bulk Orders: <a href="mailto:corporate@mohitcomputers.pk" className="text-[#6dc1c9] hover:underline">corporate@mohitcomputers.pk</a>
                     </p>
                   </div>
                 </div>
@@ -270,7 +268,7 @@ export default function Contact() {
                   <div>
                     <h4 className="font-semibold text-gray-800 mb-2">🕒 Business Hours:</h4>
                     <p className="text-gray-600">
-                      Mon-Thu & Sat: 12:00 PM – 9:00 PM<br />
+                      Mon-Thu & Sat: 12:30 PM – 9:00 PM<br />
                       Friday: 2:00 PM – 9:00 PM<br />
                       Sunday: Closed
                     </p>

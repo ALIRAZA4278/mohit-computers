@@ -232,7 +232,7 @@ export const filterOptions = {
     'AMD Radeon Pro'
   ],
   touchType: ['Touch', 'Non-touch', 'X360 (Convertible)'],
-  specialFeatures: ['Workstation', 'Rugged / Tough', 'Featured', 'Clearance'],
+  specialFeatures: ['Workstation & Gaming', 'Rugged / Tough', 'Featured', 'Clearance'],
   resolution: [
     'HD (1366x768)',
     'Full HD (1920x1080)',

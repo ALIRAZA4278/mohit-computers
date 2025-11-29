@@ -12,6 +12,7 @@ import { productsAPI } from '../lib/supabase-db';
 export default function Home() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [featuredIndex, setFeaturedIndex] = useState(0);
+  const [saleIndex, setSaleIndex] = useState(0);
   const [newArrivalIndex, setNewArrivalIndex] = useState(0);
   const [reviewIndex, setReviewIndex] = useState(0);
   const [reviewsPerView, setReviewsPerView] = useState(3);
@@ -91,6 +92,7 @@ export default function Home() {
   const catalogProducts = products.filter(product => !product.seo_only);
 
   const featuredProducts = catalogProducts.filter(product => product.is_featured);
+  const saleProducts = catalogProducts.filter(product => product.is_discounted);
   const newArrivalProducts = catalogProducts.slice(0, 8); // Latest 8 products - all categories
 
   // Calculate max index for each carousel
@@ -287,6 +289,60 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Sale Products Slider */}
+      {!loading && !error && saleProducts.length > 0 && (
+        <section className="pt-10 md:pt-14 pb-10">
+          <div className="container mx-auto px-4">
+            {/* Section Heading */}
+            <div className="flex items-center justify-center mb-8 md:mb-10">
+              <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-gray-300 to-gray-300"></div>
+              <div className="px-6 md:px-8">
+                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 uppercase tracking-wider text-center">
+                  <span className="text-[#6dc1c9]">Sale</span> Products
+                </h2>
+              </div>
+              <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent via-gray-300 to-gray-300"></div>
+            </div>
+            <div className="relative px-8 sm:px-4">
+              <div className="overflow-hidden rounded-xl -mx-2 sm:-mx-3">
+                <div
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{ transform: `translateX(-${getTransformPercentage(saleIndex)}%)` }}
+                >
+                  {saleProducts.map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex-none px-2 sm:px-3"
+                      style={{ width: `${100 / itemsPerView}%` }}
+                    >
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {saleProducts.length > itemsPerView && (
+                <>
+                  <button
+                    onClick={() => setSaleIndex(Math.max(0, saleIndex - 1))}
+                    className="absolute left-0 sm:left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={saleIndex === 0}
+                  >
+                    <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                  <button
+                    onClick={() => setSaleIndex(Math.min(getMaxIndex(saleProducts.length), saleIndex + 1))}
+                    className="absolute right-0 sm:right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 bg-white shadow-xl rounded-full p-2 md:p-3 hover:bg-gray-50 transition-all duration-300 hover:scale-110 z-10 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={saleIndex >= getMaxIndex(saleProducts.length)}
+                  >
+                    <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-gray-700" />
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Reviews Section - Slider */}
       <section className="py-10 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">

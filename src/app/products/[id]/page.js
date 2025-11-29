@@ -422,18 +422,19 @@ export default function ProductDetail() {
       </div>
 
       {/* Main Product Section */}
-      <div className="container mx-auto px-4 py-4 sm:py-8">
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 p-4 sm:p-6 lg:p-10">
-            {/* Left: Image Gallery */}
-            <div className="space-y-3 sm:space-y-4">
+      <div className="container mx-auto px-4 py-4 sm:py-6">
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-6">
+
+          {/* Left: Image Gallery */}
+          <div>
+            <div className="bg-white rounded-xl shadow-sm p-3 sm:p-4 sticky top-4">
               {/* Main Image */}
-              <div className="relative bg-gray-50 rounded-xl overflow-hidden group">
-                <div className="aspect-square flex items-center justify-center p-4 sm:p-8">
+              <div className="relative bg-gray-50 rounded-lg overflow-hidden group mb-3">
+                <div className="aspect-square flex items-center justify-center p-4">
                   <Image
                     src={getImageSrc(selectedImage)}
                     alt={product.name || 'Product'}
-                    width={600}
+                    width={800}
                     height={600}
                     className="object-contain w-full h-full cursor-zoom-in transition-transform group-hover:scale-105"
                     onClick={() => setShowImageModal(true)}
@@ -445,14 +446,14 @@ export default function ProductDetail() {
                 {/* Zoom Icon */}
                 <button
                   onClick={() => setShowImageModal(true)}
-                  className="absolute top-2 sm:top-4 right-2 sm:right-4 bg-white/90 backdrop-blur-sm p-1.5 sm:p-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <ZoomIn className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
+                  <ZoomIn className="w-4 h-4 text-gray-700" />
                 </button>
 
                 {/* Discount Badge */}
                 {discountPercentage > 0 && (
-                  <div className="absolute top-2 sm:top-4 left-2 sm:left-4 bg-gradient-to-r from-red-500 to-red-600 text-white px-2 sm:px-4 py-1 sm:py-2 rounded-full font-bold shadow-lg text-xs sm:text-sm">
+                  <div className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full font-bold shadow-lg text-xs">
                     {discountPercentage}% OFF
                   </div>
                 )}
@@ -460,14 +461,14 @@ export default function ProductDetail() {
 
               {/* Thumbnail Gallery */}
               {productImages.length > 1 && (
-                <div className="grid grid-cols-4 gap-2 sm:gap-3">
+                <div className="grid grid-cols-5 gap-2">
                   {productImages.map((img, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
                       className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                         selectedImage === index
-                          ? 'border-teal-500 ring-2 ring-teal-200 shadow-md'
+                          ? 'border-[#6dc1c9] ring-2 ring-teal-100 shadow-md'
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
@@ -484,48 +485,54 @@ export default function ProductDetail() {
                 </div>
               )}
             </div>
+          </div>
 
-            {/* Right: Product Info */}
-            <div className="space-y-4 sm:space-y-6">
-              {/* Brand & Category */}
-              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          {/* Right: Product Info */}
+          <div>
+            <div className="bg-white rounded-xl shadow-sm p-4 space-y-3">
+              {/* Brand & Category Badges */}
+              <div className="flex items-center gap-1.5 flex-wrap">
                 {product.brand && (
-                  <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-[#6dc1c9]/10 text-[#6dc1c9]">
                     {product.brand}
                   </span>
                 )}
                 {product.category_id && (
-                  <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 capitalize">
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600 capitalize">
                     {product.category_id.replace('-', ' ')}
+                  </span>
+                )}
+                {checkProductAvailability(product).isAvailable ? (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-600">
+                    <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1"></span>
+                    In Stock
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-600">
+                    Out of Stock
                   </span>
                 )}
               </div>
 
               {/* Product Title */}
-              <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-2 sm:mb-3">
-                  {product.name || 'Product Name'}
-                </h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
+                {product.name || 'Product Name'}
+              </h1>
 
-                {/* Rating */}
-                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <span className="text-xs sm:text-sm text-gray-600 font-medium">(5.0 Rating)</span>
-                  <span className="text-xs sm:text-sm text-gray-400">•</span>
-                  <span className={`text-xs sm:text-sm font-medium ${checkProductAvailability(product).isAvailable ? 'text-[#6dc1c9]' : 'text-red-500'}`}>
-                    {checkProductAvailability(product).isAvailable ? 'In Stock' : 'Out of Stock'}
-                  </span>
+              {/* Rating */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
                 </div>
+                <span className="text-xs text-gray-500">5.0 (Reviews)</span>
               </div>
 
               {/* Price Section */}
-              <div className="bg-gradient-to-br from-teal-50 to-blue-50 rounded-xl p-4 sm:p-6 border border-teal-100">
-                <div className="flex items-baseline gap-2 sm:gap-3 mb-2 flex-wrap">
-                  <span className="text-2xl sm:text-4xl font-bold text-gray-900">
+              <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <span className="text-2xl sm:text-3xl font-bold text-gray-900">
                     Rs {(
                       product.category_id === 'ram' && ramCustomization.totalPrice > 0
                         ? ramCustomization.totalPrice
@@ -533,555 +540,284 @@ export default function ProductDetail() {
                     ).toLocaleString()}
                   </span>
                   {product.original_price && (
-                    <span className="text-lg sm:text-xl text-gray-500 line-through">
+                    <span className="text-sm text-gray-400 line-through">
                       Rs {parseInt(product.original_price).toLocaleString()}
                     </span>
                   )}
-                  {laptopCustomization.additionalCost > 0 && (
-                    <span className="text-sm bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
-                      Rs {laptopCustomization.additionalCost.toLocaleString()} upgrades
-                    </span>
-                  )}
-                  {product.category_id === 'ram' && ramCustomization.additionalCost > 0 && (
-                    <span className="text-sm bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
-                      +Rs {ramCustomization.additionalCost.toLocaleString()}
+                  {discountPercentage > 0 && (
+                    <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded">
+                      Save {discountPercentage}%
                     </span>
                   )}
                 </div>
-                {discountPercentage > 0 && (
-                  <p className="text-xs sm:text-sm text-green-600 font-medium">
-                    You save Rs {(product.original_price - product.price).toLocaleString()} ({discountPercentage}% off)
-                  </p>
-                )}
                 {laptopCustomization.additionalCost > 0 && (
-                  <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                    Base price: Rs {parseInt(product.price).toLocaleString()} | Upgrades: Rs {laptopCustomization.additionalCost.toLocaleString()}
-                  </p>
-                )}
-                {product.category_id === 'ram' && ramCustomization.specs && (
-                  <p className="text-xs sm:text-sm text-gray-600 mt-1">
-                    Selected: {ramCustomization.specs.brand} • {ramCustomization.specs.speed}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Base: Rs {parseInt(product.price).toLocaleString()} + Upgrades: Rs {laptopCustomization.additionalCost.toLocaleString()}
                   </p>
                 )}
               </div>
 
               {/* Key Specifications */}
-              {product.category_id === 'ram' ? (
-                // RAM-specific Key Specifications
-                (product.ram_type || product.ram_capacity || product.ram_speed || product.ram_form_factor) && (
-                  <div className="bg-gray-50 rounded-xl p-5 space-y-3">
-                    <h3 className="font-semibold text-gray-900 mb-3">Key Specifications</h3>
-                    <div className="grid grid-cols-1 gap-3">
-                      {product.ram_type && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Type: </span>
-                            <span className="text-sm text-gray-700">{product.ram_type}</span>
-                          </div>
-                        </div>
-                      )}
-                      {product.ram_capacity && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Capacity: </span>
-                            <span className="text-sm text-gray-700">{product.ram_capacity}</span>
-                          </div>
-                        </div>
-                      )}
-                      {product.ram_speed && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Speed: </span>
-                            <span className="text-sm text-gray-700">{product.ram_speed}</span>
-                          </div>
-                        </div>
-                      )}
-                      {product.ram_form_factor && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Form Factor: </span>
-                            <span className="text-sm text-gray-700">{product.ram_form_factor}</span>
-                          </div>
-                        </div>
-                      )}
-                      {product.ram_condition && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Condition: </span>
-                            <span className="text-sm text-gray-700">{product.ram_condition}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )
-              ) : product.category_id === 'chromebook' ? (
-                // Chromebook-specific Key Specifications
-                (product.processor || product.ram || product.storage || product.display_size || product.os || product.aue_year) && (
-                  <div className="bg-gray-50 rounded-xl p-5 space-y-3">
-                    <h3 className="font-semibold text-gray-900 mb-3">Key Specifications</h3>
-                    <div className="grid grid-cols-1 gap-3">
-                      {product.processor && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Processor: </span>
-                            <span className="text-sm text-gray-700">{product.processor}</span>
-                          </div>
-                        </div>
-                      )}
-                      {product.ram && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">RAM: </span>
-                            <span className="text-sm text-gray-700">
-                              {chromebookCustomization.updatedSpecs?.ram || product.ram}
-                            </span>
-                            {chromebookCustomization.customizations.ramUpgrade && (
-                              <span className="ml-2 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
-                                Upgraded
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      {product.storage && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Storage: </span>
-                            <span className="text-sm text-gray-700">
-                              {chromebookCustomization.updatedSpecs?.storage || product.storage}
-                            </span>
-                            {chromebookCustomization.customizations.ssdUpgrade && (
-                              <span className="ml-2 text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">
-                                Upgraded
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      {product.display_size && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Display Size: </span>
-                            <span className="text-sm text-gray-700">{product.display_size}</span>
-                          </div>
-                        </div>
-                      )}
-                      {product.os && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Operating System: </span>
-                            <span className="text-sm text-gray-700">{product.os}</span>
-                          </div>
-                        </div>
-                      )}
-                      {product.aue_year && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Auto Update Until: </span>
-                            <span className="text-sm text-gray-700">{product.aue_year}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )
-              ) : (
-                // Laptop-specific Key Specifications
-                (product.processor || product.ram || product.hdd || product.generation || product.display_size || product.screensize) && (
-                  <div className="bg-gray-50 rounded-xl p-5 space-y-3">
-                    <h3 className="font-semibold text-gray-900 mb-3">Key Specifications</h3>
-                    <div className="grid grid-cols-1 gap-3">
-                      {product.processor && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Processor: </span>
-                            <span className="text-sm text-gray-700">{product.processor}</span>
-                          </div>
-                        </div>
-                      )}
-                      {product.generation && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Generation: </span>
-                            <span className="text-sm text-gray-700">{product.generation}</span>
-                          </div>
-                        </div>
-                      )}
-                      {product.ram && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">RAM: </span>
-                            <span className="text-sm text-gray-700">
-                              {laptopCustomization.updatedSpecs?.ram || product.ram}
-                            </span>
-                            {laptopCustomization.customizations.ramUpgrade && (
-                              <span className="ml-2 text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
-                                Upgraded
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      {product.hdd && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Storage: </span>
-                            <span className="text-sm text-gray-700">
-                              {laptopCustomization.updatedSpecs?.storage || product.hdd}
-                            </span>
-                            {laptopCustomization.customizations.ssdUpgrade && (
-                              <span className="ml-2 text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded-full">
-                                Upgraded
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      {(product.display_size || product.screensize) && (
-                        <div className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-[#6dc1c9] mt-0.5 flex-shrink-0" />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Display Size: </span>
-                            <span className="text-sm text-gray-700">{product.display_size || product.screensize}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )
-              )}
+              {(() => {
+                const hasRAMSpecs = product.category_id === 'ram' && (product.ram_type || product.ram_capacity || product.ram_speed || product.ram_form_factor);
+                const hasChromebookSpecs = product.category_id === 'chromebook' && (product.processor || product.ram || product.storage || product.display_size);
+                const hasLaptopSpecs = product.category_id !== 'ram' && product.category_id !== 'chromebook' && (product.processor || product.generation || product.ram || product.hdd || product.display_size || product.screensize || product.graphics);
+                const hasAnySpecs = hasRAMSpecs || hasChromebookSpecs || hasLaptopSpecs;
 
-              {/* Laptop Customizer - New customizer component (if enabled in admin) */}
+                if (!hasAnySpecs) return null;
+
+                return (
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="bg-gray-50 px-3 py-2 border-b border-gray-200">
+                      <h3 className="font-semibold text-gray-800 text-xs">Key Specifications</h3>
+                    </div>
+                    <div className="divide-y divide-gray-100">
+                      {product.category_id === 'ram' ? (
+                        <>
+                          {product.ram_type && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Type</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.ram_type}</span>
+                            </div>
+                          )}
+                          {product.ram_capacity && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Capacity</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.ram_capacity}</span>
+                            </div>
+                          )}
+                          {product.ram_speed && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Speed</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.ram_speed}</span>
+                            </div>
+                          )}
+                          {product.ram_form_factor && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Form Factor</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.ram_form_factor}</span>
+                            </div>
+                          )}
+                        </>
+                      ) : product.category_id === 'chromebook' ? (
+                        <>
+                          {product.processor && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Processor</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.processor}</span>
+                            </div>
+                          )}
+                          {(chromebookCustomization.updatedSpecs?.ram || product.ram) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">RAM</span>
+                              <span className="font-medium text-gray-900 text-xs">{chromebookCustomization.updatedSpecs?.ram || product.ram}</span>
+                            </div>
+                          )}
+                          {(chromebookCustomization.updatedSpecs?.storage || product.storage) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Storage</span>
+                              <span className="font-medium text-gray-900 text-xs">{chromebookCustomization.updatedSpecs?.storage || product.storage}</span>
+                            </div>
+                          )}
+                          {product.display_size && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Display</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.display_size}</span>
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {product.processor && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Processor</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.processor}</span>
+                            </div>
+                          )}
+                          {product.generation && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Generation</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.generation} Gen</span>
+                            </div>
+                          )}
+                          {(laptopCustomization.updatedSpecs?.ram || product.ram) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">RAM</span>
+                              <span className="font-medium text-gray-900 text-xs">{laptopCustomization.updatedSpecs?.ram || product.ram}</span>
+                            </div>
+                          )}
+                          {(laptopCustomization.updatedSpecs?.storage || product.hdd) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Storage</span>
+                              <span className="font-medium text-gray-900 text-xs">{laptopCustomization.updatedSpecs?.storage || product.hdd}</span>
+                            </div>
+                          )}
+                          {(product.display_size || product.screensize) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Display</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.display_size || product.screensize}</span>
+                            </div>
+                          )}
+                          {product.graphics && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Graphics</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.graphics}</span>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Laptop Customizer */}
               {product.category_id === 'laptop' && product.show_laptop_customizer !== false && (
-                <div className="mt-6">
-                  <LaptopCustomizer
-                    product={product}
-                    onCustomizationChange={handleCustomizationChange}
-                  />
-                </div>
+                <LaptopCustomizer
+                  product={product}
+                  onCustomizationChange={handleCustomizationChange}
+                />
               )}
 
-              {/* Chromebook Customizer - For Chromebook products (if enabled in admin) */}
+              {/* Chromebook Customizer */}
               {product.category_id === 'chromebook' && product.show_chromebook_customizer !== false && (
-                <div className="mt-6">
-                  <ChromebookCustomizer
-                    product={product}
-                    onCustomizationChange={handleChromebookCustomizationChange}
-                  />
-                </div>
+                <ChromebookCustomizer
+                  product={product}
+                  onCustomizationChange={handleChromebookCustomizationChange}
+                />
               )}
 
-              {/* RAM Customizer - For RAM products (if enabled in admin) */}
+              {/* RAM Customizer */}
               {product.category_id === 'ram' && product.show_ram_customizer !== false && (
-                <div className="mt-6">
-                  <RAMCustomizer
-                    product={product}
-                    onCustomizationChange={handleRAMCustomizationChange}
-                  />
-                </div>
+                <RAMCustomizer
+                  product={product}
+                  onCustomizationChange={handleRAMCustomizationChange}
+                />
               )}
 
-              {/* Old customization section removed - using LaptopCustomizer component instead */}
-              {false && (
-                <div className="bg-white border-2 border-gray-200 rounded-xl p-5 space-y-5">
-                  <h3 className="font-bold text-gray-900 text-lg">Customize Your Laptop</h3>
-
-                  {/* Dynamic SSD Storage Options */}
-                  {availableSSDOptions && availableSSDOptions.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold text-gray-800 mb-3">SSD Storage Upgrade</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {availableSSDOptions.map((ssdOption, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setSelectedStorage(
-                              selectedStorage?.capacity === ssdOption.capacity ? null : ssdOption
-                            )}
-                            className={`border-2 rounded-lg p-4 text-left transition-all ${
-                              selectedStorage?.capacity === ssdOption.capacity
-                                ? 'border-[#6dc1c9] bg-teal-50'
-                                : 'border-gray-300 hover:border-gray-400'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="font-semibold text-gray-900">{ssdOption.capacity} SSD</div>
-                                <div className="text-sm text-gray-600">+Rs {ssdOption.price.toLocaleString()}</div>
-                              </div>
-                              <div className={`w-5 h-5 rounded-full border-2 ${
-                                selectedStorage?.capacity === ssdOption.capacity
-                                  ? 'border-[#6dc1c9] bg-[#6dc1c9]'
-                                  : 'border-gray-300'
-                              }`}>
-                                {selectedStorage?.capacity === ssdOption.capacity && (
-                                  <CheckCircle className="w-4 h-4 text-white" />
-                                )}
-                              </div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Dynamic Memory (RAM) Options */}
-                  {availableRAMOptions && availableRAMOptions.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold text-gray-800 mb-3">Memory (RAM) Upgrade</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {availableRAMOptions.map((ramOption, index) => (
-                          <button
-                            key={index}
-                            onClick={() => setSelectedMemory(
-                              selectedMemory?.label === ramOption.label ? null : ramOption
-                            )}
-                            className={`border-2 rounded-lg p-4 text-left transition-all ${
-                              selectedMemory?.label === ramOption.label
-                                ? 'border-[#6dc1c9] bg-teal-50'
-                                : 'border-gray-300 hover:border-gray-400'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="font-semibold text-gray-900">{ramOption.label}</div>
-                                <div className="text-sm text-gray-600">+Rs {ramOption.price.toLocaleString()}</div>
-                              </div>
-                              <div className={`w-5 h-5 rounded-full border-2 ${
-                                selectedMemory?.label === ramOption.label
-                                  ? 'border-[#6dc1c9] bg-[#6dc1c9]'
-                                  : 'border-gray-300'
-                              }`}>
-                                {selectedMemory?.label === ramOption.label && (
-                                  <CheckCircle className="w-4 h-4 text-white" />
-                                )}
-                              </div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Custom Upgrade Options */}
-                  {product.custom_upgrades && product.custom_upgrades.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold text-gray-800 mb-3">Additional Options</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {product.custom_upgrades.map((upgrade, index) => {
-                          const isStorage = upgrade.type === 'storage';
-                          const isSelected = isStorage
-                            ? selectedStorage?.customIndex === index
-                            : selectedMemory?.customIndex === index;
-
-                          return (
-                            <button
-                              key={index}
-                              onClick={() => {
-                                if (isStorage) {
-                                  setSelectedStorage(
-                                    isSelected ? null : { ...upgrade, customIndex: index, id: `custom-storage-${index}` }
-                                  );
-                                } else {
-                                  setSelectedMemory(
-                                    isSelected ? null : { ...upgrade, customIndex: index, id: `custom-memory-${index}` }
-                                  );
-                                }
-                              }}
-                              className={`border-2 rounded-lg p-4 text-left transition-all ${
-                                isSelected
-                                  ? 'border-[#6dc1c9] bg-teal-50'
-                                  : 'border-gray-300 hover:border-gray-400'
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <div className="font-semibold text-gray-900">
-                                    {upgrade.label && `${upgrade.label} - `}{upgrade.capacity}
-                                  </div>
-                                  <div className="text-xs text-gray-500 capitalize">{upgrade.type}</div>
-                                  <div className="text-sm text-gray-600 mt-1">+Rs {parseInt(upgrade.price).toLocaleString()}</div>
-                                </div>
-                                <div className={`w-5 h-5 rounded-full border-2 ${
-                                  isSelected
-                                    ? 'border-[#6dc1c9] bg-[#6dc1c9]'
-                                    : 'border-gray-300'
-                                }`}>
-                                  {isSelected && (
-                                    <CheckCircle className="w-4 h-4 text-white" />
-                                  )}
-                                </div>
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Total Price with Upgrades */}
-                  {customUpgradePrice > 0 && (
-                    <div className="pt-4 border-t border-gray-200">
-                      <div className="flex items-center justify-between text-lg font-bold">
-                        <span className="text-gray-900">Total Price:</span>
-                        <span className="text-[#6dc1c9]">
-                          Rs {(parseInt(product.price) + customUpgradePrice).toLocaleString()}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Base price: Rs {parseInt(product.price).toLocaleString()} +
-                        Upgrades: Rs {customUpgradePrice.toLocaleString()}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Quantity & Actions */}
-              <div className="space-y-4">
+              {/* Quantity & Add to Cart */}
+              <div className="space-y-3">
                 {/* Quantity Selector */}
                 <div className="flex items-center gap-4">
-                  <span className="text-sm font-medium text-gray-700">Quantity:</span>
-                  <div className="flex items-center border-2 border-gray-200 rounded-lg overflow-hidden">
+                  <span className="text-sm font-semibold text-gray-700">Quantity:</span>
+                  <div className="flex items-center border-2 border-gray-200 rounded-xl overflow-hidden">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-4 py-2 bg-gray-50 hover:bg-gray-100 transition-colors font-semibold text-gray-700"
+                      className="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors font-bold text-gray-600 text-lg"
                     >
-                      -
+                      −
                     </button>
-                    <span className="px-6 py-2 font-semibold text-gray-900 min-w-[60px] text-center">
+                    <span className="px-6 py-2.5 font-bold text-gray-900 min-w-[60px] text-center bg-white text-lg">
                       {quantity}
                     </span>
                     <button
                       onClick={() => {
-                        const stockQuantity = product.stock_quantity || 0;
+                        const stockQuantity = product.stock_quantity || 999;
                         if (quantity < stockQuantity) {
                           setQuantity(quantity + 1);
                         }
                       }}
-                      disabled={quantity >= (product.stock_quantity || 0)}
-                      className="px-4 py-2 bg-gray-50 hover:bg-gray-100 transition-colors font-semibold text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2.5 bg-gray-50 hover:bg-gray-100 transition-colors font-bold text-gray-600 text-lg"
                     >
                       +
                     </button>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3">
-                  {(() => {
-                    const { isAvailable } = checkProductAvailability(product);
+                {/* Add to Cart Button */}
+                {(() => {
+                  const { isAvailable } = checkProductAvailability(product);
+                  const unitPrice = product.category_id === 'ram' && ramCustomization.totalPrice > 0
+                    ? ramCustomization.totalPrice
+                    : (laptopCustomization.totalPrice > 0 ? laptopCustomization.totalPrice : parseInt(product.price));
+                  const totalPrice = unitPrice * quantity;
 
-                    if (!isAvailable) {
-                      return (
-                        <button
-                          disabled
-                          className="flex-1 bg-gray-400 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg cursor-not-allowed flex items-center justify-center gap-2"
-                        >
-                          <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                          Out of Stock
-                        </button>
-                      );
-                    }
-                    
+                  if (!isAvailable) {
                     return (
                       <button
-                        onClick={
-                          product.category_id === 'laptop'
-                            ? handleAddToCartWithCustomization
-                            : product.category_id === 'chromebook'
-                            ? handleAddToCartWithChromebookCustomization
-                            : handleAddToCart
-                        }
-                        className="flex-1 bg-gradient-to-r from-[#6dc1c9] to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                        disabled
+                        className="w-full bg-gray-300 text-gray-500 px-4 py-3.5 rounded-xl font-bold cursor-not-allowed flex items-center justify-center gap-2 text-lg"
                       >
-                        <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="hidden sm:inline">
-                          {product.category_id === 'laptop' && (laptopCustomization.additionalCost > 0)
-                            ? `Add to Cart (Rs:${laptopCustomization.totalPrice?.toLocaleString()})`
-                            : product.category_id === 'chromebook' && (chromebookCustomization.additionalCost > 0)
-                            ? `Add to Cart (Rs:${chromebookCustomization.totalPrice?.toLocaleString()})`
-                            : 'Add to Cart'
-                          }
-                        </span>
-                        <span className="sm:hidden">Add to Cart</span>
+                        <ShoppingCart className="w-5 h-5" />
+                        Out of Stock
                       </button>
                     );
-                  })()}
-                  
-                  {/* Wishlist and Compare buttons row for mobile */}
-                  <div className="flex gap-3 sm:contents">
+                  }
+
+                  return (
                     <button
-                      onClick={handleWishlist}
-                      className={`flex-1 sm:flex-none px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-semibold transition-all border-2 flex items-center justify-center gap-2 ${
-                        isInWishlist(product.id)
-                          ? 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100'
-                          : 'bg-white border-gray-200 text-gray-700 hover:border-red-300 hover:bg-red-50'
-                      }`}
+                      onClick={() => {
+                        const customizations = product.category_id === 'ram'
+                          ? ramCustomization
+                          : (product.category_id === 'chromebook' ? chromebookCustomization : laptopCustomization);
+
+                        addToCart({
+                          ...product,
+                          quantity,
+                          customizations: customizations.customizations,
+                          customizedPrice: unitPrice,
+                          updatedSpecs: customizations.updatedSpecs
+                        });
+                      }}
+                      className="w-full bg-[#6dc1c9] hover:bg-teal-600 text-white px-4 py-3.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl text-lg"
                     >
-                      <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${isInWishlist(product.id) ? 'fill-current' : ''}`} />
-                      <span className="text-sm sm:hidden">Wishlist</span>
+                      <ShoppingCart className="w-5 h-5" />
+                      Add to Cart — Rs {totalPrice.toLocaleString()}
                     </button>
-                    <button
-                      onClick={handleCompare}
-                      className={`flex-1 sm:flex-none px-4 sm:px-6 py-3 sm:py-4 rounded-xl font-semibold transition-all border-2 flex items-center justify-center gap-2 ${
-                        isInCompare(product.id)
-                          ? 'bg-blue-50 border-blue-200 text-blue-600'
-                          : 'bg-white border-gray-200 text-gray-700 hover:border-blue-300 hover:bg-blue-50'
-                      }`}
-                    >
-                      <GitCompare className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span className="text-sm sm:hidden">Compare</span>
-                    </button>
-                  </div>
+                  );
+                })()}
+
+                {/* Wishlist & Compare Buttons */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => isInWishlist(product.id) ? removeFromWishlist(product.id) : addToWishlist(product)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border font-medium transition-all text-xs ${
+                      isInWishlist(product.id)
+                        ? 'bg-[#6dc1c9]/10 border-[#6dc1c9] text-[#6dc1c9]'
+                        : 'bg-white border-gray-200 text-gray-600 hover:border-[#6dc1c9] hover:text-[#6dc1c9]'
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? 'fill-[#6dc1c9]' : ''}`} />
+                    <span>{isInWishlist(product.id) ? 'Wishlisted' : 'Wishlist'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => addToCompare(product)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border font-medium transition-all text-xs ${
+                      isInCompare(product.id)
+                        ? 'bg-[#6dc1c9]/10 border-[#6dc1c9] text-[#6dc1c9]'
+                        : 'bg-white border-gray-200 text-gray-600 hover:border-[#6dc1c9] hover:text-[#6dc1c9]'
+                    }`}
+                  >
+                    <GitCompare className="w-4 h-4" />
+                    <span>{isInCompare(product.id) ? 'Compared' : 'Compare'}</span>
+                  </button>
                 </div>
               </div>
 
-              {/* Trust Badges */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
-                <div className="text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Truck className="w-5 h-5 sm:w-6 sm:h-6 text-[#6dc1c9]" />
-                  </div>
-                  <p className="text-xs font-medium text-gray-900">Fast Delivery</p>
-                  <p className="text-xs text-gray-500">Within 2-3 days</p>
+              {/* Features Bar */}
+              <div className="grid grid-cols-3 gap-2 pt-3 border-t border-gray-100">
+                <div className="text-center p-2 bg-teal-50/50 rounded-lg">
+                  <Truck className="w-4 h-4 text-[#6dc1c9] mx-auto mb-1" />
+                  <p className="text-[10px] font-semibold text-gray-700">Fast Delivery</p>
                 </div>
-                <div className="text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-                  </div>
-                  <p className="text-xs font-medium text-gray-900">Warranty</p>
-                  <p className="text-xs text-gray-500">{product.warranty || '6 Months'}</p>
+                <div className="text-center p-2 bg-blue-50/50 rounded-lg">
+                  <Shield className="w-4 h-4 text-blue-500 mx-auto mb-1" />
+                  <p className="text-[10px] font-semibold text-gray-700">15 Days Warranty</p>
                 </div>
-                <div className="text-center">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <RotateCcw className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
-                  </div>
-                  <p className="text-xs font-medium text-gray-900">Easy Return</p>
-                  <p className="text-xs text-gray-500">3 Days policy</p>
+                <div className="text-center p-2 bg-purple-50/50 rounded-lg">
+                  <RotateCcw className="w-4 h-4 text-purple-500 mx-auto mb-1" />
+                  <p className="text-[10px] font-semibold text-gray-700">Easy Return</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Tabs Section */}
-        <div className="mt-8 bg-white rounded-2xl shadow-sm overflow-hidden">
+      {/* Tabs Section */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           {/* Tab Navigation */}
           <div className="border-b border-gray-200">
             <nav className="flex">
@@ -1171,81 +907,81 @@ export default function ProductDetail() {
                 <h3 className="text-2xl font-bold mb-6 text-gray-900">Technical Specifications</h3>
 
                 {/* Basic Information */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Basic Information</h4>
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    {product.brand && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Brand</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm">{product.brand}</div>
-                      </div>
-                    )}
-                    {product.category_id && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Category</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm capitalize">{product.category_id.replace('-', ' ')}</div>
-                      </div>
-                    )}
-                    {product.model && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Model</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm">{product.model}</div>
-                      </div>
-                    )}
-                    {product.condition && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Condition</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm">{product.condition}</div>
-                      </div>
-                    )}
+                {(product.brand || product.category_id || product.model || product.condition) && (
+                  <div className="mb-8">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Basic Information</h4>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      {product.brand && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Brand</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.brand}</div>
+                        </div>
+                      )}
+                      {product.category_id && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Category</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm capitalize">{product.category_id.replace('-', ' ')}</div>
+                        </div>
+                      )}
+                      {product.model && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Model</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.model}</div>
+                        </div>
+                      )}
+                      {product.condition && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Condition</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.condition}</div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* RAM-specific Specifications */}
-                {product.category_id === 'ram' && (
-                  <>
-                    <div className="mb-8">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">RAM Specifications</h4>
-                      <div className="border border-gray-200 rounded-lg overflow-hidden">
-                        {product.ram_type && (
-                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Type</div>
-                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_type}</div>
-                          </div>
-                        )}
-                        {product.ram_capacity && (
-                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Capacity</div>
-                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_capacity}</div>
-                          </div>
-                        )}
-                        {product.ram_speed && (
-                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Speed (Frequency)</div>
-                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_speed}</div>
-                          </div>
-                        )}
-                        {product.ram_form_factor && (
-                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Form Factor</div>
-                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_form_factor}</div>
-                          </div>
-                        )}
-                        {product.ram_condition && (
-                          <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Condition</div>
-                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_condition}</div>
-                          </div>
-                        )}
-                        {product.ram_warranty && (
-                          <div className="grid grid-cols-2 divide-x divide-gray-200">
-                            <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty</div>
-                            <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_warranty}</div>
-                          </div>
-                        )}
-                      </div>
+                {product.category_id === 'ram' && (product.ram_type || product.ram_capacity || product.ram_speed || product.ram_form_factor || product.ram_condition || product.ram_warranty) && (
+                  <div className="mb-8">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">RAM Specifications</h4>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      {product.ram_type && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Type</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_type}</div>
+                        </div>
+                      )}
+                      {product.ram_capacity && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Capacity</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_capacity}</div>
+                        </div>
+                      )}
+                      {product.ram_speed && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Speed (Frequency)</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_speed}</div>
+                        </div>
+                      )}
+                      {product.ram_form_factor && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Form Factor</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_form_factor}</div>
+                        </div>
+                      )}
+                      {product.ram_condition && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Condition</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_condition}</div>
+                        </div>
+                      )}
+                      {product.ram_warranty && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_warranty}</div>
+                        </div>
+                      )}
                     </div>
-                  </>
+                  </div>
                 )}
 
                 {/* Performance Specifications (for Laptop) */}
@@ -1369,73 +1105,67 @@ export default function ProductDetail() {
                 )}
 
                 {/* Warranty & Support */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Warranty & Support</h4>
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    {product.warranty && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm">{product.warranty}</div>
-                      </div>
-                    )}
-                    {product.warranty_period && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty Period</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm">{product.warranty_period} months</div>
-                      </div>
-                    )}
+                {(product.warranty || product.warranty_period) && (
+                  <div className="mb-8">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Warranty & Support</h4>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      {product.warranty && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.warranty}</div>
+                        </div>
+                      )}
+                      {product.warranty_period && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty Period</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.warranty_period} months</div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Product Details */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Product Details</h4>
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    {product.sku && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">SKU</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm font-mono">{product.sku}</div>
-                      </div>
-                    )}
-                    {product.weight && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Weight</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm">{product.weight} kg</div>
-                      </div>
-                    )}
-                    <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                      <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Availability</div>
-                      <div className="px-4 py-3 text-gray-700 text-sm">
-                        {checkProductAvailability(product).isAvailable ? 'In Stock' : 'Out of Stock'}
-                      </div>
+                {(product.sku || product.weight) && (
+                  <div className="mb-8">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Product Details</h4>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      {product.sku && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">SKU</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm font-mono">{product.sku}</div>
+                        </div>
+                      )}
+                      {product.weight && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Weight</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.weight} kg</div>
+                        </div>
+                      )}
                     </div>
-                    {product.is_featured !== undefined && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Featured Product</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm">{product.is_featured ? 'Yes' : 'No'}</div>
-                      </div>
-                    )}
                   </div>
-                </div>
+                )}
 
                 {/* Pricing Information */}
-                <div className="mb-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Pricing</h4>
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    {product.price && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Current Price</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm font-semibold">Rs. {product.price.toLocaleString()}</div>
-                      </div>
-                    )}
-                    {product.sale_price && (
-                      <div className="grid grid-cols-2 divide-x divide-gray-200">
-                        <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Sale Price</div>
-                        <div className="px-4 py-3 text-gray-700 text-sm font-semibold">Rs. {product.sale_price.toLocaleString()}</div>
-                      </div>
-                    )}
+                {(product.price || product.sale_price) && (
+                  <div className="mb-8">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-[#6dc1c9]">Pricing</h4>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      {product.price && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Current Price</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm font-semibold">Rs. {product.price.toLocaleString()}</div>
+                        </div>
+                      )}
+                      {product.sale_price && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Sale Price</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm font-semibold">Rs. {product.sale_price.toLocaleString()}</div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Additional Information */}
                 {(product.tags && product.tags.length > 0) && (

@@ -22,8 +22,8 @@ const CompareTable = ({ products }) => {
   if (laptopItems.length === 0) {
     return (
       <div className="text-center py-8 sm:py-12 px-4">
-        <div className="bg-blue-100 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-          <ShoppingCart className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" />
+        <div className="bg-[#6dc1c9]/10 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+          <ShoppingCart className="w-8 h-8 sm:w-10 sm:h-10 text-[#6dc1c9]" />
         </div>
         <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-3 sm:mb-4">No Laptops to Compare</h3>
         <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">Add laptops to your comparison list to see their specifications side by side</p>
@@ -42,10 +42,10 @@ const CompareTable = ({ products }) => {
     const button = event.target;
     const originalText = button.textContent;
     button.textContent = 'Added!';
-    button.className = button.className.replace('bg-blue-600', 'bg-green-600');
+    button.className = button.className.replace('bg-[#6dc1c9]', 'bg-green-600');
     setTimeout(() => {
       button.textContent = originalText;
-      button.className = button.className.replace('bg-green-600', 'bg-blue-600');
+      button.className = button.className.replace('bg-green-600', 'bg-[#6dc1c9]');
     }, 2000);
   };
 
@@ -54,7 +54,7 @@ const CompareTable = ({ products }) => {
       if (field === 'price') return item.price;
       if (field === 'ram') return parseInt(item.ram?.match(/\d+/)?.[0] || '0');
       if (field === 'storage') {
-        const storage = item.storage || item.hdd || item.specifications?.storage || '';
+        const storage = item.hdd || '';
         const ssdMatch = storage.match(/(\d+)\s*GB.*SSD/i) || storage.match(/(\d+)\s*GB\s*SSD/i);
         const hddMatch = storage.match(/(\d+)\s*GB.*HDD/i) || storage.match(/(\d+)\s*GB/i);
         const tbMatch = storage.match(/(\d+)\s*TB/i);
@@ -75,7 +75,7 @@ const CompareTable = ({ products }) => {
     if (field === 'price') return item.price === bestValue;
     if (field === 'ram') return parseInt(item.ram?.match(/\d+/)?.[0] || '0') === bestValue;
     if (field === 'storage') {
-      const storage = item.storage || item.hdd || item.specifications?.storage || '';
+      const storage = item.hdd || '';
       const ssdMatch = storage.match(/(\d+)\s*GB.*SSD/i) || storage.match(/(\d+)\s*GB\s*SSD/i);
       const hddMatch = storage.match(/(\d+)\s*GB.*HDD/i) || storage.match(/(\d+)\s*GB/i);
       const tbMatch = storage.match(/(\d+)\s*TB/i);
@@ -202,19 +202,37 @@ const CompareTable = ({ products }) => {
                 </div>
 
                 {/* Processor */}
+                {product.processor && (
                 <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-[#6dc1c9]/20 rounded-lg flex items-center justify-center">
                       <span className="text-base">🖥️</span>
                     </div>
                     <span className="font-semibold text-gray-800 text-sm">Processor</span>
                   </div>
                   <div className="text-right text-sm text-gray-800 max-w-32 truncate font-medium">
-                    {product.processor || product.specifications?.processor || 'Not specified'}
+                    {product.processor}
                   </div>
                 </div>
+                )}
+
+                {/* Generation */}
+                {product.generation && (
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-[#6dc1c9]/20 rounded-lg flex items-center justify-center">
+                      <span className="text-base">⚙️</span>
+                    </div>
+                    <span className="font-semibold text-gray-800 text-sm">Generation</span>
+                  </div>
+                  <div className="text-right text-sm text-[#6dc1c9] font-medium">
+                    {product.generation} Gen
+                  </div>
+                </div>
+                )}
 
                 {/* RAM */}
+                {product.ram && (
                 <div className={`flex justify-between items-center p-4 rounded-xl transition-all duration-200 ${isHighlight(product, 'ram') ? 'bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-300 shadow-md' : 'bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200'}`}>
                   <div className="flex items-center gap-2">
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isHighlight(product, 'ram') ? 'bg-green-200' : 'bg-purple-100'}`}>
@@ -223,12 +241,14 @@ const CompareTable = ({ products }) => {
                     <span className="font-semibold text-gray-800 text-sm">RAM</span>
                   </div>
                   <div className={`text-right font-bold text-sm ${isHighlight(product, 'ram') ? 'text-green-700' : 'text-gray-800'}`}>
-                    {product.ram || 'Not specified'}
+                    {product.ram}
                     {isHighlight(product, 'ram') && <span className="ml-1 text-xs">🏆</span>}
                   </div>
                 </div>
+                )}
 
                 {/* Storage */}
+                {product.hdd && (
                 <div className={`flex justify-between items-center p-4 rounded-xl transition-all duration-200 ${isHighlight(product, 'storage') ? 'bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-300 shadow-md' : 'bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200'}`}>
                   <div className="flex items-center gap-2">
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isHighlight(product, 'storage') ? 'bg-green-200' : 'bg-indigo-100'}`}>
@@ -238,18 +258,50 @@ const CompareTable = ({ products }) => {
                   </div>
                   <div className="text-right">
                     <div className={`font-bold text-sm ${isHighlight(product, 'storage') ? 'text-green-700' : 'text-gray-800'}`}>
-                      {product.storage || product.hdd || 'Not specified'}
+                      {product.hdd}
                       {isHighlight(product, 'storage') && <span className="ml-1 text-xs">🏆</span>}
                     </div>
-                    {(product.storage?.includes('SSD') || product.hdd?.includes('SSD')) && (
-                      <div className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full mt-1 inline-flex items-center font-semibold">
+                    {product.hdd?.includes('SSD') && (
+                      <div className="text-xs bg-[#6dc1c9]/20 text-[#6dc1c9] px-2 py-0.5 rounded-full mt-1 inline-flex items-center font-semibold">
                         ⚡ SSD
                       </div>
                     )}
                   </div>
                 </div>
+                )}
+
+                {/* Display */}
+                {(product.display_size || product.screensize) && (
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-[#6dc1c9]/20 rounded-lg flex items-center justify-center">
+                      <span className="text-base">📺</span>
+                    </div>
+                    <span className="font-semibold text-gray-800 text-sm">Display</span>
+                  </div>
+                  <div className="text-right text-sm text-gray-800 font-medium">
+                    {product.display_size || product.screensize}
+                  </div>
+                </div>
+                )}
+
+                {/* Graphics */}
+                {(product.integrated_graphics || product.discrete_graphics) && (
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-[#6dc1c9]/20 rounded-lg flex items-center justify-center">
+                      <span className="text-base">🎮</span>
+                    </div>
+                    <span className="font-semibold text-gray-800 text-sm">Graphics</span>
+                  </div>
+                  <div className="text-right text-sm text-gray-800 font-medium max-w-32">
+                    {product.discrete_graphics || product.integrated_graphics}
+                  </div>
+                </div>
+                )}
 
                 {/* Condition */}
+                {product.condition && (
                 <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -259,14 +311,15 @@ const CompareTable = ({ products }) => {
                   </div>
                   <span className={`px-3 py-1.5 rounded-full text-xs font-bold shadow-sm ${
                     product.condition === 'Excellent' ? 'bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300' :
-                    product.condition === 'Very Good' ? 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300' :
+                    product.condition === 'Very Good' ? 'bg-gradient-to-r from-[#6dc1c9]/20 to-[#6dc1c9]/30 text-[#6dc1c9] border border-[#6dc1c9]/40' :
                     product.condition === 'Good' ? 'bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300' :
                     product.condition === 'New' ? 'bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 border border-purple-300' :
                     'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 border border-gray-300'
                   }`}>
-                    {product.condition || 'Good'}
+                    {product.condition}
                   </span>
                 </div>
+                )}
 
                 {/* Stock Status */}
                 <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl">
@@ -420,61 +473,70 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.processor || product.specifications?.processor || 'Not specified'}
+                    {product.processor || '-'}
                   </div>
-                  {(product.generation || product.specifications?.generation) && (
-                    <div className="text-sm text-blue-600 mt-1">
-                      {product.generation || product.specifications?.generation}
-                    </div>
-                  )}
+                </td>
+              ))}
+            </tr>
+
+            {/* Generation Row */}
+            <tr className="border-t hover:bg-gray-25">
+              <td className="p-6 font-semibold text-gray-800 bg-gray-50 sticky left-0 z-10 border-r border-gray-200">
+                <div className="flex items-center">
+                  ⚙️ <span className="ml-2">Generation</span>
+                </div>
+              </td>
+              {laptopItems.map((product) => (
+                <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
+                  <div className="font-medium text-[#6dc1c9]">
+                    {product.generation ? `${product.generation} Gen` : '-'}
+                  </div>
                 </td>
               ))}
             </tr>
 
             {/* RAM Row */}
-            <tr className="border-t hover:bg-gray-25">
-              <td className="p-6 font-semibold text-gray-800 bg-gray-50 sticky left-0 z-10 border-r border-gray-200">
+            <tr className="border-t bg-gray-25 hover:bg-gray-50">
+              <td className="p-6 font-semibold text-gray-800 bg-gray-100 sticky left-0 z-10 border-r border-gray-200">
                 <div className="flex items-center">
-                  🧠 <span className="ml-2">Memory (RAM)</span>
+                  🧠 <span className="ml-2">RAM</span>
                 </div>
               </td>
               {laptopItems.map((product) => (
                 <td key={product.id} className={`p-6 border-r border-gray-200 last:border-r-0 ${isHighlight(product, 'ram') ? 'bg-green-50 border-green-200' : ''}`}>
                   <div className={`font-bold text-lg ${isHighlight(product, 'ram') ? 'text-green-600' : 'text-gray-800'}`}>
-                    {product.ram || product.specifications?.ram || 'Not specified'}
-                    {isHighlight(product, 'ram') && <span className="ml-2 text-sm">🏆 Highest RAM</span>}
+                    {product.ram || '-'}
+                    {isHighlight(product, 'ram') && <span className="ml-2 text-sm">🏆</span>}
                   </div>
                 </td>
               ))}
             </tr>
 
             {/* Storage Row */}
-            <tr className="border-t bg-gray-25 hover:bg-gray-50">
-              <td className="p-6 font-semibold text-gray-800 bg-gray-100 sticky left-0 z-10 border-r border-gray-200">
+            <tr className="border-t hover:bg-gray-25">
+              <td className="p-6 font-semibold text-gray-800 bg-gray-50 sticky left-0 z-10 border-r border-gray-200">
                 <div className="flex items-center">
                   💾 <span className="ml-2">Storage</span>
                 </div>
               </td>
-              {laptopItems.map((product) => {
-                const storageValue = product.storage || product.hdd || product.specifications?.storage || 'Not specified';
-                return (
+              {laptopItems.map((product) => (
                 <td key={product.id} className={`p-6 border-r border-gray-200 last:border-r-0 ${isHighlight(product, 'storage') ? 'bg-green-50 border-green-200' : ''}`}>
                   <div className={`font-bold text-lg ${isHighlight(product, 'storage') ? 'text-green-600' : 'text-gray-800'}`}>
-                    {storageValue}
-                    {isHighlight(product, 'storage') && <span className="ml-2 text-sm">🏆 Best Storage</span>}
+                    {product.hdd || '-'}
+                    {isHighlight(product, 'storage') && <span className="ml-2 text-sm">🏆</span>}
                   </div>
-                  {storageValue?.includes('SSD') && (
-                    <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded mt-2 inline-block">
-                      ⚡ SSD - Faster Performance
+                  {product.hdd?.includes('SSD') && (
+                    <div className="text-xs bg-[#6dc1c9]/20 text-[#6dc1c9] px-2 py-1 rounded mt-2 inline-block">
+                      ⚡ SSD
                     </div>
                   )}
                 </td>
-              )})}
+              ))}
             </tr>
 
             {/* Display Row */}
-            <tr className="border-t hover:bg-gray-25">
-              <td className="p-6 font-semibold text-gray-800 bg-gray-50 sticky left-0 z-10 border-r border-gray-200">
+            <tr className="border-t bg-gray-25 hover:bg-gray-50">
+              <td className="p-6 font-semibold text-gray-800 bg-gray-100 sticky left-0 z-10 border-r border-gray-200">
                 <div className="flex items-center">
                   📺 <span className="ml-2">Display</span>
                 </div>
@@ -482,15 +544,15 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.display || product.display_size || product.screensize || product.specifications?.display || product.specifications?.screen || 'Not specified'}
+                    {product.display_size || product.screensize || '-'}
                   </div>
                 </td>
               ))}
             </tr>
 
             {/* Graphics Row */}
-            <tr className="border-t bg-gray-25 hover:bg-gray-50">
-              <td className="p-6 font-semibold text-gray-800 bg-gray-100 sticky left-0 z-10 border-r border-gray-200">
+            <tr className="border-t hover:bg-gray-25">
+              <td className="p-6 font-semibold text-gray-800 bg-gray-50 sticky left-0 z-10 border-r border-gray-200">
                 <div className="flex items-center">
                   🎮 <span className="ml-2">Graphics</span>
                 </div>
@@ -498,55 +560,7 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.graphics || product.specifications?.graphics || 'Integrated Graphics'}
-                  </div>
-                </td>
-              ))}
-            </tr>
-
-            {/* Operating System Row */}
-            <tr className="border-t hover:bg-gray-25">
-              <td className="p-6 font-semibold text-gray-800 bg-gray-50 sticky left-0 z-10 border-r border-gray-200">
-                <div className="flex items-center">
-                  💿 <span className="ml-2">Operating System</span>
-                </div>
-              </td>
-              {laptopItems.map((product) => (
-                <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
-                  <div className="font-medium text-gray-800">
-                    {product.operating_system || product.specifications?.os || product.specifications?.operating_system || 'Windows 11'}
-                  </div>
-                </td>
-              ))}
-            </tr>
-
-            {/* Battery Row */}
-            <tr className="border-t bg-gray-25 hover:bg-gray-50">
-              <td className="p-6 font-semibold text-gray-800 bg-gray-100 sticky left-0 z-10 border-r border-gray-200">
-                <div className="flex items-center">
-                  🔋 <span className="ml-2">Battery Life</span>
-                </div>
-              </td>
-              {laptopItems.map((product) => (
-                <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
-                  <div className="font-medium text-gray-800">
-                    {product.battery || product.specifications?.battery || product.specifications?.battery_life || 'Up to 6 hours'}
-                  </div>
-                </td>
-              ))}
-            </tr>
-
-            {/* Weight Row */}
-            <tr className="border-t hover:bg-gray-25">
-              <td className="p-6 font-semibold text-gray-800 bg-gray-50 sticky left-0 z-10 border-r border-gray-200">
-                <div className="flex items-center">
-                  ⚖️ <span className="ml-2">Weight</span>
-                </div>
-              </td>
-              {laptopItems.map((product) => (
-                <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
-                  <div className="font-medium text-gray-800">
-                    {product.weight ? `${product.weight} kg` : (product.specifications?.weight || 'Not specified')}
+                    {product.discrete_graphics || product.integrated_graphics || '-'}
                   </div>
                 </td>
               ))}
@@ -561,20 +575,23 @@ const CompareTable = ({ products }) => {
               </td>
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
-                  <span className={`px-3 py-2 rounded-full text-sm font-medium ${
-                    product.condition === 'Excellent' ? 'bg-green-100 text-green-800' :
-                    product.condition === 'Very Good' ? 'bg-blue-100 text-blue-800' :
-                    product.condition === 'Good' ? 'bg-yellow-100 text-yellow-800' :
-                    product.condition === 'New' ? 'bg-purple-100 text-purple-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {product.condition === 'Excellent' && '⭐'}
-                    {product.condition === 'Very Good' && '👍'}
-                    {product.condition === 'Good' && '✅'}
-                    {product.condition === 'New' && '🆕'}
-                    {' '}
-                    {product.condition || 'Good'}
-                  </span>
+                  {product.condition ? (
+                    <span className={`px-3 py-2 rounded-full text-sm font-medium ${
+                      product.condition === 'Excellent' ? 'bg-green-100 text-green-800' :
+                      product.condition === 'Very Good' ? 'bg-[#6dc1c9]/20 text-[#6dc1c9]' :
+                      product.condition === 'Good' ? 'bg-yellow-100 text-yellow-800' :
+                      product.condition === 'New' ? 'bg-purple-100 text-purple-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {product.condition === 'Excellent' && '⭐ '}
+                      {product.condition === 'Very Good' && '👍 '}
+                      {product.condition === 'Good' && '✅ '}
+                      {product.condition === 'New' && '🆕 '}
+                      {product.condition}
+                    </span>
+                  ) : (
+                    <span className="text-gray-500">-</span>
+                  )}
                 </td>
               ))}
             </tr>
@@ -589,7 +606,7 @@ const CompareTable = ({ products }) => {
               {laptopItems.map((product) => (
                 <td key={product.id} className="p-6 border-r border-gray-200 last:border-r-0">
                   <div className="font-medium text-gray-800">
-                    {product.warranty || product.specifications?.warranty || (product.warranty_period ? `${product.warranty_period} months` : '15 days checking warranty')}
+                    {product.warranty || product.specifications?.warranty || (product.warranty_period ? `${product.warranty_period} months` : '-')}
                   </div>
                 </td>
               ))}
@@ -657,8 +674,8 @@ const CompareTable = ({ products }) => {
 
 
             {/* Actions Row */}
-            <tr className="border-t bg-gradient-to-r from-blue-50 to-blue-100">
-              <td className="p-6 font-semibold text-gray-800 bg-blue-100 sticky left-0 z-10 border-r border-gray-200">
+            <tr className="border-t bg-gradient-to-r from-[#6dc1c9]/10 to-[#6dc1c9]/20">
+              <td className="p-6 font-semibold text-gray-800 bg-[#6dc1c9]/20 sticky left-0 z-10 border-r border-gray-200">
                 <div className="flex items-center">
                   🛒 <span className="ml-2">Actions</span>
                 </div>
@@ -695,7 +712,7 @@ const CompareTable = ({ products }) => {
                           const isActive = product.is_active !== undefined ? product.is_active : product.inStock !== false;
                           const isAvailableForPurchase = isActive && inStock && stockQuantity > 0;
                           return isAvailableForPurchase
-                            ? 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg transform hover:-translate-y-0.5'
+                            ? 'bg-[#6dc1c9] text-white hover:bg-teal-600 hover:shadow-lg transform hover:-translate-y-0.5'
                             : 'bg-gray-300 text-gray-500 cursor-not-allowed';
                         })()
                       }`}
@@ -710,9 +727,9 @@ const CompareTable = ({ products }) => {
                       })()}
                     </button>
                     
-                    <a 
+                    <a
                       href={`/products/${product.id}`}
-                      className="w-full py-2 px-4 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-200 font-medium block text-center"
+                      className="w-full py-2 px-4 border-2 border-[#6dc1c9] text-[#6dc1c9] rounded-lg hover:bg-[#6dc1c9] hover:text-white transition-all duration-200 font-medium block text-center"
                     >
                       View Details
                     </a>
@@ -748,18 +765,13 @@ const CompareTable = ({ products }) => {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+          <div className="flex justify-center">
             <button
               onClick={clearCompare}
               className="px-6 py-3 bg-white text-gray-700 rounded-xl hover:bg-gray-100 transition-all duration-200 font-semibold text-sm sm:text-base border-2 border-gray-300 shadow-md hover:shadow-lg"
             >
               Clear Comparison
             </button>
-            <Link href="/products"
-              className="px-6 py-3 bg-gradient-to-r from-[#6dc1c9] to-teal-600 text-white rounded-xl hover:from-teal-600 hover:to-teal-700 transition-all duration-200 font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl"
-            >
-              Browse More Products
-            </Link>
           </div>
         </div>
       </div>

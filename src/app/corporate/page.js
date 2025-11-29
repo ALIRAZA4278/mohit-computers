@@ -71,7 +71,7 @@ export default function Corporate() {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Corporate Solutions</h1>
+            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Corporate Tech Solutions by Mohit Computers</h1>
             <div className="flex justify-center">
               <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
             </div>
@@ -79,8 +79,7 @@ export default function Corporate() {
 
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-lg text-gray-600 leading-relaxed">
-              Equip your business with quality refurbished laptops and technology solutions.
-              Trusted by 500+ companies for bulk orders and enterprise needs.
+              We specialize in meeting the complex demands of corporate technology procurement, providing customized, reliable, and efficient solutions that align with your organizational needs.
             </p>
           </div>
         </div>

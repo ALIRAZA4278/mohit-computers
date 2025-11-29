@@ -816,7 +816,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 onChange={handleChange}
                 className="rounded text-black border-gray-300  focus:ring-blue-500"
               />
-              <span className="ml-2 text-sm text-gray-700">Workstation Product</span>
+              <span className="ml-2 text-sm text-gray-700">Workstation & Gaming Product</span>
             </label>
             <label className="flex items-center">
               <input
@@ -1074,13 +1074,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* RAM Type */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Type *
+                  Type
                 </label>
                 <select
                   name="ramType"
                   value={formData.ramType}
                   onChange={handleChange}
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select RAM Type</option>
@@ -1095,13 +1094,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* RAM Capacity */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Capacity *
+                  Capacity
                 </label>
                 <select
                   name="ramCapacity"
                   value={formData.ramCapacity}
                   onChange={handleChange}
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Capacity</option>
@@ -1116,13 +1114,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* RAM Speed */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Speed (Frequency) *
+                  Speed (Frequency)
                 </label>
                 <select
                   name="ramSpeed"
                   value={formData.ramSpeed}
                   onChange={handleChange}
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Speed</option>
@@ -1137,13 +1134,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* RAM Form Factor */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Form Factor *
+                  Form Factor
                 </label>
                 <select
                   name="ramFormFactor"
                   value={formData.ramFormFactor}
                   onChange={handleChange}
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Form Factor</option>
@@ -1158,13 +1154,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* RAM Condition */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Condition *
+                  Condition
                 </label>
                 <select
                   name="ramCondition"
                   value={formData.ramCondition}
                   onChange={handleChange}
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Condition</option>
@@ -1179,13 +1174,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* RAM Warranty */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Warranty *
+                  Warranty
                 </label>
                 <select
                   name="ramWarranty"
                   value={formData.ramWarranty}
                   onChange={handleChange}
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Warranty</option>
@@ -1318,7 +1312,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* SSD Capacity */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Capacity *
+                  Capacity
                 </label>
                 <input
                   type="text"
@@ -1327,7 +1321,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   value={formData.ssdCapacity}
                   onChange={handleChange}
                   placeholder="Type or select capacity..."
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <datalist id="ssd-capacity-options">
@@ -1348,7 +1341,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* SSD Form Factor */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Form Factor *
+                  Form Factor
                 </label>
                 <input
                   type="text"
@@ -1357,7 +1350,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   value={formData.ssdFormFactor}
                   onChange={handleChange}
                   placeholder="Type or select form factor..."
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <datalist id="ssd-form-factor-options">
@@ -1372,7 +1364,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* SSD Interface */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Interface *
+                  Interface
                 </label>
                 <input
                   type="text"
@@ -1381,7 +1373,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   value={formData.ssdInterface}
                   onChange={handleChange}
                   placeholder="Type or select interface..."
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <datalist id="ssd-interface-options">
@@ -1427,7 +1418,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* SSD Condition */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Condition *
+                  Condition
                 </label>
                 <input
                   type="text"
@@ -1436,7 +1427,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   value={formData.ssdCondition}
                   onChange={handleChange}
                   placeholder="Type or select condition..."
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <datalist id="ssd-condition-options">
@@ -1488,7 +1478,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* Processor - Combo Input (Type or Select) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Processor *
+                  Processor
                 </label>
                 <input
                   type="text"
@@ -1497,7 +1487,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   value={formData.processor}
                   onChange={handleChange}
                   placeholder="Type or select processor..."
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <datalist id="processor-options">
@@ -1511,7 +1500,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* RAM - Combo Input (Type or Select) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  RAM *
+                  RAM
                 </label>
                 <input
                   type="text"
@@ -1520,7 +1509,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   value={formData.ram}
                   onChange={handleChange}
                   placeholder="Type or select RAM..."
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <datalist id="ram-options">
@@ -1534,7 +1522,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* Storage (Combined: Type + Capacity) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Storage * (e.g., &quot;64GB eMMC&quot; or &quot;128GB SSD&quot;)
+                  Storage (e.g., &quot;64GB eMMC&quot; or &quot;128GB SSD&quot;)
                 </label>
                 <input
                   type="text"
@@ -1542,7 +1530,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   value={formData.chromebookStorage}
                   onChange={handleChange}
                   placeholder="e.g., 64GB eMMC, 128GB SSD"
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -1550,7 +1537,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* Display Size - Combo Input (Type or Select) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Display Size *
+                  Display Size
                 </label>
                 <input
                   type="text"
@@ -1559,7 +1546,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   value={formData.displaySize}
                   onChange={handleChange}
                   placeholder="Type or select display size..."
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <datalist id="displaysize-options">
@@ -1590,13 +1576,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* Touchscreen */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Touchscreen *
+                  Touchscreen
                 </label>
                 <select
                   name="touchType"
                   value={formData.touchType}
                   onChange={handleChange}
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select Touchscreen Type</option>
@@ -1611,13 +1596,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               {/* Operating System */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Operating System *
+                  Operating System
                 </label>
                 <select
                   name="operatingFeatures"
                   value={formData.operatingFeatures}
                   onChange={handleChange}
-                  required
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select OS</option>
@@ -2218,7 +2202,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                           {/* Type Selection */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Type *
+                              Type
                             </label>
                             <select
                               value={upgrade.type}
@@ -2233,7 +2217,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                           {/* Label/Name */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Label/Name *
+                              Label/Name
                             </label>
                             <input
                               type="text"
@@ -2247,7 +2231,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                           {/* Capacity */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Capacity *
+                              Capacity
                             </label>
                             <input
                               type="text"
@@ -2261,7 +2245,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                           {/* Price */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Price (Rs) *
+                              Price (Rs)
                             </label>
                             <input
                               type="number"

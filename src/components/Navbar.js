@@ -1,13 +1,123 @@
   'use client';
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter, usePathname } from 'next/navigation';
-import { Search, ShoppingCart, Menu, X, User, Clock, Tag, Heart, GitCompare } from 'lucide-react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { Search, ShoppingCart, Menu, X, User, Clock, Tag, Heart, GitCompare, Laptop, HardDrive, MemoryStick, Monitor, Briefcase, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useCompare } from '../context/CompareContext';
+
+// Category Navigation Bar Component
+function CategoryNavBar({ laptopDropdownOpen, setLaptopDropdownOpen }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const currentCategory = searchParams?.get('category') ||
+    (pathname === '/chromebook' ? 'chromebook' :
+     pathname === '/clearance' ? 'clearance' :
+     pathname === '/workstation' ? 'workstation' : null);
+
+  const currentBrand = searchParams?.get('brand');
+
+  const isActive = (categoryId) => {
+    if (currentCategory === categoryId) return true;
+    if (categoryId === 'laptop' && (currentCategory === 'used-laptop' || currentCategory === 'workstation' || currentCategory === 'rugged-laptop')) return true;
+    return false;
+  };
+
+  const categories = [
+    {
+      id: 'laptop',
+      name: 'Laptops',
+      icon: Laptop,
+      href: '/products?category=used-laptop',
+      hasDropdown: true,
+      subcategories: [
+        { name: 'All Laptops', href: '/products?category=used-laptop' },
+        { name: 'HP', href: '/products?category=used-laptop&brand=HP' },
+        { name: 'Dell', href: '/products?category=used-laptop&brand=Dell' },
+        { name: 'Lenovo', href: '/products?category=used-laptop&brand=Lenovo' },
+        { name: 'Acer', href: '/products?category=used-laptop&brand=Acer' },
+        { name: 'Workstation & Gaming', href: '/workstation' },
+        { name: 'Rugged Laptops', href: '/products?category=rugged-laptop' },
+      ]
+    },
+    { id: 'chromebook', name: 'Chromebook', icon: Monitor, href: '/chromebook' },
+    { id: 'ram', name: 'RAM', icon: MemoryStick, href: '/products?category=ram' },
+    { id: 'ssd', name: 'SSD', icon: HardDrive, href: '/products?category=ssd' },
+    { id: 'clearance', name: 'Clearance', icon: Tag, href: '/clearance' },
+  ];
+
+  return (
+    <div className="bg-white border-b border-gray-200 sticky top-[44px] sm:top-[52px] md:top-[56px] lg:top-[60px] z-40">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-center gap-1 py-2 flex-wrap">
+          {categories.map((category) => {
+            const Icon = category.icon;
+            const active = isActive(category.id);
+
+            if (category.hasDropdown) {
+              return (
+                <div
+                  key={category.id}
+                  className="relative"
+                  onMouseEnter={() => setLaptopDropdownOpen(true)}
+                  onMouseLeave={() => setLaptopDropdownOpen(false)}
+                >
+                  <button
+                    onClick={() => setLaptopDropdownOpen(!laptopDropdownOpen)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                      active
+                        ? 'bg-[#6dc1c9] text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {category.name}
+                    <ChevronDown className={`w-3 h-3 transition-transform ${laptopDropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {laptopDropdownOpen && (
+                    <div className="absolute top-full left-0 pt-1 z-50">
+                      <div className="bg-white border border-gray-200 rounded-lg shadow-lg min-w-[180px] py-2">
+                        {category.subcategories.map((sub) => (
+                          <Link
+                            key={sub.name}
+                            href={sub.href}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#6dc1c9]/10 hover:text-[#6dc1c9] transition-colors"
+                          >
+                            {sub.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={category.id}
+                href={category.href}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                  active
+                    ? 'bg-[#6dc1c9] text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {category.name}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,6 +134,7 @@ const Navbar = () => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [laptopDropdownOpen, setLaptopDropdownOpen] = useState(false);
   const searchRef = useRef(null);
   const searchInputRef = useRef(null);
   const mobileSearchRef = useRef(null);
@@ -390,6 +501,21 @@ const Navbar = () => {
       {/* Spacer for fixed navbar */}
       <div className="h-[44px] sm:h-[52px] md:h-[56px] lg:h-[60px]"></div>
 
+      {/* Category Navigation Bar - Only on product pages */}
+      {(pathname === '/products' || pathname?.startsWith('/products/') || pathname === '/chromebook' || pathname === '/clearance' || pathname === '/workstation') && (
+        <Suspense fallback={
+          <div className="bg-white border-b border-gray-200 sticky top-[44px] sm:top-[52px] md:top-[56px] lg:top-[60px] z-40">
+            <div className="container mx-auto px-4">
+              <div className="flex items-center justify-center gap-1 py-2">
+                <div className="h-9 w-full max-w-xl bg-gray-100 rounded-lg animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        }>
+          <CategoryNavBar laptopDropdownOpen={laptopDropdownOpen} setLaptopDropdownOpen={setLaptopDropdownOpen} />
+        </Suspense>
+      )}
+
       {/* Slide-out Menu - Smooth Transition */}
       {/* Backdrop with blur - always rendered, opacity transition */}
       <div
@@ -478,7 +604,7 @@ const Navbar = () => {
                       )}
                     </div>
                     <Link href="/products?category=chromebook" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">Chrome Book</Link>
-                    <Link href="/workstation" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">Workstations</Link>
+                    <Link href="/workstation" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">Workstation & Gaming</Link>
                     <Link href="/products?category=rugged-laptop" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">Rugged Book</Link>
                     <Link href="/products?category=accessories" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">Accessories</Link>
                     <Link href="/products?category=ram" onClick={closeMobileMenu} className="block py-2 px-3 text-sm text-gray-600 hover:text-[#6dc1c9] hover:bg-white rounded-lg transition-all">RAM</Link>

@@ -16,12 +16,12 @@ export default function Wishlist() {
         <section className="py-10 pb-0">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-medium mb-6">
-                <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+              <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
+                <span className="w-2 h-2 bg-[#6dc1c9] rounded-full mr-2"></span>
                 My Wishlist
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Your Wishlist</h1>
-              <div className="w-24 h-1 bg-red-500 rounded-full mx-auto"></div>
+              <div className="w-24 h-1 bg-[#6dc1c9] rounded-full mx-auto"></div>
             </div>
           </div>
         </section>
@@ -31,17 +31,17 @@ export default function Wishlist() {
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center">
               <div className="bg-white rounded-2xl shadow-xl p-12 border border-gray-100">
-                <div className="w-32 h-32 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-8">
-                  <Heart className="w-16 h-16 text-red-400" />
+                <div className="w-32 h-32 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-8">
+                  <Heart className="w-16 h-16 text-[#6dc1c9]" />
                 </div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Wishlist is Empty</h2>
                 <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                  Save your favorite products to your wishlist so you can easily find them later. 
+                  Save your favorite products to your wishlist so you can easily find them later.
                   Start browsing and add items you love!
                 </p>
-                <Link 
+                <Link
                   href="/products"
-                  className="bg-red-500 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-red-600 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+                  className="bg-[#6dc1c9] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-teal-600 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
                 >
                   Browse Products
                   <ArrowRight className="ml-2 w-5 h-5" />
@@ -60,15 +60,15 @@ export default function Wishlist() {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-medium mb-6">
-              <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+            <div className="inline-flex items-center px-4 py-2 bg-teal-100 text-teal-700 rounded-full text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-[#6dc1c9] rounded-full mr-2"></span>
               My Wishlist
             </div>
             <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Your Wishlist</h1>
             <p className="text-lg text-gray-600 mb-6">
               {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'} saved for later
             </p>
-            <div className="w-24 h-1 bg-red-500 rounded-full mx-auto"></div>
+            <div className="w-24 h-1 bg-[#6dc1c9] rounded-full mx-auto"></div>
           </div>
         </div>
       </section>
@@ -81,7 +81,7 @@ export default function Wishlist() {
           {wishlistItems.length > 0 && (
             <button
               onClick={clearWishlist}
-              className="text-red-600 hover:text-red-800 font-medium px-4 py-2 border border-red-300 rounded-lg hover:bg-red-50 transition-colors"
+              className="text-[#6dc1c9] hover:text-teal-700 font-medium px-4 py-2 border border-[#6dc1c9] rounded-lg hover:bg-teal-50 transition-colors"
             >
               Clear All
             </button>
@@ -101,9 +101,9 @@ export default function Wishlist() {
 
         {/* Continue Shopping */}
         <div className="mt-12 text-center">
-          <Link 
+          <Link
             href="/products"
-            className="bg-red-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-600 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
+            className="bg-[#6dc1c9] text-white px-8 py-3 rounded-lg font-semibold hover:bg-teal-600 transition-colors inline-flex items-center shadow-lg hover:shadow-xl"
           >
             Continue Shopping
             <ArrowRight className="ml-2 w-5 h-5" />
