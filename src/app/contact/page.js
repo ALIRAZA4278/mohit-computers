@@ -166,7 +166,7 @@ export default function Contact() {
                     <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-[#6dc1c9]" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">📍 Store Location</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Store Location</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
                       Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi<br />
                       <span className="text-xs sm:text-sm text-gray-500">(Just opposite the lift, near Skin / Chamra Hospital)</span>
@@ -180,7 +180,7 @@ export default function Contact() {
                     <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">☎️ Phone / WhatsApp Support</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Phone / WhatsApp Support</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
                       Mobile / WhatsApp: <a href="tel:03368900349" className="text-[#6dc1c9] hover:underline">0336-8900349</a><br />
                       Landline: <a href="tel:02132700706" className="text-[#6dc1c9] hover:underline">021-3270070-6</a>
@@ -200,7 +200,7 @@ export default function Contact() {
                     <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">📧 Email Us</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Email Us</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
                       General Support: <a href="mailto:supports@mohitcomputers.pk" className="text-[#6dc1c9] hover:underline">supports@mohitcomputers.pk</a>
                     </p>
@@ -216,7 +216,7 @@ export default function Contact() {
                     <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                   </div>
                   <div>
-                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">📦 Need Help with an Order or Warranty?</h4>
+                    <h4 className="text-base sm:text-lg font-semibold text-gray-800 mb-1">Need Help with an Order or Warranty?</h4>
                     <p className="text-gray-600 text-sm sm:text-base">
                       If you&rsquo;re facing any issue with a recent purchase, please include your Invoice Number or Order Reference when contacting us for faster service.
                     </p>
