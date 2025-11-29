@@ -58,18 +58,17 @@ const Footer = () => {
 
             {/* Contact */}
             <div>
-              <h3 className="text-lg font-bold text-[#6dc1c9] mb-2">Mohit Computers</h3>
-              <p className="text-xs text-gray-400 mb-4">Your Trusted Tech Partner</p>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Contact</h3>
               <div className="space-y-2 text-sm text-gray-400">
-                <p>Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi</p>
+                <p><span className="text-gray-300">Address:</span> Suite No. 316-B, 3rd Floor, Regal Trade Square, Saddar, Karachi</p>
                 <p>
-                  <a href="tel:03368900349" className="hover:text-[#6dc1c9] transition-colors">0336-8900349</a>
+                  <span className="text-gray-300">Phone:</span> <a href="tel:03368900349" className="hover:text-[#6dc1c9] transition-colors">0336-8900349</a>
                 </p>
                 <p>
-                  <a href="tel:02132700706" className="hover:text-[#6dc1c9] transition-colors">Landline: 021-3270070-6</a>
+                  <span className="text-gray-300">Landline:</span> <a href="tel:02132700706" className="hover:text-[#6dc1c9] transition-colors">021-3270070-6</a>
                 </p>
                 <p>
-                  <a href="mailto:info@mohitcomputers.pk" className="hover:text-[#6dc1c9] transition-colors">info@mohitcomputers.pk</a>
+                  <span className="text-gray-300">Email:</span> <a href="mailto:info@mohitcomputers.pk" className="hover:text-[#6dc1c9] transition-colors">info@mohitcomputers.pk</a>
                 </p>
               </div>
             </div>
