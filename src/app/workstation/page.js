@@ -413,13 +413,11 @@ function WorkstationContent() {
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Workstation & Gaming Laptops</h1>
+            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Workstation & Gaming Laptops</h1>
             <div className="flex justify-center mb-4">
               <div className="w-24 h-1 bg-[#6dc1c9] rounded-full"></div>
             </div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              High-performance laptops for gaming, content creation & demanding professional workflows
-            </p>
+           
           </div>
         </div>
       </section>

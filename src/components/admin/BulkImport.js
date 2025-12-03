@@ -53,6 +53,24 @@ export default function BulkImport({ onImportComplete }) {
     }
   };
 
+  const downloadExcelTemplate = async () => {
+    try {
+      const response = await fetch('/api/admin/products/excel-template');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mohit_computers_product_template.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Error downloading Excel template:', error);
+      alert('Error downloading Excel template');
+    }
+  };
+
   const exportProducts = async () => {
     try {
       const response = await fetch('/api/admin/products/export');
@@ -130,13 +148,20 @@ export default function BulkImport({ onImportComplete }) {
           <h3 className="text-lg font-semibold text-gray-900">Bulk Import/Update Products</h3>
           <p className="text-gray-600">Upload CSV or Excel file to import new products or update existing ones</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 flex-wrap">
           <button
-            onClick={downloadTemplate}
-            className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            onClick={downloadExcelTemplate}
+            className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
           >
             <Download className="w-4 h-4" />
-            New Template
+            Excel Template (Recommended)
+          </button>
+          <button
+            onClick={downloadTemplate}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            CSV Template
           </button>
           <button
             onClick={exportProducts}
@@ -301,15 +326,16 @@ export default function BulkImport({ onImportComplete }) {
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <h4 className="font-medium text-gray-900 mb-2">Instructions:</h4>
         <ul className="text-sm text-gray-600 space-y-1">
-          <li>• <strong>New Products:</strong> Click &quot;New Template&quot; and fill in product details</li>
+          <li>• <strong>Excel Template (Recommended):</strong> Download Excel template - includes &quot;Dropdown Options&quot; sheet with all valid values for reference</li>
           <li>• <strong>Update Products:</strong> Click &quot;Export Products&quot; to download existing products, edit them, and re-upload</li>
           <li>• Required fields: <strong>Model, Selling Price</strong></li>
           <li>• <strong>Product ID column:</strong> Keep this column for updates (don&apos;t change it!)</li>
           <li>• <strong>No Product ID:</strong> New product will be created</li>
           <li>• <strong>With Product ID:</strong> Existing product will be updated (no duplicate)</li>
           <li>• <strong>Image Links:</strong> Add up to 5 product image URLs</li>
-          <li>• Use &quot;true&quot;/&quot;false&quot; for boolean fields</li>
+          <li>• Use &quot;TRUE&quot;/&quot;FALSE&quot; for boolean fields (In Stock, Is Active, Is Featured, etc.)</li>
           <li>• Supported file types: CSV (.csv), Excel (.xlsx, .xls)</li>
+          <li>• <strong>Tip:</strong> Check the &quot;Dropdown Options&quot; sheet in Excel template for all valid values</li>
         </ul>
       </div>
     </div>

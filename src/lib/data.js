@@ -9,6 +9,13 @@ export const categories = [
     brands: ['Dell', 'HP', 'Lenovo', 'Acer', 'ASUS', 'Apple', 'MSI', 'Toshiba', 'Sony', 'Samsung']
   },
   {
+    id: 'workstation',
+    name: 'Workstation',
+    image: '/images/workstation.jpg',
+    description: 'High-performance workstations and gaming laptops',
+    brands: ['Dell', 'HP', 'Lenovo', 'Acer', 'ASUS', 'MSI', 'Mohit Computers']
+  },
+  {
     id: 'chromebook',
     name: 'Chromebook',
     image: '/images/chromebook.jpg',
@@ -63,7 +70,7 @@ export const conditionOptions = [
   'Excellent',
   'Very Good',
   'Good',
-  'Fair'
+  'Used'
 ];
 
 export const products = [
@@ -217,18 +224,14 @@ export const filterOptions = {
     'Intel HD Graphics 630',
     'Intel UHD Graphics 620',
     'Intel UHD Graphics 630',
-    'Intel UHD Graphics',
     'Intel Iris Xe Graphics',
     'Intel UHD/Iris Xe Graphics',
     'AMD Radeon Vega 8',
     'AMD Radeon Vega',
-    'AMD Radeon Integrated Graphics',
-    'Intel HD Graphics',
     'NVIDIA GeForce MX',
     'NVIDIA GeForce GTX',
     'NVIDIA GeForce RTX',
     'NVIDIA Quadro',
-    'AMD Radeon',
     'AMD Radeon Pro'
   ],
   touchType: ['Touch', 'Non-touch', 'X360 (Convertible)'],
@@ -259,7 +262,7 @@ export const filterOptions = {
   ],
   // RAM-specific filters
   ramBrands: [
-    'Kingston', 'Samsung', 'Crucial', 'Hynix', 'Adata', 'Corsair', 'G.Skill', 'Transcend'
+    'Kingston', 'Samsung', 'Crucial', 'Hynix', 'Adata', 'Corsair', 'G.Skill', 'Transcend', 'Mix'
   ],
   ramType: [
     'DDR3', 'DDR3L', 'DDR4', 'DDR5'
@@ -442,16 +445,19 @@ export const filterOptions = {
     '16GB', '32GB', '64GB', '128GB', '256GB', '512GB'
   ],
   chromebookDisplaySize: [
-    '11.6"', '12.5"', '13.3"', '14"', '15.6"'
+    '11.6"', '12"', '12.5"', '13.3"', '14"', '15.6"'
   ],
   chromebookDisplayType: [
-    'HD', 'Full HD (FHD)'
+    'HD (1366×768)', 'Full HD (1920×1080)'
   ],
   chromebookTouchscreen: [
-    'Non-Touch', 'Touchscreen', 'Touchscreen x360'
+    'Non-Touch', 'Touch', '2-in-1 Convertible'
   ],
   chromebookOS: [
-    'Windows', 'Chrome OS'
+    'Chrome OS'
+  ],
+  chromebookCondition: [
+    'New', 'Used'
   ],
   chromebookAUE: [
     '2025', '2026', '2027', '2028', '2029', '2030', '2031', '2032', '2033', '2034'

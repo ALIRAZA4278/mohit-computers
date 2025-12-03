@@ -283,14 +283,14 @@ export default function Contact() {
       {/* Call to Action */}
       <section className="py-8 sm:py-16 bg-gradient-to-r from-[#6dc1c9] to-teal-700 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">✅ We&rsquo;re Here Because You Matter</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">We&rsquo;re Here Because You Matter</h2>
           <p className="text-lg sm:text-xl mb-6 sm:mb-8">
             At Mohit Computers, we don&rsquo;t just deal in laptops and Accessories, we build long-term relationships through trusted products, reliable support, and personalized service.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md sm:max-w-none mx-auto">
             <a
               href="tel:03368900349"
-              className="bg-white text-teal-700 px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
+              className="bg-white text-black px-6 sm:px-8 py-3 sm:py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-sm sm:text-base"
             >
               Call: 0336-8900349
             </a>

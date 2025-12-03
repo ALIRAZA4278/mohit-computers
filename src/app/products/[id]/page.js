@@ -118,10 +118,10 @@ export default function ProductDetail() {
     }
   }, [product?.price, product?.category_id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Calculate available RAM options based on processor generation
+  // Calculate available RAM options based on processor generation and processor type (Intel/AMD)
   useEffect(() => {
-    if (product?.generation && product?.category_id === 'laptop') {
-      const ramOptions = getRAMOptionsByGeneration(product.generation);
+    if ((product?.generation || product?.processor) && product?.category_id === 'laptop') {
+      const ramOptions = getRAMOptionsByGeneration(product.generation, product.processor);
       setAvailableRAMOptions(ramOptions);
     }
   }, [product]);

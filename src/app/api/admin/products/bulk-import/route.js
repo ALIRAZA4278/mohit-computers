@@ -103,8 +103,10 @@ function parseCSV(csvContent) {
       hdd: product.HDD || null,
       display_size: product['Display Size'] || null,
       resolution: product['Resolution (Options)'] || null,
+      resolution_filter: product['Resolution Filter'] || null,
       integrated_graphics: product['Integrated Graphics'] || null,
       discrete_graphics: product['Discrete/Dedicated Graphics'] || null,
+      graphics_memory: product['Graphics Memory'] || product['VRAM'] || null,
       touch_type: product['Touch / Non touch / X360'] || null,
       operating_features: product['Operating Features'] || null,
       extra_features: product['Extra Features (Connectivity/Ports/Other)'] || null,
@@ -126,11 +128,16 @@ function parseCSV(csvContent) {
     if (product['In Stock'] !== undefined) dbProduct.in_stock = parseBool(product['In Stock']);
 
     // New fields (add only if provided)
+    if (product['Is New Arrival']) dbProduct.is_new_arrival = parseBool(product['Is New Arrival']);
     if (product['Is Workstation']) dbProduct.is_workstation = parseBool(product['Is Workstation']);
     if (product['Is Rugged Tough']) dbProduct.is_rugged_tough = parseBool(product['Is Rugged Tough']);
     if (product['Is Clearance']) dbProduct.is_clearance = parseBool(product['Is Clearance']);
     if (product['Clearance Reason']) dbProduct.clearance_reason = product['Clearance Reason'];
-    if (product['Is Discounted']) dbProduct.is_discounted = parseBool(product['Is Discounted']);
+
+    // Sale/Discount fields - support both column names
+    if (product['On Sale'] || product['Is Discounted']) {
+      dbProduct.is_discounted = parseBool(product['On Sale'] || product['Is Discounted']);
+    }
     if (product['Discount Percentage']) dbProduct.discount_percentage = parseFloat(product['Discount Percentage']);
 
     // SEO Only field - enabled after schema refresh
@@ -210,7 +217,7 @@ async function parseExcel(file) {
       is_featured: parseBool(row['Is Featured'] || false),
       is_active: parseBool(row['Is Active'] !== undefined ? row['Is Active'] : true),
 
-      // Image fields
+      // Image fields - support both old (5 images) and new (3 images) templates
       images: [
         row['Image URL 1'],
         row['Image URL 2'],
@@ -220,18 +227,20 @@ async function parseExcel(file) {
       ].filter(url => url && url.trim() !== ''),
       featured_image: row['Image URL 1'] || null,
 
-      // Laptop-specific Fields (core fields that exist)
+      // Laptop-specific Fields - support both old and new column names
       processor: row.Processor || null,
       generation: row.Generation || null,
-      ram: row.Ram || null,
-      hdd: row.HDD || null,
+      ram: row.Ram || row.RAM || null,
+      hdd: row.HDD || row['Storage/HDD'] || null,
       display_size: row['Display Size'] || null,
-      resolution: row['Resolution (Options)'] || null,
+      resolution: row['Resolution (Options)'] || row.Resolution || null,
+      resolution_filter: row['Resolution Filter'] || null,
       integrated_graphics: row['Integrated Graphics'] || null,
-      discrete_graphics: row['Discrete/Dedicated Graphics'] || null,
-      touch_type: row['Touch / Non touch / X360'] || null,
-      operating_features: row['Operating Features'] || null,
-      extra_features: row['Extra Features (Connectivity/Ports/Other)'] || null,
+      discrete_graphics: row['Discrete/Dedicated Graphics'] || row['Dedicated Graphics'] || null,
+      graphics_memory: row['Graphics Memory'] || row['VRAM'] || null,
+      touch_type: row['Touch / Non touch / X360'] || row['Touch Type'] || null,
+      operating_features: row['Operating Features'] || row['Operating System'] || null,
+      extra_features: row['Extra Features (Connectivity/Ports/Other)'] || row['Extra Features'] || null,
       condition: row.Condition || 'Good',
       battery: row.Battery || null,
       charger_included: parseBool(row['Charger Included'] || false),
@@ -244,26 +253,35 @@ async function parseExcel(file) {
     // Add optional fields only if they have values (safer for backward compatibility)
     if (row.Description) dbProduct.description = row.Description;
     if (row['Original Price']) dbProduct.original_price = parseFloat(row['Original Price']);
-    if (row['Stock Quantity']) dbProduct.stock_quantity = parseInt(row['Stock Quantity']);
-    // Temporarily skip SKU to avoid schema cache issues
-    // if (row.SKU) dbProduct.sku = row.SKU;
+    if (row['Stock Quantity'] || row['Stock Qty']) dbProduct.stock_quantity = parseInt(row['Stock Quantity'] || row['Stock Qty']);
     if (row['In Stock'] !== undefined) dbProduct.in_stock = parseBool(row['In Stock']);
 
-    // New fields (add only if provided)
-    if (row['Is Workstation']) dbProduct.is_workstation = parseBool(row['Is Workstation']);
-    if (row['Is Rugged Tough']) dbProduct.is_rugged_tough = parseBool(row['Is Rugged Tough']);
-    if (row['Is Clearance']) dbProduct.is_clearance = parseBool(row['Is Clearance']);
+    // New fields (add only if provided) - support both old and new column names
+    if (row['Is New Arrival'] !== undefined) dbProduct.is_new_arrival = parseBool(row['Is New Arrival']);
+    if (row['Is Workstation'] !== undefined) dbProduct.is_workstation = parseBool(row['Is Workstation']);
+    if (row['Is Rugged Tough'] !== undefined || row['Is Rugged'] !== undefined) {
+      dbProduct.is_rugged_tough = parseBool(row['Is Rugged Tough'] || row['Is Rugged']);
+    }
+    if (row['Is Clearance'] !== undefined) dbProduct.is_clearance = parseBool(row['Is Clearance']);
     if (row['Clearance Reason']) dbProduct.clearance_reason = row['Clearance Reason'];
-    if (row['Is Discounted']) dbProduct.is_discounted = parseBool(row['Is Discounted']);
-    if (row['Discount Percentage']) dbProduct.discount_percentage = parseFloat(row['Discount Percentage']);
 
-    // SEO Only field - enabled after schema refresh
+    // Sale/Discount fields - support multiple column names
+    if (row['On Sale'] !== undefined || row['Is Discounted'] !== undefined) {
+      dbProduct.is_discounted = parseBool(row['On Sale'] || row['Is Discounted']);
+    }
+    if (row['Discount Percentage'] || row['Discount %']) {
+      dbProduct.discount_percentage = parseFloat(row['Discount Percentage'] || row['Discount %']);
+    }
+
+    // SEO Only field
     if (row['SEO Only'] !== undefined) {
       dbProduct.seo_only = parseBool(row['SEO Only']);
     }
 
-    // Customization control fields
-    if (row['Show Laptop Customizer'] !== undefined) dbProduct.show_laptop_customizer = parseBool(row['Show Laptop Customizer']);
+    // Customization control fields - support both old and new column names
+    if (row['Show Laptop Customizer'] !== undefined || row['Show Customizer'] !== undefined) {
+      dbProduct.show_laptop_customizer = parseBool(row['Show Laptop Customizer'] || row['Show Customizer']);
+    }
     if (row['Show RAM Options'] !== undefined) dbProduct.show_ram_options = parseBool(row['Show RAM Options']);
     if (row['Show SSD Options'] !== undefined) dbProduct.show_ssd_options = parseBool(row['Show SSD Options']);
 

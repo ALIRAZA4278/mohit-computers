@@ -110,10 +110,10 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
 
       {/* Sidebar */}
       <div className={`
-        fixed lg:static inset-y-0 left-0 z-40 w-80 bg-white border-r border-gray-200 
+        fixed lg:static inset-y-0 left-0 z-30 w-80 bg-white border-r border-gray-200
         transform transition-transform duration-300 ease-in-out lg:transform-none
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        overflow-y-auto
+        overflow-y-auto lg:z-auto
       `}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -539,6 +539,15 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                   title="Touch Type"
                   options={dynamicLaptopOptions.touchType}
                   category="touchType"
+                />
+              )}
+
+              {/* Graphics Memory Filter */}
+              {dynamicLaptopOptions.graphicsMemory && dynamicLaptopOptions.graphicsMemory.length > 0 && (
+                <FilterSection
+                  title="Graphics Memory"
+                  options={dynamicLaptopOptions.graphicsMemory}
+                  category="graphicsMemory"
                 />
               )}
 

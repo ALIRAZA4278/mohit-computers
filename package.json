@@ -16,6 +16,7 @@
     "@uiw/react-md-editor": "^4.0.8",
     "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.3",
+    "exceljs": "^4.4.0",
     "firebase": "^12.3.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.544.0",

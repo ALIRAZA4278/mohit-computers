@@ -10,13 +10,15 @@ import { useWishlist } from '../context/WishlistContext';
 import { useCompare } from '../context/CompareContext';
 
 // Category Navigation Bar Component
-function CategoryNavBar({ laptopDropdownOpen, setLaptopDropdownOpen }) {
+function CategoryNavBar({ laptopDropdownOpen, setLaptopDropdownOpen, discountedDropdownOpen, setDiscountedDropdownOpen }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [salesSubOpen, setSalesSubOpen] = useState(false);
 
   const currentCategory = searchParams?.get('category') ||
     (pathname === '/chromebook' ? 'chromebook' :
      pathname === '/clearance' ? 'clearance' :
+     pathname === '/sales' ? 'sales' :
      pathname === '/workstation' ? 'workstation' : null);
 
   const currentBrand = searchParams?.get('brand');
@@ -24,6 +26,7 @@ function CategoryNavBar({ laptopDropdownOpen, setLaptopDropdownOpen }) {
   const isActive = (categoryId) => {
     if (currentCategory === categoryId) return true;
     if (categoryId === 'laptop' && (currentCategory === 'used-laptop' || currentCategory === 'workstation' || currentCategory === 'rugged-laptop')) return true;
+    if (categoryId === 'discounted' && (currentCategory === 'clearance' || currentCategory === 'sales' || pathname === '/clearance' || pathname === '/sales')) return true;
     return false;
   };
 
@@ -34,6 +37,7 @@ function CategoryNavBar({ laptopDropdownOpen, setLaptopDropdownOpen }) {
       icon: Laptop,
       href: '/products?category=used-laptop',
       hasDropdown: true,
+      dropdownType: 'laptop',
       subcategories: [
         { name: 'All Laptops', href: '/products?category=used-laptop' },
         { name: 'HP', href: '/products?category=used-laptop&brand=HP' },
@@ -47,7 +51,30 @@ function CategoryNavBar({ laptopDropdownOpen, setLaptopDropdownOpen }) {
     { id: 'chromebook', name: 'Chromebook', icon: Monitor, href: '/chromebook' },
     { id: 'ram', name: 'RAM', icon: MemoryStick, href: '/products?category=ram' },
     { id: 'ssd', name: 'SSD', icon: HardDrive, href: '/products?category=ssd' },
-    { id: 'clearance', name: 'Clearance', icon: Tag, href: '/clearance' },
+    {
+      id: 'discounted',
+      name: 'Discounted',
+      icon: Tag,
+      href: '/clearance',
+      hasDropdown: true,
+      dropdownType: 'discounted',
+      subcategories: [
+        { name: 'Clearance', href: '/clearance' },
+        {
+          name: 'Sale',
+          href: '/sales',
+          hasSubMenu: true,
+          subItems: [
+            { name: 'All Sales', href: '/sales' },
+            { name: 'Used Laptops', href: '/sales?category=laptop' },
+            { name: 'Chromebook', href: '/sales?category=chromebook' },
+            { name: 'RAM', href: '/sales?category=ram' },
+            { name: 'SSD', href: '/sales?category=ssd' },
+            { name: 'Accessories', href: '/sales?category=accessories' },
+          ]
+        },
+      ]
+    },
   ];
 
   return (
@@ -59,15 +86,23 @@ function CategoryNavBar({ laptopDropdownOpen, setLaptopDropdownOpen }) {
             const active = isActive(category.id);
 
             if (category.hasDropdown) {
+              const isLaptopDropdown = category.dropdownType === 'laptop';
+              const isDiscountedDropdown = category.dropdownType === 'discounted';
+              const isOpen = isLaptopDropdown ? laptopDropdownOpen : discountedDropdownOpen;
+              const setOpen = isLaptopDropdown ? setLaptopDropdownOpen : setDiscountedDropdownOpen;
+
               return (
                 <div
                   key={category.id}
                   className="relative"
-                  onMouseEnter={() => setLaptopDropdownOpen(true)}
-                  onMouseLeave={() => setLaptopDropdownOpen(false)}
+                  onMouseEnter={() => setOpen(true)}
+                  onMouseLeave={() => {
+                    setOpen(false);
+                    setSalesSubOpen(false);
+                  }}
                 >
                   <button
-                    onClick={() => setLaptopDropdownOpen(!laptopDropdownOpen)}
+                    onClick={() => setOpen(!isOpen)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                       active
                         ? 'bg-[#6dc1c9] text-white'
@@ -76,20 +111,51 @@ function CategoryNavBar({ laptopDropdownOpen, setLaptopDropdownOpen }) {
                   >
                     <Icon className="w-4 h-4" />
                     {category.name}
-                    <ChevronDown className={`w-3 h-3 transition-transform ${laptopDropdownOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                   </button>
 
-                  {laptopDropdownOpen && (
+                  {isOpen && (
                     <div className="absolute top-full left-0 pt-1 z-50">
                       <div className="bg-white border border-gray-200 rounded-lg shadow-lg min-w-[180px] py-2">
                         {category.subcategories.map((sub) => (
-                          <Link
-                            key={sub.name}
-                            href={sub.href}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#6dc1c9]/10 hover:text-[#6dc1c9] transition-colors"
-                          >
-                            {sub.name}
-                          </Link>
+                          sub.hasSubMenu ? (
+                            <div
+                              key={sub.name}
+                              className="relative"
+                              onMouseEnter={() => setSalesSubOpen(true)}
+                              onMouseLeave={() => setSalesSubOpen(false)}
+                            >
+                              <button
+                                className="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-700 hover:bg-[#6dc1c9]/10 hover:text-[#6dc1c9] transition-colors"
+                              >
+                                {sub.name}
+                                <ChevronDown className="w-3 h-3 -rotate-90" />
+                              </button>
+                              {salesSubOpen && (
+                                <div className="absolute left-full top-0 ml-1 z-50">
+                                  <div className="bg-white border border-gray-200 rounded-lg shadow-lg min-w-[160px] py-2">
+                                    {sub.subItems.map((item) => (
+                                      <Link
+                                        key={item.name}
+                                        href={item.href}
+                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#6dc1c9]/10 hover:text-[#6dc1c9] transition-colors"
+                                      >
+                                        {item.name}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <Link
+                              key={sub.name}
+                              href={sub.href}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#6dc1c9]/10 hover:text-[#6dc1c9] transition-colors"
+                            >
+                              {sub.name}
+                            </Link>
+                          )
                         ))}
                       </div>
                     </div>
@@ -135,6 +201,7 @@ const Navbar = () => {
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
   const [isScrolled, setIsScrolled] = useState(false);
   const [laptopDropdownOpen, setLaptopDropdownOpen] = useState(false);
+  const [discountedDropdownOpen, setDiscountedDropdownOpen] = useState(false);
   const searchRef = useRef(null);
   const searchInputRef = useRef(null);
   const mobileSearchRef = useRef(null);
@@ -501,8 +568,8 @@ const Navbar = () => {
       {/* Spacer for fixed navbar */}
       <div className="h-[44px] sm:h-[52px] md:h-[56px] lg:h-[60px]"></div>
 
-      {/* Category Navigation Bar - Only on product pages */}
-      {(pathname === '/products' || pathname?.startsWith('/products/') || pathname === '/chromebook' || pathname === '/clearance' || pathname === '/workstation') && (
+      {/* Category Navigation Bar - Show on all pages except home */}
+      {pathname !== '/' && (
         <Suspense fallback={
           <div className="bg-white border-b border-gray-200 sticky top-[44px] sm:top-[52px] md:top-[56px] lg:top-[60px] z-40">
             <div className="container mx-auto px-4">
@@ -512,7 +579,7 @@ const Navbar = () => {
             </div>
           </div>
         }>
-          <CategoryNavBar laptopDropdownOpen={laptopDropdownOpen} setLaptopDropdownOpen={setLaptopDropdownOpen} />
+          <CategoryNavBar laptopDropdownOpen={laptopDropdownOpen} setLaptopDropdownOpen={setLaptopDropdownOpen} discountedDropdownOpen={discountedDropdownOpen} setDiscountedDropdownOpen={setDiscountedDropdownOpen} />
         </Suspense>
       )}
 

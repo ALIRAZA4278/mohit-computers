@@ -320,7 +320,7 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
                     </span>
                   </div>
                   <div className={`text-xs mt-1 ${customizations.ssdUpgrade?.id === ssd.id ? 'text-teal-100' : 'text-gray-500'}`}>
-                    NVMe SSD
+                    {product?.hdd || 'Current'} → {ssd.size} NVMe SSD
                   </div>
                   {customizations.ssdUpgrade?.id === ssd.id && (
                     <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow">

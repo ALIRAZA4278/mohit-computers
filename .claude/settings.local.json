@@ -8,7 +8,9 @@
       "Bash(npx next lint:*)",
       "Bash(dir:*)",
       "Bash(find:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(npx eslint:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

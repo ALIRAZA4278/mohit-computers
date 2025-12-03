@@ -51,14 +51,43 @@ export const fetchUpgradePricing = async () => {
 };
 
 // Helper function to get RAM options based on processor generation
-export const getRAMOptionsByGeneration = async (generation) => {
-  if (!generation) return [];
+export const getRAMOptionsByGeneration = async (generation, processor = '') => {
+  if (!generation && !processor) return [];
 
   const pricing = await fetchUpgradePricing();
+  const genLower = (generation || '').toLowerCase();
+  const procLower = (processor || '').toLowerCase();
 
+  // Intel DDR3 generations
   const ddr3Generations = ['3rd Gen', '4th Gen', '5th Gen'];
+  // Intel DDR4 generations
   const ddr4Generations = ['6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen'];
+  // Intel DDR5 generations
   const ddr5Generations = ['12th Gen', '13th Gen', '14th Gen', '15th Gen'];
+
+  // Check for AMD Ryzen processors (DDR4 for Ryzen 1000-5000, DDR5 for Ryzen 7000+)
+  const isAMDRyzen = procLower.includes('ryzen') || procLower.includes('amd');
+  const isRyzen7000Plus = procLower.includes('7') && (procLower.includes('7000') || procLower.includes('7x') || procLower.includes('ryzen 7 7'));
+
+  // AMD Ryzen 7000 series uses DDR5
+  if (isAMDRyzen && isRyzen7000Plus) {
+    return [
+      { capacity: '8GB', price: pricing.ram_ddr5_8gb || 8000, label: '8GB DDR5' },
+      { capacity: '16GB', price: pricing.ram_ddr5_16gb || 15000, label: '16GB DDR5' },
+      { capacity: '32GB', price: pricing.ram_ddr5_32gb || 30000, label: '32GB DDR5' },
+      { capacity: '64GB', price: pricing.ram_ddr5_64gb || 60000, label: '64GB DDR5' }
+    ];
+  }
+
+  // AMD Ryzen 1000-6000 series uses DDR4
+  if (isAMDRyzen) {
+    return [
+      { capacity: '4GB', price: pricing.ram_ddr4_4gb, label: '4GB DDR4' },
+      { capacity: '8GB', price: pricing.ram_ddr4_8gb, label: '8GB DDR4' },
+      { capacity: '16GB', price: pricing.ram_ddr4_16gb, label: '16GB DDR4' },
+      { capacity: '32GB', price: pricing.ram_ddr4_32gb, label: '32GB DDR4' }
+    ];
+  }
 
   // Check if generation matches DDR3 (3rd-5th Gen)
   if (ddr3Generations.includes(generation)) {
@@ -88,11 +117,33 @@ export const getRAMOptionsByGeneration = async (generation) => {
     ];
   }
 
-  return [];
+  // Default to DDR4 if generation/processor not recognized
+  return [
+    { capacity: '4GB', price: pricing.ram_ddr4_4gb, label: '4GB DDR4' },
+    { capacity: '8GB', price: pricing.ram_ddr4_8gb, label: '8GB DDR4' },
+    { capacity: '16GB', price: pricing.ram_ddr4_16gb, label: '16GB DDR4' },
+    { capacity: '32GB', price: pricing.ram_ddr4_32gb, label: '32GB DDR4' }
+  ];
 };
 
-// Helper function to get RAM type based on generation
-export const getRAMTypeByGeneration = (generation) => {
+// Helper function to get RAM type based on generation and processor
+export const getRAMTypeByGeneration = (generation, processor = '') => {
+  const procLower = (processor || '').toLowerCase();
+
+  // Check for AMD Ryzen processors
+  const isAMDRyzen = procLower.includes('ryzen') || procLower.includes('amd');
+  const isRyzen7000Plus = procLower.includes('7') && (procLower.includes('7000') || procLower.includes('7x') || procLower.includes('ryzen 7 7'));
+
+  // AMD Ryzen 7000 series uses DDR5
+  if (isAMDRyzen && isRyzen7000Plus) {
+    return 'DDR5';
+  }
+
+  // AMD Ryzen 1000-6000 series uses DDR4
+  if (isAMDRyzen) {
+    return 'DDR4';
+  }
+
   if (!generation) return 'DDR4';
 
   const ddr3Generations = ['3rd Gen', '4th Gen', '5th Gen'];

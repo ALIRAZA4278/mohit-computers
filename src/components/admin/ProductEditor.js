@@ -19,6 +19,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     inStock: true,
     active: true,
     featured: false,
+    newArrival: false,
     workstation: false,
     ruggedTough: false,
     seoOnly: false, // SEO-only products (visible only via direct URL)
@@ -43,8 +44,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     hdd: '',
     displaySize: '',
     resolution: '',
+    resolutionFilter: '', // For filtering only (HD, Full HD, QHD, 4K)
     integratedGraphics: '',
     discreteGraphics: '',
+    graphicsMemory: '', // GPU VRAM (2GB, 4GB, 6GB, etc.)
     touchType: '',
     operatingFeatures: '',
     extraFeatures: '',
@@ -119,6 +122,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         inStock: product.in_stock !== false,
         active: product.is_active !== false,
         featured: product.is_featured || false,
+        newArrival: product.is_new_arrival || false,
         workstation: product.is_workstation || false,
         ruggedTough: product.is_rugged_tough || false,
         seoOnly: product.seo_only || false,
@@ -143,8 +147,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         hdd: product.hdd || '',
         displaySize: product.display_size || '',
         resolution: product.resolution || '',
+        resolutionFilter: product.resolution_filter || '',
         integratedGraphics: product.integrated_graphics || '',
         discreteGraphics: product.discrete_graphics || '',
+        graphicsMemory: product.graphics_memory || '',
         touchType: product.touch_type || '',
         operatingFeatures: product.operating_features || '',
         extraFeatures: product.extra_features || '',
@@ -347,6 +353,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         in_stock: formData.inStock,
         is_active: formData.active,
         is_featured: formData.featured,
+        is_new_arrival: formData.newArrival,
         is_workstation: formData.workstation,
         is_rugged_tough: formData.ruggedTough,
         seo_only: formData.seoOnly,
@@ -367,8 +374,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         hdd: formData.hdd || null,
         display_size: formData.displaySize || null,
         resolution: formData.resolution || null,
+        resolution_filter: formData.resolutionFilter || null,
         integrated_graphics: formData.integratedGraphics || null,
         discrete_graphics: formData.discreteGraphics || null,
+        graphics_memory: formData.graphicsMemory || null,
         touch_type: formData.touchType || null,
         operating_features: formData.operatingFeatures || null,
         extra_features: formData.extraFeatures || null,
@@ -807,6 +816,16 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 className="rounded text-black border-gray-300  focus:ring-blue-500"
               />
               <span className="ml-2 text-sm text-gray-700">Featured Product</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                name="newArrival"
+                checked={formData.newArrival}
+                onChange={handleChange}
+                className="rounded text-black border-gray-300  focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-700">New Arrival</span>
             </label>
             <label className="flex items-center">
               <input
@@ -1636,10 +1655,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
           </div>
         )}
 
-        {/* Laptop Specific Fields */}
-        {formData.category === 'laptop' && (
+        {/* Laptop & Workstation Specific Fields */}
+        {(formData.category === 'laptop' || formData.category === 'workstation') && (
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Laptop Specifications</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              {formData.category === 'workstation' ? 'Workstation Specifications' : 'Laptop Specifications'}
+            </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Model */}
@@ -1732,24 +1753,41 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 />
               </div>
 
-              {/* Resolution */}
+              {/* Resolution (for product detail page) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Resolution
+                  Resolution (Detail Page)
                 </label>
-                <select
+                <input
+                  type="text"
                   name="resolution"
                   value={formData.resolution}
                   onChange={handleChange}
+                  placeholder="e.g., Full HD (1920x1080), IPS Panel"
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">Shows on product detail page</p>
+              </div>
+
+              {/* Resolution Filter (for filtering) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Resolution Filter
+                </label>
+                <select
+                  name="resolutionFilter"
+                  value={formData.resolutionFilter}
+                  onChange={handleChange}
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">Select Resolution</option>
-                  {resolutionOptions.map(resolution => (
-                    <option key={resolution} value={resolution}>
-                      {resolution}
-                    </option>
-                  ))}
+                  <option value="">Select for Filter</option>
+                  <option value="HD">HD (1366x768)</option>
+                  <option value="Full HD">Full HD (1920x1080)</option>
+                  <option value="QHD">QHD (2560x1440)</option>
+                  <option value="4K">4K UHD (3840x2160)</option>
+                  <option value="Retina">Retina Display</option>
                 </select>
+                <p className="text-xs text-gray-500 mt-1">Used for filtering products</p>
               </div>
 
               {/* Integrated Graphics */}
@@ -1780,6 +1818,29 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   placeholder="e.g., NVIDIA GeForce MX250"
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+              </div>
+
+              {/* Graphics Memory (VRAM) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Graphics Memory (VRAM)
+                </label>
+                <select
+                  name="graphicsMemory"
+                  value={formData.graphicsMemory}
+                  onChange={handleChange}
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select VRAM</option>
+                  <option value="1GB">1GB</option>
+                  <option value="2GB">2GB</option>
+                  <option value="3GB">3GB</option>
+                  <option value="4GB">4GB</option>
+                  <option value="6GB">6GB</option>
+                  <option value="8GB">8GB</option>
+                  <option value="12GB">12GB</option>
+                  <option value="16GB">16GB</option>
+                </select>
               </div>
 
               {/* Touch Type */}
@@ -1864,8 +1925,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
           </div>
         )}
 
-        {/* Upgrade Options - Only for Laptop category */}
-        {formData.category === 'laptop' && (
+        {/* Upgrade Options - For Laptop and Workstation categories */}
+        {(formData.category === 'laptop' || formData.category === 'workstation') && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Upgrade Options</h3>
             <p className="text-sm text-gray-600 mb-6">
@@ -1883,9 +1944,10 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               </h4>
               <div className="text-sm text-blue-800 space-y-1">
                 <p><strong>Generation:</strong> {formData.generation || 'Not set - enter generation above'}</p>
+                <p><strong>Processor:</strong> {formData.processor || 'Not set'}</p>
                 <p><strong>Current Storage:</strong> {formData.hdd || 'Not set - enter storage above'}</p>
-                {formData.generation && (
-                  <p><strong>RAM Type:</strong> {getRAMTypeByGeneration(formData.generation)}</p>
+                {(formData.generation || formData.processor) && (
+                  <p><strong>RAM Type:</strong> {getRAMTypeByGeneration(formData.generation, formData.processor)}</p>
                 )}
               </div>
             </div>

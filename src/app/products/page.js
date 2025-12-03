@@ -55,6 +55,31 @@ function ProductsContent() {
       return str !== '-' && str !== '--' && str !== '—' && str !== 'n/a' && str !== 'na' && str !== 'null' && str !== 'undefined' && str.length > 0;
     };
 
+    // Normalize touch type values to handle variations (spaces, dashes, capitalization)
+    const normalizeTouchType = (value) => {
+      if (!value) return null;
+      const str = String(value).trim().toLowerCase();
+
+      // Non-touch variations
+      if (str.includes('non') && str.includes('touch')) {
+        return 'Non-touch';
+      }
+      // X360/Convertible variations
+      if (str.includes('x360') || str.includes('convertible')) {
+        return 'Touch X360';
+      }
+      // Touch Detachable variations (check before plain Touch)
+      if (str.includes('detachable')) {
+        return 'Touch - Detachable';
+      }
+      // Plain Touch (must check last)
+      if (str === 'touch' || (str.includes('touch') && !str.includes('non'))) {
+        return 'Touch';
+      }
+      // Return original trimmed value if no pattern matches
+      return String(value).trim();
+    };
+
     const extractUniqueValues = (field, processor) => {
       const values = availableProducts
         .map(p => processor ? processor(p[field]) : p[field])
@@ -62,6 +87,15 @@ function ProductsContent() {
         .flat()
         .filter(isValidValue) // Filter out invalid values
         .map(v => String(v).trim()); // Normalize: trim whitespace and convert to string
+      return [...new Set(values)].sort();
+    };
+
+    // Extract normalized unique values for touch type
+    const extractNormalizedTouchTypes = () => {
+      const values = availableProducts
+        .map(p => normalizeTouchType(p.touch_type))
+        .filter(Boolean)
+        .filter(isValidValue);
       return [...new Set(values)].sort();
     };
 
@@ -79,25 +113,22 @@ function ProductsContent() {
       const prices = availableProducts.map(p => p.price).filter(p => p > 0).sort((a, b) => a - b);
       if (prices.length === 0) return [];
 
-      const minPrice = Math.floor(prices[0] / 10000) * 10000; // Round down to nearest 10k
-      const maxPrice = Math.ceil(prices[prices.length - 1] / 10000) * 10000; // Round up to nearest 10k
+      // Use larger steps for cleaner ranges
+      const stepSize = category === 'ram' ? 5000 : (category === 'ssd' ? 5000 : 50000);
+      const minPrice = Math.floor(prices[0] / stepSize) * stepSize; // Round down to nearest step
+      const maxPrice = Math.ceil(prices[prices.length - 1] / stepSize) * stepSize; // Round up to nearest step
 
       const ranges = [];
-      const step = category === 'ram' ? 2000 : 20000; // Smaller steps for RAM
 
-      for (let i = minPrice; i < maxPrice; i += step) {
-        const rangeMax = i + step;
-        const label = category === 'ram'
-          ? `PKR ${i.toLocaleString()} - ${rangeMax.toLocaleString()}`
-          : `Rs:${i.toLocaleString()} - Rs:${rangeMax.toLocaleString()}`;
+      for (let i = minPrice; i < maxPrice; i += stepSize) {
+        const rangeMax = i + stepSize;
+        const label = `Rs:${i.toLocaleString()} - Rs:${rangeMax.toLocaleString()}`;
         ranges.push({ label, min: i, max: rangeMax });
       }
 
       // Add "Above" range
       if (maxPrice > minPrice) {
-        const aboveLabel = category === 'ram'
-          ? `Above PKR ${maxPrice.toLocaleString()}`
-          : `Above Rs:${maxPrice.toLocaleString()}`;
+        const aboveLabel = `Above Rs:${maxPrice.toLocaleString()}`;
         ranges.push({ label: aboveLabel, min: maxPrice, max: Infinity });
       }
 
@@ -119,12 +150,19 @@ function ProductsContent() {
         ...extractUniqueValues('display')
       ])].sort();
 
-      // Combine and deduplicate graphics values
+      // Only show discrete/dedicated graphics in filter (not integrated)
       const graphics = [...new Set([
         ...extractUniqueValues('discrete_graphics'),
-        ...extractUniqueValues('integrated_graphics'),
         ...extractUniqueValues('graphics')
-      ])].sort();
+      ])].filter(g => {
+        // Exclude integrated graphics from filter options
+        const lower = g.toLowerCase();
+        return !lower.includes('intel hd') &&
+               !lower.includes('intel uhd') &&
+               !lower.includes('intel iris') &&
+               !lower.includes('amd radeon vega') &&
+               !lower.includes('integrated');
+      }).sort();
 
       return {
         brands: extractUniqueValues('brand'),
@@ -134,8 +172,9 @@ function ProductsContent() {
         display: displays,
         generation: sortGenerations(generations), // Sort generations numerically
         graphics: graphics,
-        touchType: extractUniqueValues('touch_type'),
-        resolution: extractUniqueValues('resolution'),
+        touchType: extractNormalizedTouchTypes(), // Use normalized touch types to avoid duplicates
+        resolution: ['HD (1366x768)', 'Full HD (1920x1080)', 'QHD (2560x1440)', '4K UHD (3840x2160)', 'Retina Display'], // Fixed resolution options
+        graphicsMemory: extractUniqueValues('graphics_memory'), // GPU VRAM filter
         operatingSystem: extractUniqueValues('os'),
         priceRanges: generatePriceRanges()
       };
@@ -857,56 +896,54 @@ function ProductsContent() {
       }
     }
 
+    // Apply graphics memory filter (database field: graphics_memory)
+    if (filters.graphicsMemory && filters.graphicsMemory.length > 0) {
+      const beforeFilter = filtered.length;
+
+      filtered = filtered.filter(product => {
+        const productGraphicsMemory = (product.graphics_memory || '').toLowerCase();
+
+        return filters.graphicsMemory.some(filterMemory => {
+          const filterMem = filterMemory.toLowerCase();
+          return productGraphicsMemory === filterMem || productGraphicsMemory.includes(filterMem);
+        });
+      });
+
+      console.log(`✅ Graphics Memory filter (${filters.graphicsMemory}): ${beforeFilter} → ${filtered.length} products`);
+    }
+
     // Apply resolution filter (database field: resolution)
+    // Filter options: HD (1366x768), Full HD (1920x1080), QHD (2560x1440), 4K UHD (3840x2160), Retina Display
     if (filters.resolution && filters.resolution.length > 0) {
       const beforeFilter = filtered.length;
-      
+
       filtered = filtered.filter(product => {
-        const productResolution = (product.resolution || '').toLowerCase();
-        
+        const productRes = (product.resolution || '').toLowerCase();
+
         return filters.resolution.some(filterResolution => {
           const filterRes = filterResolution.toLowerCase();
-          
-          // Try exact match first
-          if (productResolution === filterRes) {
-            return true;
-          }
-          
-          // Try contains match
-          if (productResolution.includes(filterRes) || filterRes.includes(productResolution)) {
-            return true;
-          }
-          
-          // Special handling for resolution variations
-          // Match "HD" with "HD (1366x768)"
-          if (filterRes.includes('hd') && productResolution.includes('hd')) {
-            if (filterRes.includes('full hd') && productResolution.includes('full hd')) return true;
-            if (filterRes.includes('qhd') && productResolution.includes('qhd')) return true;
-            if (filterRes.includes('4k') && productResolution.includes('4k')) return true;
-            // Just "HD" (not Full HD)
-            if (filterRes.match(/^hd\s*\(/i) && productResolution.match(/^hd\s*\(/i)) return true;
-          }
-          
-          // Match resolution numbers like "1920x1080" with "Full HD (1920x1080)"
-          if (filterRes.includes('1920') && productResolution.includes('1920')) return true;
-          if (filterRes.includes('1366') && productResolution.includes('1366')) return true;
-          if (filterRes.includes('2560') && productResolution.includes('2560')) return true;
-          if (filterRes.includes('3840') && productResolution.includes('3840')) return true;
-          
+
+          // Exact match
+          if (productRes === filterRes) return true;
+
+          // Match by resolution dimensions or type
+          if (filterRes.includes('1366x768') && productRes.includes('1366x768')) return true;
+          if (filterRes.includes('1920x1080') && productRes.includes('1920x1080')) return true;
+          if (filterRes.includes('2560x1440') && productRes.includes('2560x1440')) return true;
+          if (filterRes.includes('3840x2160') && productRes.includes('3840x2160')) return true;
+          if (filterRes.includes('retina') && productRes.includes('retina')) return true;
+
+          // Match by short name (HD, Full HD, QHD, 4K)
+          if (filterRes.includes('hd (1366') && (productRes.includes('hd') && productRes.includes('1366'))) return true;
+          if (filterRes.includes('full hd') && (productRes.includes('full hd') || productRes.includes('fhd') || productRes.includes('1920x1080'))) return true;
+          if (filterRes.includes('qhd') && (productRes.includes('qhd') || productRes.includes('2560x1440') || productRes.includes('2k'))) return true;
+          if (filterRes.includes('4k') && (productRes.includes('4k') || productRes.includes('3840x2160') || productRes.includes('uhd'))) return true;
+
           return false;
         });
       });
-      
+
       console.log(`✅ Resolution filter (${filters.resolution}): ${beforeFilter} → ${filtered.length} products`);
-      
-      // Debug if no products matched
-      if (filtered.length === 0 && beforeFilter > 0) {
-        console.log('❌ NO RESOLUTIONS MATCHED!');
-        console.log('Sample resolutions from products:',
-          products.slice(0, 10).map(p => `"${p.resolution}"`).filter(r => r !== '""')
-        );
-        console.log('Looking for:', filters.resolution.map(r => `"${r}"`));
-      }
     }
 
     // Apply graphics filter (database fields: integrated_graphics, discrete_graphics, graphics)
@@ -983,32 +1020,27 @@ function ProductsContent() {
     // Apply touch type filter (database field: touch_type)
     if (filters.touchType && filters.touchType.length > 0) {
       const beforeFilter = filtered.length;
-      
+
+      // Normalize touch type for consistent matching
+      const normalizeTouch = (value) => {
+        if (!value) return '';
+        const str = String(value).trim().toLowerCase();
+        if (str.includes('non') && str.includes('touch')) return 'non-touch';
+        if (str.includes('x360') || str.includes('convertible')) return 'touch x360';
+        if (str.includes('detachable')) return 'touch - detachable';
+        if (str === 'touch' || (str.includes('touch') && !str.includes('non'))) return 'touch';
+        return str;
+      };
+
       filtered = filtered.filter(product => {
-        const productTouchType = (product.touch_type || '').toLowerCase();
-        
+        const normalizedProductTouch = normalizeTouch(product.touch_type);
+
         return filters.touchType.some(filterTouchType => {
-          const filterTouch = filterTouchType.toLowerCase();
-          
-          // Try exact match first
-          if (productTouchType === filterTouch) {
-            return true;
-          }
-          
-          // Try contains match
-          if (productTouchType.includes(filterTouch) || filterTouch.includes(productTouchType)) {
-            return true;
-          }
-          
-          // Special handling for touch variations
-          if (filterTouch.includes('x360') && productTouchType.includes('x360')) return true;
-          if (filterTouch.includes('convertible') && productTouchType.includes('convertible')) return true;
-          if (filterTouch.includes('non') && productTouchType.includes('non')) return true;
-          
-          return false;
+          const normalizedFilterTouch = normalizeTouch(filterTouchType);
+          return normalizedProductTouch === normalizedFilterTouch;
         });
       });
-      
+
       console.log(`✅ Touch Type filter (${filters.touchType}): ${beforeFilter} → ${filtered.length} products`);
       
       // Debug if no products matched
