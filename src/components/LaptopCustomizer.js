@@ -114,10 +114,23 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
           price: finalPrice,
           defaultPrice: opt.price,
           isCustomPrice: customPrice !== undefined,
-          label: opt.display_label
+          label: opt.display_label,
+          applicableTo: opt.applicable_to
         };
       })
-      .sort((a, b) => a.sizeNumber - b.sizeNumber); // Sort by size
+      .sort((a, b) => a.sizeNumber - b.sizeNumber)
+      // Deduplicate by size - keep only one option per size (prefer cheaper price)
+      .reduce((acc, opt) => {
+        const existing = acc.find(o => o.sizeNumber === opt.sizeNumber);
+        if (!existing) {
+          acc.push(opt);
+        } else if (opt.price < existing.price) {
+          // Replace with cheaper option
+          const index = acc.indexOf(existing);
+          acc[index] = opt;
+        }
+        return acc;
+      }, []); // Sort by size
   }, [upgradeOptions.ram, product?.ram, product?.generation, product?.custom_upgrade_pricing]);
 
   // SSD upgrade options (replaces existing drive) - show only larger capacities than current storage

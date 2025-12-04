@@ -637,7 +637,7 @@ export default function ProductDetail() {
                           {product.generation && (
                             <div className="flex justify-between px-3 py-2">
                               <span className="text-gray-500 text-xs">Generation</span>
-                              <span className="font-medium text-gray-900 text-xs">{product.generation} Gen</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.generation}</span>
                             </div>
                           )}
                           {(laptopCustomization.updatedSpecs?.ram || product.ram) && (
