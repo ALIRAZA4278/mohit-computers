@@ -116,6 +116,7 @@ export async function GET() {
       { header: 'Is Rugged', key: 'isRugged', width: 10 },
       { header: 'On Sale', key: 'onSale', width: 10 },
       { header: 'Discount %', key: 'discountPct', width: 10 },
+      { header: 'SEO Only', key: 'seoOnly', width: 10 },
       { header: 'Show Customizer', key: 'showCustomizer', width: 14 },
       { header: 'Show RAM Options', key: 'showRamOptions', width: 14 },
       { header: 'Show SSD Options', key: 'showSsdOptions', width: 14 },
@@ -168,6 +169,7 @@ export async function GET() {
         isRugged: 'FALSE',
         onSale: 'FALSE',
         discountPct: '',
+        seoOnly: 'FALSE',
         showCustomizer: 'TRUE',
         showRamOptions: 'TRUE',
         showSsdOptions: 'TRUE',
@@ -208,6 +210,7 @@ export async function GET() {
         isRugged: 'FALSE',
         onSale: 'FALSE',
         discountPct: '',
+        seoOnly: 'FALSE',
         showCustomizer: 'TRUE',
         showRamOptions: 'TRUE',
         showSsdOptions: 'TRUE',
@@ -248,6 +251,7 @@ export async function GET() {
         isRugged: 'FALSE',
         onSale: 'FALSE',
         discountPct: '',
+        seoOnly: 'FALSE',
         showCustomizer: 'TRUE',
         showRamOptions: 'TRUE',
         showSsdOptions: 'TRUE',
@@ -266,6 +270,11 @@ export async function GET() {
     const rowEnd = 200;
 
     // Column mapping for dropdowns
+    // A=Model, B=Brand, C=ProductType, D=Processor, E=Generation, F=RAM, G=Storage, H=DisplaySize,
+    // I=ResFilter, J=ResDetail, K=IntGraphics, L=DedGraphics, M=GraphicsMem, N=TouchType, O=OS,
+    // P=Condition, Q=Battery, R=Charger, S=ExtraFeatures, T=SellingPrice, U=OrigPrice, V=StockQty,
+    // W=Warranty, X=Desc, Y=InStock, Z=IsActive, AA=IsFeatured, AB=IsNewArrival, AC=IsWorkstation,
+    // AD=IsRugged, AE=OnSale, AF=Discount%, AG=SEOOnly, AH=ShowCustomizer, AI=ShowRAM, AJ=ShowSSD
     const columnDropdowns = {
       'B': dropdowns.brand,              // Brand
       'C': dropdowns.productType,        // Product Type
@@ -290,9 +299,10 @@ export async function GET() {
       'AC': dropdowns.booleanOptions,    // Is Workstation
       'AD': dropdowns.booleanOptions,    // Is Rugged
       'AE': dropdowns.booleanOptions,    // On Sale
-      'AG': dropdowns.booleanOptions,    // Show Customizer
-      'AH': dropdowns.booleanOptions,    // Show RAM Options
-      'AI': dropdowns.booleanOptions     // Show SSD Options
+      'AG': dropdowns.booleanOptions,    // SEO Only
+      'AH': dropdowns.booleanOptions,    // Show Customizer
+      'AI': dropdowns.booleanOptions,    // Show RAM Options
+      'AJ': dropdowns.booleanOptions     // Show SSD Options
     };
 
     // Apply dropdowns to each column
@@ -379,6 +389,7 @@ export async function GET() {
       { field: 'Is Rugged', description: 'TRUE = Mark as rugged/tough laptop', required: 'NO' },
       { field: 'On Sale', description: 'TRUE = Show sale badge', required: 'NO' },
       { field: 'Discount %', description: 'Discount percentage (10, 15, 20, etc.)', required: 'NO' },
+      { field: 'SEO Only', description: 'TRUE = Product hidden from website listings (only visible via direct URL/Google search)', required: 'NO' },
       { field: 'Show Customizer', description: 'TRUE = Show upgrade options on product page', required: 'NO' },
       { field: 'Show RAM Options', description: 'TRUE = Show RAM upgrade options', required: 'NO' },
       { field: 'Show SSD Options', description: 'TRUE = Show SSD upgrade options', required: 'NO' },
