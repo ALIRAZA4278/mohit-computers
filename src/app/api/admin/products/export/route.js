@@ -36,8 +36,9 @@ export async function GET(request) {
     const dropdowns = {
       category: ['laptop', 'chromebook', 'workstation', 'ram', 'ssd', 'accessories'],
       brand: ['HP', 'Dell', 'Lenovo', 'Acer', 'ASUS', 'Apple', 'MSI', 'Toshiba', 'Sony', 'Samsung', 'Kingston', 'Corsair', 'Crucial', 'G.Skill', 'Transcend', 'WD', 'SanDisk', 'Intel', 'Logitech', 'Microsoft', 'Razer', 'Generic'],
+      productType: ['New', 'Used'],
       condition: ['New', 'Excellent', 'Very Good', 'Good', 'Used'],
-      touchType: ['Touch', 'Non-touch', 'X360 (Convertible)'],
+      touchType: ['Touch', 'Non-touch', 'X360 (Convertible)', 'Touch - Detachable'],
       generation: ['4th Gen', '5th Gen', '6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen', '13th Gen'],
       booleanOptions: ['TRUE', 'FALSE'],
       ramType: ['DDR3', 'DDR3L', 'DDR4', 'DDR5'],
@@ -56,7 +57,27 @@ export async function GET(request) {
         'Intel UHD Graphics 630',
         'Intel Iris Xe Graphics',
         'AMD Radeon Vega 8',
-        'AMD Radeon Vega'
+        'AMD Radeon Vega',
+        'Apple M1 GPU (7-core)',
+        'Apple M1 GPU (8-core)',
+        'Apple M1 Pro GPU (14-core)',
+        'Apple M1 Pro GPU (16-core)',
+        'Apple M1 Max GPU (24-core)',
+        'Apple M1 Max GPU (32-core)',
+        'Apple M2 GPU (8-core)',
+        'Apple M2 GPU (10-core)',
+        'Apple M2 Pro GPU (16-core)',
+        'Apple M2 Pro GPU (19-core)',
+        'Apple M2 Max GPU (30-core)',
+        'Apple M2 Max GPU (38-core)',
+        'Apple M3 GPU (8-core)',
+        'Apple M3 GPU (10-core)',
+        'Apple M3 Pro GPU (14-core)',
+        'Apple M3 Pro GPU (18-core)',
+        'Apple M3 Max GPU (30-core)',
+        'Apple M3 Max GPU (40-core)',
+        'Apple M4 GPU',
+        'Apple GPU'
       ],
       dedicatedGraphics: [
         'NVIDIA GeForce MX150',
@@ -72,15 +93,33 @@ export async function GET(request) {
       processors: [
         'Intel Core i3',
         'Intel Core i5',
+        'Intel Core i5-H',
         'Intel Core i7',
+        'Intel Core i7-H',
         'Intel Core i9',
+        'Intel Core i9-H',
         'Intel Pentium',
         'Intel Celeron',
         'Intel Xeon',
         'AMD Ryzen 3',
         'AMD Ryzen 5',
+        'AMD Ryzen 5-H',
         'AMD Ryzen 7',
-        'AMD Ryzen 9'
+        'AMD Ryzen 7-H',
+        'AMD Ryzen 9',
+        'AMD Ryzen 9-H',
+        'Apple M1',
+        'Apple M1 Pro',
+        'Apple M1 Max',
+        'Apple M2',
+        'Apple M2 Pro',
+        'Apple M2 Max',
+        'Apple M3',
+        'Apple M3 Pro',
+        'Apple M3 Max',
+        'Apple M4',
+        'Apple M4 Pro',
+        'Apple M4 Max'
       ]
     };
 
@@ -95,6 +134,7 @@ export async function GET(request) {
       { header: 'Category', key: 'category', width: 15 },
       { header: 'Model', key: 'model', width: 30 },
       { header: 'Brand', key: 'brand', width: 15 },
+      { header: 'Product Type', key: 'productType', width: 12 },
       { header: 'Description', key: 'description', width: 40 },
       { header: 'Selling Price', key: 'sellingPrice', width: 15 },
       { header: 'Original Price', key: 'originalPrice', width: 15 },
@@ -157,6 +197,7 @@ export async function GET(request) {
         category: product.category_id || '',
         model: product.name || '',
         brand: product.brand || '',
+        productType: product.product_type || (product.condition === 'New' ? 'New' : 'Used'),
         description: product.description || '',
         sellingPrice: product.price || 0,
         originalPrice: product.original_price || '',
@@ -214,37 +255,38 @@ export async function GET(request) {
       };
     }
 
-    // Column mapping for dropdowns (shifted by 1 due to Product ID column)
+    // Column mapping for dropdowns (shifted by 1 due to Product ID column, and 1 for Product Type)
     const columnDropdowns = {
       'B': dropdowns.category,           // Category
       'D': dropdowns.brand,              // Brand
-      'I': dropdowns.booleanOptions,     // In Stock
-      'J': dropdowns.booleanOptions,     // Is Active
-      'K': dropdowns.booleanOptions,     // Is Featured
-      'L': dropdowns.booleanOptions,     // Is New Arrival
-      'M': dropdowns.booleanOptions,     // On Sale
-      'O': dropdowns.booleanOptions,     // Is Workstation
-      'P': dropdowns.booleanOptions,     // Is Rugged
-      'Q': dropdowns.booleanOptions,     // Is Clearance
-      'S': dropdowns.booleanOptions,     // SEO Only
-      'T': dropdowns.processors,         // Processor
-      'U': dropdowns.generation,         // Generation
-      'X': dropdowns.displaySize,        // Display Size
-      'AA': dropdowns.integratedGraphics, // Integrated Graphics
-      'AB': dropdowns.dedicatedGraphics, // Dedicated Graphics
-      'AD': dropdowns.touchType,         // Touch Type
-      'AG': dropdowns.condition,         // Condition
-      'AI': dropdowns.booleanOptions,    // Charger Included
-      'AJ': dropdowns.warranty,          // Warranty
-      'AK': dropdowns.booleanOptions,    // Show Customizer
-      'AL': dropdowns.booleanOptions,    // Show RAM Options
-      'AM': dropdowns.booleanOptions,    // Show SSD Options
-      'AN': dropdowns.ramType,           // RAM Type
-      'AO': dropdowns.ramCapacity,       // RAM Capacity
-      'AP': dropdowns.ramSpeed,          // RAM Speed
-      'AQ': dropdowns.ramFormFactor,     // RAM Form Factor
-      'AR': dropdowns.condition,         // RAM Condition
-      'AS': dropdowns.warranty           // RAM Warranty
+      'E': dropdowns.productType,        // Product Type (New/Used)
+      'J': dropdowns.booleanOptions,     // In Stock
+      'K': dropdowns.booleanOptions,     // Is Active
+      'L': dropdowns.booleanOptions,     // Is Featured
+      'M': dropdowns.booleanOptions,     // Is New Arrival
+      'N': dropdowns.booleanOptions,     // On Sale
+      'P': dropdowns.booleanOptions,     // Is Workstation
+      'Q': dropdowns.booleanOptions,     // Is Rugged
+      'R': dropdowns.booleanOptions,     // Is Clearance
+      'T': dropdowns.booleanOptions,     // SEO Only
+      'U': dropdowns.processors,         // Processor
+      'V': dropdowns.generation,         // Generation
+      'Y': dropdowns.displaySize,        // Display Size
+      'AB': dropdowns.integratedGraphics, // Integrated Graphics
+      'AC': dropdowns.dedicatedGraphics, // Dedicated Graphics
+      'AE': dropdowns.touchType,         // Touch Type
+      'AH': dropdowns.condition,         // Condition
+      'AJ': dropdowns.booleanOptions,    // Charger Included
+      'AK': dropdowns.warranty,          // Warranty
+      'AL': dropdowns.booleanOptions,    // Show Customizer
+      'AM': dropdowns.booleanOptions,    // Show RAM Options
+      'AN': dropdowns.booleanOptions,    // Show SSD Options
+      'AO': dropdowns.ramType,           // RAM Type
+      'AP': dropdowns.ramCapacity,       // RAM Capacity
+      'AQ': dropdowns.ramSpeed,          // RAM Speed
+      'AR': dropdowns.ramFormFactor,     // RAM Form Factor
+      'AS': dropdowns.condition,         // RAM Condition
+      'AT': dropdowns.warranty           // RAM Warranty
     };
 
     // Apply dropdowns to each column

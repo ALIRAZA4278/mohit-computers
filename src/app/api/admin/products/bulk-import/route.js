@@ -273,9 +273,14 @@ async function parseExcel(file) {
       dbProduct.discount_percentage = parseFloat(row['Discount Percentage'] || row['Discount %']);
     }
 
-    // SEO Only field
-    if (row['SEO Only'] !== undefined) {
-      dbProduct.seo_only = parseBool(row['SEO Only']);
+    // SEO Only field - support multiple column names
+    if (row['SEO Only'] !== undefined || row['seoOnly'] !== undefined) {
+      dbProduct.seo_only = parseBool(row['SEO Only'] || row['seoOnly']);
+    }
+
+    // Product Type field (New/Used)
+    if (row['Product Type'] || row['productType']) {
+      dbProduct.product_type = row['Product Type'] || row['productType'];
     }
 
     // Customization control fields - support both old and new column names

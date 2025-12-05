@@ -62,7 +62,8 @@ export const resolutionOptions = [
 export const touchOptions = [
   'Touch',
   'Non-touch',
-  'X360 (Convertible)'
+  'X360 (Convertible)',
+  'Touch - Detachable'
 ];
 
 export const conditionOptions = [
@@ -199,10 +200,10 @@ export const testimonials = [
 
 export const filterOptions = {
   brands: [
-    'HP', 'Dell', 'Lenovo', 'Acer',
+    'HP', 'Dell', 'Lenovo', 'Acer', 'Apple',
   ],
   processors: [
-    'Intel Core i3', 'Intel Core i5', 'Intel Core i7', 'Intel Core i9', 'Intel Pentium', 'Intel Celeron', 'Intel Xeon', 'Intel Core M5', 'AMD Ryzen 3', 'AMD Ryzen 5', 'AMD Ryzen 7', 'AMD Pro APU'
+    'Intel Core i3', 'Intel Core i5', 'Intel Core i5-H', 'Intel Core i7', 'Intel Core i7-H', 'Intel Core i9', 'Intel Core i9-H', 'Intel Pentium', 'Intel Celeron', 'Intel Xeon', 'Intel Core M5', 'AMD Ryzen 3', 'AMD Ryzen 5', 'AMD Ryzen 5-H', 'AMD Ryzen 7', 'AMD Ryzen 7-H', 'AMD Ryzen 9', 'AMD Ryzen 9-H', 'AMD Pro APU', 'Apple M1', 'Apple M1 Pro', 'Apple M1 Max', 'Apple M2', 'Apple M2 Pro', 'Apple M2 Max', 'Apple M3', 'Apple M3 Pro', 'Apple M3 Max', 'Apple M4', 'Apple M4 Pro', 'Apple M4 Max'
   ],
   ram: ['4GB', '8GB', '16GB', '32GB', '32GB DDR5'],
   storage: ['128GB SSD', '240GB SSD', '256GB SSD', '512GB SSD', '1TB SSD'],
@@ -234,7 +235,7 @@ export const filterOptions = {
     'NVIDIA Quadro',
     'AMD Radeon Pro'
   ],
-  touchType: ['Touch', 'Non-touch', 'X360 (Convertible)'],
+  touchType: ['Touch', 'Non-touch', 'X360 (Convertible)', 'Touch - Detachable'],
   specialFeatures: ['Workstation & Gaming', 'Rugged / Tough', 'Featured', 'Clearance'],
   resolution: [
     'HD (1366x768)',
@@ -467,5 +468,57 @@ export const filterOptions = {
     { label: 'Rs:30,000 - Rs:50,000', min: 30000, max: 50000 },
     { label: 'Rs:50,000 - Rs:70,000', min: 50000, max: 70000 },
     { label: 'Above Rs:70,000', min: 70000, max: Infinity }
+  ],
+
+  // ========================================
+  // APPLE MACBOOK-SPECIFIC FILTERS
+  // ========================================
+  appleModels: [
+    'MacBook Air',
+    'MacBook Pro'
+  ],
+  appleProcessors: [
+    'Intel',
+    'Apple M1',
+    'Apple M2',
+    'Apple M3',
+    'Apple M4',
+    'Customized'
+  ],
+  appleRam: [
+    '8GB',
+    '16GB',
+    '32GB+'
+  ],
+  appleStorage: [
+    '256GB',
+    '512GB',
+    '1TB+'
+  ],
+  appleScreenSize: [
+    '13"',
+    '14"',
+    '15-16"'
+  ],
+  appleDisplay: [
+    'Retina Display',
+    'Liquid Retina',
+    'XDR Display',
+    'Customized'
+  ],
+  appleGraphics: [
+    'Intel Graphics',
+    'Apple GPU',
+    'Customized'
+  ],
+  appleCondition: [
+    'New',
+    'A-Grade Used',
+    'B-Grade Used'
+  ],
+  applePriceRanges: [
+    { label: 'Under Rs:100,000', min: 0, max: 100000 },
+    { label: 'Rs:100,000 - Rs:200,000', min: 100000, max: 200000 },
+    { label: 'Above Rs:200,000', min: 200000, max: Infinity }
   ]
 };

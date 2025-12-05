@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { X, Filter } from 'lucide-react';
 import { filterOptions } from '../lib/data';
 
-const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dynamicGraphicsOptions = [], dynamicChromebookOptions = {}, dynamicLaptopOptions = {}, dynamicRamOptions = {}, dynamicSsdOptions = {} }) => {
+const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dynamicGraphicsOptions = [], dynamicChromebookOptions = {}, dynamicLaptopOptions = {}, dynamicRamOptions = {}, dynamicSsdOptions = {}, dynamicAppleOptions = {}, isAppleBrand = false }) => {
   const [localFilters, setLocalFilters] = useState(filters);
   const [customPriceMin, setCustomPriceMin] = useState('');
   const [customPriceMax, setCustomPriceMax] = useState('');
@@ -464,6 +464,81 @@ const FilterSidebar = ({ filters, onFiltersChange, isOpen, onClose, category, dy
                   title="Auto Update (AUE) Year"
                   options={dynamicChromebookOptions.aueYear}
                   category="aueYear"
+                />
+              )}
+            </>
+          ) : isAppleBrand ? (
+            <>
+              {/* ========== APPLE MACBOOK FILTERS ========== */}
+              {/* Model Filter (MacBook Air / Pro) */}
+              {dynamicAppleOptions.models && dynamicAppleOptions.models.length > 0 && (
+                <FilterSection
+                  title="Model"
+                  options={dynamicAppleOptions.models}
+                  category="appleModel"
+                />
+              )}
+
+              {/* Apple Processor Filter (Intel/M1/M2/M3/M4) */}
+              {dynamicAppleOptions.processors && dynamicAppleOptions.processors.length > 0 && (
+                <FilterSection
+                  title="Processor Type"
+                  options={dynamicAppleOptions.processors}
+                  category="appleProcessor"
+                />
+              )}
+
+              {/* Apple RAM Filter */}
+              {dynamicAppleOptions.ram && dynamicAppleOptions.ram.length > 0 && (
+                <FilterSection
+                  title="RAM"
+                  options={dynamicAppleOptions.ram}
+                  category="appleRam"
+                />
+              )}
+
+              {/* Apple Storage Filter */}
+              {dynamicAppleOptions.storage && dynamicAppleOptions.storage.length > 0 && (
+                <FilterSection
+                  title="Storage"
+                  options={dynamicAppleOptions.storage}
+                  category="appleStorage"
+                />
+              )}
+
+              {/* Apple Screen Size Filter */}
+              {dynamicAppleOptions.screenSize && dynamicAppleOptions.screenSize.length > 0 && (
+                <FilterSection
+                  title="Screen Size"
+                  options={dynamicAppleOptions.screenSize}
+                  category="appleScreenSize"
+                />
+              )}
+
+              {/* Apple Display Quality Filter */}
+              {dynamicAppleOptions.display && dynamicAppleOptions.display.length > 0 && (
+                <FilterSection
+                  title="Display Quality"
+                  options={dynamicAppleOptions.display}
+                  category="appleDisplay"
+                />
+              )}
+
+              {/* Apple Graphics Filter */}
+              {dynamicAppleOptions.graphics && dynamicAppleOptions.graphics.length > 0 && (
+                <FilterSection
+                  title="Graphics"
+                  options={dynamicAppleOptions.graphics}
+                  category="appleGraphics"
+                />
+              )}
+
+              {/* Apple Condition Filter */}
+              {dynamicAppleOptions.condition && dynamicAppleOptions.condition.length > 0 && (
+                <FilterSection
+                  title="Condition"
+                  options={dynamicAppleOptions.condition}
+                  category="appleCondition"
                 />
               )}
             </>

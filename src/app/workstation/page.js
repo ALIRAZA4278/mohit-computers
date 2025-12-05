@@ -94,12 +94,22 @@ function WorkstationContent() {
       ...extractUniqueValues('display')
     ])].sort();
 
-    // Combine and deduplicate graphics values
+    // Combine and deduplicate graphics values - only discrete/dedicated for workstations
     const graphics = [...new Set([
       ...extractUniqueValues('discrete_graphics'),
-      ...extractUniqueValues('integrated_graphics'),
       ...extractUniqueValues('graphics')
-    ])].sort();
+    ])].filter(g => {
+      // Only show dedicated GPUs for workstations, not integrated
+      const lower = g.toLowerCase();
+      return !lower.includes('intel hd') &&
+             !lower.includes('intel uhd') &&
+             !lower.includes('intel iris') &&
+             !lower.includes('amd radeon vega') &&
+             !lower.includes('integrated');
+    }).sort();
+
+    // Graphics memory (VRAM)
+    const graphicsMemory = extractUniqueValues('graphics_memory');
 
     return {
       brands: extractUniqueValues('brand'),
@@ -109,6 +119,7 @@ function WorkstationContent() {
       display: displays,
       generation: sortGenerations(generations), // Sort generations numerically
       graphics: graphics,
+      graphicsMemory: graphicsMemory,
       touchType: extractUniqueValues('touch_type'),
       resolution: extractUniqueValues('resolution'),
       operatingSystem: extractUniqueValues('os'),

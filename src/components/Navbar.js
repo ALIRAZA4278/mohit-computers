@@ -44,6 +44,7 @@ function CategoryNavBar({ laptopDropdownOpen, setLaptopDropdownOpen, discountedD
         { name: 'Dell', href: '/products?category=used-laptop&brand=Dell' },
         { name: 'Lenovo', href: '/products?category=used-laptop&brand=Lenovo' },
         { name: 'Acer', href: '/products?category=used-laptop&brand=Acer' },
+        { name: 'Apple MacBook', href: '/products?category=used-laptop&brand=Apple' },
         { name: 'Workstation & Gaming', href: '/workstation' },
         { name: 'Rugged Laptops', href: '/products?category=rugged-laptop' },
       ]
@@ -667,6 +668,7 @@ const Navbar = () => {
                           <Link href="/products?category=used-laptop&brand=Dell" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Dell</Link>
                           <Link href="/products?category=used-laptop&brand=Acer" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Acer</Link>
                           <Link href="/products?category=used-laptop&brand=Lenovo" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Lenovo</Link>
+                          <Link href="/products?category=used-laptop&brand=Apple" onClick={closeMobileMenu} className="block py-1.5 text-xs text-gray-500 hover:text-[#6dc1c9]">Apple MacBook</Link>
                         </div>
                       )}
                     </div>

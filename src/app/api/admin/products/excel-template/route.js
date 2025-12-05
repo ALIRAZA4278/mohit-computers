@@ -13,9 +13,10 @@ export async function GET() {
     const dropdowns = {
       category: ['laptop', 'chromebook', 'workstation', 'ram', 'ssd', 'accessories'],
       brand: ['HP', 'Dell', 'Lenovo', 'Acer', 'ASUS', 'Apple', 'MSI', 'Toshiba', 'Sony', 'Samsung', 'Kingston', 'Corsair', 'Crucial', 'G.Skill', 'Transcend', 'WD', 'SanDisk', 'Intel', 'Logitech', 'Microsoft', 'Razer', 'Generic'],
+      productType: ['New', 'Used'],
       condition: ['New', 'Excellent', 'Very Good', 'Good', 'Used'],
-      touchType: ['Touch', 'Non-touch', 'X360 (Convertible)'],
-      resolution: ['HD (1366x768)', 'Full HD (1920x1080)', 'QHD (2560x1440)', '4K UHD (3840x2160)', 'Retina Display'],
+      touchType: ['Touch', 'Non-touch', 'X360 (Convertible)', 'Touch - Detachable'],
+      resolution: ['HD (1366x768)', 'Full HD (1920x1080)', 'QHD (2560x1440)', '4K UHD (3840x2160)', 'Retina Display', 'Liquid Retina', 'Liquid Retina XDR', 'XDR Display'],
       resolutionFilter: ['HD', 'Full HD', 'QHD', '4K', 'Retina'],
       generation: ['4th Gen', '5th Gen', '6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen', '13th Gen'],
       booleanOptions: ['TRUE', 'FALSE'],
@@ -35,7 +36,27 @@ export async function GET() {
         'Intel UHD Graphics 630',
         'Intel Iris Xe Graphics',
         'AMD Radeon Vega 8',
-        'AMD Radeon Vega'
+        'AMD Radeon Vega',
+        'Apple M1 GPU (7-core)',
+        'Apple M1 GPU (8-core)',
+        'Apple M1 Pro GPU (14-core)',
+        'Apple M1 Pro GPU (16-core)',
+        'Apple M1 Max GPU (24-core)',
+        'Apple M1 Max GPU (32-core)',
+        'Apple M2 GPU (8-core)',
+        'Apple M2 GPU (10-core)',
+        'Apple M2 Pro GPU (16-core)',
+        'Apple M2 Pro GPU (19-core)',
+        'Apple M2 Max GPU (30-core)',
+        'Apple M2 Max GPU (38-core)',
+        'Apple M3 GPU (8-core)',
+        'Apple M3 GPU (10-core)',
+        'Apple M3 Pro GPU (14-core)',
+        'Apple M3 Pro GPU (18-core)',
+        'Apple M3 Max GPU (30-core)',
+        'Apple M3 Max GPU (40-core)',
+        'Apple M4 GPU',
+        'Apple GPU'
       ],
       dedicatedGraphics: [
         'NVIDIA GeForce MX150',
@@ -51,15 +72,33 @@ export async function GET() {
       processors: [
         'Intel Core i3',
         'Intel Core i5',
+        'Intel Core i5-H',
         'Intel Core i7',
+        'Intel Core i7-H',
         'Intel Core i9',
+        'Intel Core i9-H',
         'Intel Pentium',
         'Intel Celeron',
         'Intel Xeon',
         'AMD Ryzen 3',
         'AMD Ryzen 5',
+        'AMD Ryzen 5-H',
         'AMD Ryzen 7',
-        'AMD Ryzen 9'
+        'AMD Ryzen 7-H',
+        'AMD Ryzen 9',
+        'AMD Ryzen 9-H',
+        'Apple M1',
+        'Apple M1 Pro',
+        'Apple M1 Max',
+        'Apple M2',
+        'Apple M2 Pro',
+        'Apple M2 Max',
+        'Apple M3',
+        'Apple M3 Pro',
+        'Apple M3 Max',
+        'Apple M4',
+        'Apple M4 Pro',
+        'Apple M4 Max'
       ],
       graphicsMemory: ['1GB', '2GB', '3GB', '4GB', '6GB', '8GB', '12GB', '16GB']
     };
@@ -74,6 +113,7 @@ export async function GET() {
       { header: 'Category', key: 'category', width: 15 },
       { header: 'Model', key: 'model', width: 30 },
       { header: 'Brand', key: 'brand', width: 15 },
+      { header: 'Product Type', key: 'productType', width: 12 },
       { header: 'Description', key: 'description', width: 40 },
       { header: 'Selling Price', key: 'sellingPrice', width: 15 },
       { header: 'Original Price', key: 'originalPrice', width: 15 },
@@ -134,6 +174,7 @@ export async function GET() {
       category: 'laptop',
       model: 'HP EliteBook 840 G5',
       brand: 'HP',
+      productType: 'Used',
       description: 'Premium business ultrabook with excellent build quality',
       sellingPrice: 35000,
       originalPrice: 40000,
@@ -184,40 +225,41 @@ export async function GET() {
     const rowStart = 2;
     const rowEnd = 100;
 
-    // Column mapping for dropdowns
+    // Column mapping for dropdowns (shifted by 1 due to Product Type column)
     const columnDropdowns = {
       'A': dropdowns.category,           // Category
       'C': dropdowns.brand,              // Brand
-      'H': dropdowns.booleanOptions,     // In Stock
-      'I': dropdowns.booleanOptions,     // Is Active
-      'J': dropdowns.booleanOptions,     // Is Featured
-      'K': dropdowns.booleanOptions,     // Is New Arrival
-      'L': dropdowns.booleanOptions,     // On Sale
-      'N': dropdowns.booleanOptions,     // Is Workstation
-      'O': dropdowns.booleanOptions,     // Is Rugged
-      'P': dropdowns.booleanOptions,     // Is Clearance
-      'R': dropdowns.booleanOptions,     // SEO Only
-      'S': dropdowns.processors,         // Processor
-      'T': dropdowns.generation,         // Generation
-      'W': dropdowns.displaySize,        // Display Size
+      'D': dropdowns.productType,        // Product Type (New/Used)
+      'I': dropdowns.booleanOptions,     // In Stock
+      'J': dropdowns.booleanOptions,     // Is Active
+      'K': dropdowns.booleanOptions,     // Is Featured
+      'L': dropdowns.booleanOptions,     // Is New Arrival
+      'M': dropdowns.booleanOptions,     // On Sale
+      'O': dropdowns.booleanOptions,     // Is Workstation
+      'P': dropdowns.booleanOptions,     // Is Rugged
+      'Q': dropdowns.booleanOptions,     // Is Clearance
+      'S': dropdowns.booleanOptions,     // SEO Only
+      'T': dropdowns.processors,         // Processor
+      'U': dropdowns.generation,         // Generation
+      'X': dropdowns.displaySize,        // Display Size
       // Resolution - manual text input
       // Resolution Filter - manual text input
-      'Z': dropdowns.integratedGraphics, // Integrated Graphics
-      'AA': dropdowns.dedicatedGraphics, // Dedicated Graphics
+      'AA': dropdowns.integratedGraphics, // Integrated Graphics
+      'AB': dropdowns.dedicatedGraphics, // Dedicated Graphics
       // Graphics Memory - manual text input
-      'AC': dropdowns.touchType,         // Touch Type
-      'AF': dropdowns.condition,         // Condition
-      'AH': dropdowns.booleanOptions,    // Charger Included
-      'AI': dropdowns.warranty,          // Warranty
-      'AJ': dropdowns.booleanOptions,    // Show Customizer
-      'AK': dropdowns.booleanOptions,    // Show RAM Options
-      'AL': dropdowns.booleanOptions,    // Show SSD Options
-      'AM': dropdowns.ramType,           // RAM Type
-      'AN': dropdowns.ramCapacity,       // RAM Capacity
-      'AO': dropdowns.ramSpeed,          // RAM Speed
-      'AP': dropdowns.ramFormFactor,     // RAM Form Factor
-      'AQ': dropdowns.condition,         // RAM Condition
-      'AR': dropdowns.warranty           // RAM Warranty
+      'AD': dropdowns.touchType,         // Touch Type
+      'AG': dropdowns.condition,         // Condition
+      'AI': dropdowns.booleanOptions,    // Charger Included
+      'AJ': dropdowns.warranty,          // Warranty
+      'AK': dropdowns.booleanOptions,    // Show Customizer
+      'AL': dropdowns.booleanOptions,    // Show RAM Options
+      'AM': dropdowns.booleanOptions,    // Show SSD Options
+      'AN': dropdowns.ramType,           // RAM Type
+      'AO': dropdowns.ramCapacity,       // RAM Capacity
+      'AP': dropdowns.ramSpeed,          // RAM Speed
+      'AQ': dropdowns.ramFormFactor,     // RAM Form Factor
+      'AR': dropdowns.condition,         // RAM Condition
+      'AS': dropdowns.warranty           // RAM Warranty
     };
 
     // Apply dropdowns to each column
@@ -258,6 +300,7 @@ export async function GET() {
       { field: 'Category*', description: 'Product type: laptop, chromebook, workstation, ram, ssd, accessories' },
       { field: 'Model*', description: 'Product model name (e.g., HP EliteBook 840 G5)' },
       { field: 'Brand', description: 'Product manufacturer (dropdown)' },
+      { field: 'Product Type', description: 'New or Used (dropdown)' },
       { field: 'Description', description: 'Product description' },
       { field: 'Selling Price*', description: 'Current price (number only, no currency)' },
       { field: 'Original Price', description: 'Original price before discount' },

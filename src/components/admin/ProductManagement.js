@@ -186,6 +186,8 @@ export default function ProductManagement() {
           >
             <option value="all">All Categories</option>
             <option value="laptop">Laptop</option>
+            <option value="workstation">Workstation</option>
+            <option value="chromebook">Chromebook</option>
             <option value="accessories">Accessories</option>
             <option value="ram">RAM</option>
             <option value="ssd">SSD</option>
