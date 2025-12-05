@@ -88,6 +88,25 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     chromebookStorage: '', // Combined storage (e.g., "64GB eMMC" or "128GB SSD")
     chromebookAUEYear: '', // Auto Update Expiration Year
 
+    // Apple MacBook specific fields
+    appleModel: '', // MacBook Air, MacBook Pro
+    appleProcessor: '', // Apple M1, M2, M3, M4, Intel
+    appleRam: '', // 8GB, 16GB, 32GB+
+    appleStorage: '', // 256GB, 512GB, 1TB+
+    appleScreenSize: '', // 13", 14", 15-16"
+    appleDisplay: '', // Retina Display, Liquid Retina, XDR Display
+    appleGraphics: '', // Intel Graphics, Apple GPU
+    appleCondition: '', // New, A-Grade Used, B-Grade Used
+    showAppleCustomizer: true, // Show Apple customizer by default
+
+    // Apple SSD Upgrade Options (processor-based pricing)
+    appleSsdUpgrades: {
+      // Each SSD size has different prices based on processor
+      '512GB': { intel: '', m1: '', m2: '', m3: '', m4: '' },
+      '1TB': { intel: '', m1: '', m2: '', m3: '', m4: '' },
+      '2TB': { intel: '', m1: '', m2: '', m3: '', m4: '' }
+    },
+
     // Upgrade Options
     upgradeOptions: {
       ssd256: { enabled: false, price: '' },
@@ -190,6 +209,24 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         // Chromebook specific fields
         chromebookStorage: product.storage || '',
         chromebookAUEYear: product.aue_year || product.auto_update_expiration || '',
+
+        // Apple MacBook specific fields
+        appleModel: product.apple_model || '',
+        appleProcessor: product.apple_processor || '',
+        appleRam: product.apple_ram || '',
+        appleStorage: product.apple_storage || '',
+        appleScreenSize: product.apple_screen_size || '',
+        appleDisplay: product.apple_display || '',
+        appleGraphics: product.apple_graphics || '',
+        appleCondition: product.apple_condition || '',
+        showAppleCustomizer: product.show_apple_customizer !== false,
+
+        // Apple SSD Upgrade Options
+        appleSsdUpgrades: product.apple_ssd_upgrades || {
+          '512GB': { intel: '', m1: '', m2: '', m3: '', m4: '' },
+          '1TB': { intel: '', m1: '', m2: '', m3: '', m4: '' },
+          '2TB': { intel: '', m1: '', m2: '', m3: '', m4: '' }
+        },
 
         // Upgrade Options
         upgradeOptions: product.upgrade_options || {
@@ -440,6 +477,20 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         } catch (err) {
           console.warn('Some fields not available in database schema:', err);
         }
+      }
+
+      // Only add Apple MacBook specific fields if brand is 'Apple'
+      if (formData.brand?.toLowerCase() === 'apple') {
+        productData.apple_model = formData.appleModel || null;
+        productData.apple_processor = formData.appleProcessor || null;
+        productData.apple_ram = formData.appleRam || null;
+        productData.apple_storage = formData.appleStorage || null;
+        productData.apple_screen_size = formData.appleScreenSize || null;
+        productData.apple_display = formData.appleDisplay || null;
+        productData.apple_graphics = formData.appleGraphics || null;
+        productData.apple_condition = formData.appleCondition || null;
+        productData.show_apple_customizer = formData.showAppleCustomizer !== false;
+        productData.apple_ssd_upgrades = formData.appleSsdUpgrades || null;
       }
 
       // Add workstation flag if checked
@@ -1942,8 +1993,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   MacBook Model
                 </label>
                 <select
-                  name="model"
-                  value={formData.model}
+                  name="appleModel"
+                  value={formData.appleModel}
                   onChange={handleChange}
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
@@ -1962,8 +2013,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   Apple Processor
                 </label>
                 <select
-                  name="processor"
-                  value={formData.processor}
+                  name="appleProcessor"
+                  value={formData.appleProcessor}
                   onChange={handleChange}
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
@@ -1982,8 +2033,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   Display Type
                 </label>
                 <select
-                  name="resolution"
-                  value={formData.resolution}
+                  name="appleDisplay"
+                  value={formData.appleDisplay}
                   onChange={handleChange}
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
@@ -2002,8 +2053,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   Graphics
                 </label>
                 <select
-                  name="integratedGraphics"
-                  value={formData.integratedGraphics}
+                  name="appleGraphics"
+                  value={formData.appleGraphics}
                   onChange={handleChange}
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
@@ -2022,8 +2073,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   Condition
                 </label>
                 <select
-                  name="condition"
-                  value={formData.condition}
+                  name="appleCondition"
+                  value={formData.appleCondition}
                   onChange={handleChange}
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
@@ -2042,8 +2093,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   Screen Size
                 </label>
                 <select
-                  name="displaySize"
-                  value={formData.displaySize}
+                  name="appleScreenSize"
+                  value={formData.appleScreenSize}
                   onChange={handleChange}
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
@@ -2062,8 +2113,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   Unified Memory (RAM)
                 </label>
                 <select
-                  name="ram"
-                  value={formData.ram}
+                  name="appleRam"
+                  value={formData.appleRam}
                   onChange={handleChange}
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
@@ -2082,8 +2133,8 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   SSD Storage
                 </label>
                 <select
-                  name="hdd"
-                  value={formData.hdd}
+                  name="appleStorage"
+                  value={formData.appleStorage}
                   onChange={handleChange}
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
@@ -2097,9 +2148,85 @@ export default function ProductEditor({ product, onSave, onCancel }) {
               </div>
             </div>
 
-            <p className="text-xs text-gray-500 mt-4 italic">
-              Note: These Apple-specific fields provide quick dropdowns. You can also manually enter values in the Laptop Specifications section above for more detailed specifications.
-            </p>
+            {/* Apple SSD Upgrade Options - Processor Based Pricing */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <h4 className="text-md font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                Apple SSD Upgrade Pricing (by Processor)
+              </h4>
+              <p className="text-sm text-gray-500 mb-4">
+                Set different SSD upgrade prices for each processor type. Leave empty if upgrade not available.
+              </p>
+
+              {/* SSD Upgrade Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="border border-gray-300 px-3 py-2 text-left text-sm font-semibold text-gray-700">SSD Size</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm font-semibold text-gray-700">Intel</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm font-semibold text-gray-700">M1</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm font-semibold text-gray-700">M2</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm font-semibold text-gray-700">M3</th>
+                      <th className="border border-gray-300 px-3 py-2 text-center text-sm font-semibold text-gray-700">M4</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {['512GB', '1TB', '2TB'].map(ssdSize => (
+                      <tr key={ssdSize} className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-3 py-2 font-medium text-gray-800">{ssdSize}</td>
+                        {['intel', 'm1', 'm2', 'm3', 'm4'].map(processor => (
+                          <td key={processor} className="border border-gray-300 px-2 py-1">
+                            <input
+                              type="number"
+                              min="0"
+                              placeholder="Rs"
+                              value={formData.appleSsdUpgrades?.[ssdSize]?.[processor] || ''}
+                              onChange={(e) => {
+                                const newValue = e.target.value;
+                                setFormData(prev => ({
+                                  ...prev,
+                                  appleSsdUpgrades: {
+                                    ...prev.appleSsdUpgrades,
+                                    [ssdSize]: {
+                                      ...prev.appleSsdUpgrades?.[ssdSize],
+                                      [processor]: newValue
+                                    }
+                                  }
+                                }));
+                              }}
+                              className="w-full text-black text-center px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-gray-500"
+                            />
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="text-xs text-gray-400 mt-2 italic">
+                Prices are in PKR. Only filled prices will be shown as upgrade options to customers.
+              </p>
+            </div>
+
+            {/* Show Apple Customizer Toggle */}
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  name="showAppleCustomizer"
+                  checked={formData.showAppleCustomizer !== false}
+                  onChange={handleChange}
+                  className="w-4 h-4 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Show Apple Customizer on Product Page
+                </span>
+              </label>
+            </div>
           </div>
         )}
 
