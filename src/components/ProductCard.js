@@ -119,6 +119,11 @@ const ProductCard = ({ product, showCompare = true }) => {
     categoryLower.includes(cat)
   );
 
+  // Check if this is an Apple product
+  const isAppleProduct = product.brand?.toLowerCase() === 'apple' ||
+                         productNameLower.includes('macbook') ||
+                         productNameLower.includes('mac book');
+
   return (
     <div className="group h-full">
       <div className="relative bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 h-full flex flex-col hover:-translate-y-1">
@@ -182,29 +187,62 @@ const ProductCard = ({ product, showCompare = true }) => {
 
           {/* Specifications - Fixed Height */}
           <div className="text-xs text-gray-600 mt-2 space-y-0.5 h-[72px] overflow-hidden">
-            {product.processor && (
-              <div className="flex items-center">
-                <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
-                <span className="truncate">{product.processor}</span>
-              </div>
-            )}
-            {product.generation && (
-              <div className="flex items-center">
-                <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
-                <span className="truncate">{product.generation}</span>
-              </div>
-            )}
-            {product.ram && (
-              <div className="flex items-center">
-                <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
-                <span className="truncate">{product.ram}, {product.hdd || product.storage}</span>
-              </div>
-            )}
-            {(product.display_size || product.screensize || product.display) && (
-              <div className="flex items-center">
-                <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
-                <span className="truncate">{product.display_size || product.screensize || product.display}</span>
-              </div>
+            {isAppleProduct ? (
+              /* Apple Product Specs */
+              <>
+                {(product.apple_processor || product.processor) && (
+                  <div className="flex items-center">
+                    <span className="w-1 h-1 bg-gray-800 rounded-full mr-1.5 flex-shrink-0"></span>
+                    <span className="truncate">{product.apple_processor || product.processor}</span>
+                  </div>
+                )}
+                {(product.apple_ram || product.ram) && (
+                  <div className="flex items-center">
+                    <span className="w-1 h-1 bg-gray-800 rounded-full mr-1.5 flex-shrink-0"></span>
+                    <span className="truncate">{product.apple_ram || product.ram} Unified Memory</span>
+                  </div>
+                )}
+                {(product.apple_storage || product.hdd) && (
+                  <div className="flex items-center">
+                    <span className="w-1 h-1 bg-gray-800 rounded-full mr-1.5 flex-shrink-0"></span>
+                    <span className="truncate">{product.apple_storage || product.hdd} SSD</span>
+                  </div>
+                )}
+                {(product.apple_screen_size || product.display_size) && (
+                  <div className="flex items-center">
+                    <span className="w-1 h-1 bg-gray-800 rounded-full mr-1.5 flex-shrink-0"></span>
+                    <span className="truncate">{product.apple_screen_size || product.display_size} {product.apple_display || 'Retina'}</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              /* Regular Product Specs */
+              <>
+                {product.processor && (
+                  <div className="flex items-center">
+                    <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
+                    <span className="truncate">{product.processor}</span>
+                  </div>
+                )}
+                {product.generation && (
+                  <div className="flex items-center">
+                    <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
+                    <span className="truncate">{product.generation}</span>
+                  </div>
+                )}
+                {product.ram && (
+                  <div className="flex items-center">
+                    <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
+                    <span className="truncate">{product.ram}, {product.hdd || product.storage}</span>
+                  </div>
+                )}
+                {(product.display_size || product.screensize || product.display) && (
+                  <div className="flex items-center">
+                    <span className="w-1 h-1 bg-[#6dc1c9] rounded-full mr-1.5 flex-shrink-0"></span>
+                    <span className="truncate">{product.display_size || product.screensize || product.display}</span>
+                  </div>
+                )}
+              </>
             )}
           </div>
 

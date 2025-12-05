@@ -446,7 +446,7 @@ function ProductsContent() {
     return {};
   };
 
-  // Generate Apple MacBook specific filter options
+  // Generate Apple MacBook specific filter options - FULLY DYNAMIC from actual products
   const generateAppleFilters = (productsList) => {
     // Filter only Apple products
     const appleProducts = productsList.filter(p =>
@@ -457,114 +457,148 @@ function ProductsContent() {
     );
 
     if (appleProducts.length === 0) {
-      // Return default Apple options from data.js if no products
+      // Return empty arrays - no defaults, fully dynamic
       return {
-        models: ['MacBook Air', 'MacBook Pro'],
-        processors: ['Intel', 'Apple M1', 'Apple M2', 'Apple M3', 'Apple M4', 'Customized'],
-        ram: ['8GB', '16GB', '32GB+'],
-        storage: ['256GB', '512GB', '1TB+'],
-        screenSize: ['13"', '14"', '15-16"'],
-        display: ['Retina Display', 'Liquid Retina', 'XDR Display', 'Customized'],
-        graphics: ['Intel Graphics', 'Apple GPU', 'Customized'],
-        condition: ['New', 'A-Grade Used', 'B-Grade Used'],
-        priceRanges: [
-          { label: 'Under Rs:100,000', min: 0, max: 100000 },
-          { label: 'Rs:100,000 - Rs:200,000', min: 100000, max: 200000 },
-          { label: 'Above Rs:200,000', min: 200000, max: Infinity }
-        ]
+        models: [],
+        processors: [],
+        ram: [],
+        storage: [],
+        screenSize: [],
+        display: [],
+        graphics: [],
+        condition: [],
+        priceRanges: []
       };
     }
 
-    // Extract model types from product names
-    const extractModel = (name) => {
-      if (!name) return null;
+    // Extract model - prefer apple_model field, fallback to name parsing
+    const extractModel = (product) => {
+      // First check apple_model field
+      if (product.apple_model) return product.apple_model;
+
+      // Fallback to name parsing
+      const name = product.name || '';
       const nameLower = name.toLowerCase();
       if (nameLower.includes('macbook air') || nameLower.includes('mac book air')) return 'MacBook Air';
       if (nameLower.includes('macbook pro') || nameLower.includes('mac book pro')) return 'MacBook Pro';
       return null;
     };
 
-    // Extract processor type
-    const extractAppleProcessor = (processor) => {
-      if (!processor) return null;
+    // Extract processor - prefer apple_processor field
+    const extractAppleProcessor = (product) => {
+      // First check apple_processor field
+      if (product.apple_processor) return product.apple_processor;
+
+      // Fallback to processor field
+      const processor = product.processor || '';
       const procLower = processor.toLowerCase();
       if (procLower.includes('m4')) return 'Apple M4';
       if (procLower.includes('m3')) return 'Apple M3';
       if (procLower.includes('m2')) return 'Apple M2';
       if (procLower.includes('m1')) return 'Apple M1';
       if (procLower.includes('intel')) return 'Intel';
-      return 'Customized';
+      return null;
     };
 
-    // Extract RAM category
-    const extractAppleRam = (ram) => {
-      if (!ram) return null;
+    // Extract RAM - prefer apple_ram field
+    const extractAppleRam = (product) => {
+      // First check apple_ram field
+      if (product.apple_ram) return product.apple_ram;
+
+      // Fallback to ram field
+      const ram = product.ram || '';
       const ramStr = ram.toLowerCase();
-      if (ramStr.includes('32') || ramStr.includes('64')) return '32GB+';
+      if (ramStr.includes('64')) return '64GB';
+      if (ramStr.includes('32')) return '32GB';
+      if (ramStr.includes('24')) return '24GB';
       if (ramStr.includes('16')) return '16GB';
       if (ramStr.includes('8')) return '8GB';
       return null;
     };
 
-    // Extract storage category
-    const extractAppleStorage = (storage) => {
-      if (!storage) return null;
+    // Extract storage - prefer apple_storage field
+    const extractAppleStorage = (product) => {
+      // First check apple_storage field
+      if (product.apple_storage) return product.apple_storage;
+
+      // Fallback to hdd field
+      const storage = product.hdd || '';
       const storStr = storage.toLowerCase();
-      if (storStr.includes('1tb') || storStr.includes('2tb') || storStr.includes('1000') || storStr.includes('2000')) return '1TB+';
+      if (storStr.includes('2tb') || storStr.includes('2000')) return '2TB';
+      if (storStr.includes('1tb') || storStr.includes('1000')) return '1TB';
       if (storStr.includes('512')) return '512GB';
       if (storStr.includes('256')) return '256GB';
       return null;
     };
 
-    // Extract screen size category
-    const extractAppleScreen = (display) => {
-      if (!display) return null;
+    // Extract screen size - prefer apple_screen_size field
+    const extractAppleScreen = (product) => {
+      // First check apple_screen_size field
+      if (product.apple_screen_size) return product.apple_screen_size;
+
+      // Fallback to display_size field
+      const display = product.display_size || '';
       const dispStr = display.toLowerCase();
-      if (dispStr.includes('15') || dispStr.includes('16')) return '15-16"';
+      if (dispStr.includes('16')) return '16"';
+      if (dispStr.includes('15')) return '15"';
       if (dispStr.includes('14')) return '14"';
       if (dispStr.includes('13')) return '13"';
       return null;
     };
 
-    // Extract display type
-    const extractAppleDisplay = (resolution) => {
-      if (!resolution) return null;
+    // Extract display type - prefer apple_display field
+    const extractAppleDisplay = (product) => {
+      // First check apple_display field
+      if (product.apple_display) return product.apple_display;
+
+      // Fallback to resolution field
+      const resolution = product.resolution || '';
       const resLower = resolution.toLowerCase();
       if (resLower.includes('xdr')) return 'XDR Display';
       if (resLower.includes('liquid retina')) return 'Liquid Retina';
       if (resLower.includes('retina')) return 'Retina Display';
-      return 'Customized';
+      return null;
     };
 
-    // Extract graphics type
-    const extractAppleGraphics = (graphics, processor) => {
-      const gfxLower = (graphics || '').toLowerCase();
-      const procLower = (processor || '').toLowerCase();
+    // Extract graphics - prefer apple_graphics field
+    const extractAppleGraphics = (product) => {
+      // First check apple_graphics field
+      if (product.apple_graphics) return product.apple_graphics;
+
+      // Fallback to integrated_graphics or processor
+      const graphics = product.integrated_graphics || product.discrete_graphics || '';
+      const processor = product.processor || product.apple_processor || '';
+      const gfxLower = graphics.toLowerCase();
+      const procLower = processor.toLowerCase();
 
       if (gfxLower.includes('intel') || procLower.includes('intel')) return 'Intel Graphics';
-      if (procLower.includes('m1') || procLower.includes('m2') || procLower.includes('m3') || procLower.includes('m4')) return 'Apple GPU';
-      return 'Customized';
+      if (gfxLower.includes('apple') || procLower.includes('m1') || procLower.includes('m2') || procLower.includes('m3') || procLower.includes('m4')) return 'Apple GPU';
+      return null;
     };
 
-    // Extract condition
-    const extractAppleCondition = (condition) => {
-      if (!condition) return null;
+    // Extract condition - prefer apple_condition field
+    const extractAppleCondition = (product) => {
+      // First check apple_condition field
+      if (product.apple_condition) return product.apple_condition;
+
+      // Fallback to condition field
+      const condition = product.condition || '';
       const condLower = condition.toLowerCase();
-      if (condLower.includes('new')) return 'New';
+      if (condLower.includes('new') && !condLower.includes('used')) return 'New';
       if (condLower.includes('a-grade') || condLower.includes('excellent')) return 'A-Grade Used';
       if (condLower.includes('b-grade') || condLower.includes('good') || condLower.includes('used')) return 'B-Grade Used';
       return null;
     };
 
-    // Build unique values from actual products
-    const models = [...new Set(appleProducts.map(p => extractModel(p.name)).filter(Boolean))];
-    const processors = [...new Set(appleProducts.map(p => extractAppleProcessor(p.processor)).filter(Boolean))];
-    const ram = [...new Set(appleProducts.map(p => extractAppleRam(p.ram)).filter(Boolean))];
-    const storage = [...new Set(appleProducts.map(p => extractAppleStorage(p.hdd)).filter(Boolean))];
-    const screenSize = [...new Set(appleProducts.map(p => extractAppleScreen(p.display_size)).filter(Boolean))];
-    const display = [...new Set(appleProducts.map(p => extractAppleDisplay(p.resolution)).filter(Boolean))];
-    const graphics = [...new Set(appleProducts.map(p => extractAppleGraphics(p.integrated_graphics || p.discrete_graphics, p.processor)).filter(Boolean))];
-    const condition = [...new Set(appleProducts.map(p => extractAppleCondition(p.condition)).filter(Boolean))];
+    // Build unique values from actual products - NO DEFAULTS
+    const models = [...new Set(appleProducts.map(p => extractModel(p)).filter(Boolean))];
+    const processors = [...new Set(appleProducts.map(p => extractAppleProcessor(p)).filter(Boolean))];
+    const ram = [...new Set(appleProducts.map(p => extractAppleRam(p)).filter(Boolean))];
+    const storage = [...new Set(appleProducts.map(p => extractAppleStorage(p)).filter(Boolean))];
+    const screenSize = [...new Set(appleProducts.map(p => extractAppleScreen(p)).filter(Boolean))];
+    const display = [...new Set(appleProducts.map(p => extractAppleDisplay(p)).filter(Boolean))];
+    const graphics = [...new Set(appleProducts.map(p => extractAppleGraphics(p)).filter(Boolean))];
+    const condition = [...new Set(appleProducts.map(p => extractAppleCondition(p)).filter(Boolean))];
 
     // Generate dynamic price ranges based on actual Apple product prices
     const generateApplePriceRanges = () => {
@@ -604,36 +638,59 @@ function ProductsContent() {
       ];
     };
 
-    // Sort values in logical order
+    // Sort values in logical order - handle all possible values
     const sortRam = (ramArr) => {
-      const order = ['8GB', '16GB', '32GB+'];
-      return ramArr.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+      return ramArr.sort((a, b) => {
+        // Extract numeric values for sorting
+        const numA = parseInt(a) || 0;
+        const numB = parseInt(b) || 0;
+        return numA - numB;
+      });
     };
 
     const sortStorage = (storageArr) => {
-      const order = ['256GB', '512GB', '1TB+'];
-      return storageArr.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+      return storageArr.sort((a, b) => {
+        // Convert to GB for comparison
+        const getGB = (str) => {
+          if (str.toLowerCase().includes('tb')) {
+            return parseFloat(str) * 1024;
+          }
+          return parseInt(str) || 0;
+        };
+        return getGB(a) - getGB(b);
+      });
     };
 
     const sortScreenSize = (screenArr) => {
-      const order = ['13"', '14"', '15-16"'];
-      return screenArr.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+      return screenArr.sort((a, b) => {
+        // Extract numeric values
+        const numA = parseFloat(a) || 0;
+        const numB = parseFloat(b) || 0;
+        return numA - numB;
+      });
     };
 
     const sortProcessors = (procArr) => {
-      const order = ['Intel', 'Apple M1', 'Apple M2', 'Apple M3', 'Apple M4', 'Customized'];
-      return procArr.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+      const order = ['Intel', 'Apple M1', 'Apple M2', 'Apple M3', 'Apple M4'];
+      return procArr.sort((a, b) => {
+        const idxA = order.findIndex(o => a.includes(o));
+        const idxB = order.findIndex(o => b.includes(o));
+        if (idxA === -1 && idxB === -1) return a.localeCompare(b);
+        if (idxA === -1) return 1;
+        if (idxB === -1) return -1;
+        return idxA - idxB;
+      });
     };
 
     return {
-      models: models.length > 0 ? models.sort() : ['MacBook Air', 'MacBook Pro'],
-      processors: processors.length > 0 ? sortProcessors(processors) : ['Intel', 'Apple M1', 'Apple M2', 'Apple M3', 'Apple M4', 'Customized'],
-      ram: ram.length > 0 ? sortRam(ram) : ['8GB', '16GB', '32GB+'],
-      storage: storage.length > 0 ? sortStorage(storage) : ['256GB', '512GB', '1TB+'],
-      screenSize: screenSize.length > 0 ? sortScreenSize(screenSize) : ['13"', '14"', '15-16"'],
-      display: display.length > 0 ? display : ['Retina Display', 'Liquid Retina', 'XDR Display', 'Customized'],
-      graphics: graphics.length > 0 ? graphics : ['Intel Graphics', 'Apple GPU', 'Customized'],
-      condition: condition.length > 0 ? condition : ['New', 'A-Grade Used', 'B-Grade Used'],
+      models: models.sort(),
+      processors: sortProcessors(processors),
+      ram: sortRam(ram),
+      storage: sortStorage(storage),
+      screenSize: sortScreenSize(screenSize),
+      display: display,
+      graphics: graphics,
+      condition: condition,
       priceRanges: generateApplePriceRanges()
     };
   };

@@ -13,6 +13,7 @@ import ReviewSection from '../../../components/ReviewSection';
 import LaptopCustomizer from '../../../components/LaptopCustomizer';
 import ChromebookCustomizer from '../../../components/ChromebookCustomizer';
 import RAMCustomizer from '../../../components/RAMCustomizer';
+import AppleCustomizer from '../../../components/AppleCustomizer';
 import { getRAMOptionsByGeneration, getSSDUpgradeOptions, getRAMTypeByGeneration, getAllSSDOptions } from '../../../lib/upgradeOptions';
 
 export default function ProductDetail() {
@@ -46,6 +47,12 @@ export default function ProductDetail() {
   });
   const [chromebookCustomization, setChromebookCustomization] = useState({
     customizations: { ramUpgrade: null, ssdUpgrade: null },
+    additionalCost: 0,
+    totalPrice: 0,
+    updatedSpecs: null
+  });
+  const [appleCustomization, setAppleCustomization] = useState({
+    customizations: { ssdUpgrade: null },
     additionalCost: 0,
     totalPrice: 0,
     updatedSpecs: null
@@ -90,6 +97,11 @@ export default function ProductDetail() {
     console.log('Chromebook Customization data received:', customizationData);
     console.log('Updated specs:', customizationData.updatedSpecs);
     setChromebookCustomization(customizationData);
+  }, []);
+
+  const handleAppleCustomizationChange = useCallback((customizationData) => {
+    console.log('Apple Customization data received:', customizationData);
+    setAppleCustomization(customizationData);
   }, []);
 
   useEffect(() => {
@@ -559,20 +571,75 @@ export default function ProductDetail() {
 
               {/* Key Specifications */}
               {(() => {
+                const isAppleProduct = product.brand?.toLowerCase() === 'apple' || product.name?.toLowerCase().includes('macbook');
+                const hasAppleSpecs = isAppleProduct && (product.apple_model || product.apple_processor || product.apple_ram || product.apple_storage || product.apple_screen_size || product.apple_display || product.apple_graphics || product.apple_condition);
                 const hasRAMSpecs = product.category_id === 'ram' && (product.ram_type || product.ram_capacity || product.ram_speed || product.ram_form_factor);
                 const hasChromebookSpecs = product.category_id === 'chromebook' && (product.processor || product.ram || product.storage || product.display_size);
-                const hasLaptopSpecs = product.category_id !== 'ram' && product.category_id !== 'chromebook' && (product.processor || product.generation || product.ram || product.hdd || product.display_size || product.screensize || product.graphics);
-                const hasAnySpecs = hasRAMSpecs || hasChromebookSpecs || hasLaptopSpecs;
+                const hasLaptopSpecs = !isAppleProduct && product.category_id !== 'ram' && product.category_id !== 'chromebook' && (product.processor || product.generation || product.ram || product.hdd || product.display_size || product.screensize || product.graphics);
+                const hasAnySpecs = hasAppleSpecs || hasRAMSpecs || hasChromebookSpecs || hasLaptopSpecs;
 
                 if (!hasAnySpecs) return null;
 
                 return (
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="bg-gray-50 px-3 py-2 border-b border-gray-200">
-                      <h3 className="font-semibold text-gray-800 text-xs">Key Specifications</h3>
+                    <div className={`px-3 py-2 border-b border-gray-200 ${isAppleProduct ? 'bg-gray-800' : 'bg-gray-50'}`}>
+                      <h3 className={`font-semibold text-xs flex items-center gap-1.5 ${isAppleProduct ? 'text-white' : 'text-gray-800'}`}>
+                        {isAppleProduct && (
+                          <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                          </svg>
+                        )}
+                        Key Specifications
+                      </h3>
                     </div>
                     <div className="divide-y divide-gray-100">
-                      {product.category_id === 'ram' ? (
+                      {/* Apple MacBook Specifications */}
+                      {isAppleProduct ? (
+                        <>
+                          {(product.apple_model || product.name) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Model</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.apple_model || (product.name?.toLowerCase().includes('air') ? 'MacBook Air' : 'MacBook Pro')}</span>
+                            </div>
+                          )}
+                          {(product.apple_processor || product.processor) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Chip</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.apple_processor || product.processor}</span>
+                            </div>
+                          )}
+                          {(product.apple_ram || product.ram) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Unified Memory</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.apple_ram || product.ram}</span>
+                            </div>
+                          )}
+                          {(appleCustomization.updatedSpecs?.storage || product.apple_storage || product.hdd) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">SSD Storage</span>
+                              <span className="font-medium text-gray-900 text-xs">{appleCustomization.updatedSpecs?.storage || product.apple_storage || product.hdd}</span>
+                            </div>
+                          )}
+                          {(product.apple_screen_size || product.display_size) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Display</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.apple_screen_size || product.display_size}</span>
+                            </div>
+                          )}
+                          {(product.apple_display || product.resolution) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Display Type</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.apple_display || product.resolution}</span>
+                            </div>
+                          )}
+                          {(product.apple_condition || product.condition) && (
+                            <div className="flex justify-between px-3 py-2">
+                              <span className="text-gray-500 text-xs">Condition</span>
+                              <span className="font-medium text-gray-900 text-xs">{product.apple_condition || product.condition}</span>
+                            </div>
+                          )}
+                        </>
+                      ) : product.category_id === 'ram' ? (
                         <>
                           {product.ram_type && (
                             <div className="flex justify-between px-3 py-2">
@@ -671,11 +738,21 @@ export default function ProductDetail() {
                 );
               })()}
 
-              {/* Laptop Customizer */}
+              {/* Laptop Customizer (non-Apple products) */}
               {product.category_id === 'laptop' && product.show_laptop_customizer !== false && (
                 <LaptopCustomizer
                   product={product}
                   onCustomizationChange={handleCustomizationChange}
+                />
+              )}
+
+              {/* Apple MacBook Customizer */}
+              {(product.category_id === 'laptop' || product.category_id === 'workstation') &&
+               (product.brand?.toLowerCase() === 'apple' || product.name?.toLowerCase().includes('macbook')) &&
+               product.show_apple_customizer !== false && (
+                <AppleCustomizer
+                  product={product}
+                  onCustomizationChange={handleAppleCustomizationChange}
                 />
               )}
 
@@ -978,6 +1055,69 @@ export default function ProductDetail() {
                         <div className="grid grid-cols-2 divide-x divide-gray-200">
                           <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Warranty</div>
                           <div className="px-4 py-3 text-gray-700 text-sm">{product.ram_warranty}</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Apple MacBook Specifications */}
+                {(product.brand?.toLowerCase() === 'apple' || product.name?.toLowerCase().includes('macbook')) &&
+                 (product.apple_model || product.apple_processor || product.apple_ram || product.apple_storage || product.apple_screen_size || product.apple_display || product.apple_graphics || product.apple_condition) && (
+                  <div className="mb-8">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b-2 border-gray-800 flex items-center gap-2">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                      </svg>
+                      Apple MacBook Specifications
+                    </h4>
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                      {product.apple_model && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Model</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.apple_model}</div>
+                        </div>
+                      )}
+                      {product.apple_processor && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Apple Processor</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.apple_processor}</div>
+                        </div>
+                      )}
+                      {product.apple_ram && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Unified Memory</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.apple_ram}</div>
+                        </div>
+                      )}
+                      {product.apple_storage && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">SSD Storage</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.apple_storage}</div>
+                        </div>
+                      )}
+                      {product.apple_screen_size && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Screen Size</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.apple_screen_size}</div>
+                        </div>
+                      )}
+                      {product.apple_display && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Display Type</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.apple_display}</div>
+                        </div>
+                      )}
+                      {product.apple_graphics && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200 border-b border-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Graphics</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.apple_graphics}</div>
+                        </div>
+                      )}
+                      {product.apple_condition && (
+                        <div className="grid grid-cols-2 divide-x divide-gray-200">
+                          <div className="bg-gray-50 px-4 py-3 font-medium text-gray-900 text-sm">Condition</div>
+                          <div className="px-4 py-3 text-gray-700 text-sm">{product.apple_condition}</div>
                         </div>
                       )}
                     </div>

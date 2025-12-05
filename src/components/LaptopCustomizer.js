@@ -250,6 +250,13 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
 
   if (!product) return null;
 
+  // Check if this is an Apple product
+  const isAppleProduct = product?.brand?.toLowerCase() === 'apple' ||
+                         product?.name?.toLowerCase().includes('macbook');
+
+  // For Apple products, don't show this customizer - they have their own AppleCustomizer
+  if (isAppleProduct) return null;
+
   // Don't render if no options available
   if (!loading && ramModules.length === 0 && ssdUpgrades.length === 0) return null;
 
