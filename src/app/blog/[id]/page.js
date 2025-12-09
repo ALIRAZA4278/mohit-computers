@@ -220,14 +220,16 @@ export default async function BlogDetail({ params }) {
 
                 {/* Article Content */}
                 <div className="prose prose-lg max-w-none prose-headings:text-black prose-p:text-black prose-strong:text-black prose-li:text-black prose-img:rounded-lg prose-img:shadow-md prose-blockquote:text-black prose-code:text-black">
-                  <ReactMarkdown 
+                  <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={{
                       h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-black mt-8 mb-4" {...props} />,
                       h2: ({node, ...props}) => <h2 className="text-2xl font-bold text-black mt-6 mb-4" {...props} />,
                       h3: ({node, ...props}) => <h3 className="text-xl font-semibold text-black mt-4 mb-3" {...props} />,
                       p: ({node, ...props}) => <p className="text-black mb-4 leading-relaxed" {...props} />,
-                      li: ({node, ...props}) => <li className="text-black" {...props} />,
+                      ul: ({node, ...props}) => <ul className="list-disc list-inside text-black mb-4 space-y-2 ml-4" {...props} />,
+                      ol: ({node, ...props}) => <ol className="list-decimal list-inside text-black mb-4 space-y-2 ml-4" {...props} />,
+                      li: ({node, ...props}) => <li className="text-black leading-relaxed" {...props} />,
                       strong: ({node, ...props}) => <strong className="text-black font-bold" {...props} />,
                       em: ({node, ...props}) => <em className="text-black italic" {...props} />,
                       blockquote: ({node, ...props}) => (
