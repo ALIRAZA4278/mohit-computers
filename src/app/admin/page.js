@@ -12,6 +12,7 @@ import NewsletterSubscribers from '../../components/admin/NewsletterSubscribers'
 import CommentManagement from '../../components/admin/CommentManagement';
 import ReviewManagement from '../../components/admin/ReviewManagement';
 import LaptopUpgradeOptionsManager from '../../components/admin/LaptopUpgradeOptionsManager';
+import BannerManagement from '../../components/admin/BannerManagement';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -213,6 +214,8 @@ export default function AdminLogin() {
         return <ReviewManagement />;
       case 'laptop-options':
         return <LaptopUpgradeOptionsManager />;
+      case 'banners':
+        return <BannerManagement />;
       default:
         return <AdminDashboard />;
     }

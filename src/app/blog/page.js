@@ -76,7 +76,7 @@ export default async function Blog() {
         <section id="articles" className="py-16 bg-white">
           <div className="container mx-auto px-4">
             {/* Featured Post */}
-            {blogs.filter(blog => blog.featured).length > 0 && (
+            {blogs.filter(blog => blog.is_featured).length > 0 && (
               <div className="mb-16">
                 <div className="text-center mb-10">
                   <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Featured Article</h2>
@@ -85,7 +85,7 @@ export default async function Blog() {
                   </div>
                 </div>
                 <div className="max-w-4xl mx-auto">
-                  <BlogCard post={blogs.find(blog => blog.featured)} featured={true} />
+                  <BlogCard post={blogs.find(blog => blog.is_featured)} featured={true} />
                 </div>
               </div>
             )}

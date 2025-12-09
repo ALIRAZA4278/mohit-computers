@@ -22,20 +22,33 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Hero banners carousel
-  const heroBanners = [
+  // State for banners from database
+  const [banners, setBanners] = useState([]);
+  const [bannersLoading, setBannersLoading] = useState(true);
+
+  // Default hero banners (fallback if database empty)
+  const defaultBanners = [
     { desktop: '/banners/hero banner 1.jpg', mobile: '/banners/hero mobile banner 1.jpg' },
     { desktop: '/banners/hero banner 2.jpg', mobile: '/banners/hero mobile banner 2.jpg' },
     { desktop: '/banners/hero banner 3.jpg', mobile: '/banners/hero mobile banner 3.jpg' }
   ];
 
+  // Use banners from database or fallback to default
+  const heroBanners = banners.length > 0 ? banners.map(b => ({
+    desktop: b.desktop_image_url,
+    mobile: b.mobile_image_url || b.desktop_image_url,
+    link: b.link_url,
+    title: b.title,
+    subtitle: b.subtitle
+  })) : defaultBanners;
+
   // Auto-advance hero carousel
   useEffect(() => {
     const interval = setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % 3);
+      setHeroIndex((prev) => (prev + 1) % heroBanners.length);
     }, 5000); // Change every 5 seconds
     return () => clearInterval(interval);
-  }, []);
+  }, [heroBanners.length]);
 
   // State for items per view (responsive)
   const [itemsPerView, setItemsPerView] = useState(4);
@@ -61,6 +74,28 @@ export default function Home() {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Fetch banners from database
+  useEffect(() => {
+    async function fetchBanners() {
+      try {
+        setBannersLoading(true);
+        const response = await fetch('/api/banners?active=true');
+        const data = await response.json();
+
+        if (data.success && data.banners) {
+          setBanners(data.banners);
+        }
+      } catch (err) {
+        console.error('Error fetching banners:', err);
+        // Fallback to default banners on error
+      } finally {
+        setBannersLoading(false);
+      }
+    }
+
+    fetchBanners();
   }, []);
 
   // Fetch products from database

@@ -16,7 +16,8 @@ import {
   Menu,
   X,
   DollarSign,
-  Cpu
+  Cpu,
+  Image
 } from 'lucide-react';
 
 export default function AdminSidebar({ activeSection, setActiveSection, onLogout, isSidebarOpen, setIsSidebarOpen }) {
@@ -24,6 +25,7 @@ export default function AdminSidebar({ activeSection, setActiveSection, onLogout
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'orders', label: 'Orders', icon: ShoppingCart },
     { id: 'products', label: 'Products', icon: Package },
+    { id: 'banners', label: 'Hero Banners', icon: Image },
     { id: 'users', label: 'Users', icon: Users },
     { id: 'blogs', label: 'Blogs', icon: FileText },
     { id: 'comments', label: 'Comments', icon: MessageCircle },
