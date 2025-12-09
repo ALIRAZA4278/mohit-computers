@@ -7,6 +7,10 @@ import remarkGfm from 'remark-gfm';
 import BlogCard from '../../../components/BlogCard';
 import CommentSection from '../../../components/CommentSection';
 
+// Force dynamic rendering - no caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getBlog(slug) {
   try {
     // For server-side rendering, use Supabase directly

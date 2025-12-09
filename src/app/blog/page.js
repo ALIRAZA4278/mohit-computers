@@ -5,6 +5,10 @@ import { ArrowRight } from 'lucide-react';
 import BlogCard from '../../components/BlogCard';
 import NewsletterSubscribe from '../../components/NewsletterSubscribe';
 
+// Force dynamic rendering - no caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getBlogs() {
   try {
     // For server-side rendering, use Supabase directly
