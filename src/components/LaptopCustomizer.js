@@ -71,22 +71,31 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
         // If applicable_to is not set or is 'all', show for all generations
         const applicableTo = opt.applicable_to || 'all';
 
+        // Check if product has explicit RAM type support specified (especially for 12th gen)
+        const supportedRamType = product?.supported_ram_type || product?.supportedRamType;
+
         if (genNumber && applicableTo !== 'all') {
-          if (genNumber >= 3 && genNumber <= 5) {
-            // 3rd-5th gen uses DDR3
-            if (!['ddr3', 'all'].includes(applicableTo)) return false;
-          } else if (genNumber === 6) {
-            // 6th gen can use DDR3 or DDR4
-            if (!['ddr3', 'ddr3_6th', 'ddr4', 'all'].includes(applicableTo)) return false;
-          } else if (genNumber >= 7 && genNumber <= 11) {
-            // 7th-11th gen uses DDR4
-            if (!['ddr4', 'all'].includes(applicableTo)) return false;
-          } else if (genNumber === 12) {
-            // 12th gen can use DDR4 or DDR5
-            if (!['ddr4_12th', 'ddr4', 'ddr5', 'all'].includes(applicableTo)) return false;
-          } else if (genNumber >= 13 && genNumber <= 15) {
-            // 13th-15th gen uses DDR5
-            if (!['ddr5', 'all'].includes(applicableTo)) return false;
+          // If admin has specified RAM type support, use that
+          if (supportedRamType) {
+            if (applicableTo !== supportedRamType && applicableTo !== 'all') return false;
+          } else {
+            // Auto-detect based on generation
+            if (genNumber >= 3 && genNumber <= 5) {
+              // 3rd-5th gen uses DDR3
+              if (!['ddr3', 'all'].includes(applicableTo)) return false;
+            } else if (genNumber === 6) {
+              // 6th gen can use DDR3 or DDR4
+              if (!['ddr3', 'ddr3_6th', 'ddr4', 'all'].includes(applicableTo)) return false;
+            } else if (genNumber >= 7 && genNumber <= 11) {
+              // 7th-11th gen uses DDR4
+              if (!['ddr4', 'all'].includes(applicableTo)) return false;
+            } else if (genNumber === 12) {
+              // 12th gen can use DDR4 or DDR5 - show both by default if not specified
+              if (!['ddr4', 'ddr5', 'all'].includes(applicableTo)) return false;
+            } else if (genNumber >= 13) {
+              // 13th gen+ uses DDR5
+              if (!['ddr5', 'all'].includes(applicableTo)) return false;
+            }
           }
         }
 

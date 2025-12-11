@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update RAM & SSD Prices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+        .pricing-table {
+            margin: 20px 0;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .pricing-table th, .pricing-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .pricing-table th {
+            background: #6dc1c9;
+            color: white;
+        }
+        .pricing-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        button {
+            background: #6dc1c9;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #5db0b8;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            display: block;
+        }
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Update RAM & SSD Upgrade Prices</h1>
+
+        <div class="info">
+            <strong>Note:</strong> This will update all laptop upgrade options in the database with the latest pricing from the chart.
+        </div>
+
+        <h2>Current Pricing Structure:</h2>
+
+        <h3>DDR3/DDR3L (3rd to 5th Generation)</h3>
+        <table class="pricing-table">
+            <tr>
+                <th>Option</th>
+                <th>Price</th>
+            </tr>
+            <tr>
+                <td>4GB DDR3 RAM</td>
+                <td>Rs 1,000</td>
+            </tr>
+            <tr>
+                <td>8GB DDR3 RAM</td>
+                <td>Rs 2,500</td>
+            </tr>
+        </table>
+
+        <h3>DDR4 (6th to 11th Generation)</h3>
+        <table class="pricing-table">
+            <tr>
+                <th>Option</th>
+                <th>Price</th>
+            </tr>
+            <tr>
+                <td>4GB DDR4 RAM</td>
+                <td>Rs 3,200</td>
+            </tr>
+            <tr>
+                <td>8GB DDR4 RAM</td>
+                <td>Rs 6,000</td>
+            </tr>
+            <tr>
+                <td>16GB DDR4 RAM</td>
+                <td>Rs 11,500</td>
+            </tr>
+        </table>
+
+        <h3>SSD Upgrades (All Generations)</h3>
+        <table class="pricing-table">
+            <tr>
+                <th>Option</th>
+                <th>Price</th>
+            </tr>
+            <tr>
+                <td>256GB NVMe SSD</td>
+                <td>Rs 3,000</td>
+            </tr>
+            <tr>
+                <td>512GB NVMe SSD</td>
+                <td>Rs 5,500</td>
+            </tr>
+            <tr>
+                <td>1TB NVMe SSD</td>
+                <td>Rs 10,000</td>
+            </tr>
+        </table>
+
+        <button id="updateBtn" onclick="updatePrices()">Update Prices in Database</button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        async function updatePrices() {
+            const btn = document.getElementById('updateBtn');
+            const result = document.getElementById('result');
+
+            btn.disabled = true;
+            btn.textContent = 'Updating...';
+            result.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/admin/update-upgrade-prices', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    result.className = 'result success';
+                    result.textContent = `✓ ${data.message}`;
+                    result.style.display = 'block';
+                } else {
+                    throw new Error(data.error || 'Failed to update prices');
+                }
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = `✗ Error: ${error.message}`;
+                result.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Update Prices in Database';
+            }
+        }
+    </script>
+</body>
+</html>

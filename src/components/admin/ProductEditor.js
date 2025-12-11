@@ -58,6 +58,9 @@ export default function ProductEditor({ product, onSave, onCancel }) {
     showRAMOptions: true, // Show RAM upgrade options by default
     showSSDOptions: true, // Show SSD upgrade options by default
 
+    // For 12th gen laptops - specify which RAM type is supported
+    supportedRamType: '', // 'ddr4', 'ddr5', or empty for auto-detect
+
     // Custom pricing for this specific product's upgrade options
     customUpgradePricing: {}, // e.g., { 'ram-4GB-ddr4': 3500, 'ssd-512GB': 8000 }
 
@@ -1754,9 +1757,31 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   name="generation"
                   value={formData.generation}
                   onChange={handleChange}
-                  placeholder="e.g., 8th Gen, 10th Gen"
+                  placeholder="e.g., 8th Gen, 10th Gen, 12th Gen"
                   className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+              </div>
+
+              {/* Supported RAM Type (for 12th gen) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Supported RAM Type
+                  <span className="text-xs text-gray-500 ml-2">(For 12th Gen specify DDR4 or DDR5)</span>
+                </label>
+                <select
+                  name="supportedRamType"
+                  value={formData.supportedRamType}
+                  onChange={handleChange}
+                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Auto-detect from generation</option>
+                  <option value="ddr3">DDR3 (3rd-5th Gen)</option>
+                  <option value="ddr4">DDR4 (6th-12th Gen)</option>
+                  <option value="ddr5">DDR5 (12th Gen+)</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  💡 Leave as "Auto-detect" for most laptops. Set manually for 12th Gen laptops with specific RAM type support.
+                </p>
               </div>
 
               {/* RAM */}

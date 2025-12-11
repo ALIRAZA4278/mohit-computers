@@ -46,7 +46,7 @@ export async function POST(request) {
         display_order: 2
       },
 
-      // DDR4 RAM (6th-11th Gen)
+      // DDR4 RAM (6th-12th Gen)
       {
         option_type: 'ram',
         size: '4GB',
@@ -55,7 +55,7 @@ export async function POST(request) {
         display_label: '4GB DDR4',
         applicable_to: 'ddr4',
         min_generation: 6,
-        max_generation: 11,
+        max_generation: 12,
         is_active: true,
         display_order: 3
       },
@@ -67,7 +67,7 @@ export async function POST(request) {
         display_label: '8GB DDR4',
         applicable_to: 'ddr4',
         min_generation: 6,
-        max_generation: 11,
+        max_generation: 12,
         is_active: true,
         display_order: 4
       },
@@ -79,9 +79,59 @@ export async function POST(request) {
         display_label: '16GB DDR4',
         applicable_to: 'ddr4',
         min_generation: 6,
-        max_generation: 11,
+        max_generation: 12,
         is_active: true,
         display_order: 5
+      },
+
+      // DDR5 RAM (12th Gen onwards)
+      {
+        option_type: 'ram',
+        size: '4GB',
+        size_number: 4,
+        price: 5000,
+        display_label: '4GB DDR5',
+        applicable_to: 'ddr5',
+        min_generation: 12,
+        max_generation: null,
+        is_active: true,
+        display_order: 6
+      },
+      {
+        option_type: 'ram',
+        size: '8GB',
+        size_number: 8,
+        price: 8000,
+        display_label: '8GB DDR5',
+        applicable_to: 'ddr5',
+        min_generation: 12,
+        max_generation: null,
+        is_active: true,
+        display_order: 7
+      },
+      {
+        option_type: 'ram',
+        size: '16GB',
+        size_number: 16,
+        price: 15000,
+        display_label: '16GB DDR5',
+        applicable_to: 'ddr5',
+        min_generation: 12,
+        max_generation: null,
+        is_active: true,
+        display_order: 8
+      },
+      {
+        option_type: 'ram',
+        size: '32GB',
+        size_number: 32,
+        price: 28000,
+        display_label: '32GB DDR5',
+        applicable_to: 'ddr5',
+        min_generation: 12,
+        max_generation: null,
+        is_active: true,
+        display_order: 9
       },
 
       // SSD options (All generations)
