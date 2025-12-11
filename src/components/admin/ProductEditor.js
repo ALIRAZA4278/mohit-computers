@@ -2297,7 +2297,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   </select>
                   <p className="text-sm text-blue-800 mt-3 bg-blue-100 px-3 py-2 rounded">
                     <strong>Note:</strong> For 12th Gen laptops, select which RAM type to show in customization.
-                    Choose "DDR4 Only" or "DDR5 Only" based on what the laptop supports.
+                    Choose &quot;DDR4 Only&quot; or &quot;DDR5 Only&quot; based on what the laptop supports.
                   </p>
                 </div>
               )}
