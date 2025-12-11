@@ -110,7 +110,7 @@
             </tr>
         </table>
 
-        <h3>DDR4 (6th to 11th Generation)</h3>
+        <h3>DDR4 (6th to 12th Generation)</h3>
         <table class="pricing-table">
             <tr>
                 <th>Option</th>
@@ -127,6 +127,30 @@
             <tr>
                 <td>16GB DDR4 RAM</td>
                 <td>Rs 11,500</td>
+            </tr>
+        </table>
+
+        <h3>DDR5 (12th Generation onwards)</h3>
+        <table class="pricing-table">
+            <tr>
+                <th>Option</th>
+                <th>Price</th>
+            </tr>
+            <tr>
+                <td>4GB DDR5 RAM</td>
+                <td>Rs 5,000</td>
+            </tr>
+            <tr>
+                <td>8GB DDR5 RAM</td>
+                <td>Rs 8,000</td>
+            </tr>
+            <tr>
+                <td>16GB DDR5 RAM</td>
+                <td>Rs 15,000</td>
+            </tr>
+            <tr>
+                <td>32GB DDR5 RAM</td>
+                <td>Rs 28,000</td>
             </tr>
         </table>
 
@@ -165,7 +189,7 @@
             result.style.display = 'none';
 
             try {
-                const response = await fetch('http://localhost:3000/api/admin/update-upgrade-prices', {
+                const response = await fetch('http://localhost:3001/api/admin/update-upgrade-prices', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

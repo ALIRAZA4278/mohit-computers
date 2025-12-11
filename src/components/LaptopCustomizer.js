@@ -71,11 +71,11 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
         // If applicable_to is not set or is 'all', show for all generations
         const applicableTo = opt.applicable_to || 'all';
 
-        // Check if product has explicit RAM type support specified (especially for 12th gen)
+        // Check if product has explicit RAM type support specified by admin (especially for 12th gen)
         const supportedRamType = product?.supported_ram_type || product?.supportedRamType;
 
         if (genNumber && applicableTo !== 'all') {
-          // If admin has specified RAM type support, use that
+          // If admin has specified RAM type support, use that (overrides auto-detection)
           if (supportedRamType) {
             if (applicableTo !== supportedRamType && applicableTo !== 'all') return false;
           } else {
@@ -90,7 +90,7 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
               // 7th-11th gen uses DDR4
               if (!['ddr4', 'all'].includes(applicableTo)) return false;
             } else if (genNumber === 12) {
-              // 12th gen can use DDR4 or DDR5 - show both by default if not specified
+              // 12th gen - if no admin specification, show both DDR4 and DDR5
               if (!['ddr4', 'ddr5', 'all'].includes(applicableTo)) return false;
             } else if (genNumber >= 13) {
               // 13th gen+ uses DDR5
@@ -143,7 +143,7 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
         }
         return acc;
       }, []); // Sort by size
-  }, [upgradeOptions.ram, product?.ram, product?.generation, product?.custom_upgrade_pricing]);
+  }, [upgradeOptions.ram, product?.ram, product?.generation, product?.custom_upgrade_pricing, product?.supported_ram_type, product?.supportedRamType]);
 
   // SSD upgrade options (replaces existing drive) - show only larger capacities than current storage
   const ssdUpgrades = useMemo(() => {
@@ -292,35 +292,36 @@ export default function LaptopCustomizer({ product, onCustomizationChange }) {
               </div>
               <span className="font-semibold text-gray-800">RAM Upgrade</span>
             </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {ramModules.map((ram) => (
-                <button
-                  key={ram.id}
-                  onClick={() => handleRamUpgrade(ram)}
-                  className={`relative text-left p-3 rounded-xl transition-all ${
-                    customizations.ramUpgrade?.id === ram.id
-                      ? 'bg-[#6dc1c9] text-white shadow-lg shadow-[#6dc1c9]/30'
-                      : 'bg-white border border-gray-200 hover:border-[#6dc1c9] hover:shadow-md'
-                  }`}
-                >
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold">{ram.size}</span>
-                    <span className={`font-bold ${customizations.ramUpgrade?.id === ram.id ? 'text-white' : 'text-[#6dc1c9]'}`}>
-                      +Rs:{ram.price.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className={`text-xs mt-1 ${customizations.ramUpgrade?.id === ram.id ? 'text-teal-100' : 'text-gray-500'}`}>
-                    {product?.ram || '8GB'} → {ram.size}
-                  </div>
-                  {customizations.ramUpgrade?.id === ram.id && (
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow">
-                      <svg className="w-3 h-3 text-[#6dc1c9]" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
+                  <button
+                    key={ram.id}
+                    onClick={() => handleRamUpgrade(ram)}
+                    className={`relative text-left p-3 rounded-xl transition-all ${
+                      customizations.ramUpgrade?.id === ram.id
+                        ? 'bg-[#6dc1c9] text-white shadow-lg shadow-[#6dc1c9]/30'
+                        : 'bg-white border border-gray-200 hover:border-[#6dc1c9] hover:shadow-md'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold">{ram.size}</span>
+                      <span className={`font-bold ${customizations.ramUpgrade?.id === ram.id ? 'text-white' : 'text-[#6dc1c9]'}`}>
+                        +Rs:{ram.price.toLocaleString()}
+                      </span>
                     </div>
-                  )}
-                </button>
-              ))}
+                    <div className={`text-xs mt-1 ${customizations.ramUpgrade?.id === ram.id ? 'text-teal-100' : 'text-gray-500'}`}>
+                      {product?.ram || '8GB'} → {ram.size}
+                    </div>
+                    {customizations.ramUpgrade?.id === ram.id && (
+                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow">
+                        <svg className="w-3 h-3 text-[#6dc1c9]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                ))}
             </div>
           </div>
         )}

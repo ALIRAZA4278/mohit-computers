@@ -258,7 +258,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         try {
           const response = await fetch('/api/laptop-upgrade-options?active=true&type=ram');
           const data = await response.json();
-          
+
           if (data.success) {
             // Parse generation number
             const gen = formData.generation;
@@ -272,26 +272,39 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 genNumber = match ? parseInt(match[0]) : null;
               }
             }
-            
+
             // Get current RAM size for filtering
             const ramText = formData.ram || '8GB';
             const ramNumber = parseInt(ramText);
             const currentRAM = isNaN(ramNumber) ? 8 : ramNumber;
-            
+
             // Filter options by generation and current RAM
             const filtered = data.options
               .filter(opt => {
                 // Filter by generation
                 if (opt.min_generation && genNumber && genNumber < opt.min_generation) return false;
                 if (opt.max_generation && genNumber && genNumber > opt.max_generation) return false;
-                
-                // Filter by applicable type (ddr3/ddr4)
-                if (genNumber && genNumber >= 3 && genNumber <= 5) {
-                  if (opt.applicable_to !== 'ddr3') return false;
-                } else if (genNumber && genNumber >= 6) {
-                  if (opt.applicable_to !== 'ddr4' && opt.applicable_to !== 'all') return false;
+
+                // PRIORITY: If admin has specified RAM type (especially for 12th gen), use that
+                if (formData.supportedRamType) {
+                  if (opt.applicable_to !== formData.supportedRamType) return false;
+                } else {
+                  // Auto-detect based on generation
+                  if (genNumber && genNumber >= 3 && genNumber <= 5) {
+                    // 3rd-5th gen: DDR3
+                    if (opt.applicable_to !== 'ddr3') return false;
+                  } else if (genNumber && genNumber >= 6 && genNumber <= 11) {
+                    // 6th-11th gen: DDR4
+                    if (opt.applicable_to !== 'ddr4' && opt.applicable_to !== 'all') return false;
+                  } else if (genNumber === 12) {
+                    // 12th gen: Show both DDR4 and DDR5 if not specified
+                    if (opt.applicable_to !== 'ddr4' && opt.applicable_to !== 'ddr5' && opt.applicable_to !== 'all') return false;
+                  } else if (genNumber >= 13) {
+                    // 13th gen+: DDR5
+                    if (opt.applicable_to !== 'ddr5' && opt.applicable_to !== 'all') return false;
+                  }
                 }
-                
+
                 // Only show larger sizes
                 return opt.size_number > currentRAM;
               })
@@ -304,11 +317,12 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                   price: customPrice !== undefined ? customPrice : opt.price,
                   defaultPrice: opt.price,
                   size: opt.size,
-                  optionKey: optionKey
+                  optionKey: optionKey,
+                  applicableTo: opt.applicable_to
                 };
               })
               .sort((a, b) => parseInt(a.size) - parseInt(b.size));
-            
+
             setAvailableRAMOptions(filtered);
             console.log('Loaded RAM options from database:', filtered);
           }
@@ -320,9 +334,9 @@ export default function ProductEditor({ product, onSave, onCancel }) {
         setAvailableRAMOptions([]);
       }
     };
-    
+
     fetchRAMOptions();
-  }, [formData.generation, formData.category, formData.ram, formData.customUpgradePricing]);
+  }, [formData.generation, formData.category, formData.ram, formData.customUpgradePricing, formData.supportedRamType]);
 
   // Update available SSD options based on current storage - FROM DATABASE
   useEffect(() => {
@@ -1762,28 +1776,6 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                 />
               </div>
 
-              {/* Supported RAM Type (for 12th gen) */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Supported RAM Type
-                  <span className="text-xs text-gray-500 ml-2">(For 12th Gen specify DDR4 or DDR5)</span>
-                </label>
-                <select
-                  name="supportedRamType"
-                  value={formData.supportedRamType}
-                  onChange={handleChange}
-                  className="w-full text-black px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Auto-detect from generation</option>
-                  <option value="ddr3">DDR3 (3rd-5th Gen)</option>
-                  <option value="ddr4">DDR4 (6th-12th Gen)</option>
-                  <option value="ddr5">DDR5 (12th Gen+)</option>
-                </select>
-                <p className="text-xs text-gray-500 mt-1">
-                  💡 Leave as "Auto-detect" for most laptops. Set manually for 12th Gen laptops with specific RAM type support.
-                </p>
-              </div>
-
               {/* RAM */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -2283,6 +2275,33 @@ export default function ProductEditor({ product, onSave, onCancel }) {
             </div>
 
             <div className="space-y-6">
+              {/* Supported RAM Type Selection - For 12th Gen */}
+              {formData.generation && formData.generation.includes('12') && (
+                <div className="bg-gradient-to-r from-blue-50 to-teal-50 border-2 border-blue-300 rounded-lg p-5 mb-6">
+                  <label className="block text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
+                    </svg>
+                    Supported RAM Type
+                    <span className="text-xs font-normal text-blue-700 bg-blue-200 px-2 py-1 rounded">12th Gen Required</span>
+                  </label>
+                  <select
+                    name="supportedRamType"
+                    value={formData.supportedRamType}
+                    onChange={handleChange}
+                    className="w-full text-black px-4 py-3 border-2 border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                  >
+                    <option value="">Auto-detect (Shows both DDR4 & DDR5)</option>
+                    <option value="ddr4">DDR4 Only</option>
+                    <option value="ddr5">DDR5 Only</option>
+                  </select>
+                  <p className="text-sm text-blue-800 mt-3 bg-blue-100 px-3 py-2 rounded">
+                    <strong>Note:</strong> For 12th Gen laptops, select which RAM type to show in customization.
+                    Choose "DDR4 Only" or "DDR5 Only" based on what the laptop supports.
+                  </p>
+                </div>
+              )}
+
               {/* Dynamic RAM Upgrade Options */}
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -2294,7 +2313,7 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                       </span>
                     )}
                   </div>
-                  
+
                   {/* Checkbox to show/hide RAM options */}
                   {availableRAMOptions.length > 0 && (
                     <label className="flex items-center gap-2 cursor-pointer">
@@ -2310,6 +2329,15 @@ export default function ProductEditor({ product, onSave, onCancel }) {
                     </label>
                   )}
                 </div>
+
+                {/* RAM Type Label */}
+                {availableRAMOptions.length > 0 && availableRAMOptions[0]?.applicableTo && (
+                  <div className="mb-3 px-3 py-2 bg-blue-100 border border-blue-300 rounded-md inline-block">
+                    <span className="text-sm font-semibold text-blue-900">
+                      RAM Type: {availableRAMOptions[0].applicableTo.toUpperCase()}
+                    </span>
+                  </div>
+                )}
 
                 {formData.generation && availableRAMOptions.length > 0 ? (
                   <>
