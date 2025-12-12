@@ -12,11 +12,11 @@ export async function GET() {
     // Define dropdown options for LAPTOPS (excluding Apple-specific options)
     const dropdowns = {
       brand: ['HP', 'Dell', 'Lenovo', 'Acer', 'ASUS', 'MSI', 'Toshiba', 'Sony', 'Samsung'],
-      productType: ['New', 'Used'],
       condition: ['New', 'Excellent', 'Very Good', 'Good', 'Used'],
       touchType: ['Touch', 'Non-touch', 'X360 (Convertible)', 'Touch - Detachable'],
       resolutionFilter: ['HD', 'Full HD', 'QHD', '4K'],
       generation: ['4th Gen', '5th Gen', '6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen', '13th Gen'],
+      supportedRamType: ['', 'ddr3', 'ddr4', 'ddr5'],
       booleanOptions: ['TRUE', 'FALSE'],
       warranty: ['15 days', '1 month', '3 months', '6 months', '1 year', '2 years', '3 years'],
       displaySize: ['11.6 inch', '12 inch', '12.5 inch', '13.3 inch', '14 inch', '15.6 inch', '17 inch', '17.3 inch'],
@@ -86,9 +86,9 @@ export async function GET() {
     productsSheet.columns = [
       { header: 'Model Name*', key: 'model', width: 35 },
       { header: 'Brand*', key: 'brand', width: 12 },
-      { header: 'Product Type', key: 'productType', width: 12 },
       { header: 'Processor*', key: 'processor', width: 18 },
       { header: 'Generation*', key: 'generation', width: 12 },
+      { header: 'Supported RAM Type', key: 'supportedRamType', width: 18 },
       { header: 'RAM*', key: 'ram', width: 15 },
       { header: 'Storage*', key: 'storage', width: 20 },
       { header: 'Display Size', key: 'displaySize', width: 12 },
@@ -139,9 +139,9 @@ export async function GET() {
       {
         model: 'HP EliteBook 840 G5',
         brand: 'HP',
-        productType: 'Used',
         processor: 'Intel Core i5',
         generation: '8th Gen',
+        supportedRamType: '',
         ram: '8GB DDR4',
         storage: '256GB SSD',
         displaySize: '14 inch',
@@ -180,9 +180,9 @@ export async function GET() {
       {
         model: 'Dell Latitude 5520',
         brand: 'Dell',
-        productType: 'Used',
         processor: 'Intel Core i7',
         generation: '11th Gen',
+        supportedRamType: '',
         ram: '16GB DDR4',
         storage: '512GB SSD',
         displaySize: '15.6 inch',
@@ -221,9 +221,9 @@ export async function GET() {
       {
         model: 'Lenovo ThinkPad P15 Workstation',
         brand: 'Lenovo',
-        productType: 'Used',
         processor: 'Intel Core i7-H',
         generation: '10th Gen',
+        supportedRamType: '',
         ram: '32GB DDR4',
         storage: '1TB SSD',
         displaySize: '15.6 inch',
@@ -270,39 +270,39 @@ export async function GET() {
     const rowEnd = 200;
 
     // Column mapping for dropdowns
-    // A=Model, B=Brand, C=ProductType, D=Processor, E=Generation, F=RAM, G=Storage, H=DisplaySize,
+    // A=Model, B=Brand, C=Processor, D=Generation, E=SupportedRAM, F=RAM, G=Storage, H=DisplaySize,
     // I=ResFilter, J=ResDetail, K=IntGraphics, L=DedGraphics, M=GraphicsMem, N=TouchType, O=OS,
     // P=Condition, Q=Battery, R=Charger, S=ExtraFeatures, T=SellingPrice, U=OrigPrice, V=StockQty,
     // W=Warranty, X=Desc, Y=InStock, Z=IsActive, AA=IsFeatured, AB=IsNewArrival, AC=IsWorkstation,
     // AD=IsRugged, AE=OnSale, AF=Discount%, AG=SEOOnly, AH=ShowCustomizer, AI=ShowRAM, AJ=ShowSSD
     const columnDropdowns = {
       'B': dropdowns.brand,              // Brand
-      'C': dropdowns.productType,        // Product Type
-      'D': dropdowns.processors,         // Processor
-      'E': dropdowns.generation,         // Generation
+      'C': dropdowns.processors,         // Processor
+      'D': dropdowns.generation,         // Generation
+      'E': dropdowns.supportedRamType,   // Supported RAM Type
       'F': dropdowns.ram,                // RAM
       'G': dropdowns.storage,            // Storage
       'H': dropdowns.displaySize,        // Display Size
       'I': dropdowns.resolutionFilter,   // Resolution Filter
-      'K': dropdowns.integratedGraphics, // Integrated Graphics
-      'L': dropdowns.dedicatedGraphics,  // Dedicated Graphics
-      'M': dropdowns.graphicsMemory,     // Graphics Memory
-      'N': dropdowns.touchType,          // Touch Type
-      'O': dropdowns.operatingSystem,    // Operating System
-      'P': dropdowns.condition,          // Condition
-      'R': dropdowns.booleanOptions,     // Charger Included
-      'W': dropdowns.warranty,           // Warranty
-      'Y': dropdowns.booleanOptions,     // In Stock
-      'Z': dropdowns.booleanOptions,     // Is Active
-      'AA': dropdowns.booleanOptions,    // Is Featured
-      'AB': dropdowns.booleanOptions,    // Is New Arrival
-      'AC': dropdowns.booleanOptions,    // Is Workstation
-      'AD': dropdowns.booleanOptions,    // Is Rugged
-      'AE': dropdowns.booleanOptions,    // On Sale
-      'AG': dropdowns.booleanOptions,    // SEO Only
-      'AH': dropdowns.booleanOptions,    // Show Customizer
-      'AI': dropdowns.booleanOptions,    // Show RAM Options
-      'AJ': dropdowns.booleanOptions     // Show SSD Options
+      'J': dropdowns.integratedGraphics, // Integrated Graphics
+      'K': dropdowns.dedicatedGraphics,  // Dedicated Graphics
+      'L': dropdowns.graphicsMemory,     // Graphics Memory
+      'M': dropdowns.touchType,          // Touch Type
+      'N': dropdowns.operatingSystem,    // Operating System
+      'O': dropdowns.condition,          // Condition
+      'Q': dropdowns.booleanOptions,     // Charger Included
+      'V': dropdowns.warranty,           // Warranty
+      'X': dropdowns.booleanOptions,     // In Stock
+      'Y': dropdowns.booleanOptions,     // Is Active
+      'Z': dropdowns.booleanOptions,     // Is Featured
+      'AA': dropdowns.booleanOptions,    // Is New Arrival
+      'AB': dropdowns.booleanOptions,    // Is Workstation
+      'AC': dropdowns.booleanOptions,    // Is Rugged
+      'AD': dropdowns.booleanOptions,    // On Sale
+      'AF': dropdowns.booleanOptions,    // SEO Only
+      'AG': dropdowns.booleanOptions,    // Show Customizer
+      'AH': dropdowns.booleanOptions,    // Show RAM Options
+      'AI': dropdowns.booleanOptions     // Show SSD Options
     };
 
     // Apply dropdowns to each column
@@ -322,7 +322,7 @@ export async function GET() {
     }
 
     // Highlight required columns
-    const requiredCols = ['A', 'B', 'D', 'E', 'F', 'G', 'T']; // Model, Brand, Processor, Gen, RAM, Storage, Price
+    const requiredCols = ['A', 'B', 'C', 'D', 'F', 'G', 'T']; // Model, Brand, Processor, Gen, RAM, Storage, Price
     requiredCols.forEach(col => {
       const cell = productsSheet.getCell(`${col}1`);
       cell.fill = {
@@ -357,7 +357,6 @@ export async function GET() {
       { field: '', description: '', required: '' },
       { field: 'Model Name*', description: 'Full laptop model name (e.g., HP EliteBook 840 G5)', required: 'YES' },
       { field: 'Brand*', description: 'HP, Dell, Lenovo, Acer, ASUS, MSI, etc.', required: 'YES' },
-      { field: 'Product Type', description: 'New or Used', required: 'NO' },
       { field: 'Processor*', description: 'Intel Core i3/i5/i7/i9, AMD Ryzen 3/5/7/9, etc.', required: 'YES' },
       { field: 'Generation*', description: '4th Gen to 13th Gen', required: 'YES' },
       { field: 'RAM*', description: 'e.g., 8GB DDR4, 16GB DDR4', required: 'YES' },

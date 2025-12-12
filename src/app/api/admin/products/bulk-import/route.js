@@ -58,9 +58,9 @@ function parseCSV(csvContent) {
     const productId = product['Product ID'] || product['product_id'] || product.id || null;
 
     // Convert to our database format - supporting all fields
-    const model = product.Model || product.model || '';
-    const processor = product.Processor || product.processor || '';
-    const brandFromCSV = product.Brand || product.brand || '';
+    const model = product['Model Name*'] || product['Model Name'] || product.Model || product.model || '';
+    const processor = product['Processor*'] || product.Processor || product.processor || '';
+    const brandFromCSV = product['Brand*'] || product.Brand || product.brand || '';
     const brand = brandFromCSV || model.split(' ')[0] || processor.split(' ')[0] || 'Unknown';
 
     // Helper function to parse boolean values
@@ -97,19 +97,20 @@ function parseCSV(csvContent) {
       featured_image: product['Image URL 1'] || null,
 
       // Laptop-specific Fields (core fields that exist)
-      processor: product.Processor || null,
-      generation: product.Generation || null,
-      ram: product.Ram || null,
-      hdd: product.HDD || null,
+      processor: product['Processor*'] || product.Processor || null,
+      generation: product['Generation*'] || product.Generation || null,
+      supported_ram_type: product['Supported RAM Type'] || null,
+      ram: product['RAM*'] || product.Ram || null,
+      hdd: product['Storage*'] || product.Storage || product.HDD || null,
       display_size: product['Display Size'] || null,
-      resolution: product['Resolution (Options)'] || null,
+      resolution: product['Resolution Detail'] || product['Resolution (Options)'] || null,
       resolution_filter: product['Resolution Filter'] || null,
       integrated_graphics: product['Integrated Graphics'] || null,
-      discrete_graphics: product['Discrete/Dedicated Graphics'] || null,
+      discrete_graphics: product['Dedicated Graphics'] || product['Discrete/Dedicated Graphics'] || null,
       graphics_memory: product['Graphics Memory'] || product['VRAM'] || null,
-      touch_type: product['Touch / Non touch / X360'] || null,
-      operating_features: product['Operating Features'] || null,
-      extra_features: product['Extra Features (Connectivity/Ports/Other)'] || null,
+      touch_type: product['Touch Type'] || product['Touch / Non touch / X360'] || null,
+      operating_features: product['Operating System'] || product['Operating Features'] || null,
+      extra_features: product['Extra Features'] || product['Extra Features (Connectivity/Ports/Other)'] || null,
       condition: product.Condition || 'Good',
       battery: product.Battery || null,
       charger_included: parseBool(product['Charger Included'] || false),
@@ -199,9 +200,9 @@ async function parseExcel(file) {
     // Check if this is an update (has Product ID)
     const productId = row['Product ID'] || row['product_id'] || row.id || null;
 
-    const model = row.Model || row.model || '';
-    const processor = row.Processor || row.processor || '';
-    const brandFromExcel = row.Brand || row.brand || '';
+    const model = row['Model Name*'] || row['Model Name'] || row.Model || row.model || '';
+    const processor = row['Processor*'] || row.Processor || row.processor || '';
+    const brandFromExcel = row['Brand*'] || row.Brand || row.brand || '';
     const brand = brandFromExcel || model.split(' ')[0] || processor.split(' ')[0] || 'Unknown';
 
     // Build product object with only essential fields first
@@ -228,19 +229,20 @@ async function parseExcel(file) {
       featured_image: row['Image URL 1'] || null,
 
       // Laptop-specific Fields - support both old and new column names
-      processor: row.Processor || null,
-      generation: row.Generation || null,
-      ram: row.Ram || row.RAM || null,
-      hdd: row.HDD || row['Storage/HDD'] || null,
+      processor: row['Processor*'] || row.Processor || null,
+      generation: row['Generation*'] || row.Generation || null,
+      supported_ram_type: row['Supported RAM Type'] || null,
+      ram: row['RAM*'] || row.Ram || row.RAM || null,
+      hdd: row['Storage*'] || row.Storage || row.HDD || row['Storage/HDD'] || null,
       display_size: row['Display Size'] || null,
-      resolution: row['Resolution (Options)'] || row.Resolution || null,
+      resolution: row['Resolution Detail'] || row['Resolution (Options)'] || row.Resolution || null,
       resolution_filter: row['Resolution Filter'] || null,
       integrated_graphics: row['Integrated Graphics'] || null,
-      discrete_graphics: row['Discrete/Dedicated Graphics'] || row['Dedicated Graphics'] || null,
+      discrete_graphics: row['Dedicated Graphics'] || row['Discrete/Dedicated Graphics'] || null,
       graphics_memory: row['Graphics Memory'] || row['VRAM'] || null,
-      touch_type: row['Touch / Non touch / X360'] || row['Touch Type'] || null,
-      operating_features: row['Operating Features'] || row['Operating System'] || null,
-      extra_features: row['Extra Features (Connectivity/Ports/Other)'] || row['Extra Features'] || null,
+      touch_type: row['Touch Type'] || row['Touch / Non touch / X360'] || null,
+      operating_features: row['Operating System'] || row['Operating Features'] || null,
+      extra_features: row['Extra Features'] || row['Extra Features (Connectivity/Ports/Other)'] || null,
       condition: row.Condition || 'Good',
       battery: row.Battery || null,
       charger_included: parseBool(row['Charger Included'] || false),
@@ -278,10 +280,11 @@ async function parseExcel(file) {
       dbProduct.seo_only = parseBool(row['SEO Only'] || row['seoOnly']);
     }
 
-    // Product Type field (New/Used)
-    if (row['Product Type'] || row['productType']) {
-      dbProduct.product_type = row['Product Type'] || row['productType'];
-    }
+    // Product Type field (New/Used) - Column doesn't exist in database
+    // Database derives this from 'condition' field (New condition = New type, others = Used type)
+    // if (row['Product Type'] || row['productType']) {
+    //   dbProduct.product_type = row['Product Type'] || row['productType'];
+    // }
 
     // Customization control fields - support both old and new column names
     if (row['Show Laptop Customizer'] !== undefined || row['Show Customizer'] !== undefined) {

@@ -41,6 +41,7 @@ export async function GET(request) {
       touchType: ['Touch', 'Non-touch', 'X360 (Convertible)', 'Touch - Detachable'],
       generation: ['4th Gen', '5th Gen', '6th Gen', '7th Gen', '8th Gen', '9th Gen', '10th Gen', '11th Gen', '12th Gen', '13th Gen'],
       booleanOptions: ['TRUE', 'FALSE'],
+      supportedRamType: ['', 'ddr3', 'ddr4', 'ddr5'],
       ramType: ['DDR3', 'DDR3L', 'DDR4', 'DDR5'],
       ramCapacity: ['2GB', '4GB', '8GB', '16GB', '32GB'],
       ramSpeed: ['1333 MHz', '1600 MHz', '2133 MHz', '2400 MHz', '2666 MHz', '3200 MHz', '4800 MHz'],
@@ -152,6 +153,7 @@ export async function GET(request) {
       { header: 'SEO Only', key: 'seoOnly', width: 12 },
       { header: 'Processor', key: 'processor', width: 20 },
       { header: 'Generation', key: 'generation', width: 12 },
+      { header: 'Supported RAM Type', key: 'supportedRamType', width: 18 },
       { header: 'RAM', key: 'ram', width: 15 },
       { header: 'Storage/HDD', key: 'hdd', width: 18 },
       { header: 'Display Size', key: 'displaySize', width: 15 },
@@ -215,6 +217,7 @@ export async function GET(request) {
         seoOnly: product.seo_only ? 'TRUE' : 'FALSE',
         processor: product.processor || '',
         generation: product.generation || '',
+        supportedRamType: product.supported_ram_type || '',
         ram: product.ram || '',
         hdd: product.hdd || '',
         displaySize: product.display_size || '',
@@ -271,6 +274,7 @@ export async function GET(request) {
       'T': dropdowns.booleanOptions,     // SEO Only
       'U': dropdowns.processors,         // Processor
       'V': dropdowns.generation,         // Generation
+      'W': dropdowns.supportedRamType,   // Supported RAM Type
       'Y': dropdowns.displaySize,        // Display Size
       'AB': dropdowns.integratedGraphics, // Integrated Graphics
       'AC': dropdowns.dedicatedGraphics, // Dedicated Graphics
